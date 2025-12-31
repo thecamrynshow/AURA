@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Project AURA — Regulation Game</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="start-content">
+            <h1 class="title">Project AURA</h1>
+            <p class="subtitle">The Field of Still Water</p>
+            <div class="breath-indicator-intro">
+                <div class="breath-circle"></div>
+            </div>
+            <p class="intro-text">A journey of calm awaits.<br>Your breath is your guide.</p>
+            <button id="start-button" class="glow-button">Begin Journey</button>
+            <p class="mic-notice">🎤 Microphone access required for breath detection</p>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="screen">
+        <div class="loading-content">
+            <div class="loading-breath"></div>
+            <p>Preparing your sanctuary...</p>
+        </div>
+    </div>
+
+    <!-- Main Game -->
+    <div id="game-container" class="screen">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD -->
+        <div id="hud">
+            <div id="breath-meter">
+                <div class="breath-label">Breath</div>
+                <div class="breath-bar">
+                    <div id="breath-fill"></div>
+                </div>
+                <div id="breath-state">Calibrating...</div>
+            </div>
+            
+            <div id="coherence-meter">
+                <div class="coherence-label">Coherence</div>
+                <div class="coherence-ring">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="coherence-bg" cx="50" cy="50" r="45"/>
+                        <circle id="coherence-progress" class="coherence-fill" cx="50" cy="50" r="45"/>
+                    </svg>
+                    <span id="coherence-value">0</span>
+                </div>
+            </div>
+            
+            <div id="session-timer">
+                <span id="timer-display">0:00</span>
+            </div>
+        </div>
+
+        <!-- Touch Controls -->
+        <div id="touch-controls">
+            <div id="joystick-zone">
+                <div id="joystick-base">
+                    <div id="joystick-thumb"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge UI Overlays -->
+        <div id="challenge-overlay" class="hidden">
+            <div id="challenge-content"></div>
+        </div>
+
+        <!-- Breath Guide -->
+        <div id="breath-guide" class="hidden">
+            <div class="guide-circle">
+                <div class="guide-inner"></div>
+            </div>
+            <p class="guide-text">Follow the rhythm</p>
+        </div>
+
+        <!-- Messages -->
+        <div id="message-display" class="hidden">
+            <p id="message-text"></p>
+        </div>
+    </div>
+
+    <!-- End Session Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-content">
+            <div class="end-glow"></div>
+            <div class="final-breath-cycle">
+                <div class="final-breath-circle"></div>
+            </div>
+            <h2 class="end-title">Journey Complete</h2>
+            <p class="end-message">Your nervous system is balanced.</p>
+            
+            <div id="session-stats">
+                <div class="stat">
+                    <span class="stat-value" id="stat-duration">0:00</span>
+                    <span class="stat-label">Duration</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="stat-coherence">0%</span>
+                    <span class="stat-label">Avg Coherence</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="stat-stability">0%</span>
+                    <span class="stat-label">Breath Stability</span>
+                </div>
+            </div>
+            
+            <div id="pneu-sync" class="hidden">
+                <p>✓ Session synced to PNEU profile</p>
+            </div>
+            
+            <button id="restart-button" class="glow-button">Return to Field</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/breath.js"></script>
+    <script src="src/js/world.js"></script>
+    <script src="src/js/player.js"></script>
+    <script src="src/js/challenges.js"></script>
+    <script src="src/js/pneu.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+/* Project AURA - Regulation Game Styles */
+
+:root {
+    --primary-bg: #0a0a1a;
+    --secondary-bg: #1a1a2e;
+    --accent-glow: #64ffda;
+    --accent-warm: #ffd700;
+    --accent-calm: #7b68ee;
+    --accent-breath: #00d9ff;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --gradient-sky: linear-gradient(180deg, #0a0a1a 0%, #1a1a3e 50%, #2a1a4e 100%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--primary-bg);
+    color: var(--text-primary);
+}
+
+/* Screen Management */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.screen.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Start Screen */
+#start-screen {
+    background: var(--gradient-sky);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.start-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 300;
+    letter-spacing: 0.5rem;
+    color: var(--accent-glow);
+    text-shadow: 0 0 30px var(--accent-glow);
+    margin-bottom: 0.5rem;
+    animation: titlePulse 4s ease-in-out infinite;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.2rem;
+    margin-bottom: 3rem;
+}
+
+.breath-indicator-intro {
+    margin: 2rem auto;
+}
+
+.breath-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-breath) 0%, transparent 70%);
+    animation: breathPulse 4s ease-in-out infinite;
+    margin: 0 auto;
+}
+
+.intro-text {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.glow-button {
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    background: transparent;
+    border: 2px solid var(--accent-glow);
+    color: var(--accent-glow);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.1rem;
+}
+
+.glow-button:hover, .glow-button:active {
+    background: var(--accent-glow);
+    color: var(--primary-bg);
+    box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.mic-notice {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Loading Screen */
+#loading-screen {
+    background: var(--primary-bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-breath {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-glow);
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 2rem;
+}
+
+/* Game Container */
+#game-container {
+    background: var(--primary-bg);
+}
+
+#game-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* HUD */
+#hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 100;
+}
+
+#breath-meter {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 0.8rem 1rem;
+    min-width: 120px;
+}
+
+.breath-label, .coherence-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    margin-bottom: 0.3rem;
+}
+
+.breath-bar {
+    width: 100px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#breath-fill {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(90deg, var(--accent-breath), var(--accent-glow));
+    border-radius: 4px;
+    transition: width 0.2s ease, background 0.3s ease;
+}
+
+#breath-state {
+    font-size: 0.7rem;
+    color: var(--accent-breath);
+    margin-top: 0.3rem;
+}
+
+#coherence-meter {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 0.8rem 1rem;
+    text-align: center;
+}
+
+.coherence-ring {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+}
+
+.coherence-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.coherence-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 6;
+}
+
+.coherence-fill {
+    fill: none;
+    stroke: var(--accent-glow);
+    stroke-width: 6;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+#coherence-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--accent-glow);
+}
+
+#session-timer {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 0.8rem 1rem;
+}
+
+#timer-display {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Touch Controls */
+#touch-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    pointer-events: none;
+    z-index: 50;
+}
+
+#joystick-zone {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    pointer-events: auto;
+}
+
+#joystick-base {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#joystick-thumb {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, rgba(100, 255, 218, 0.5) 100%);
+    box-shadow: 0 0 20px var(--accent-glow);
+    transition: transform 0.1s ease;
+}
+
+/* Challenge Overlay */
+#challenge-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+#challenge-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#challenge-content {
+    text-align: center;
+    padding: 2rem;
+    max-width: 90%;
+}
+
+.challenge-title {
+    font-size: 1.8rem;
+    color: var(--accent-warm);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px var(--accent-warm);
+}
+
+.challenge-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+/* Breath Guide */
+#breath-guide {
+    position: fixed;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 150;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+#breath-guide.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.guide-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-breath);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    animation: guideExpand 4s ease-in-out infinite;
+}
+
+.guide-inner {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-breath);
+    animation: guideInner 4s ease-in-out infinite;
+}
+
+.guide-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Messages */
+#message-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 1.5rem 2.5rem;
+    border-radius: 20px;
+    border: 1px solid var(--accent-glow);
+    z-index: 250;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+#message-display.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#message-text {
+    color: var(--accent-glow);
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* End Screen */
+#end-screen {
+    background: var(--gradient-sky);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.end-content {
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.end-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(100, 255, 218, 0.2) 0%, transparent 70%);
+    animation: endGlow 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.final-breath-cycle {
+    margin-bottom: 2rem;
+}
+
+.final-breath-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-glow);
+    margin: 0 auto;
+    animation: finalBreath 6s ease-in-out infinite;
+    box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.end-title {
+    font-size: 2rem;
+    color: var(--accent-glow);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.2rem;
+}
+
+.end-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+#session-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.8rem;
+    color: var(--accent-warm);
+    font-weight: bold;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+}
+
+#pneu-sync {
+    margin-bottom: 2rem;
+    color: var(--accent-glow);
+    font-size: 0.9rem;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+#pneu-sync.hidden {
+    opacity: 0;
+}
+
+/* Animations */
+@keyframes titlePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes breathPulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.3); opacity: 1; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes guideExpand {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+@keyframes guideInner {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.5); opacity: 0.5; }
+}
+
+@keyframes endGlow {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+}
+
+@keyframes finalBreath {
+    0%, 100% { transform: scale(1); }
+    40% { transform: scale(1.2); }
+    60% { transform: scale(1.2); }
+}
+
+/* Crystal Challenge Specific */
+.crystal-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.crystal {
+    width: 60px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--accent-calm) 0%, #4a3f8a 100%);
+    clip-path: polygon(50% 0%, 100% 30%, 100% 70%, 50% 100%, 0% 70%, 0% 30%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+}
+
+.crystal.active {
+    opacity: 1;
+    box-shadow: 0 0 30px var(--accent-calm);
+    transform: scale(1.1);
+}
+
+.crystal.synced {
+    background: linear-gradient(135deg, var(--accent-glow) 0%, #3a9a8a 100%);
+    box-shadow: 0 0 40px var(--accent-glow);
+}
+
+/* Light Animal */
+.light-animal {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-warm) 0%, rgba(255, 215, 0, 0.3) 70%);
+    margin: 2rem auto;
+    transition: all 1s ease;
+    box-shadow: 0 0 40px var(--accent-warm);
+}
+
+.light-animal.distant {
+    transform: scale(0.3);
+    opacity: 0.3;
+}
+
+.light-animal.approaching {
+    transform: scale(0.6);
+    opacity: 0.6;
+}
+
+.light-animal.close {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Wind Bridge */
+.wind-bridge {
+    width: 200px;
+    height: 20px;
+    background: linear-gradient(90deg, transparent, var(--accent-breath), transparent);
+    margin: 2rem auto;
+    border-radius: 10px;
+    opacity: 0.3;
+    transition: all 0.5s ease;
+}
+
+.wind-bridge.forming {
+    opacity: 0.6;
+    box-shadow: 0 0 20px var(--accent-breath);
+}
+
+.wind-bridge.solid {
+    opacity: 1;
+    box-shadow: 0 0 40px var(--accent-glow);
+    background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+}
+
+/* Progress Bar for challenges */
+.challenge-progress {
+    width: 200px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin: 1rem auto;
+    overflow: hidden;
+}
+
+.challenge-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-breath), var(--accent-glow));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .title {
+        font-size: 2.2rem;
+        letter-spacing: 0.3rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    #hud {
+        padding: 0.5rem;
+    }
+    
+    #breath-meter, #coherence-meter, #session-timer {
+        padding: 0.5rem 0.8rem;
+    }
+    
+    .breath-bar {
+        width: 80px;
+    }
+    
+    #joystick-base {
+        width: 100px;
+        height: 100px;
+    }
+    
+    #joystick-thumb {
+        width: 40px;
+        height: 40px;
+    }
+    
+    #session-stats {
+        gap: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 1.4rem;
+    }
+}
+
+/* Dysregulated state */
+.dysregulated #breath-fill {
+    background: linear-gradient(90deg, #ff6b6b, #ffa500);
+}
+
+.dysregulated #breath-state {
+    color: #ff6b6b;
+}
+
+/* Calm state */
+.calm #breath-fill {
+    background: linear-gradient(90deg, var(--accent-glow), #00ff88);
+}
+
+.calm #breath-state {
+    color: var(--accent-glow);
+}
