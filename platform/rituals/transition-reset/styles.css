@@ -1,0 +1,569 @@
+/* ============================================
+   Transition Reset Ritual
+   Clean exits, clean entrances
+   Cool blues, neutral grays, clean lines
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0a0c10;
+    --bg-mid: #12151c;
+    --blue: #63b3ed;
+    --blue-soft: #90cdf4;
+    --blue-dim: rgba(99, 179, 237, 0.15);
+    --blue-glow: rgba(99, 179, 237, 0.3);
+    --gray: #718096;
+    --gray-light: #a0aec0;
+    --text-primary: #e2e8f0;
+    --text-secondary: rgba(226, 232, 240, 0.7);
+    --text-muted: rgba(226, 232, 240, 0.4);
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+    --transition: 0.4s ease;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.ritual-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient Background */
+.ambient-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
+}
+
+.transition-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gray), transparent);
+    opacity: 0.3;
+    transition: all 1s ease;
+}
+
+.ambient-bg.releasing .transition-line {
+    background: linear-gradient(90deg, var(--blue-dim), var(--gray), transparent);
+}
+
+.ambient-bg.neutral .transition-line {
+    opacity: 0.6;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+}
+
+.ambient-bg.arriving .transition-line {
+    background: linear-gradient(90deg, transparent, var(--gray), var(--blue-dim));
+}
+
+/* Audio & Close */
+.audio-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+.audio-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.audio-btn:hover { background: rgba(255,255,255,0.1); }
+.audio-icon { font-size: 1.2rem; }
+.audio-icon.off { display: none; }
+.audio-btn.muted .audio-icon.on { display: none; }
+.audio-btn.muted .audio-icon.off { display: inline; }
+
+.close-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    transition: all var(--transition);
+}
+
+.close-btn:hover {
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.1);
+}
+
+/* Progress */
+.ritual-progress {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+}
+
+.progress-bar {
+    width: 120px;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--blue);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.progress-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    z-index: 10;
+    padding: 40px 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.screen-content {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Welcome */
+.ritual-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.ritual-title {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+    color: var(--blue);
+}
+
+.ritual-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.ritual-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.ritual-overview {
+    background: var(--blue-dim);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.overview-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.overview-steps {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.begin-btn {
+    background: var(--blue);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 48px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 20px;
+}
+
+.begin-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px var(--blue-glow);
+}
+
+.prep-note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Phase */
+.phase-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.phase-num {
+    width: 32px;
+    height: 32px;
+    background: var(--blue-dim);
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.phase-label {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--blue);
+    letter-spacing: 0.05em;
+}
+
+.guidance-container {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.guidance-text {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    font-style: italic;
+    transition: opacity 0.5s ease;
+}
+
+.timing-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 30px;
+}
+
+/* Release Visual */
+.release-visual {
+    margin: 30px 0;
+}
+
+.release-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+.release-orb {
+    width: 100%;
+    height: 100%;
+    background: var(--blue-dim);
+    border: 2px solid var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 1s ease;
+}
+
+.release-orb.fading {
+    opacity: 0.3;
+    transform: scale(0.8);
+    border-style: dashed;
+}
+
+.orb-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Neutral Visual */
+.neutral-visual {
+    margin: 40px 0;
+}
+
+.neutral-line {
+    width: 200px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.neutral-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background: var(--blue);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--blue-glow);
+    transition: all 0.5s ease;
+}
+
+.neutral-dot.pulse {
+    transform: translate(-50%, -50%) scale(1.3);
+}
+
+.breath-counter {
+    margin-top: 25px;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.breath-counter span {
+    color: var(--blue);
+}
+
+/* Intention */
+.intention-prompt {
+    background: var(--blue-dim);
+    border-radius: 16px;
+    padding: 30px;
+    margin: 30px 0;
+}
+
+.prompt-stem {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.intention-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.suggestion {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Arrive Visual */
+.arrive-visual {
+    margin: 30px 0;
+}
+
+.arrive-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+.arrive-orb {
+    position: absolute;
+    inset: 25px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 1s ease;
+    box-shadow: 0 0 30px var(--blue-glow);
+}
+
+.arrive-orb.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.arrive-orb .orb-label {
+    color: var(--bg-dark);
+    font-weight: 500;
+}
+
+.arrive-rings {
+    position: absolute;
+    inset: 0;
+}
+
+.arrive-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--blue);
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.8s ease;
+}
+
+.arrive-ring.r2 { inset: -15px; }
+
+.arrive-ring.visible {
+    opacity: 0.5;
+}
+
+/* Complete */
+.complete-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--blue);
+}
+
+.complete-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--blue);
+    margin-bottom: 20px;
+}
+
+.complete-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.complete-reminder {
+    background: var(--blue-dim);
+    border: 1px solid var(--blue);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.reminder-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.reminder-text {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    font-style: italic;
+}
+
+.complete-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-primary {
+    background: var(--blue);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 40px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px var(--blue-glow);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 10px 20px;
+}
+
+@media (max-width: 480px) {
+    .ritual-title { font-size: 2.2rem; }
+    .guidance-text { font-size: 1.3rem; }
+}
+

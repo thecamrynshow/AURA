@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transition Reset — Ritual | PNEUOMA</title>
+    <meta name="description" content="A 2-5 minute guided ritual for moving between contexts. Clean exits, clean entrances. Reset your nervous system between work, home, activities, or people.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ritual-container" id="ritualContainer">
+        <!-- Ambient Background -->
+        <div class="ambient-bg" id="ambientBg">
+            <div class="transition-line" id="transitionLine"></div>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="audio-toggle" id="audioToggle">
+            <button class="audio-btn" id="audioBtn">
+                <span class="audio-icon on">🔊</span>
+                <span class="audio-icon off">🔇</span>
+            </button>
+        </div>
+
+        <!-- Close Button -->
+        <a href="../index.html" class="close-btn" id="closeBtn">✕</a>
+
+        <!-- Progress -->
+        <div class="ritual-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-time" id="progressTime">0:00</span>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="ritual-icon">🔄</div>
+                <h1 class="ritual-title">Transition Reset</h1>
+                <p class="ritual-subtitle">Clean exits, clean entrances</p>
+                
+                <div class="ritual-info">
+                    <span class="info-item">
+                        <span class="info-icon">⏱</span>
+                        2-5 minutes
+                    </span>
+                    <span class="info-item">
+                        <span class="info-icon">🎧</span>
+                        Audio guided
+                    </span>
+                </div>
+
+                <div class="ritual-overview">
+                    <p class="overview-label">What we'll do:</p>
+                    <ol class="overview-steps">
+                        <li>Release previous context</li>
+                        <li>Neutral breath</li>
+                        <li>Set new intention</li>
+                        <li>Arrive fully</li>
+                    </ol>
+                </div>
+
+                <button class="begin-btn" id="beginBtn">
+                    Begin Transition
+                </button>
+
+                <p class="prep-note">
+                    Use this between meetings, activities, or spaces.
+                </p>
+            </div>
+        </div>
+
+        <!-- Phase 1: Release -->
+        <div class="screen" id="releaseScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">1</span>
+                    <span class="phase-label">Release</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="releaseText">
+                        Let go of where you've been...
+                    </p>
+                </div>
+
+                <div class="visual-element release-visual">
+                    <div class="release-container">
+                        <div class="release-orb" id="releaseOrb">
+                            <span class="orb-label">before</span>
+                        </div>
+                        <div class="release-particles" id="releaseParticles"></div>
+                    </div>
+                </div>
+
+                <p class="timing-note">~1 minute</p>
+            </div>
+        </div>
+
+        <!-- Phase 2: Neutral -->
+        <div class="screen" id="neutralScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">2</span>
+                    <span class="phase-label">Neutral</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="neutralText">
+                        Find the space between...
+                    </p>
+                </div>
+
+                <div class="visual-element neutral-visual">
+                    <div class="neutral-line">
+                        <div class="neutral-dot" id="neutralDot"></div>
+                    </div>
+                </div>
+
+                <div class="breath-counter">
+                    <span id="breathCount">1</span> / 4
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Intention -->
+        <div class="screen" id="intentionScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">3</span>
+                    <span class="phase-label">Intention</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="intentionText">
+                        What does the next context need from you?
+                    </p>
+                </div>
+
+                <div class="intention-prompt">
+                    <p class="prompt-stem">"In this next space, I will be..."</p>
+                    <div class="intention-suggestions">
+                        <span class="suggestion">present</span>
+                        <span class="suggestion">patient</span>
+                        <span class="suggestion">engaged</span>
+                        <span class="suggestion">calm</span>
+                        <span class="suggestion">focused</span>
+                        <span class="suggestion">open</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: Arrive -->
+        <div class="screen" id="arriveScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">4</span>
+                    <span class="phase-label">Arrive</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="arriveText">
+                        Step fully into this moment...
+                    </p>
+                </div>
+
+                <div class="visual-element arrive-visual">
+                    <div class="arrive-container">
+                        <div class="arrive-orb" id="arriveOrb">
+                            <span class="orb-label">now</span>
+                        </div>
+                        <div class="arrive-rings">
+                            <div class="arrive-ring r1"></div>
+                            <div class="arrive-ring r2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="timing-note">~1 minute</p>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-icon">✓</div>
+                <h2 class="complete-title">Transitioned</h2>
+                
+                <p class="complete-message">
+                    You've created space between contexts.<br>
+                    You arrive fresh, not carrying the last thing.
+                </p>
+
+                <div class="complete-reminder">
+                    <p class="reminder-label">You're now ready for:</p>
+                    <p class="reminder-text" id="reminderText">
+                        This present moment.
+                    </p>
+                </div>
+
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">Continue</button>
+                    <button class="btn-secondary" id="repeatBtn">Reset Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="ritual.js"></script>
+</body>
+</html>
+

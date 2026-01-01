@@ -1,0 +1,562 @@
+/* ============================================
+   Deep Focus Ritual
+   Enter flow state on command
+   Golden amber, sharp, concentrated
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0a0a08;
+    --bg-mid: #14140f;
+    --gold: #ffd700;
+    --gold-soft: #f0c800;
+    --gold-dim: rgba(255, 215, 0, 0.1);
+    --gold-glow: rgba(255, 215, 0, 0.3);
+    --amber: #ffb347;
+    --text-primary: #f5f5dc;
+    --text-secondary: rgba(245, 245, 220, 0.7);
+    --text-muted: rgba(245, 245, 220, 0.4);
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+    --transition: 0.4s ease;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.ritual-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient Background */
+.ambient-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, var(--bg-mid) 0%, var(--bg-dark) 70%);
+}
+
+.focus-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.ambient-bg.focusing .focus-rings {
+    opacity: 1;
+}
+
+.ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    animation: ring-pulse 4s ease-in-out infinite;
+}
+
+.ring.r1 { animation-delay: 0s; }
+.ring.r2 { inset: 40px; animation-delay: 0.5s; }
+.ring.r3 { inset: 80px; animation-delay: 1s; }
+
+@keyframes ring-pulse {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.02); }
+}
+
+/* Audio & Close */
+.audio-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+.audio-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.audio-btn:hover { background: rgba(255,255,255,0.1); }
+.audio-icon { font-size: 1.2rem; }
+.audio-icon.off { display: none; }
+.audio-btn.muted .audio-icon.on { display: none; }
+.audio-btn.muted .audio-icon.off { display: inline; }
+
+.close-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    transition: all var(--transition);
+}
+
+.close-btn:hover {
+    color: var(--text-secondary);
+}
+
+/* Progress */
+.ritual-progress {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+}
+
+.progress-bar {
+    width: 120px;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.progress-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    z-index: 10;
+    padding: 40px 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.screen-content {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Welcome */
+.ritual-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.ritual-title {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+    color: var(--gold);
+}
+
+.ritual-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.ritual-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.ritual-overview {
+    background: var(--gold-dim);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.overview-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.overview-steps {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.begin-btn {
+    background: var(--gold);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 48px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 20px;
+}
+
+.begin-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px var(--gold-glow);
+}
+
+.prep-note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Phase */
+.phase-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.phase-num {
+    width: 32px;
+    height: 32px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.phase-label {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+}
+
+.guidance-container {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.guidance-text {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    font-style: italic;
+    transition: opacity 0.5s ease;
+}
+
+.timing-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 30px;
+}
+
+/* Clear Visual */
+.clear-visual {
+    margin: 30px 0;
+    height: 100px;
+}
+
+.thought-container {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.thought {
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    transition: all 1s ease;
+}
+
+.thought.t1 { top: 10%; left: 20%; }
+.thought.t2 { top: 30%; left: 70%; }
+.thought.t3 { top: 60%; left: 30%; }
+.thought.t4 { top: 40%; left: 50%; }
+.thought.t5 { top: 70%; left: 80%; }
+
+.thought.cleared {
+    opacity: 0;
+    transform: translateY(-30px);
+}
+
+/* Box Breathing Visual */
+.box-visual {
+    margin: 30px 0;
+}
+
+.breath-box {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    position: relative;
+}
+
+.box-side {
+    position: absolute;
+    background: var(--gold-dim);
+    transition: background 0.3s ease;
+}
+
+.box-side.top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.box-side.right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3px;
+}
+
+.box-side.bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.box-side.left {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+}
+
+.box-side.active {
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.box-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--gold-glow);
+    transition: all 4s linear;
+    top: -4px;
+    left: -4px;
+}
+
+.box-dot.top { top: -4px; left: calc(100% - 8px); }
+.box-dot.right { top: calc(100% - 8px); left: calc(100% - 8px); }
+.box-dot.bottom { top: calc(100% - 8px); left: -4px; }
+.box-dot.left { top: -4px; left: -4px; }
+
+.box-instruction {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.breath-counter {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.breath-counter span {
+    color: var(--gold);
+}
+
+/* Single Point Visual */
+.point-visual {
+    margin: 30px 0;
+}
+
+.focus-point {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.point-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 30px var(--gold-glow);
+    animation: point-pulse 2s ease-in-out infinite;
+}
+
+.point-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: point-ring-pulse 2s ease-in-out infinite;
+}
+
+@keyframes point-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+@keyframes point-ring-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.focus-prompt {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-top: 20px;
+}
+
+/* Launch */
+.launch-visual {
+    margin: 40px 0;
+}
+
+.launch-countdown {
+    font-family: var(--font-display);
+    font-size: 6rem;
+    color: var(--gold);
+    font-weight: 400;
+    text-shadow: 0 0 40px var(--gold-glow);
+}
+
+.launch-text {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+/* Complete */
+.complete-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.complete-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--gold);
+    margin-bottom: 20px;
+}
+
+.complete-message {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.complete-actions {
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background: var(--gold);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 40px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px var(--gold-glow);
+}
+
+.complete-note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+@media (max-width: 480px) {
+    .ritual-title { font-size: 2.2rem; }
+    .guidance-text { font-size: 1.3rem; }
+    .launch-countdown { font-size: 4rem; }
+}
+
