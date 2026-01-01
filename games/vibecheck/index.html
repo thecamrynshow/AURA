@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Vibe Check — Emotional Check-In for Teens | PNEUOMA</title>
+    <meta name="title" content="Vibe Check — Emotional Check-In for Teens | PNEUOMA">
+    <meta name="description" content="Quick emotional processing for confusing feelings. Name it, feel it, move through it. 3-5 minute check-in when you're feeling some type of way.">
+    <meta name="keywords" content="teen emotions, emotional check-in, mood tracker, feeling processing, teen mental health, emotion regulation, vibe check">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/vibecheck/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-gradient" id="bgGradient">
+            <div class="bg-blur"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="progress-dots" id="progressDots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="vibe-emoji-spin">
+                    <span class="spin-emoji">🎭</span>
+                </div>
+                <h1 class="title">vibe check</h1>
+                <p class="tagline">how you really doing?</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>check in</span>
+                </button>
+                
+                <p class="time-note">~3-5 min</p>
+            </div>
+        </div>
+
+        <!-- Quick Vibe Screen -->
+        <div class="screen" id="vibeScreen">
+            <div class="vibe-content">
+                <h2 class="phase-title">right now, i'm feeling...</h2>
+                
+                <div class="vibe-grid" id="vibeGrid">
+                    <button class="vibe-btn" data-vibe="good" data-color="#4ade80">
+                        <span class="vibe-emoji">😊</span>
+                        <span class="vibe-label">good</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="meh" data-color="#fbbf24">
+                        <span class="vibe-emoji">😐</span>
+                        <span class="vibe-label">meh</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="anxious" data-color="#f97316">
+                        <span class="vibe-emoji">😰</span>
+                        <span class="vibe-label">anxious</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="sad" data-color="#60a5fa">
+                        <span class="vibe-emoji">😢</span>
+                        <span class="vibe-label">sad</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="angry" data-color="#ef4444">
+                        <span class="vibe-emoji">😤</span>
+                        <span class="vibe-label">frustrated</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="confused" data-color="#a78bfa">
+                        <span class="vibe-emoji">😕</span>
+                        <span class="vibe-label">confused</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="tired" data-color="#94a3b8">
+                        <span class="vibe-emoji">😴</span>
+                        <span class="vibe-label">tired</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="overwhelmed" data-color="#ec4899">
+                        <span class="vibe-emoji">🤯</span>
+                        <span class="vibe-label">overwhelmed</span>
+                    </button>
+                    <button class="vibe-btn" data-vibe="numb" data-color="#64748b">
+                        <span class="vibe-emoji">😶</span>
+                        <span class="vibe-label">numb</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intensity Screen -->
+        <div class="screen" id="intensityScreen">
+            <div class="intensity-content">
+                <div class="selected-vibe" id="selectedVibe">
+                    <span class="selected-emoji">😊</span>
+                </div>
+                <h2 class="phase-title">how strong is it?</h2>
+                
+                <div class="intensity-slider">
+                    <div class="intensity-track" id="intensityTrack">
+                        <div class="intensity-fill" id="intensityFill"></div>
+                        <div class="intensity-handle" id="intensityHandle"></div>
+                    </div>
+                    <div class="intensity-labels">
+                        <span>barely there</span>
+                        <span>pretty intense</span>
+                    </div>
+                </div>
+                
+                <div class="intensity-value" id="intensityValue">50%</div>
+                
+                <button class="continue-btn" id="intensityContinue">next</button>
+            </div>
+        </div>
+
+        <!-- Body Map Screen -->
+        <div class="screen" id="bodyScreen">
+            <div class="body-content">
+                <h2 class="phase-title">where do you feel it?</h2>
+                <p class="phase-desc">tap where it shows up in your body</p>
+                
+                <div class="body-map" id="bodyMap">
+                    <div class="body-silhouette">
+                        <button class="body-point head" data-area="head">
+                            <span class="point-label">head</span>
+                        </button>
+                        <button class="body-point chest" data-area="chest">
+                            <span class="point-label">chest</span>
+                        </button>
+                        <button class="body-point stomach" data-area="stomach">
+                            <span class="point-label">stomach</span>
+                        </button>
+                        <button class="body-point shoulders" data-area="shoulders">
+                            <span class="point-label">shoulders</span>
+                        </button>
+                        <button class="body-point hands" data-area="hands">
+                            <span class="point-label">hands</span>
+                        </button>
+                        <button class="body-point nowhere" data-area="nowhere">
+                            <span class="point-label">nowhere specific</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="continue-btn" id="bodyContinue" disabled>next</button>
+            </div>
+        </div>
+
+        <!-- Process Screen -->
+        <div class="screen" id="processScreen">
+            <div class="process-content">
+                <h2 class="phase-title">let's sit with it</h2>
+                <p class="phase-desc" id="processDesc">breathe and just notice</p>
+                
+                <div class="process-visual">
+                    <div class="emotion-orb" id="emotionOrb">
+                        <span class="orb-emoji" id="orbEmoji">😊</span>
+                    </div>
+                    <div class="breath-ring" id="breathRing"></div>
+                </div>
+                
+                <p class="breath-instruction" id="breathInstruction">tap to breathe with it</p>
+                
+                <div class="breath-counter">
+                    <span id="processBreathCount">0</span> / 3
+                </div>
+            </div>
+        </div>
+
+        <!-- Reframe Screen -->
+        <div class="screen" id="reframeScreen">
+            <div class="reframe-content">
+                <h2 class="phase-title">a thought</h2>
+                
+                <div class="reframe-card" id="reframeCard">
+                    <p class="reframe-text" id="reframeText">
+                        feelings are visitors. let them come and go.
+                    </p>
+                </div>
+                
+                <div class="reframe-actions">
+                    <button class="reframe-btn" id="anotherReframe">
+                        <span>🔄</span> another
+                    </button>
+                    <button class="reframe-btn primary" id="keepReframe">
+                        <span>💜</span> that helps
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-emoji" id="completeEmoji">✨</div>
+                <h2 class="complete-title">checked in</h2>
+                <p class="complete-message" id="completeMessage">
+                    you took time to feel. that's self-care.
+                </p>
+                
+                <div class="vibe-summary" id="vibeSummary">
+                    <div class="summary-row">
+                        <span class="summary-label">feeling</span>
+                        <span class="summary-value" id="summaryFeeling">😊 good</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">intensity</span>
+                        <span class="summary-value" id="summaryIntensity">50%</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">body</span>
+                        <span class="summary-value" id="summaryBody">chest</span>
+                    </div>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">i'm good</button>
+                    <button class="btn-secondary" id="journalBtn">write more</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journal Modal -->
+        <div class="modal" id="journalModal">
+            <div class="modal-content">
+                <h3>quick journal</h3>
+                <textarea id="journalText" placeholder="what else is on your mind?"></textarea>
+                <div class="modal-actions">
+                    <button class="modal-btn" id="saveJournal">done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/content.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
