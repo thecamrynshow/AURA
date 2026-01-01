@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Drift — Free Sleep Preparation Game | Wind Down for Better Sleep | PNEUOMA</title>
+    <meta name="title" content="Drift — Free Sleep Preparation Game | Wind Down for Better Sleep | PNEUOMA">
+    <meta name="description" content="Can't sleep? Drift helps you wind down with 15-20 minute guided breathing, body relaxation, and progressive screen dimming. Natural sleep preparation without medication.">
+    <meta name="keywords" content="sleep app, insomnia help, wind down for sleep, sleep breathing, bedtime relaxation, sleep preparation, cant sleep, sleep game">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/drift/">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pneuoma.com/games/drift/">
+    <meta property="og:title" content="Drift — Wind Down for Sleep">
+    <meta property="og:description" content="15-20 minute sleep preparation. Breathing, relaxation, and gentle descent into rest.">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Animated Sky Background -->
+        <div class="sky-bg" id="skyBg">
+            <div class="stars" id="stars"></div>
+            <div class="moon" id="moon"></div>
+            <div class="clouds">
+                <div class="cloud c1"></div>
+                <div class="cloud c2"></div>
+                <div class="cloud c3"></div>
+            </div>
+            <div class="horizon"></div>
+        </div>
+
+        <!-- Dimming Overlay -->
+        <div class="dim-overlay" id="dimOverlay"></div>
+
+        <!-- Navigation -->
+        <nav class="game-nav" id="gameNav">
+            <a href="../../index.html" class="back-link">← Back</a>
+            <div class="progress-indicator" id="progressIndicator">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="moon-icon">🌙</div>
+                <h1 class="title">Drift</h1>
+                <p class="subtitle">Sleep Preparation</p>
+                <p class="tagline">
+                    Let the day go.<br>
+                    Drift into rest.
+                </p>
+                
+                <div class="duration-select">
+                    <p class="select-label">Session Length</p>
+                    <div class="duration-options">
+                        <button class="duration-btn" data-duration="900">
+                            <span class="duration-time">15</span>
+                            <span class="duration-unit">min</span>
+                        </button>
+                        <button class="duration-btn selected" data-duration="1200">
+                            <span class="duration-time">20</span>
+                            <span class="duration-unit">min</span>
+                        </button>
+                        <button class="duration-btn" data-duration="1800">
+                            <span class="duration-time">30</span>
+                            <span class="duration-unit">min</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="start-btn" id="startBtn">
+                    <span>Begin Drift</span>
+                </button>
+                
+                <div class="options">
+                    <label class="option-toggle">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="toggle-switch"></span>
+                        <span>Ambient Sound</span>
+                    </label>
+                    <label class="option-toggle">
+                        <input type="checkbox" id="continueToggle" checked>
+                        <span class="toggle-switch"></span>
+                        <span>Continue into sleep</span>
+                    </label>
+                </div>
+                
+                <p class="tip">💡 Best used in bed, 20 minutes before sleep</p>
+            </div>
+        </div>
+
+        <!-- Journey Screen -->
+        <div class="screen" id="journeyScreen">
+            <div class="journey-content">
+                <!-- Breath Guide -->
+                <div class="breath-guide" id="breathGuide">
+                    <div class="breath-orb" id="breathOrb">
+                        <div class="orb-glow"></div>
+                        <div class="orb-core"></div>
+                    </div>
+                    <p class="breath-instruction" id="breathInstruction">Breathe</p>
+                </div>
+                
+                <!-- Phase Message -->
+                <div class="phase-message" id="phaseMessage">
+                    <h2 class="phase-title" id="phaseTitle">Arriving</h2>
+                    <p class="phase-text" id="phaseText">Let your eyes soften</p>
+                </div>
+                
+                <!-- Ambient Text (appears occasionally) -->
+                <div class="ambient-text" id="ambientText"></div>
+            </div>
+        </div>
+
+        <!-- Sleep Screen (final state) -->
+        <div class="screen" id="sleepScreen">
+            <div class="sleep-content">
+                <p class="sleep-text" id="sleepText">Goodnight</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/visuals.js"></script>
+    <script src="src/js/journey.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
