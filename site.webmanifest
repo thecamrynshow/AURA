@@ -1,0 +1,19 @@
+{
+    "name": "PNEUOMA — Nervous System Regulation Games & Apps",
+    "short_name": "PNEUOMA",
+    "description": "The leading platform for nervous system wellness. Games and apps that train regulation through breath, voice, and presence.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a0f",
+    "theme_color": "#8b5cf6",
+    "orientation": "any",
+    "categories": ["health", "education", "games"],
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}
+

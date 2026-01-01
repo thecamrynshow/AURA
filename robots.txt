@@ -1,0 +1,12 @@
+# PNEUOMA robots.txt
+# https://pneuoma.com
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://pneuoma.com/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
