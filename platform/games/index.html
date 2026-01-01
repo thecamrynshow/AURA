@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games — PNEUOMA</title>
+    <meta name="description" content="Biofeedback games that train your nervous system. Filter by age, intention, and control type.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="games.css">
+</head>
+<body>
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <canvas id="particles"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="../../index.html" class="nav-logo">
+            <span class="logo-icon">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </a>
+        <div class="nav-links">
+            <a href="../games/" class="active">Games</a>
+            <a href="../apps/">Apps</a>
+            <a href="../rituals/">Rituals</a>
+            <a href="../multiplayer/">Multiplayer</a>
+            <a href="../../index.html#partner" class="nav-cta">Partner</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="page-hero">
+        <div class="section-container">
+            <p class="hero-eyebrow">Platform / Games</p>
+            <h1 class="page-title">Games</h1>
+            <p class="page-subtitle">
+                Immersive experiences where breath, touch, and sound become the controller.<br>
+                Play that heals. Progress without addiction.
+            </p>
+        </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section" id="filters-section">
+        <div class="section-container">
+            <!-- Collapsed Toggle View -->
+            <button class="filters-toggle" id="filters-toggle">
+                <span class="toggle-label">Filters</span>
+                <div class="active-filters" id="active-filters">
+                    <span class="active-filter" data-type="age">All Ages</span>
+                    <span class="active-filter" data-type="intention">All</span>
+                    <span class="active-filter" data-type="control">All</span>
+                </div>
+                <svg class="toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+            
+            <!-- Expandable Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Age</label>
+                    <div class="filter-buttons" data-filter="age">
+                        <button class="filter-btn active" data-value="all" data-label="All Ages">All Ages</button>
+                        <button class="filter-btn" data-value="5-10" data-label="5-10">5-10</button>
+                        <button class="filter-btn" data-value="8-13" data-label="8-13">8-13</button>
+                        <button class="filter-btn" data-value="13-18" data-label="13-18">13-18</button>
+                        <button class="filter-btn" data-value="18+" data-label="18+">18+</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Intention</label>
+                    <div class="filter-buttons" data-filter="intention">
+                        <button class="filter-btn active" data-value="all" data-label="All">All</button>
+                        <button class="filter-btn" data-value="calm" data-label="Calm">Calm</button>
+                        <button class="filter-btn" data-value="focus" data-label="Focus">Focus</button>
+                        <button class="filter-btn" data-value="energy" data-label="Energy">Energy</button>
+                        <button class="filter-btn" data-value="sleep" data-label="Sleep">Sleep</button>
+                        <button class="filter-btn" data-value="transition" data-label="Transition">Transition</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Control</label>
+                    <div class="filter-buttons" data-filter="control">
+                        <button class="filter-btn active" data-value="all" data-label="All">All</button>
+                        <button class="filter-btn" data-value="breath" data-label="Breath">Breath</button>
+                        <button class="filter-btn" data-value="voice" data-label="Voice">Voice</button>
+                        <button class="filter-btn" data-value="touch" data-label="Touch">Touch</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Grid -->
+    <section class="games-section">
+        <div class="section-container">
+            <div class="games-count">
+                <span class="count-number">4</span> games available · <span class="count-coming">8</span> coming soon
+            </div>
+            
+            <div class="games-grid-full">
+                <!-- Project AURA -->
+                <article class="game-card-full available" 
+                    data-age="8-13,13-18,18+" 
+                    data-intention="calm,focus,transition" 
+                    data-control="breath">
+                    <div class="game-status">
+                        <span class="status-badge live">Available Now</span>
+                    </div>
+                    <div class="game-visual-full aura-bg">
+                        <div class="game-orb"></div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">Project AURA</h2>
+                        <p class="game-tagline">The Field of Still Water</p>
+                        <p class="game-desc">
+                            Navigate a glowing dreamscape where your breath controls everything. 
+                            Calm breathing opens paths, steadies bridges, and befriends light creatures.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 8+</span>
+                            <span class="tag time">5-12 min</span>
+                            <span class="tag control">Breath</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention calm">Calm</span>
+                            <span class="intention focus">Focus</span>
+                            <span class="intention transition">Transition</span>
+                        </div>
+                        <a href="../../games/aura/index.html" class="btn btn-primary">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Echo Garden -->
+                <article class="game-card-full available" 
+                    data-age="5-10,8-13" 
+                    data-intention="calm,focus" 
+                    data-control="voice">
+                    <div class="game-status">
+                        <span class="status-badge live">Available Now</span>
+                    </div>
+                    <div class="game-visual-full echo-bg">
+                        <div class="echo-circles">
+                            <div class="echo-circle"></div>
+                            <div class="echo-circle"></div>
+                            <div class="echo-circle"></div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">Echo Garden</h2>
+                        <p class="game-tagline">Sound-Based Regulation</p>
+                        <p class="game-desc">
+                            Grow a garden of sound. Hum to plant seeds, breathe to nurture growth, 
+                            find harmony to unlock new species.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 6+</span>
+                            <span class="tag time">5-8 min</span>
+                            <span class="tag control">Voice</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention calm">Calm</span>
+                            <span class="intention focus">Focus</span>
+                        </div>
+                        <a href="../../games/echogarden/index.html" class="btn btn-primary">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Tidepool -->
+                <article class="game-card-full available" 
+                    data-age="5-10,8-13" 
+                    data-intention="calm,transition" 
+                    data-control="touch">
+                    <div class="game-status">
+                        <span class="status-badge live">Available Now</span>
+                    </div>
+                    <div class="game-visual-full tide-bg">
+                        <div class="tide-waves">
+                            <div class="tide-wave"></div>
+                            <div class="tide-wave"></div>
+                            <div class="tide-wave"></div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">Tidepool</h2>
+                        <p class="game-tagline">Touch-Based Calm</p>
+                        <p class="game-desc">
+                            Gentle creatures respond to your touch. Slow movements attract, 
+                            fast movements scatter. Learn the rhythm of patience.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 5+</span>
+                            <span class="tag time">5-10 min</span>
+                            <span class="tag control">Touch</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention calm">Calm</span>
+                            <span class="intention transition">Transition</span>
+                        </div>
+                        <a href="../../games/tidepool/index.html" class="btn btn-primary">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Pulse -->
+                <article class="game-card-full available" 
+                    data-age="8-13,13-18" 
+                    data-intention="focus,energy" 
+                    data-control="breath">
+                    <div class="game-status">
+                        <span class="status-badge live">Available Now</span>
+                    </div>
+                    <div class="game-visual-full pulse-bg">
+                        <div class="pulse-ring"></div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">Pulse</h2>
+                        <p class="game-tagline">Rhythm-Based Focus</p>
+                        <p class="game-desc">
+                            Sync your breath to the rhythm. A musical biofeedback experience 
+                            that trains heart rate variability through play.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 10+</span>
+                            <span class="tag time">5 min</span>
+                            <span class="tag control">Breath</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention focus">Focus</span>
+                            <span class="intention energy">Energy</span>
+                        </div>
+                        <a href="../../games/pulse/index.html" class="btn btn-primary">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Coming Soon: The Deep -->
+                <article class="game-card-full coming-soon" 
+                    data-age="8-13,13-18,18+" 
+                    data-intention="calm,sleep" 
+                    data-control="breath">
+                    <div class="game-status">
+                        <span class="status-badge coming">Coming Q2 2025</span>
+                    </div>
+                    <div class="game-visual-full deep-bg">
+                        <div class="deep-particles"></div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">The Deep</h2>
+                        <p class="game-tagline">Descent into Calm</p>
+                        <p class="game-desc">
+                            Dive into an endless ocean. The deeper you go, the calmer you become. 
+                            Breath controls buoyancy. Find what lies at the bottom.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 10+</span>
+                            <span class="tag time">10-20 min</span>
+                            <span class="tag control">Breath</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention calm">Calm</span>
+                            <span class="intention sleep">Sleep</span>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            <span>Coming Soon</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Coming Soon: Cloud Keeper -->
+                <article class="game-card-full coming-soon" 
+                    data-age="5-10" 
+                    data-intention="calm,transition" 
+                    data-control="breath">
+                    <div class="game-status">
+                        <span class="status-badge coming">Coming Q3 2025</span>
+                    </div>
+                    <div class="game-visual-full cloud-bg">
+                        <div class="cloud-puffs"></div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">Cloud Keeper</h2>
+                        <p class="game-tagline">Gentle Sky Play</p>
+                        <p class="game-desc">
+                            Blow clouds across the sky. Shape them with your breath. 
+                            The gentlest game for the youngest players.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 4+</span>
+                            <span class="tag time">3-8 min</span>
+                            <span class="tag control">Breath</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention calm">Calm</span>
+                            <span class="intention transition">Transition</span>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            <span>Coming Soon</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Coming Soon: ZONE -->
+                <article class="game-card-full coming-soon" 
+                    data-age="13-18,18+" 
+                    data-intention="focus,energy" 
+                    data-control="breath">
+                    <div class="game-status">
+                        <span class="status-badge coming">Coming Q3 2025</span>
+                    </div>
+                    <div class="game-visual-full zone-bg">
+                        <div class="zone-target"></div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">ZONE</h2>
+                        <p class="game-tagline">Performance State Training</p>
+                        <p class="game-desc">
+                            Train to enter flow state on command. For athletes, performers, 
+                            and anyone who needs to access peak performance.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 14+</span>
+                            <span class="tag time">10-20 min</span>
+                            <span class="tag control">Breath</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention focus">Focus</span>
+                            <span class="intention energy">Energy</span>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            <span>Coming Soon</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Coming Soon: Threshold -->
+                <article class="game-card-full coming-soon" 
+                    data-age="13-18,18+" 
+                    data-intention="calm,transition" 
+                    data-control="breath">
+                    <div class="game-status">
+                        <span class="status-badge coming">Coming Q4 2025</span>
+                    </div>
+                    <div class="game-visual-full threshold-bg">
+                        <div class="threshold-door"></div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">Threshold</h2>
+                        <p class="game-tagline">State Transition Training</p>
+                        <p class="game-desc">
+                            Practice moving between states. Wake up, wind down, reset, recover. 
+                            Master the art of intentional transition.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 14+</span>
+                            <span class="tag time">5-15 min</span>
+                            <span class="tag control">Breath</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention calm">Calm</span>
+                            <span class="intention transition">Transition</span>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            <span>Coming Soon</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Coming Soon: Before -->
+                <article class="game-card-full coming-soon" 
+                    data-age="13-18,18+" 
+                    data-intention="calm,focus" 
+                    data-control="breath">
+                    <div class="game-status">
+                        <span class="status-badge coming">Coming Q4 2025</span>
+                    </div>
+                    <div class="game-visual-full before-bg">
+                        <div class="before-timer"></div>
+                    </div>
+                    <div class="game-info">
+                        <h2 class="game-name">Before</h2>
+                        <p class="game-tagline">Pre-Event Regulation</p>
+                        <p class="game-desc">
+                            The 5-minute game before tests, presentations, interviews, or competitions. 
+                            Arrive in the right state, every time.
+                        </p>
+                        <div class="game-tags">
+                            <span class="tag age">Ages 14+</span>
+                            <span class="tag time">5 min</span>
+                            <span class="tag control">Breath</span>
+                        </div>
+                        <div class="game-intentions">
+                            <span class="intention calm">Calm</span>
+                            <span class="intention focus">Focus</span>
+                        </div>
+                        <button class="btn btn-secondary" disabled>
+                            <span>Coming Soon</span>
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="section-container">
+            <div class="cta-content">
+                <h2>Want a game for a specific need?</h2>
+                <p>We're building games for schools, healthcare, and specific use cases. Tell us what you need.</p>
+                <a href="../../index.html#partner" class="btn btn-primary">Request a Game</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-simple">
+                <a href="../../index.html" class="footer-logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">PNEUOMA</span>
+                </a>
+                <p>© 2025 PNEUOMA. The operating system for human regulation.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../main.js"></script>
+    <script src="games.js"></script>
+</body>
+</html>
+

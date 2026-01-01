@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rituals — PNEUOMA</title>
+    <meta name="description" content="Structured regulation sessions for specific moments. Morning, transition, sleep, and crisis protocols.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../section.css">
+</head>
+<body>
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <canvas id="particles"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="../../index.html" class="nav-logo">
+            <span class="logo-icon">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </a>
+        <div class="nav-links">
+            <a href="../games/">Games</a>
+            <a href="../apps/">Apps</a>
+            <a href="../rituals/" class="active">Rituals</a>
+            <a href="../multiplayer/">Multiplayer</a>
+            <a href="../../index.html#partner" class="nav-cta">Partner</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="page-hero">
+        <div class="section-container">
+            <p class="hero-eyebrow">Platform / Rituals</p>
+            <h1 class="page-title">Rituals</h1>
+            <p class="page-subtitle">
+                Structured regulation protocols for specific moments.<br>
+                From 2-minute resets to 20-minute deep sessions.
+            </p>
+        </div>
+    </section>
+
+    <!-- Rituals by Moment -->
+    <section class="preview-section">
+        <div class="section-container">
+            <p class="section-eyebrow">By Moment</p>
+            <h2 class="section-title">When Do You Need Regulation?</h2>
+            
+            <div class="rituals-grid">
+                <!-- Morning -->
+                <div class="ritual-card" style="--ritual-color: #ffd700">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                        </svg>
+                        5-10 min
+                    </span>
+                    <h3>Morning Rise</h3>
+                    <p class="ritual-moment">Start regulated</p>
+                    <p class="ritual-desc">
+                        Begin your day from a place of calm alertness. 
+                        Activate without anxiety, energize without stress.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Gentle body scan (2 min)</li>
+                        <li>Breath activation (3 min)</li>
+                        <li>Intention setting (2 min)</li>
+                        <li>Energy calibration (3 min)</li>
+                    </ul>
+                </div>
+
+                <!-- Transition -->
+                <div class="ritual-card" style="--ritual-color: #63b3ed">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6"/>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                        2-5 min
+                    </span>
+                    <h3>Transition Reset</h3>
+                    <p class="ritual-moment">Between contexts</p>
+                    <p class="ritual-desc">
+                        Clean exits, clean entrances. Reset your nervous system 
+                        when moving between work, home, activities, or people.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Release previous context (1 min)</li>
+                        <li>Neutral breath (1 min)</li>
+                        <li>Set new intention (1 min)</li>
+                        <li>Arrive fully (1 min)</li>
+                    </ul>
+                </div>
+
+                <!-- Focus -->
+                <div class="ritual-card" style="--ritual-color: #ffd700">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        3-5 min
+                    </span>
+                    <h3>Deep Focus</h3>
+                    <p class="ritual-moment">Before deep work</p>
+                    <p class="ritual-desc">
+                        Enter flow state on command. Prepare your nervous system 
+                        for sustained attention and creative work.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Clear mental space (1 min)</li>
+                        <li>Box breathing (2 min)</li>
+                        <li>Single-point focus (1 min)</li>
+                        <li>Begin work immediately</li>
+                    </ul>
+                </div>
+
+                <!-- Pre-Event -->
+                <div class="ritual-card" style="--ritual-color: #68d391">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        5 min
+                    </span>
+                    <h3>Before</h3>
+                    <p class="ritual-moment">Pre-performance</p>
+                    <p class="ritual-desc">
+                        Tests, presentations, interviews, competitions. 
+                        Arrive in the optimal state, every time.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Acknowledge nerves (30 sec)</li>
+                        <li>Physiological sigh x3 (1 min)</li>
+                        <li>Power posture (1 min)</li>
+                        <li>Visualization (2 min)</li>
+                        <li>Action cue (30 sec)</li>
+                    </ul>
+                </div>
+
+                <!-- Decompress -->
+                <div class="ritual-card" style="--ritual-color: #b794f6">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18"/>
+                            <path d="M6 6l12 12"/>
+                        </svg>
+                        10-15 min
+                    </span>
+                    <h3>Decompress</h3>
+                    <p class="ritual-moment">After stress</p>
+                    <p class="ritual-desc">
+                        Process and release accumulated stress. 
+                        Don't carry today's tension into tomorrow.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Body tension scan (2 min)</li>
+                        <li>Progressive release (5 min)</li>
+                        <li>Slow breathing (3 min)</li>
+                        <li>Gratitude noting (2 min)</li>
+                        <li>Completion signal (1 min)</li>
+                    </ul>
+                </div>
+
+                <!-- Sleep -->
+                <div class="ritual-card" style="--ritual-color: #b794f6">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                        15-20 min
+                    </span>
+                    <h3>Sleep Descent</h3>
+                    <p class="ritual-moment">Preparing for rest</p>
+                    <p class="ritual-desc">
+                        Guide your nervous system into sleep-ready state. 
+                        Fall asleep faster, sleep deeper.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Day completion (2 min)</li>
+                        <li>4-7-8 breathing (5 min)</li>
+                        <li>Body scan relaxation (5 min)</li>
+                        <li>Counting descent (3 min)</li>
+                        <li>Drift...</li>
+                    </ul>
+                </div>
+
+                <!-- Crisis -->
+                <div class="ritual-card" style="--ritual-color: #ff6b6b">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        2-3 min
+                    </span>
+                    <h3>Emergency Reset</h3>
+                    <p class="ritual-moment">Acute distress</p>
+                    <p class="ritual-desc">
+                        Panic, overwhelm, shutdown. Fast-acting protocols 
+                        to return to safety when dysregulation hits hard.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Ground: 5-4-3-2-1 senses (1 min)</li>
+                        <li>Physiological sigh x5 (1 min)</li>
+                        <li>Cold water on wrists (30 sec)</li>
+                        <li>Reassess (30 sec)</li>
+                    </ul>
+                </div>
+
+                <!-- Recovery -->
+                <div class="ritual-card" style="--ritual-color: #64ffda">
+                    <span class="ritual-time">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        20 min
+                    </span>
+                    <h3>Deep Recovery</h3>
+                    <p class="ritual-moment">Restoration</p>
+                    <p class="ritual-desc">
+                        After illness, trauma, or extended stress. 
+                        Full nervous system reset and restoration.
+                    </p>
+                    <ul class="ritual-steps">
+                        <li>Safety establishment (3 min)</li>
+                        <li>Gentle breath (5 min)</li>
+                        <li>Restorative movement (5 min)</li>
+                        <li>Self-compassion (4 min)</li>
+                        <li>Integration (3 min)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coming Soon -->
+    <section class="waitlist-section">
+        <div class="section-container">
+            <div class="waitlist-content">
+                <h2>Rituals Coming to the App</h2>
+                <p>All rituals will be available as guided audio experiences in the PNEUOMA app.</p>
+                <a href="../apps/" class="btn btn-primary">Learn About the App</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-simple">
+                <a href="../../index.html" class="footer-logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">PNEUOMA</span>
+                </a>
+                <p>© 2025 PNEUOMA. The operating system for human regulation.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../main.js"></script>
+</body>
+</html>
+
+

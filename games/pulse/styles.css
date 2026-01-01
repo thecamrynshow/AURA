@@ -1,0 +1,543 @@
+/* ============================================
+   Pulse — A PNEUOMA Game
+   Rhythm-Based Focus Training
+   ============================================ */
+
+:root {
+    --bg-deep: #0a0612;
+    --bg-mid: #12081a;
+    --bg-surface: #1a0f24;
+    
+    --accent-primary: #ff6b9d;
+    --accent-secondary: #c084fc;
+    --accent-tertiary: #818cf8;
+    --accent-glow: rgba(255, 107, 157, 0.4);
+    
+    --text-primary: #f8f0ff;
+    --text-secondary: #b794c7;
+    --text-muted: #7c6489;
+    
+    --font-main: 'Outfit', -apple-system, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================
+   Screens
+   ============================================ */
+.screen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ============================================
+   Title Screen
+   ============================================ */
+.title-content {
+    text-align: center;
+    padding: 2rem;
+    max-width: 500px;
+}
+
+.back-link {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--accent-primary);
+}
+
+/* Title Visual */
+.title-visual {
+    margin-bottom: 2rem;
+}
+
+.title-pulse {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+}
+
+.pulse-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.pulse-ring.ring-1 {
+    animation: title-pulse 2s ease-in-out infinite;
+}
+
+.pulse-ring.ring-2 {
+    inset: -15px;
+    border-color: var(--accent-secondary);
+    animation: title-pulse 2s ease-in-out infinite 0.3s;
+}
+
+.pulse-ring.ring-3 {
+    inset: -30px;
+    border-color: var(--accent-tertiary);
+    animation: title-pulse 2s ease-in-out infinite 0.6s;
+}
+
+@keyframes title-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+.pulse-core {
+    position: absolute;
+    inset: 40px;
+    background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: core-beat 1s ease-in-out infinite;
+}
+
+@keyframes core-beat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* Title Text */
+.game-title {
+    font-size: 4rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.game-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.game-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+/* Instructions */
+.instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+}
+
+.instruction {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--bg-surface);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.instruction-icon {
+    font-size: 1.2rem;
+}
+
+/* Start Button */
+.btn-start {
+    position: relative;
+    padding: 1.25rem 3rem;
+    font-family: var(--font-main);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-start:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 40px var(--accent-glow);
+}
+
+.btn-pulse {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: inherit;
+    animation: btn-pulse-anim 2s ease-in-out infinite;
+}
+
+@keyframes btn-pulse-anim {
+    0%, 100% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+.mic-notice {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   Game Screen
+   ============================================ */
+#game-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* HUD */
+.hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.hud-left, .hud-right {
+    min-width: 120px;
+}
+
+.hud-center {
+    text-align: center;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.stat-bar {
+    width: 100px;
+    height: 6px;
+    background: var(--bg-surface);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.stat-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.bpm-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#bpm-value {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--accent-primary);
+    line-height: 1;
+}
+
+.bpm-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+}
+
+/* Breath Guide */
+.breath-guide {
+    position: fixed;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.75rem 1.5rem;
+    background: rgba(26, 15, 36, 0.8);
+    border: 1px solid rgba(255, 107, 157, 0.2);
+    border-radius: 30px;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    pointer-events: none;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+/* Combo Display */
+.combo-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    text-shadow: 0 0 30px var(--accent-glow);
+    pointer-events: none;
+    z-index: 20;
+    animation: combo-pop 0.5s ease-out forwards;
+}
+
+.combo-display.hidden {
+    display: none;
+}
+
+@keyframes combo-pop {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* Session Timer */
+.session-timer {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* ============================================
+   Complete Screen
+   ============================================ */
+.complete-content {
+    text-align: center;
+    padding: 2rem;
+    max-width: 500px;
+}
+
+.complete-visual {
+    margin-bottom: 2rem;
+}
+
+.complete-rings {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+}
+
+.complete-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--accent-secondary);
+    border-radius: 50%;
+    animation: complete-expand 2s ease-out infinite;
+}
+
+.complete-ring:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.complete-ring:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+@keyframes complete-expand {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+.complete-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.complete-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* Stats */
+.session-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--bg-surface);
+    padding: 1.25rem;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.stat-name {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.complete-insight {
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+}
+
+/* Actions */
+.complete-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-primary {
+    padding: 1rem 2.5rem;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 40px var(--accent-glow);
+}
+
+.btn-secondary {
+    padding: 1rem 2.5rem;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 600px) {
+    .game-title {
+        font-size: 3rem;
+    }
+    
+    .title-pulse {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .hud {
+        padding: 1rem;
+    }
+    
+    .stat-bar {
+        width: 80px;
+    }
+    
+    #bpm-value {
+        font-size: 2rem;
+    }
+    
+    .session-stats {
+        gap: 0.75rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+

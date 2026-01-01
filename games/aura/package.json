@@ -1,0 +1,21 @@
+{
+  "name": "project-aura",
+  "version": "1.0.0",
+  "description": "Project AURA - Regulation Game Prototype v1. A game designed to actively regulate the nervous system through breath-based gameplay.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -l 3000",
+    "dev": "npx serve -l 3000"
+  },
+  "keywords": [
+    "game",
+    "breath",
+    "regulation",
+    "meditation",
+    "nervous-system",
+    "wellness",
+    "therapeutic"
+  ],
+  "author": "",
+  "license": "MIT"
+}

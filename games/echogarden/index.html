@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Echo Garden — Sound-Based Calm</title>
+    <meta name="description" content="A PNEUOMA game. Grow a garden of sound. Hum to plant seeds, breathe to nurture growth.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="screen-content">
+            <div class="logo-mark">
+                <div class="sound-wave wave-1"></div>
+                <div class="sound-wave wave-2"></div>
+                <div class="sound-wave wave-3"></div>
+                <div class="logo-seed"></div>
+            </div>
+            <h1 class="title">Echo Garden</h1>
+            <p class="subtitle">Sound-Based Calm</p>
+            <p class="description">
+                Your voice grows this garden.<br>
+                Hum to plant seeds.<br>
+                Breathe softly to nurture them.<br>
+                Find harmony to unlock new life.
+            </p>
+            <button id="start-button" class="btn-start">
+                <span>Begin Growing</span>
+            </button>
+            <p class="hint">🎤 Microphone required</p>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-item sound-meter">
+                <span class="hud-label">SOUND</span>
+                <div class="meter-bar">
+                    <div class="meter-fill" id="sound-fill"></div>
+                </div>
+                <span class="hud-value" id="sound-state">Listening...</span>
+            </div>
+            
+            <div class="hud-item harmony-display">
+                <span class="hud-label">HARMONY</span>
+                <div class="harmony-rings">
+                    <div class="harmony-ring" id="ring-1"></div>
+                    <div class="harmony-ring" id="ring-2"></div>
+                    <div class="harmony-ring" id="ring-3"></div>
+                </div>
+                <span class="hud-value" id="harmony-value">0</span>
+            </div>
+            
+            <div class="hud-item timer">
+                <span id="timer-display">0:00</span>
+            </div>
+            
+            <div class="hud-item plants-count">
+                <span class="hud-label">GARDEN</span>
+                <span class="hud-value" id="plants-grown">0 plants</span>
+            </div>
+        </div>
+        
+        <!-- Pitch guide -->
+        <div id="pitch-guide" class="pitch-guide hidden">
+            <div class="target-pitch"></div>
+            <div class="current-pitch" id="current-pitch"></div>
+            <p class="pitch-instruction">Match the tone...</p>
+        </div>
+        
+        <!-- Message display -->
+        <div id="message-display" class="message-display hidden">
+            <p id="message-text"></p>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="screen-content">
+            <h2 class="end-title">Garden Complete</h2>
+            <p class="end-message">Your sounds created life.</p>
+            
+            <div class="session-stats">
+                <div class="stat">
+                    <span class="stat-value" id="stat-time">0:00</span>
+                    <span class="stat-label">Time Spent</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="stat-plants">0</span>
+                    <span class="stat-label">Plants Grown</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="stat-harmony">0</span>
+                    <span class="stat-label">Harmonies Found</span>
+                </div>
+            </div>
+            
+            <p class="closing-message">The garden remembers your voice.</p>
+            
+            <button id="restart-button" class="btn-start">
+                <span>Grow Again</span>
+            </button>
+            
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/sound.js"></script>
+    <script src="src/js/plants.js"></script>
+    <script src="src/js/world.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

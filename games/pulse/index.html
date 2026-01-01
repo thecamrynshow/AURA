@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Pulse — A PNEUOMA Game</title>
+    <meta name="description" content="A PNEUOMA game. Sync your breath to the rhythm. Train heart rate variability through musical biofeedback.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Title Screen -->
+    <div id="title-screen" class="screen active">
+        <div class="title-content">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            
+            <div class="title-visual">
+                <div class="title-pulse">
+                    <div class="pulse-ring ring-1"></div>
+                    <div class="pulse-ring ring-2"></div>
+                    <div class="pulse-ring ring-3"></div>
+                    <div class="pulse-core"></div>
+                </div>
+            </div>
+            
+            <h1 class="game-title">Pulse</h1>
+            <p class="game-subtitle">Rhythm-Based Focus</p>
+            
+            <p class="game-description">
+                Sync your breath to the rhythm.<br>
+                Feel the beat. Find your flow.<br>
+                Train your heart rate variability through play.
+            </p>
+            
+            <div class="instructions">
+                <div class="instruction">
+                    <span class="instruction-icon">🎵</span>
+                    <span>Follow the pulse with your breath</span>
+                </div>
+                <div class="instruction">
+                    <span class="instruction-icon">💫</span>
+                    <span>Hit the beats as they reach the center</span>
+                </div>
+                <div class="instruction">
+                    <span class="instruction-icon">🎯</span>
+                    <span>Stay in sync to build your flow state</span>
+                </div>
+            </div>
+            
+            <button id="start-btn" class="btn-start">
+                <span>Begin Session</span>
+                <div class="btn-pulse"></div>
+            </button>
+            
+            <p class="mic-notice">🎤 Microphone required for breath detection</p>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-left">
+                <div class="stat flow-stat">
+                    <span class="stat-label">Flow</span>
+                    <div class="stat-bar">
+                        <div id="flow-fill" class="stat-fill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hud-center">
+                <div class="bpm-display">
+                    <span id="bpm-value">65</span>
+                    <span class="bpm-label">BPM</span>
+                </div>
+            </div>
+            
+            <div class="hud-right">
+                <div class="stat streak-stat">
+                    <span class="stat-label">Streak</span>
+                    <span id="streak-value" class="stat-value">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Breath Guide -->
+        <div id="breath-guide" class="breath-guide">
+            <span id="breath-text">Breathe in...</span>
+        </div>
+        
+        <!-- Combo Display -->
+        <div id="combo-display" class="combo-display hidden">
+            <span class="combo-text">Perfect!</span>
+        </div>
+        
+        <!-- Session Timer -->
+        <div class="session-timer">
+            <span id="session-time">0:00</span>
+        </div>
+    </div>
+
+    <!-- Session Complete Screen -->
+    <div id="complete-screen" class="screen">
+        <div class="complete-content">
+            <div class="complete-visual">
+                <div class="complete-rings">
+                    <div class="complete-ring"></div>
+                    <div class="complete-ring"></div>
+                    <div class="complete-ring"></div>
+                </div>
+            </div>
+            
+            <h2 class="complete-title">Session Complete</h2>
+            <p class="complete-message">Your rhythm was strong today.</p>
+            
+            <div class="session-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">⏱️</span>
+                    <span id="stat-duration" class="stat-number">0:00</span>
+                    <span class="stat-name">Duration</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🎯</span>
+                    <span id="stat-accuracy" class="stat-number">0%</span>
+                    <span class="stat-name">Accuracy</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🔥</span>
+                    <span id="stat-best-streak" class="stat-number">0</span>
+                    <span class="stat-name">Best Streak</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">💜</span>
+                    <span id="stat-flow" class="stat-number">0%</span>
+                    <span class="stat-name">Peak Flow</span>
+                </div>
+            </div>
+            
+            <p class="complete-insight" id="session-insight">
+                "When breath and rhythm align, the mind finds focus."
+            </p>
+            
+            <div class="complete-actions">
+                <button id="play-again-btn" class="btn-primary">Play Again</button>
+                <a href="../../index.html" class="btn-secondary">Return Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/rhythm.js"></script>
+    <script src="src/js/world.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
+

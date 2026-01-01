@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer — PNEUOMA</title>
+    <meta name="description" content="Co-regulation experiences. Parent-child, classroom, therapy groups. Heal together.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="../section.css">
+</head>
+<body>
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <canvas id="particles"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="../../index.html" class="nav-logo">
+            <span class="logo-icon">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </a>
+        <div class="nav-links">
+            <a href="../games/">Games</a>
+            <a href="../apps/">Apps</a>
+            <a href="../rituals/">Rituals</a>
+            <a href="../multiplayer/" class="active">Multiplayer</a>
+            <a href="../../index.html#partner" class="nav-cta">Partner</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="page-hero">
+        <div class="section-container">
+            <p class="hero-eyebrow">Platform / Multiplayer</p>
+            <h1 class="page-title">Multiplayer</h1>
+            <p class="page-subtitle">
+                Co-regulation experiences. When we regulate together,<br>
+                we heal faster and bond deeper.
+            </p>
+            <div class="coming-badge">
+                <span class="badge-icon">👥</span>
+                <span>Coming Q3 2025</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modes -->
+    <section class="preview-section">
+        <div class="section-container">
+            <p class="section-eyebrow">Co-Regulation Modes</p>
+            <h2 class="section-title">Regulate Together</h2>
+            
+            <div class="multiplayer-grid">
+                <!-- Parent-Child -->
+                <div class="mp-card">
+                    <div class="mp-visual" style="background: linear-gradient(135deg, #0a1628 0%, #1a0a28 100%);">
+                        <div class="duo-circles">
+                            <div class="duo-circle" style="width: 80px; height: 80px;"></div>
+                            <div class="duo-circle" style="width: 50px; height: 50px;"></div>
+                        </div>
+                    </div>
+                    <div class="mp-content">
+                        <h3>Parent + Child</h3>
+                        <p class="mp-tagline">Attachment-Based Co-Regulation</p>
+                        <p class="mp-desc">
+                            Synchronize breath with your child. See their state, feel your connection, 
+                            teach regulation through modeling. The most powerful way to help a child regulate.
+                        </p>
+                        <div class="mp-features">
+                            <span class="mp-feature">Synced breathing</span>
+                            <span class="mp-feature">Shared progress</span>
+                            <span class="mp-feature">Connection metrics</span>
+                            <span class="mp-feature">Bedtime mode</span>
+                        </div>
+                        <span class="mp-status">Coming Q3 2025</span>
+                    </div>
+                </div>
+
+                <!-- Classroom -->
+                <div class="mp-card">
+                    <div class="mp-visual" style="background: linear-gradient(135deg, #0a1a1a 0%, #0a280a 100%);">
+                        <div class="classroom-dots">
+                            <div class="classroom-dot"></div>
+                            <div class="classroom-dot"></div>
+                            <div class="classroom-dot"></div>
+                            <div class="classroom-dot"></div>
+                            <div class="classroom-dot"></div>
+                            <div class="classroom-dot"></div>
+                            <div class="classroom-dot"></div>
+                            <div class="classroom-dot"></div>
+                        </div>
+                    </div>
+                    <div class="mp-content">
+                        <h3>Classroom Sync</h3>
+                        <p class="mp-tagline">Whole-Class Regulation</p>
+                        <p class="mp-desc">
+                            Teacher-led regulation for entire classrooms. See the collective state of your class 
+                            in real-time. Guide 30 students into regulation together.
+                        </p>
+                        <div class="mp-features">
+                            <span class="mp-feature">Teacher dashboard</span>
+                            <span class="mp-feature">Class heatmap</span>
+                            <span class="mp-feature">Transition protocols</span>
+                            <span class="mp-feature">Individual tracking</span>
+                        </div>
+                        <span class="mp-status">Coming Q4 2025</span>
+                    </div>
+                </div>
+
+                <!-- Therapy Group -->
+                <div class="mp-card">
+                    <div class="mp-visual" style="background: linear-gradient(135deg, #140a1a 0%, #1a0a14 100%);">
+                        <div class="therapy-waves">
+                            <div class="therapy-wave"></div>
+                            <div class="therapy-wave"></div>
+                            <div class="therapy-wave"></div>
+                            <div class="therapy-wave"></div>
+                            <div class="therapy-wave"></div>
+                        </div>
+                    </div>
+                    <div class="mp-content">
+                        <h3>Therapy Circle</h3>
+                        <p class="mp-tagline">Group Therapy Enhancement</p>
+                        <p class="mp-desc">
+                            For therapists running group sessions. Collective biofeedback, 
+                            shared regulation, and group coherence tracking.
+                        </p>
+                        <div class="mp-features">
+                            <span class="mp-feature">Therapist controls</span>
+                            <span class="mp-feature">Group coherence</span>
+                            <span class="mp-feature">HIPAA compliant</span>
+                            <span class="mp-feature">Session notes</span>
+                        </div>
+                        <span class="mp-status">Coming 2026</span>
+                    </div>
+                </div>
+
+                <!-- Couples -->
+                <div class="mp-card">
+                    <div class="mp-visual" style="background: linear-gradient(135deg, #1a0a1a 0%, #280a1a 100%);">
+                        <div class="duo-circles">
+                            <div class="duo-circle" style="border-color: #ff6b9d;"></div>
+                            <div class="duo-circle" style="border-color: #ff6b9d;"></div>
+                        </div>
+                    </div>
+                    <div class="mp-content">
+                        <h3>Partners</h3>
+                        <p class="mp-tagline">Couple Co-Regulation</p>
+                        <p class="mp-desc">
+                            Regulate with your partner. Before difficult conversations, 
+                            after conflict, or just to connect. Sync your nervous systems.
+                        </p>
+                        <div class="mp-features">
+                            <span class="mp-feature">Partner sync</span>
+                            <span class="mp-feature">Conflict recovery</span>
+                            <span class="mp-feature">Connection rituals</span>
+                            <span class="mp-feature">Private mode</span>
+                        </div>
+                        <span class="mp-status">Coming Q4 2025</span>
+                    </div>
+                </div>
+
+                <!-- Family -->
+                <div class="mp-card">
+                    <div class="mp-visual" style="background: linear-gradient(135deg, #0a140a 0%, #141a14 100%);">
+                        <div class="classroom-dots" style="grid-template-columns: repeat(3, 1fr);">
+                            <div class="classroom-dot" style="width: 35px; height: 35px;"></div>
+                            <div class="classroom-dot" style="width: 35px; height: 35px;"></div>
+                            <div class="classroom-dot" style="width: 25px; height: 25px;"></div>
+                            <div class="classroom-dot" style="width: 25px; height: 25px;"></div>
+                            <div class="classroom-dot" style="width: 20px; height: 20px;"></div>
+                        </div>
+                    </div>
+                    <div class="mp-content">
+                        <h3>Family Circle</h3>
+                        <p class="mp-tagline">Whole Family Regulation</p>
+                        <p class="mp-desc">
+                            Up to 6 family members. Morning rituals, dinner wind-downs, 
+                            or weekend resets. Build a family culture of regulation.
+                        </p>
+                        <div class="mp-features">
+                            <span class="mp-feature">Multi-device sync</span>
+                            <span class="mp-feature">Role assignment</span>
+                            <span class="mp-feature">Family streaks</span>
+                            <span class="mp-feature">Age-appropriate</span>
+                        </div>
+                        <span class="mp-status">Coming 2026</span>
+                    </div>
+                </div>
+
+                <!-- Remote -->
+                <div class="mp-card">
+                    <div class="mp-visual" style="background: linear-gradient(135deg, #0a0a14 0%, #14140a 100%);">
+                        <div style="display: flex; gap: 40px;">
+                            <div class="duo-circle" style="width: 40px; height: 40px; border-color: var(--accent-primary);"></div>
+                            <div style="width: 60px; border-top: 2px dashed var(--accent-primary); margin-top: 20px; opacity: 0.3;"></div>
+                            <div class="duo-circle" style="width: 40px; height: 40px; border-color: var(--accent-primary);"></div>
+                        </div>
+                    </div>
+                    <div class="mp-content">
+                        <h3>Remote Sync</h3>
+                        <p class="mp-tagline">Long-Distance Co-Regulation</p>
+                        <p class="mp-desc">
+                            Regulate with someone across the world. For families apart, 
+                            remote therapy, or distant friendships. Feel connected through breath.
+                        </p>
+                        <div class="mp-features">
+                            <span class="mp-feature">Any distance</span>
+                            <span class="mp-feature">Video optional</span>
+                            <span class="mp-feature">Scheduled sessions</span>
+                            <span class="mp-feature">Async mode</span>
+                        </div>
+                        <span class="mp-status">Coming 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Science -->
+    <section class="platforms-section">
+        <div class="section-container">
+            <h2 class="section-title">The Science of Co-Regulation</h2>
+            <p class="page-subtitle" style="margin-bottom: var(--space-xl);">
+                When we breathe together, our nervous systems synchronize. 
+                Heart rates align. Cortisol drops faster. Oxytocin rises. 
+                This is co-regulation — and it's how humans are designed to heal.
+            </p>
+        </div>
+    </section>
+
+    <!-- Waitlist -->
+    <section class="waitlist-section">
+        <div class="section-container">
+            <div class="waitlist-content">
+                <h2>Be First to Co-Regulate</h2>
+                <p>Join the waitlist for multiplayer beta access.</p>
+                <form class="waitlist-form">
+                    <input type="email" placeholder="your@email.com" required>
+                    <button type="submit" class="btn btn-primary">
+                        <span>Join Multiplayer Beta</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-simple">
+                <a href="../../index.html" class="footer-logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">PNEUOMA</span>
+                </a>
+                <p>© 2025 PNEUOMA. The operating system for human regulation.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../main.js"></script>
+</body>
+</html>
+
+

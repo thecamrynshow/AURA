@@ -1,0 +1,516 @@
+/* ============================================
+   Echo Garden — Sound-Based Calm
+   A PNEUOMA Game
+   ============================================ */
+
+:root {
+    /* Mystical garden palette */
+    --bg-deep: #0a0812;
+    --bg-mid: #12101a;
+    --bg-surface: #1a1525;
+    
+    /* Nature accents */
+    --glow-green: #7fff7f;
+    --glow-emerald: #50c878;
+    --glow-purple: #9b59b6;
+    --glow-gold: #ffd700;
+    --glow-pink: #ff69b4;
+    --glow-blue: #87ceeb;
+    
+    /* Text */
+    --text-primary: #f0e6ff;
+    --text-secondary: #a89cc8;
+    --text-muted: #6a5a8a;
+    
+    /* Typography */
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+    
+    /* Transitions */
+    --transition-slow: 800ms ease;
+    --transition-base: 400ms ease;
+    --transition-fast: 200ms ease;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   Screens
+   ============================================ */
+.screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-slow), visibility var(--transition-slow);
+    background: var(--bg-deep);
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.screen-content {
+    text-align: center;
+    padding: 2rem;
+    max-width: 500px;
+}
+
+/* ============================================
+   Start Screen
+   ============================================ */
+#start-screen {
+    background: radial-gradient(ellipse at center bottom, #1a152a 0%, var(--bg-deep) 70%);
+}
+
+.logo-mark {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sound-wave {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid var(--glow-green);
+    animation: soundWave 3s ease-out infinite;
+}
+
+.wave-1 {
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+}
+
+.wave-2 {
+    width: 60px;
+    height: 60px;
+    animation-delay: 1s;
+}
+
+.wave-3 {
+    width: 60px;
+    height: 60px;
+    animation-delay: 2s;
+}
+
+@keyframes soundWave {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+.logo-seed {
+    width: 20px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--glow-emerald) 0%, var(--glow-green) 100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: 0 0 30px var(--glow-green);
+    animation: seedPulse 2s ease-in-out infinite;
+}
+
+@keyframes seedPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.title {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--glow-green), var(--glow-emerald));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.btn-start {
+    background: transparent;
+    border: 1px solid var(--glow-green);
+    color: var(--glow-green);
+    padding: 1rem 2.5rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-start::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--glow-green);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.btn-start:hover {
+    color: var(--bg-deep);
+    box-shadow: 0 0 30px rgba(127, 255, 127, 0.4);
+}
+
+.btn-start:hover::before {
+    opacity: 1;
+}
+
+.btn-start span {
+    position: relative;
+    z-index: 1;
+}
+
+.hint {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   Game Screen
+   ============================================ */
+#game-screen {
+    background: var(--bg-deep);
+}
+
+#game-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* HUD */
+.hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.hud-item {
+    background: rgba(18, 16, 26, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid rgba(127, 255, 127, 0.1);
+}
+
+.hud-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.hud-value {
+    font-size: 0.9rem;
+    color: var(--glow-green);
+}
+
+/* Sound Meter */
+.sound-meter {
+    min-width: 150px;
+}
+
+.meter-bar {
+    height: 4px;
+    background: rgba(127, 255, 127, 0.1);
+    border-radius: 2px;
+    margin: 0.5rem 0;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--glow-green), var(--glow-gold));
+    border-radius: 2px;
+    transition: width 100ms ease;
+}
+
+/* Harmony Display */
+.harmony-display {
+    text-align: center;
+}
+
+.harmony-rings {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 0.5rem 0;
+}
+
+.harmony-ring {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--text-muted);
+    transition: all var(--transition-base);
+}
+
+.harmony-ring.active {
+    border-color: var(--glow-gold);
+    background: var(--glow-gold);
+    box-shadow: 0 0 10px var(--glow-gold);
+}
+
+/* Timer */
+.timer {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+}
+
+/* Plants Count */
+.plants-count .hud-value {
+    font-size: 1rem;
+}
+
+/* Pitch Guide */
+.pitch-guide {
+    position: fixed;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 100px;
+    background: rgba(18, 16, 26, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(127, 255, 127, 0.2);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    transition: opacity var(--transition-base);
+}
+
+.pitch-guide.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.target-pitch {
+    width: 100%;
+    height: 4px;
+    background: var(--glow-gold);
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 10px var(--glow-gold);
+}
+
+.current-pitch {
+    width: 20px;
+    height: 20px;
+    background: var(--glow-green);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--glow-green);
+    transition: transform 100ms ease;
+}
+
+.pitch-instruction {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Message Display */
+.message-display {
+    position: fixed;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(18, 16, 26, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    border: 1px solid rgba(127, 255, 127, 0.2);
+    transition: opacity var(--transition-base);
+    z-index: 20;
+}
+
+.message-display.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.message-display p {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+/* ============================================
+   End Screen
+   ============================================ */
+#end-screen {
+    background: radial-gradient(ellipse at center, #1a152a 0%, var(--bg-deep) 70%);
+}
+
+.end-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+}
+
+.end-message {
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.session-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--glow-green);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+.closing-message {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--glow-green);
+    margin-bottom: 2rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 600px) {
+    .title {
+        font-size: 2.5rem;
+    }
+    
+    .description {
+        font-size: 1rem;
+    }
+    
+    .hud {
+        padding: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .hud-item {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .session-stats {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Selection */
+::selection {
+    background: var(--glow-green);
+    color: var(--bg-deep);
+}
+

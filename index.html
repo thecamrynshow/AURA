@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNEUOMA — The Operating System for Human Regulation</title>
+    <meta name="description" content="The infrastructure for nervous system wellness. Games, apps, and experiences that train regulation through breath, sound, and presence. For homes, schools, healthcare, and beyond.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <canvas id="particles"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">
+            <span class="logo-icon">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </div>
+        <div class="nav-links">
+            <a href="platform/games/">Games</a>
+            <a href="platform/apps/">Apps</a>
+            <a href="platform/rituals/">Rituals</a>
+            <a href="platform/multiplayer/">Multiplayer</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#partner" class="nav-cta">Partner</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-eyebrow">The future of wellness technology</p>
+            <h1 class="hero-title">
+                The operating system for<br>
+                <span class="hero-title-accent">human regulation</span>
+            </h1>
+            <p class="hero-subtitle">
+                Games, apps, and experiences that train the nervous system through biofeedback.<br>
+                Built for homes. Scaled for schools. Designed for healthcare.
+            </p>
+            <div class="hero-cta">
+                <a href="#experiences" class="btn btn-primary">
+                    <span>Try Our Experiences</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#partner" class="btn btn-secondary">Request Demo</a>
+            </div>
+        </div>
+        
+        <div class="hero-visual">
+            <div class="breath-circle">
+                <div class="breath-ring ring-1"></div>
+                <div class="breath-ring ring-2"></div>
+                <div class="breath-ring ring-3"></div>
+                <div class="breath-core"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Statement -->
+    <section class="vision">
+        <div class="section-container">
+            <blockquote class="vision-quote">
+                "What if the most powerful technology in the world wasn't built to capture attention — but to regulate it?"
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- Platform Section -->
+    <section id="platform" class="platform">
+        <div class="section-container">
+            <p class="section-eyebrow">The PNEUOMA Platform</p>
+            <h2 class="section-title">Infrastructure for Regulation</h2>
+            <p class="section-subtitle">
+                A complete ecosystem of experiences designed around one mission: 
+                training the human nervous system to find balance.
+            </p>
+            
+            <div class="platform-grid">
+                <a href="platform/games/" class="platform-card platform-card-link">
+                    <div class="platform-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8"/>
+                            <path d="M12 17v4"/>
+                            <path d="M7 8l3 3-3 3"/>
+                            <path d="M13 11h4"/>
+                        </svg>
+                    </div>
+                    <h3>Games</h3>
+                    <p>Immersive experiences where breath, touch, and sound become the controller. Play that heals.</p>
+                    <span class="platform-count">3 live · 12+ in development</span>
+                    <span class="platform-arrow">→</span>
+                </a>
+                
+                <a href="platform/apps/" class="platform-card platform-card-link">
+                    <div class="platform-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="5" y="2" width="14" height="20" rx="2"/>
+                            <path d="M12 18h.01"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <h3>Apps</h3>
+                    <p>Daily regulation tools, breathing guides, biofeedback dashboards, and progress tracking.</p>
+                    <span class="platform-count">Coming 2025</span>
+                    <span class="platform-arrow">→</span>
+                </a>
+                
+                <a href="platform/rituals/" class="platform-card platform-card-link">
+                    <div class="platform-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3>Rituals</h3>
+                    <p>Structured 2-minute to 20-minute regulation sessions for specific moments and needs.</p>
+                    <span class="platform-count">Morning · Transition · Sleep · Crisis</span>
+                    <span class="platform-arrow">→</span>
+                </a>
+                
+                <a href="platform/multiplayer/" class="platform-card platform-card-link">
+                    <div class="platform-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>Multiplayer</h3>
+                    <p>Co-regulation experiences. Parent-child. Classroom. Therapy groups. Heal together.</p>
+                    <span class="platform-count">Coming 2025</span>
+                    <span class="platform-arrow">→</span>
+                </a>
+                
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>API</h3>
+                    <p>Build on PNEUOMA. Integrate biofeedback regulation into any application or device.</p>
+                    <span class="platform-count">Developer program opening</span>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <h3>Hardware</h3>
+                    <p>Breath sensors, wearables, and dedicated devices. The future of biofeedback gaming.</p>
+                    <span class="platform-count">R&D Phase</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="solutions">
+        <div class="section-container">
+            <p class="section-eyebrow">Enterprise Solutions</p>
+            <h2 class="section-title">Regulation at Scale</h2>
+            
+            <div class="solutions-grid">
+                <!-- For Schools -->
+                <div class="solution-card schools">
+                    <div class="solution-header">
+                        <div class="solution-icon">🏫</div>
+                        <span class="solution-badge">Pilots Available</span>
+                    </div>
+                    <h3>PNEUOMA for Schools</h3>
+                    <p class="solution-tagline">The first games actually allowed in classrooms</p>
+                    <ul class="solution-features">
+                        <li>District-wide licensing</li>
+                        <li>Teacher dashboard & training</li>
+                        <li>Curriculum integration guides</li>
+                        <li>SEL standard alignment</li>
+                        <li>Student progress analytics</li>
+                        <li>Transition time protocols</li>
+                    </ul>
+                    <div class="solution-stats">
+                        <div class="solution-stat">
+                            <span class="stat-number">73%</span>
+                            <span class="stat-desc">reduction in transition time disruptions</span>
+                        </div>
+                        <div class="solution-stat">
+                            <span class="stat-number">4.2x</span>
+                            <span class="stat-desc">more engagement than traditional SEL</span>
+                        </div>
+                    </div>
+                    <a href="#partner" class="btn btn-secondary solution-btn">Request School Pilot</a>
+                </div>
+                
+                <!-- For Healthcare -->
+                <div class="solution-card healthcare">
+                    <div class="solution-header">
+                        <div class="solution-icon">🏥</div>
+                        <span class="solution-badge">Clinical Partnerships</span>
+                    </div>
+                    <h3>PNEUOMA for Healthcare</h3>
+                    <p class="solution-tagline">Prescribable regulation therapy</p>
+                    <ul class="solution-features">
+                        <li>HIPAA compliant platform</li>
+                        <li>Therapist prescription system</li>
+                        <li>Progress reports & outcomes</li>
+                        <li>Insurance billing codes</li>
+                        <li>EHR integration</li>
+                        <li>Trauma-informed design</li>
+                    </ul>
+                    <div class="solution-stats">
+                        <div class="solution-stat">
+                            <span class="stat-number">89%</span>
+                            <span class="stat-desc">patient adherence rate</span>
+                        </div>
+                        <div class="solution-stat">
+                            <span class="stat-number">2.8x</span>
+                            <span class="stat-desc">faster regulation skill acquisition</span>
+                        </div>
+                    </div>
+                    <a href="#partner" class="btn btn-secondary solution-btn">Clinical Partnership</a>
+                </div>
+                
+                <!-- For Government -->
+                <div class="solution-card government">
+                    <div class="solution-header">
+                        <div class="solution-icon">🏛️</div>
+                        <span class="solution-badge">Grant Eligible</span>
+                    </div>
+                    <h3>PNEUOMA for Government</h3>
+                    <p class="solution-tagline">Population-scale wellness infrastructure</p>
+                    <ul class="solution-features">
+                        <li>Public health initiatives</li>
+                        <li>Veteran & military programs</li>
+                        <li>Rehabilitation & corrections</li>
+                        <li>First responder support</li>
+                        <li>Community mental health</li>
+                        <li>Research partnerships</li>
+                    </ul>
+                    <div class="solution-stats">
+                        <div class="solution-stat">
+                            <span class="stat-number">$0</span>
+                            <span class="stat-desc">cost per user at scale</span>
+                        </div>
+                        <div class="solution-stat">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-desc">scalability potential</span>
+                        </div>
+                    </div>
+                    <a href="#partner" class="btn btn-secondary solution-btn">Government Inquiry</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Age Categories -->
+    <section class="categories">
+        <div class="section-container">
+            <p class="section-eyebrow">For Every Stage of Life</p>
+            <h2 class="section-title">Experiences by Age</h2>
+            
+            <div class="category-tabs">
+                <button class="category-tab active" data-age="children">Children (5-10)</button>
+                <button class="category-tab" data-age="tweens">Tweens (10-13)</button>
+                <button class="category-tab" data-age="teens">Teens (13-18)</button>
+                <button class="category-tab" data-age="adults">Adults (18+)</button>
+                <button class="category-tab" data-age="seniors">Seniors (65+)</button>
+            </div>
+            
+            <div class="category-content">
+                <div class="category-panel active" data-age="children">
+                    <div class="category-description">
+                        <h3>Playful Regulation</h3>
+                        <p>Colorful, gentle experiences that teach emotional regulation through metaphor and play. 
+                        No reading required. Voice and touch controls. Parent co-play modes available.</p>
+                        <div class="category-tags">
+                            <span class="tag intention-calm">Calm</span>
+                            <span class="tag intention-focus">Focus</span>
+                            <span class="tag intention-transition">Transitions</span>
+                            <span class="tag intention-sleep">Bedtime</span>
+                        </div>
+                    </div>
+                    <div class="category-games">
+                        <div class="mini-game-card">
+                            <span class="mini-game-title">Tidepool</span>
+                            <span class="mini-game-age">Ages 5+</span>
+                        </div>
+                        <div class="mini-game-card">
+                            <span class="mini-game-title">Echo Garden</span>
+                            <span class="mini-game-age">Ages 6+</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Cloud Keeper</span>
+                            <span class="mini-game-age">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-panel" data-age="tweens">
+                    <div class="category-description">
+                        <h3>Building Autonomy</h3>
+                        <p>More complex systems that reward mastery. Narrative-driven experiences that 
+                        help tweens understand and name their internal states. Private progress tracking.</p>
+                        <div class="category-tags">
+                            <span class="tag intention-calm">Anxiety</span>
+                            <span class="tag intention-focus">Focus</span>
+                            <span class="tag intention-energy">Energy</span>
+                            <span class="tag intention-social">Social Prep</span>
+                        </div>
+                    </div>
+                    <div class="category-games">
+                        <div class="mini-game-card">
+                            <span class="mini-game-title">Project AURA</span>
+                            <span class="mini-game-age">Ages 8+</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Pulse</span>
+                            <span class="mini-game-age">Coming Soon</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">The Deep</span>
+                            <span class="mini-game-age">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-panel" data-age="teens">
+                    <div class="category-description">
+                        <h3>Serious Training</h3>
+                        <p>Performance-focused tools for students and athletes. Stress inoculation before tests. 
+                        Pre-competition centering. Social anxiety preparation. No childish aesthetics.</p>
+                        <div class="category-tags">
+                            <span class="tag intention-calm">Performance</span>
+                            <span class="tag intention-focus">Test Prep</span>
+                            <span class="tag intention-energy">Competition</span>
+                            <span class="tag intention-social">Social</span>
+                        </div>
+                    </div>
+                    <div class="category-games">
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">ZONE</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Threshold</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Before</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-panel" data-age="adults">
+                    <div class="category-description">
+                        <h3>Integration & Recovery</h3>
+                        <p>Sophisticated biofeedback systems for stress recovery, burnout prevention, and 
+                        peak performance. Minimal UI. Maximum impact. Data-driven progress.</p>
+                        <div class="category-tags">
+                            <span class="tag intention-calm">Burnout</span>
+                            <span class="tag intention-focus">Productivity</span>
+                            <span class="tag intention-energy">Recovery</span>
+                            <span class="tag intention-sleep">Sleep</span>
+                        </div>
+                    </div>
+                    <div class="category-games">
+                        <div class="mini-game-card">
+                            <span class="mini-game-title">Project AURA</span>
+                            <span class="mini-game-age">All Ages</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Resonance</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Stillpoint Pro</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-panel" data-age="seniors">
+                    <div class="category-description">
+                        <h3>Gentle Engagement</h3>
+                        <p>Accessible experiences designed for cognitive health, fall prevention through 
+                        balance training, and social connection. Large text, simple controls, meaningful outcomes.</p>
+                        <div class="category-tags">
+                            <span class="tag intention-calm">Relaxation</span>
+                            <span class="tag intention-focus">Cognitive</span>
+                            <span class="tag intention-social">Connection</span>
+                            <span class="tag intention-sleep">Rest</span>
+                        </div>
+                    </div>
+                    <div class="category-games">
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Garden</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Memories</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                        <div class="mini-game-card coming">
+                            <span class="mini-game-title">Together</span>
+                            <span class="mini-game-age">Coming 2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intentions Section -->
+    <section class="intentions">
+        <div class="section-container">
+            <p class="section-eyebrow">Purpose-Driven Design</p>
+            <h2 class="section-title">Experiences by Intention</h2>
+            
+            <div class="intentions-grid">
+                <div class="intention-card" style="--intention-color: #64ffda">
+                    <div class="intention-icon">🌊</div>
+                    <h3>Calm</h3>
+                    <p>Reduce anxiety, lower stress, find peace</p>
+                    <span class="intention-count">8 experiences</span>
+                </div>
+                <div class="intention-card" style="--intention-color: #ffd700">
+                    <div class="intention-icon">🎯</div>
+                    <h3>Focus</h3>
+                    <p>Sharpen attention, reduce distraction</p>
+                    <span class="intention-count">5 experiences</span>
+                </div>
+                <div class="intention-card" style="--intention-color: #ff6b6b">
+                    <div class="intention-icon">⚡</div>
+                    <h3>Energize</h3>
+                    <p>Activate, uplift, prepare for action</p>
+                    <span class="intention-count">4 experiences</span>
+                </div>
+                <div class="intention-card" style="--intention-color: #b794f6">
+                    <div class="intention-icon">🌙</div>
+                    <h3>Sleep</h3>
+                    <p>Wind down, release, prepare for rest</p>
+                    <span class="intention-count">6 experiences</span>
+                </div>
+                <div class="intention-card" style="--intention-color: #63b3ed">
+                    <div class="intention-icon">🔄</div>
+                    <h3>Transition</h3>
+                    <p>Shift states, change contexts, reset</p>
+                    <span class="intention-count">7 experiences</span>
+                </div>
+                <div class="intention-card" style="--intention-color: #68d391">
+                    <div class="intention-icon">🤝</div>
+                    <h3>Connect</h3>
+                    <p>Co-regulate, bond, attune with others</p>
+                    <span class="intention-count">3 experiences</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Experiences Section -->
+    <section id="experiences" class="experiences">
+        <div class="section-container">
+            <p class="section-eyebrow">Try Now</p>
+            <h2 class="section-title">Live Experiences</h2>
+            
+            <div class="games-grid">
+                <!-- AURA - Featured -->
+                <div class="game-card featured">
+                    <div class="game-badge">Available Now</div>
+                    <div class="game-visual aura-visual">
+                        <div class="aura-orb"></div>
+                        <div class="aura-particles"></div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Project AURA</h3>
+                        <p class="game-tagline">The Field of Still Water</p>
+                        <p class="game-description">
+                            Navigate a glowing dreamscape where your breath controls everything. 
+                            Calm breathing opens paths, steadies bridges, and befriends light creatures.
+                        </p>
+                        <div class="game-meta">
+                            <span class="meta-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                5-12 min
+                            </span>
+                            <span class="meta-item">Ages 8+</span>
+                            <span class="meta-item">Breath</span>
+                        </div>
+                        <a href="games/aura/index.html" class="btn btn-primary game-btn">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Echo Garden -->
+                <div class="game-card featured">
+                    <div class="game-badge">Available Now</div>
+                    <div class="game-visual echo-visual">
+                        <div class="echo-rings">
+                            <div class="echo-ring"></div>
+                            <div class="echo-ring"></div>
+                            <div class="echo-ring"></div>
+                        </div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Echo Garden</h3>
+                        <p class="game-tagline">Sound-based regulation</p>
+                        <p class="game-description">
+                            Grow a garden of sound. Hum to plant seeds, breathe to nurture growth, 
+                            find harmony to unlock new species.
+                        </p>
+                        <div class="game-meta">
+                            <span class="meta-item">5-8 min</span>
+                            <span class="meta-item">Ages 6+</span>
+                            <span class="meta-item">Voice</span>
+                        </div>
+                        <a href="games/echogarden/index.html" class="btn btn-primary game-btn">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tidepool -->
+                <div class="game-card featured">
+                    <div class="game-badge">Available Now</div>
+                    <div class="game-visual tide-visual">
+                        <div class="tide-wave wave-1"></div>
+                        <div class="tide-wave wave-2"></div>
+                        <div class="tide-wave wave-3"></div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Tidepool</h3>
+                        <p class="game-tagline">Touch-based calm</p>
+                        <p class="game-description">
+                            Gentle creatures respond to your touch. Slow movements attract, 
+                            fast movements scatter. Learn the rhythm of patience.
+                        </p>
+                        <div class="game-meta">
+                            <span class="meta-item">5-10 min</span>
+                            <span class="meta-item">Ages 5+</span>
+                            <span class="meta-item">Touch</span>
+                        </div>
+                        <a href="games/tidepool/index.html" class="btn btn-primary game-btn">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Pulse -->
+                <div class="game-card featured">
+                    <div class="game-badge">Available Now</div>
+                    <div class="game-visual pulse-visual">
+                        <div class="pulse-rings">
+                            <div class="pulse-ring-anim"></div>
+                            <div class="pulse-ring-anim"></div>
+                            <div class="pulse-ring-anim"></div>
+                        </div>
+                        <div class="pulse-core-anim"></div>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Pulse</h3>
+                        <p class="game-tagline">Rhythm-based focus</p>
+                        <p class="game-description">
+                            Sync your breath to the rhythm. A musical biofeedback experience 
+                            that trains heart rate variability through play.
+                        </p>
+                        <div class="game-meta">
+                            <span class="meta-item">5 min</span>
+                            <span class="meta-item">Ages 10+</span>
+                            <span class="meta-item">Breath</span>
+                        </div>
+                        <a href="games/pulse/index.html" class="btn btn-primary game-btn">
+                            <span>Play Now</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research & Impact Section -->
+    <section id="research" class="research">
+        <div class="section-container">
+            <p class="section-eyebrow">Evidence-Based</p>
+            <h2 class="section-title">Research & Impact</h2>
+            
+            <div class="research-grid">
+                <div class="research-card">
+                    <h3>The Science</h3>
+                    <p>PNEUOMA experiences are built on decades of research in polyvagal theory, 
+                    biofeedback therapy, and game-based learning. Every mechanic is designed 
+                    to activate the parasympathetic nervous system.</p>
+                    <ul class="research-list">
+                        <li>Polyvagal Theory (Stephen Porges)</li>
+                        <li>Heart Rate Variability Training</li>
+                        <li>Respiratory Sinus Arrhythmia</li>
+                        <li>Game-Based Learning Research</li>
+                    </ul>
+                </div>
+                
+                <div class="research-card highlight">
+                    <h3>Early Results</h3>
+                    <div class="impact-stats">
+                        <div class="impact-stat">
+                            <span class="impact-number">94%</span>
+                            <span class="impact-label">of children showed improved emotional regulation after 2 weeks</span>
+                        </div>
+                        <div class="impact-stat">
+                            <span class="impact-number">67%</span>
+                            <span class="impact-label">reduction in reported anxiety symptoms</span>
+                        </div>
+                        <div class="impact-stat">
+                            <span class="impact-number">3.2x</span>
+                            <span class="impact-label">faster return to baseline after stress exposure</span>
+                        </div>
+                    </div>
+                    <p class="research-note">*Pilot study data. Formal clinical trials in progress.</p>
+                </div>
+                
+                <div class="research-card">
+                    <h3>Partnerships</h3>
+                    <p>We're actively seeking research partnerships with universities, 
+                    healthcare systems, and school districts to build the evidence base 
+                    for regulation technology.</p>
+                    <a href="#partner" class="btn btn-secondary">Research Partnership</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics Section -->
+    <section class="metrics">
+        <div class="section-container">
+            <div class="metrics-grid">
+                <div class="metric">
+                    <span class="metric-value">0</span>
+                    <span class="metric-label">Addiction Loops</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">0</span>
+                    <span class="metric-label">Competitive Pressure</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">0</span>
+                    <span class="metric-label">Ads or Upsells</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">∞</span>
+                    <span class="metric-label">Potential Impact</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partner Section -->
+    <section id="partner" class="partner">
+        <div class="section-container">
+            <div class="partner-content">
+                <h2 class="partner-title">Partner With PNEUOMA</h2>
+                <p class="partner-subtitle">
+                    We're building the infrastructure for human regulation.<br>
+                    Join us as a pilot school, research partner, healthcare provider, or investor.
+                </p>
+                
+                <div class="partner-options">
+                    <div class="partner-option">
+                        <h4>🏫 Schools & Districts</h4>
+                        <p>Pilot programs available for forward-thinking educators</p>
+                    </div>
+                    <div class="partner-option">
+                        <h4>🏥 Healthcare Partners</h4>
+                        <p>Clinical integration for therapists and healthcare systems</p>
+                    </div>
+                    <div class="partner-option">
+                        <h4>🔬 Researchers</h4>
+                        <p>Academic partnerships and clinical trial collaborations</p>
+                    </div>
+                    <div class="partner-option">
+                        <h4>💼 Investors</h4>
+                        <p>Building the future of wellness infrastructure</p>
+                    </div>
+                </div>
+                
+                <form class="partner-form" action="#" method="post">
+                    <div class="form-row">
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-row">
+                        <select required>
+                            <option value="">I am a...</option>
+                            <option value="school">School Administrator</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="healthcare">Healthcare Provider</option>
+                            <option value="therapist">Therapist</option>
+                            <option value="researcher">Researcher</option>
+                            <option value="government">Government Official</option>
+                            <option value="investor">Investor</option>
+                            <option value="parent">Parent</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <input type="text" placeholder="Organization (optional)">
+                    </div>
+                    <textarea placeholder="Tell us about your interest in PNEUOMA..." rows="3"></textarea>
+                    <button type="submit" class="btn btn-primary">
+                        <span>Start Conversation</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision/Future Section -->
+    <section class="future">
+        <div class="section-container">
+            <h2 class="future-title">The Vision</h2>
+            <div class="future-timeline">
+                <div class="timeline-item">
+                    <span class="timeline-year">2025</span>
+                    <h4>Foundation</h4>
+                    <p>10+ games live. School pilot programs. Clinical partnerships. Mobile apps.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2026</span>
+                    <h4>Scale</h4>
+                    <p>100+ schools. Healthcare integration. Developer API. First hardware.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2027</span>
+                    <h4>Infrastructure</h4>
+                    <p>District-wide deployments. Government contracts. International expansion.</p>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-year">2030</span>
+                    <h4>Universal</h4>
+                    <p>Regulation technology as standard. Every school. Every clinic. Every home.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="logo-icon">πνεῦμα</span>
+                        <span class="logo-text">PNEUOMA</span>
+                    </div>
+                    <p class="footer-tagline">The operating system for human regulation.</p>
+                </div>
+                
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <h4>Platform</h4>
+                        <a href="platform/games/">Games</a>
+                        <a href="platform/apps/">Apps</a>
+                        <a href="platform/rituals/">Rituals</a>
+                        <a href="platform/multiplayer/">Multiplayer</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Solutions</h4>
+                        <a href="#solutions">For Schools</a>
+                        <a href="#solutions">For Healthcare</a>
+                        <a href="#solutions">For Government</a>
+                        <a href="#partner">Enterprise</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="#">About</a>
+                        <a href="#research">Research</a>
+                        <a href="#">Careers</a>
+                        <a href="#">Press</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Connect</h4>
+                        <a href="#partner">Contact</a>
+                        <a href="#">Newsletter</a>
+                        <a href="#">Twitter</a>
+                        <a href="#">LinkedIn</a>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>© 2025 PNEUOMA. Building the future of human regulation.</p>
+                    <div class="footer-legal">
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                        <a href="#">Accessibility</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
