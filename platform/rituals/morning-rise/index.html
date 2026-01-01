@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Rise — Ritual | PNEUOMA</title>
+    <meta name="description" content="A 5-10 minute guided morning ritual to start your day regulated. Gentle body scan, breath activation, intention setting, and energy calibration.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ritual-container" id="ritualContainer">
+        <!-- Ambient Background -->
+        <div class="ambient-bg" id="ambientBg">
+            <div class="light-ray ray-1"></div>
+            <div class="light-ray ray-2"></div>
+            <div class="light-ray ray-3"></div>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="audio-toggle" id="audioToggle">
+            <button class="audio-btn" id="audioBtn">
+                <span class="audio-icon on">🔊</span>
+                <span class="audio-icon off">🔇</span>
+            </button>
+        </div>
+
+        <!-- Close Button -->
+        <a href="../index.html" class="close-btn" id="closeBtn">✕</a>
+
+        <!-- Progress -->
+        <div class="ritual-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-time" id="progressTime">0:00</span>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="ritual-icon">☀️</div>
+                <h1 class="ritual-title">Morning Rise</h1>
+                <p class="ritual-subtitle">A guided ritual to begin your day</p>
+                
+                <div class="ritual-info">
+                    <span class="info-item">
+                        <span class="info-icon">⏱</span>
+                        5-10 minutes
+                    </span>
+                    <span class="info-item">
+                        <span class="info-icon">🎧</span>
+                        Audio guided
+                    </span>
+                </div>
+
+                <div class="ritual-overview">
+                    <p class="overview-label">What we'll do:</p>
+                    <ol class="overview-steps">
+                        <li>Gentle body scan</li>
+                        <li>Breath activation</li>
+                        <li>Intention setting</li>
+                        <li>Energy calibration</li>
+                    </ol>
+                </div>
+
+                <button class="begin-btn" id="beginBtn">
+                    Begin Ritual
+                </button>
+
+                <p class="prep-note">
+                    Find a comfortable position. You can stay in bed or sit up.
+                </p>
+            </div>
+        </div>
+
+        <!-- Phase 1: Body Scan -->
+        <div class="screen" id="bodyScanScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">1</span>
+                    <span class="phase-label">Body Scan</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="bodyScanText">
+                        Before you move, simply notice...
+                    </p>
+                </div>
+
+                <div class="visual-element body-visual">
+                    <div class="body-outline">
+                        <div class="scan-line" id="scanLine"></div>
+                    </div>
+                </div>
+
+                <p class="timing-note" id="bodyScanTiming">~2 minutes</p>
+            </div>
+        </div>
+
+        <!-- Phase 2: Breath Activation -->
+        <div class="screen" id="breathScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">2</span>
+                    <span class="phase-label">Breath Activation</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="breathText">
+                        Let's wake up the body with breath...
+                    </p>
+                </div>
+
+                <div class="visual-element breath-visual">
+                    <div class="breath-circle" id="breathCircle">
+                        <span class="breath-instruction" id="breathInstruction">breathe</span>
+                    </div>
+                </div>
+
+                <div class="breath-counter">
+                    <span id="breathCount">1</span> / 6
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Intention -->
+        <div class="screen" id="intentionScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">3</span>
+                    <span class="phase-label">Intention Setting</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="intentionText">
+                        How do you want to meet this day?
+                    </p>
+                </div>
+
+                <div class="intention-prompt">
+                    <p class="prompt-question">Complete this sentence:</p>
+                    <p class="prompt-stem">"Today, I choose to be..."</p>
+                    <div class="intention-suggestions">
+                        <span class="suggestion">present</span>
+                        <span class="suggestion">patient</span>
+                        <span class="suggestion">open</span>
+                        <span class="suggestion">focused</span>
+                        <span class="suggestion">kind</span>
+                        <span class="suggestion">grateful</span>
+                    </div>
+                </div>
+
+                <p class="reflection-note">
+                    Hold your intention gently. Don't grip it.
+                </p>
+            </div>
+        </div>
+
+        <!-- Phase 4: Energy Calibration -->
+        <div class="screen" id="energyScreen">
+            <div class="screen-content">
+                <div class="phase-indicator">
+                    <span class="phase-num">4</span>
+                    <span class="phase-label">Energy Calibration</span>
+                </div>
+
+                <div class="guidance-container">
+                    <p class="guidance-text" id="energyText">
+                        Find your optimal energy for today...
+                    </p>
+                </div>
+
+                <div class="visual-element energy-visual">
+                    <div class="energy-meter">
+                        <div class="meter-level" id="meterLevel"></div>
+                        <div class="meter-labels">
+                            <span>calm</span>
+                            <span>alert</span>
+                            <span>energized</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="energy-note" id="energyNote">
+                    Not too sleepy, not too wired. Just right.
+                </p>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-icon">✨</div>
+                <h2 class="complete-title">You've Risen</h2>
+                
+                <p class="complete-message">
+                    You've given yourself the gift of a regulated start.<br>
+                    This sets the tone for everything that follows.
+                </p>
+
+                <div class="complete-reminder">
+                    <p class="reminder-label">Remember:</p>
+                    <p class="reminder-text" id="reminderText">
+                        "Today, I choose to be present."
+                    </p>
+                </div>
+
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">Begin My Day</button>
+                    <button class="btn-secondary" id="repeatBtn">Repeat Ritual</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="ritual.js"></script>
+</body>
+</html>
+

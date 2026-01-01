@@ -1,0 +1,608 @@
+/* ============================================
+   Morning Rise Ritual
+   Guided audio/text experience
+   Contemplative, minimal, warm
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0a0908;
+    --bg-warm: #1a1614;
+    --gold: #d4a574;
+    --gold-soft: #c9a67a;
+    --gold-dim: rgba(212, 165, 116, 0.15);
+    --gold-glow: rgba(212, 165, 116, 0.3);
+    --cream: #f5f0e8;
+    --cream-soft: rgba(245, 240, 232, 0.9);
+    --text-primary: #f5f0e8;
+    --text-secondary: rgba(245, 240, 232, 0.7);
+    --text-muted: rgba(245, 240, 232, 0.4);
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+    --transition: 0.4s ease;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Container */
+.ritual-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient Background */
+.ambient-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center bottom, var(--bg-warm) 0%, var(--bg-dark) 70%);
+    transition: background 3s ease;
+}
+
+.ambient-bg.awakening {
+    background: radial-gradient(ellipse at center bottom, #2a1f1a 0%, #1a1614 50%, var(--bg-dark) 100%);
+}
+
+.ambient-bg.bright {
+    background: radial-gradient(ellipse at center, #3d2a1f 0%, #2a1f1a 40%, var(--bg-dark) 100%);
+}
+
+/* Light Rays */
+.light-ray {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 0;
+    background: linear-gradient(to top, var(--gold-glow), transparent);
+    opacity: 0;
+    transition: all 2s ease;
+    transform-origin: bottom center;
+}
+
+.light-ray.ray-1 { transform: translateX(-50%) rotate(-15deg); }
+.light-ray.ray-2 { transform: translateX(-50%) rotate(0deg); }
+.light-ray.ray-3 { transform: translateX(-50%) rotate(15deg); }
+
+.ambient-bg.awakening .light-ray {
+    height: 40vh;
+    opacity: 0.3;
+}
+
+.ambient-bg.bright .light-ray {
+    height: 60vh;
+    opacity: 0.5;
+}
+
+/* Audio Toggle */
+.audio-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+.audio-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.audio-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.audio-icon {
+    font-size: 1.2rem;
+}
+
+.audio-icon.off { display: none; }
+.audio-btn.muted .audio-icon.on { display: none; }
+.audio-btn.muted .audio-icon.off { display: inline; }
+
+/* Close Button */
+.close-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    transition: all var(--transition);
+}
+
+.close-btn:hover {
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.1);
+}
+
+/* Progress */
+.ritual-progress {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+}
+
+.progress-bar {
+    width: 120px;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.progress-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    z-index: 10;
+    padding: 40px 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.screen-content {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Welcome Screen */
+.ritual-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.ritual-title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+    color: var(--gold);
+}
+
+.ritual-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.ritual-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.info-icon {
+    font-size: 1rem;
+}
+
+.ritual-overview {
+    background: var(--gold-dim);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.overview-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.overview-steps {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.overview-steps li {
+    padding-left: 8px;
+}
+
+.begin-btn {
+    background: var(--gold);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 48px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 20px;
+}
+
+.begin-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px var(--gold-glow);
+}
+
+.prep-note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Phase Indicator */
+.phase-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.phase-num {
+    width: 32px;
+    height: 32px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.phase-label {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+}
+
+/* Guidance Text */
+.guidance-container {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.guidance-text {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    color: var(--cream-soft);
+    font-style: italic;
+    transition: opacity 0.5s ease;
+}
+
+.timing-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 30px;
+}
+
+/* Body Scan Visual */
+.body-visual {
+    margin: 30px 0;
+}
+
+.body-outline {
+    width: 60px;
+    height: 140px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.05);
+    border-radius: 30px 30px 20px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gold);
+    box-shadow: 0 0 20px var(--gold-glow);
+    transition: top 8s ease-in-out;
+}
+
+.scan-line.scanning {
+    top: calc(100% - 4px);
+}
+
+/* Breath Visual */
+.breath-visual {
+    margin: 30px 0;
+}
+
+.breath-circle {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 4s ease;
+    background: var(--gold-dim);
+}
+
+.breath-circle.inhale {
+    transform: scale(1.3);
+    background: var(--gold-glow);
+}
+
+.breath-circle.exhale {
+    transform: scale(0.85);
+    background: transparent;
+}
+
+.breath-instruction {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+}
+
+.breath-counter {
+    margin-top: 25px;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.breath-counter span {
+    color: var(--gold);
+}
+
+/* Intention */
+.intention-prompt {
+    background: var(--gold-dim);
+    border-radius: 16px;
+    padding: 30px;
+    margin: 30px 0;
+}
+
+.prompt-question {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+.prompt-stem {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--cream);
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.intention-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.suggestion {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.reflection-note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Energy Visual */
+.energy-visual {
+    margin: 30px 0;
+}
+
+.energy-meter {
+    width: 200px;
+    height: 12px;
+    margin: 0 auto 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.meter-level {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 33%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 6px;
+    transition: width 2s ease;
+}
+
+.meter-level.mid { width: 50%; }
+.meter-level.high { width: 70%; }
+
+.meter-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 0 5px;
+}
+
+.energy-note {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-top: 20px;
+}
+
+/* Complete Screen */
+.complete-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.complete-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--gold);
+    margin-bottom: 20px;
+}
+
+.complete-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.complete-reminder {
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.reminder-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.reminder-text {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--cream);
+    font-style: italic;
+}
+
+.complete-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-primary {
+    background: var(--gold);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 40px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px var(--gold-glow);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 10px 20px;
+}
+
+.btn-secondary:hover {
+    color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .ritual-title {
+        font-size: 2.5rem;
+    }
+    
+    .guidance-text {
+        font-size: 1.4rem;
+    }
+    
+    .ritual-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+

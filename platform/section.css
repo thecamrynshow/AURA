@@ -582,6 +582,46 @@
     counter-reset: step;
 }
 
+/* Ritual Card Link */
+.ritual-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ritual-card-link:hover {
+    transform: translateY(-4px);
+    border-color: var(--ritual-color, var(--accent-primary));
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.ritual-status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(100, 255, 218, 0.15);
+    color: var(--accent-primary);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.ritual-cta {
+    display: inline-block;
+    margin-top: var(--space-md);
+    color: var(--ritual-color, var(--accent-primary));
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.ritual-card-link:hover .ritual-cta {
+    transform: translateX(5px);
+}
+
 /* Multiplayer Cards */
 .multiplayer-grid {
     display: grid;
