@@ -140,8 +140,24 @@ class GamesFilter {
     }
     
     gameMatchesFilters(game) {
-        const ageMatch = this.filters.age === 'all' || 
-            game.dataset.age.split(',').includes(this.filters.age);
+        const gameAge = game.dataset.age;
+        let ageMatch = false;
+        
+        if (this.filters.age === 'all') {
+            ageMatch = true;
+        } else if (this.filters.age === 'kids') {
+            // Kids: 4+, 5+, 4-8
+            ageMatch = gameAge === '4+' || gameAge === '5+' || gameAge === '4-8';
+        } else if (this.filters.age === 'everyone') {
+            // Everyone/All Ages: 8+, All Ages
+            ageMatch = gameAge === '8+' || gameAge === 'All Ages' || gameAge === 'all';
+        } else if (this.filters.age === 'teens') {
+            // Teens: 13+
+            ageMatch = gameAge === '13+';
+        } else if (this.filters.age === 'adults') {
+            // Adults: 18+
+            ageMatch = gameAge === '18+';
+        }
         
         const intentionMatch = this.filters.intention === 'all' || 
             game.dataset.intention.split(',').includes(this.filters.intention);
