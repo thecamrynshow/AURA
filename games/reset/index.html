@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Reset — Free Workplace Stress Relief | 2-5 Minute Desk Breaks | PNEUOMA</title>
+    <meta name="title" content="Reset — Free Workplace Stress Relief | 2-5 Minute Desk Breaks | PNEUOMA">
+    <meta name="description" content="Quick 2-5 minute desk breaks for instant calm. Micro-meditations between meetings, eye strain relief, and stress reset. Perfect for the modern workplace.">
+    <meta name="keywords" content="workplace stress relief, desk break exercises, office meditation, eye strain relief, work anxiety, micro meditation, quick calm, breathing at work">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/reset/">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pneuoma.com/games/reset/">
+    <meta property="og:title" content="Reset — Workplace Stress Relief">
+    <meta property="og:description" content="Quick 2-5 minute desk breaks for instant calm.">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            <div class="timer-display" id="timerDisplay">
+                <span class="timer-value">0:00</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="title-icon">↻</div>
+                <h1 class="title">Reset</h1>
+                <p class="subtitle">Workplace Stress Relief</p>
+                <p class="tagline">Quick desk breaks for instant calm.<br>Take a moment. Return refreshed.</p>
+                
+                <div class="mode-selection">
+                    <h3>Choose Your Reset</h3>
+                    <div class="mode-cards">
+                        <button class="mode-card" data-mode="quick" data-duration="120">
+                            <div class="mode-icon">🌬️</div>
+                            <div class="mode-info">
+                                <span class="mode-name">Quick Breath</span>
+                                <span class="mode-time">2 min</span>
+                            </div>
+                            <p class="mode-desc">Box breathing for immediate calm</p>
+                        </button>
+                        
+                        <button class="mode-card" data-mode="eyes" data-duration="180">
+                            <div class="mode-icon">👁️</div>
+                            <div class="mode-info">
+                                <span class="mode-name">Eye Reset</span>
+                                <span class="mode-time">3 min</span>
+                            </div>
+                            <p class="mode-desc">Relief from screen strain</p>
+                        </button>
+                        
+                        <button class="mode-card" data-mode="body" data-duration="300">
+                            <div class="mode-icon">🧘</div>
+                            <div class="mode-info">
+                                <span class="mode-name">Body Scan</span>
+                                <span class="mode-time">5 min</span>
+                            </div>
+                            <p class="mode-desc">Release tension head to toe</p>
+                        </button>
+                        
+                        <button class="mode-card featured" data-mode="full" data-duration="300">
+                            <div class="mode-icon">✨</div>
+                            <div class="mode-info">
+                                <span class="mode-name">Full Reset</span>
+                                <span class="mode-time">5 min</span>
+                            </div>
+                            <p class="mode-desc">Complete mind-body refresh</p>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sound-toggle">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="toggle-switch"></span>
+                        <span class="toggle-text">Sound</span>
+                    </label>
+                    <p class="sound-note">Turn off for open offices</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen" id="gameScreen">
+            <div class="game-content">
+                <!-- Progress Ring -->
+                <div class="progress-container">
+                    <svg class="progress-ring" viewBox="0 0 200 200">
+                        <circle class="progress-bg" cx="100" cy="100" r="90" />
+                        <circle class="progress-fill" cx="100" cy="100" r="90" id="progressFill" />
+                    </svg>
+                    
+                    <div class="breath-indicator" id="breathIndicator">
+                        <div class="breath-circle" id="breathCircle"></div>
+                        <div class="breath-text" id="breathText">Breathe</div>
+                    </div>
+                </div>
+                
+                <!-- Instruction -->
+                <div class="instruction-area">
+                    <p class="instruction" id="instruction">Follow the rhythm</p>
+                    <p class="sub-instruction" id="subInstruction"></p>
+                </div>
+                
+                <!-- Phase Indicator -->
+                <div class="phase-indicator" id="phaseIndicator">
+                    <div class="phase-dots">
+                        <span class="phase-dot active"></span>
+                        <span class="phase-dot"></span>
+                        <span class="phase-dot"></span>
+                        <span class="phase-dot"></span>
+                    </div>
+                    <p class="phase-name" id="phaseName">Centering</p>
+                </div>
+            </div>
+            
+            <!-- Pause Button -->
+            <button class="pause-btn" id="pauseBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="6" y="4" width="4" height="16" rx="1"/>
+                    <rect x="14" y="4" width="4" height="16" rx="1"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div class="overlay" id="pauseOverlay">
+            <div class="overlay-content">
+                <h2>Paused</h2>
+                <p>Take your time. Resume when ready.</p>
+                <div class="overlay-buttons">
+                    <button class="btn btn-primary" id="resumeBtn">Resume</button>
+                    <button class="btn btn-secondary" id="quitBtn">End Session</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div class="screen" id="endScreen">
+            <div class="end-content">
+                <div class="end-icon">✓</div>
+                <h2 class="end-title">Reset Complete</h2>
+                <p class="end-message" id="endMessage">You took time for yourself. That matters.</p>
+                
+                <div class="session-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="sessionDuration">5:00</span>
+                        <span class="stat-label">Duration</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="breathCount">0</span>
+                        <span class="stat-label">Breaths</span>
+                    </div>
+                </div>
+                
+                <div class="end-actions">
+                    <button class="btn btn-primary" id="anotherBtn">Another Reset</button>
+                    <a href="../../platform/games/" class="btn btn-secondary">All Games</a>
+                </div>
+                
+                <p class="reminder">Set a reminder: Reset every 2 hours</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/breathing.js"></script>
+    <script src="src/js/exercises.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
