@@ -1,0 +1,795 @@
+/* ============================================
+   Classroom Sync — Teacher-Led Regulation
+   Clean, professional, dashboard aesthetic
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0a0c10;
+    --bg-card: #12151c;
+    --bg-hover: #1a1e28;
+    --border: rgba(255,255,255,0.08);
+    
+    --calm: #68d391;
+    --calm-dim: rgba(104, 211, 145, 0.15);
+    --alert: #fbd38d;
+    --alert-dim: rgba(251, 211, 141, 0.15);
+    --stressed: #fc8181;
+    --stressed-dim: rgba(252, 129, 129, 0.15);
+    --coherence: #63b3ed;
+    --coherence-dim: rgba(99, 179, 237, 0.15);
+    
+    --accent: #90cdf4;
+    --accent-dim: rgba(144, 205, 244, 0.1);
+    
+    --text-primary: #e2e8f0;
+    --text-secondary: rgba(226, 232, 240, 0.7);
+    --text-muted: rgba(226, 232, 240, 0.4);
+    
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    
+    --radius: 12px;
+    --radius-sm: 8px;
+    --transition: 0.3s ease;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.app-container {
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Screens */
+.screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.screen-content {
+    max-width: 500px;
+    width: 100%;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Role Selection */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 300;
+}
+
+.logo-text {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+}
+
+.logo-small {
+    font-size: 1.2rem;
+    color: var(--accent);
+}
+
+.welcome-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.welcome-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+.role-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.role-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition);
+}
+
+.role-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.role-icon {
+    font-size: 2.5rem;
+}
+
+.role-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.role-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.teacher-btn:hover {
+    border-color: var(--coherence);
+    box-shadow: 0 0 30px var(--coherence-dim);
+}
+
+.student-btn:hover {
+    border-color: var(--calm);
+    box-shadow: 0 0 30px var(--calm-dim);
+}
+
+.demo-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ============================================
+   Teacher Dashboard
+   ============================================ */
+
+.teacher-layout {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.session-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.session-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.session-code {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.class-status {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.student-count {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.student-count span {
+    color: var(--calm);
+    font-weight: 600;
+}
+
+.end-session-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.end-session-btn:hover {
+    border-color: var(--stressed);
+    color: var(--stressed);
+}
+
+/* Main Dashboard */
+.teacher-main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 24px;
+    padding: 24px;
+    overflow: auto;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Heatmap */
+.heatmap-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border);
+}
+
+.heatmap-legend {
+    display: flex;
+    gap: 16px;
+}
+
+.legend-item {
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-item::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.legend-item.calm::before { background: var(--calm); }
+.legend-item.alert::before { background: var(--alert); }
+.legend-item.stressed::before { background: var(--stressed); }
+
+.class-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.student-dot {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(0,0,0,0.6);
+    transition: all 0.5s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.student-dot.calm { background: var(--calm); }
+.student-dot.alert { background: var(--alert); }
+.student-dot.stressed { background: var(--stressed); }
+
+.student-dot:hover {
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.student-dot::after {
+    content: attr(data-name);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.student-dot:hover::after {
+    opacity: 1;
+}
+
+.class-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.stat {
+    text-align: center;
+    padding: 16px;
+    background: var(--bg-dark);
+    border-radius: var(--radius-sm);
+}
+
+.stat-value {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.stat-value.calm { color: var(--calm); }
+.stat-value.alert { color: var(--alert); }
+.stat-value.stressed { color: var(--stressed); }
+.stat-value.coherence { color: var(--coherence); }
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Controls */
+.controls-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border);
+}
+
+.exercise-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.exercise-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: left;
+}
+
+.exercise-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent);
+}
+
+.ex-icon {
+    font-size: 1.3rem;
+}
+
+.ex-name {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.ex-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Exercise Overlay */
+.exercise-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 12, 16, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.exercise-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.exercise-display {
+    text-align: center;
+    max-width: 500px;
+    padding: 40px;
+}
+
+.exercise-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.exercise-name {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.stop-btn {
+    background: transparent;
+    border: 1px solid var(--stressed);
+    color: var(--stressed);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.stop-btn:hover {
+    background: var(--stressed-dim);
+}
+
+.breath-visual {
+    margin: 40px 0;
+}
+
+.breath-circle {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 30px;
+    border: 4px solid var(--accent);
+    border-radius: 50%;
+    transition: all 4s ease;
+    box-shadow: 0 0 40px var(--accent-dim);
+}
+
+.breath-circle.expand {
+    transform: scale(1.3);
+    box-shadow: 0 0 60px var(--coherence-dim);
+}
+
+.breath-circle.contract {
+    transform: scale(0.7);
+    opacity: 0.7;
+}
+
+.breath-instruction {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.exercise-progress {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.exercise-progress .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--bg-card);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.exercise-progress .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 1s linear;
+}
+
+.time-remaining {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    min-width: 50px;
+}
+
+.live-coherence {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.coherence-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.coherence-value {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--coherence);
+}
+
+/* ============================================
+   Student View
+   ============================================ */
+
+.student-layout {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+}
+
+.session-joined {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.session-joined span {
+    color: var(--accent);
+}
+
+.student-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+}
+
+.student-state.hidden {
+    display: none;
+}
+
+/* Waiting State */
+.waiting-content {
+    text-align: center;
+}
+
+.waiting-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+}
+
+.waiting-content h2 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.waiting-content p {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.pulse-ring {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Student Exercise */
+.student-exercise-content {
+    text-align: center;
+    padding: 40px;
+}
+
+.exercise-label {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin-bottom: 40px;
+    letter-spacing: 0.1em;
+}
+
+.student-breath-visual {
+    margin: 40px 0;
+}
+
+.student-breath-circle {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border: 5px solid var(--calm);
+    border-radius: 50%;
+    transition: all 4s ease;
+    box-shadow: 0 0 50px var(--calm-dim);
+}
+
+.student-breath-circle.expand {
+    transform: scale(1.4);
+    box-shadow: 0 0 80px var(--calm-dim);
+}
+
+.student-breath-circle.contract {
+    transform: scale(0.6);
+    opacity: 0.6;
+}
+
+.student-instruction {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 40px;
+}
+
+.student-feedback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.feedback-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--calm);
+    border-radius: 50%;
+    animation: feedback-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes feedback-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.feedback-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Complete State */
+.complete-content {
+    text-align: center;
+}
+
+.complete-icon {
+    font-size: 4rem;
+    width: 100px;
+    height: 100px;
+    background: var(--calm);
+    color: var(--bg-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: pop-in 0.5s ease;
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.complete-content h2 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--calm);
+    margin-bottom: 10px;
+}
+
+.complete-message {
+    color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .teacher-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .class-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .header-center {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .class-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+    
+    .class-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .header-right .student-count {
+        display: none;
+    }
+}
+

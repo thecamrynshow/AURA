@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Sync — PNEUOMA Multiplayer</title>
+    <meta name="description" content="Teacher-led regulation for entire classrooms. Guide 30 students into regulation together with real-time class state visualization.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Role Selection -->
+        <div class="screen active" id="roleScreen">
+            <div class="screen-content">
+                <div class="logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">CLASSROOM SYNC</span>
+                </div>
+                
+                <h1 class="welcome-title">Welcome to Classroom Sync</h1>
+                <p class="welcome-subtitle">Whole-class regulation, together</p>
+                
+                <div class="role-options">
+                    <button class="role-btn teacher-btn" id="teacherBtn">
+                        <span class="role-icon">👩‍🏫</span>
+                        <span class="role-title">I'm the Teacher</span>
+                        <span class="role-desc">Lead the session & view class state</span>
+                    </button>
+                    
+                    <button class="role-btn student-btn" id="studentBtn">
+                        <span class="role-icon">🎒</span>
+                        <span class="role-title">I'm a Student</span>
+                        <span class="role-desc">Join and follow along</span>
+                    </button>
+                </div>
+                
+                <p class="demo-note">Demo Mode: Simulated class of 24 students</p>
+            </div>
+        </div>
+
+        <!-- Teacher Dashboard -->
+        <div class="screen" id="teacherScreen">
+            <div class="teacher-layout">
+                <!-- Header -->
+                <header class="teacher-header">
+                    <div class="header-left">
+                        <span class="logo-small">πνεῦμα</span>
+                        <span class="session-info">
+                            <span class="session-label">Session</span>
+                            <span class="session-code" id="sessionCode">CALM-2847</span>
+                        </span>
+                    </div>
+                    <div class="header-center">
+                        <span class="class-status" id="classStatus">Ready to Begin</span>
+                    </div>
+                    <div class="header-right">
+                        <span class="student-count">
+                            <span id="connectedCount">24</span> students connected
+                        </span>
+                        <button class="end-session-btn" id="endSessionBtn">End Session</button>
+                    </div>
+                </header>
+
+                <!-- Main Dashboard -->
+                <main class="teacher-main">
+                    <!-- Class Heatmap -->
+                    <section class="heatmap-section">
+                        <div class="section-header">
+                            <h2>Class State</h2>
+                            <div class="heatmap-legend">
+                                <span class="legend-item calm">Calm</span>
+                                <span class="legend-item alert">Alert</span>
+                                <span class="legend-item stressed">Stressed</span>
+                            </div>
+                        </div>
+                        <div class="class-grid" id="classGrid">
+                            <!-- Students will be generated here -->
+                        </div>
+                        <div class="class-stats">
+                            <div class="stat">
+                                <span class="stat-value calm" id="calmCount">8</span>
+                                <span class="stat-label">Calm</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value alert" id="alertCount">12</span>
+                                <span class="stat-label">Alert</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value stressed" id="stressedCount">4</span>
+                                <span class="stat-label">Stressed</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value coherence" id="coherenceScore">67%</span>
+                                <span class="stat-label">Coherence</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Controls -->
+                    <section class="controls-section">
+                        <div class="section-header">
+                            <h2>Lead Exercise</h2>
+                        </div>
+                        
+                        <div class="exercise-options">
+                            <button class="exercise-btn" data-exercise="breath-reset">
+                                <span class="ex-icon">🌬️</span>
+                                <span class="ex-name">Breath Reset</span>
+                                <span class="ex-time">2 min</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="grounding">
+                                <span class="ex-icon">🌍</span>
+                                <span class="ex-name">Quick Ground</span>
+                                <span class="ex-time">1 min</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="transition">
+                                <span class="ex-icon">🔄</span>
+                                <span class="ex-name">Transition</span>
+                                <span class="ex-time">90 sec</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="focus">
+                                <span class="ex-icon">🎯</span>
+                                <span class="ex-name">Focus Prep</span>
+                                <span class="ex-time">2 min</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="calm-down">
+                                <span class="ex-icon">🌊</span>
+                                <span class="ex-name">Calm Down</span>
+                                <span class="ex-time">3 min</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="energy">
+                                <span class="ex-icon">⚡</span>
+                                <span class="ex-name">Energy Up</span>
+                                <span class="ex-time">1 min</span>
+                            </button>
+                        </div>
+                    </section>
+                </main>
+
+                <!-- Active Exercise Overlay -->
+                <div class="exercise-overlay hidden" id="exerciseOverlay">
+                    <div class="exercise-display">
+                        <div class="exercise-header">
+                            <span class="exercise-name" id="activeExerciseName">Breath Reset</span>
+                            <button class="stop-btn" id="stopExerciseBtn">Stop</button>
+                        </div>
+                        
+                        <div class="breath-visual">
+                            <div class="breath-circle" id="breathCircle"></div>
+                            <p class="breath-instruction" id="breathInstruction">Breathe In</p>
+                        </div>
+                        
+                        <div class="exercise-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="exerciseProgress"></div>
+                            </div>
+                            <span class="time-remaining" id="timeRemaining">2:00</span>
+                        </div>
+                        
+                        <div class="live-coherence">
+                            <span class="coherence-label">Class Coherence</span>
+                            <span class="coherence-value" id="liveCoherence">67%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student View -->
+        <div class="screen" id="studentScreen">
+            <div class="student-layout">
+                <header class="student-header">
+                    <span class="logo-small">πνεῦμα</span>
+                    <span class="session-joined">Session: <span id="studentSessionCode">CALM-2847</span></span>
+                </header>
+
+                <!-- Waiting State -->
+                <div class="student-state waiting" id="studentWaiting">
+                    <div class="waiting-content">
+                        <div class="waiting-icon">✋</div>
+                        <h2>Ready When You Are</h2>
+                        <p>Waiting for your teacher to start an exercise...</p>
+                        <div class="pulse-ring"></div>
+                    </div>
+                </div>
+
+                <!-- Active Exercise State -->
+                <div class="student-state exercise hidden" id="studentExercise">
+                    <div class="student-exercise-content">
+                        <p class="exercise-label" id="studentExerciseLabel">Breath Reset</p>
+                        
+                        <div class="student-breath-visual">
+                            <div class="student-breath-circle" id="studentBreathCircle"></div>
+                        </div>
+                        
+                        <p class="student-instruction" id="studentInstruction">Breathe In</p>
+                        
+                        <div class="student-feedback">
+                            <div class="feedback-dot" id="feedbackDot"></div>
+                            <span class="feedback-text" id="feedbackText">Following along</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete State -->
+                <div class="student-state complete hidden" id="studentComplete">
+                    <div class="complete-content">
+                        <div class="complete-icon">✓</div>
+                        <h2>Great Job!</h2>
+                        <p class="complete-message" id="studentCompleteMessage">You did great with that exercise.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="classroom.js"></script>
+</body>
+</html>
+
