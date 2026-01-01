@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNEUOMA Pilot Program — District Partnership Information</title>
+    <meta name="description" content="Complete information about PNEUOMA's school pilot program. Implementation timeline, what's included, success metrics, and partnership details.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-light: #ffffff;
+            --bg-section: #f8fafc;
+            --bg-dark: #0f172a;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-dark: #1e40af;
+            --success: #10b981;
+            --border: #e2e8f0;
+            --font-display: 'DM Serif Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            body { font-size: 11pt; }
+            .container { max-width: 100%; padding: 0; }
+            section { padding: 30px 0; }
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-dark);
+            line-height: 1.7;
+            background: var(--bg-light);
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .doc-header {
+            padding: 60px 0 40px;
+            border-bottom: 3px solid var(--accent);
+            margin-bottom: 50px;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .doc-title {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .doc-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .doc-meta {
+            display: flex;
+            gap: 30px;
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .doc-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Sections */
+        section {
+            padding: 50px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-number {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            color: var(--text-dark);
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .lead {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 16px 0 16px 24px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        li strong {
+            color: var(--text-dark);
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+            border-left: 4px solid var(--accent);
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-box strong {
+            color: var(--accent-dark);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: var(--bg-section);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .info-box h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin: 30px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            width: 2px;
+            height: calc(100% + 4px);
+            background: var(--border);
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .timeline-content h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-content p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            background: var(--bg-section);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .data-table td:first-child {
+            font-weight: 500;
+        }
+
+        /* Grid */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 600px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metric-card {
+            background: var(--bg-section);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .metric-card h4 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .metric-card p {
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+
+        /* Pricing */
+        .pricing-tiers {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 700px) {
+            .pricing-tiers {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tier {
+            background: var(--bg-section);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .tier.featured {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+        }
+
+        .tier h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .tier .size {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .tier .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .tier .period {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Contact */
+        .contact-section {
+            background: var(--bg-dark);
+            color: white;
+            padding: 50px;
+            border-radius: 16px;
+            margin: 40px 0;
+        }
+
+        .contact-section h2 {
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .contact-section p {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .contact-info {
+            margin-top: 24px;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .contact-row a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        .doc-footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .doc-footer p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Print Button */
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 14px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .print-btn:hover {
+            background: var(--accent-dark);
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/platform/schools/" class="back-link no-print">← Back to For Schools</a>
+
+        <!-- Header -->
+        <header class="doc-header">
+            <div class="logo-row">
+                <span class="logo-icon">πνεῦμα</span>
+                <span class="logo-text">PNEUOMA</span>
+            </div>
+            <h1 class="doc-title">District Pilot Program</h1>
+            <p class="doc-subtitle">Partner with us to bring nervous system regulation to your schools</p>
+            <div class="doc-meta">
+                <span>📅 Fall 2026 Cohort</span>
+                <span>📍 Limited Availability</span>
+                <span>📄 Version 1.0</span>
+            </div>
+        </header>
+
+        <!-- Executive Summary -->
+        <section>
+            <p class="section-number">Overview</p>
+            <h2>Executive Summary</h2>
+            
+            <p class="lead">
+                The PNEUOMA Pilot Program is a semester-long partnership designed to integrate nervous system regulation tools into your district's existing infrastructure and measure real impact on student outcomes.
+            </p>
+
+            <div class="highlight-box">
+                <p><strong>Our Goal:</strong> Equip students with the physiological tools to regulate stress, improve focus, and return to a calm learning state — before behavioral issues arise.</p>
+                <p><strong>Your Outcome:</strong> Measurable data on student regulation, classroom climate, and staff experience to inform district-wide decisions.</p>
+            </div>
+
+            <h3>What Makes This Different</h3>
+            <ul>
+                <li><strong>Addresses root cause</strong> — Works at the nervous system level, not just behavioral surface</li>
+                <li><strong>Evidence-based</strong> — Built on biofeedback science and regulation research</li>
+                <li><strong>Low-friction</strong> — 3-12 minute sessions that integrate into existing routines</li>
+                <li><strong>Measurable</strong> — Pre/post data collection built into the program</li>
+            </ul>
+        </section>
+
+        <!-- What's Included -->
+        <section>
+            <p class="section-number">Section 1</p>
+            <h2>What's Included in the Pilot</h2>
+
+            <h3>🌍 Full Platform Access</h3>
+            <ul>
+                <li>All regulation games (AURA, Echo Garden, Tidepool, Pulse, ZONE, and 20+ more)</li>
+                <li>Age-appropriate experiences for your grade levels</li>
+                <li>Classroom Sync for teacher-led whole-class regulation</li>
+                <li>PNEU app for daily micro-practices</li>
+            </ul>
+
+            <h3>📚 Implementation Resources</h3>
+            <ul>
+                <li>Teacher quick-start guides</li>
+                <li>Classroom integration protocols</li>
+                <li>Counselor toolkit</li>
+                <li>Parent communication templates</li>
+            </ul>
+
+            <h3>🎓 Training & Support</h3>
+            <ul>
+                <li>Initial staff training session (virtual or in-person)</li>
+                <li>Monthly check-in calls</li>
+                <li>Dedicated support contact</li>
+                <li>Mid-pilot optimization session</li>
+            </ul>
+
+            <h3>📊 Data & Reporting</h3>
+            <ul>
+                <li>Pre-pilot baseline assessment</li>
+                <li>Usage analytics dashboard</li>
+                <li>Post-pilot outcome report</li>
+                <li>ROI analysis for district planning</li>
+            </ul>
+        </section>
+
+        <!-- Timeline -->
+        <section>
+            <p class="section-number">Section 2</p>
+            <h2>Pilot Timeline</h2>
+            
+            <p>A typical pilot runs for one full semester (16-18 weeks):</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <h4>Pre-Pilot Setup (Weeks -2 to 0)</h4>
+                        <p>Technical setup, staff training, baseline assessments, communication rollout</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <h4>Launch Phase (Weeks 1-4)</h4>
+                        <p>Initial implementation with high support, troubleshooting, usage monitoring</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <h4>Integration Phase (Weeks 5-12)</h4>
+                        <p>Full integration into daily routines, mid-pilot check-in, optimization</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <h4>Assessment Phase (Weeks 13-16)</h4>
+                        <p>Post assessments, data collection, outcome analysis</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">5</div>
+                    <div class="timeline-content">
+                        <h4>Review & Decision (Week 17+)</h4>
+                        <p>Final report presentation, district-wide rollout planning if successful</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Metrics -->
+        <section class="page-break">
+            <p class="section-number">Section 3</p>
+            <h2>What We Measure</h2>
+            
+            <p>The pilot includes comprehensive data collection to demonstrate impact:</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Metric Category</th>
+                        <th>What We Track</th>
+                        <th>Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Student Regulation</td>
+                        <td>Self-reported calm, emotional control, stress recovery</td>
+                        <td>Pre/post surveys</td>
+                    </tr>
+                    <tr>
+                        <td>Classroom Climate</td>
+                        <td>Disruptions, transitions, overall atmosphere</td>
+                        <td>Teacher reports</td>
+                    </tr>
+                    <tr>
+                        <td>Academic Readiness</td>
+                        <td>Focus, attention, learning engagement</td>
+                        <td>Teacher observations</td>
+                    </tr>
+                    <tr>
+                        <td>Behavioral Incidents</td>
+                        <td>Office referrals, escalations</td>
+                        <td>Existing district data</td>
+                    </tr>
+                    <tr>
+                        <td>Usage & Engagement</td>
+                        <td>Sessions completed, time on platform</td>
+                        <td>Platform analytics</td>
+                    </tr>
+                    <tr>
+                        <td>Staff Experience</td>
+                        <td>Ease of use, perceived value, burnout indicators</td>
+                        <td>Staff surveys</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <h4>📋 Your Final Report Will Include:</h4>
+                <ul>
+                    <li>Executive summary for board presentation</li>
+                    <li>Detailed outcome data with visualizations</li>
+                    <li>Student and staff testimonials</li>
+                    <li>ROI projections for district-wide implementation</li>
+                    <li>Recommended next steps</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Implementation Models -->
+        <section>
+            <p class="section-number">Section 4</p>
+            <h2>Implementation Models</h2>
+            
+            <p>We offer flexible implementation based on your district's needs:</p>
+
+            <div class="two-col">
+                <div class="metric-card">
+                    <h4>🏫 Classroom Integration</h4>
+                    <p>Teachers use PNEUOMA during transitions, after recess, before tests, or as needed. 3-5 minute sessions built into the school day.</p>
+                </div>
+                <div class="metric-card">
+                    <h4>🩺 Counselor-Led</h4>
+                    <p>School counselors use PNEUOMA in individual and group sessions. Ideal for targeted intervention.</p>
+                </div>
+                <div class="metric-card">
+                    <h4>📍 Wellness Room</h4>
+                    <p>Dedicated regulation space where students can self-select PNEUOMA experiences. Student-driven usage.</p>
+                </div>
+                <div class="metric-card">
+                    <h4>🧘 Morning Ritual</h4>
+                    <p>Whole-school regulation to start the day. Announcements + 3-minute breath exercise.</p>
+                </div>
+            </div>
+
+            <p><strong>Most pilots combine 2-3 models</strong> based on grade level and school context. We'll work with you to design the right approach.</p>
+        </section>
+
+        <!-- Investment -->
+        <section>
+            <p class="section-number">Section 5</p>
+            <h2>Pilot Investment</h2>
+            
+            <p>Pilot pricing is significantly reduced from standard licensing to lower the barrier to evaluation:</p>
+
+            <div class="pricing-tiers">
+                <div class="tier">
+                    <h4>Single School</h4>
+                    <p class="size">Up to 500 students</p>
+                    <p class="price">$2,500</p>
+                    <p class="period">one semester</p>
+                </div>
+                <div class="tier featured">
+                    <h4>Multi-School</h4>
+                    <p class="size">2-5 schools</p>
+                    <p class="price">$5,000</p>
+                    <p class="period">one semester</p>
+                </div>
+                <div class="tier">
+                    <h4>District-Wide</h4>
+                    <p class="size">6+ schools</p>
+                    <p class="price">Custom</p>
+                    <p class="period">contact us</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Pilot Guarantee:</strong> If you don't see measurable improvement in at least one key metric, we'll extend your pilot at no additional cost or provide a full refund.</p>
+            </div>
+
+            <h3>What Happens After the Pilot?</h3>
+            <p>Successful pilots can transition to annual licensing with:</p>
+            <ul>
+                <li>Preferred pricing locked in at pilot rates + 20%</li>
+                <li>Expanded training and support packages</li>
+                <li>Priority access to new features and content</li>
+                <li>Co-development opportunities for district-specific needs</li>
+            </ul>
+        </section>
+
+        <!-- Requirements -->
+        <section>
+            <p class="section-number">Section 6</p>
+            <h2>Technical Requirements</h2>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Specification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Devices</td>
+                        <td>Chromebooks, iPads, laptops, or desktop computers</td>
+                    </tr>
+                    <tr>
+                        <td>Browser</td>
+                        <td>Chrome, Safari, Firefox, Edge (latest versions)</td>
+                    </tr>
+                    <tr>
+                        <td>Internet</td>
+                        <td>Standard school WiFi (no special bandwidth needs)</td>
+                    </tr>
+                    <tr>
+                        <td>Audio</td>
+                        <td>Headphones recommended but not required</td>
+                    </tr>
+                    <tr>
+                        <td>Accounts</td>
+                        <td>No student accounts required — classroom code system</td>
+                    </tr>
+                    <tr>
+                        <td>Data Privacy</td>
+                        <td>FERPA compliant, no PII collected</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- FAQ -->
+        <section>
+            <p class="section-number">Section 7</p>
+            <h2>Frequently Asked Questions</h2>
+
+            <h3>How much time does this take from the school day?</h3>
+            <p>Most implementations use 3-12 minutes per session. Teachers report this time is recovered through smoother transitions and fewer disruptions.</p>
+
+            <h3>Do teachers need extensive training?</h3>
+            <p>No. The platform is designed to be intuitive. We provide a 45-minute training session, and teachers can start using it immediately.</p>
+
+            <h3>What if students don't engage?</h3>
+            <p>PNEUOMA uses game mechanics that meet students where they are. Early data shows 90%+ engagement rates. We also provide troubleshooting support if engagement dips.</p>
+
+            <h3>Is this just another SEL program?</h3>
+            <p>No. SEL focuses on social-emotional skills and awareness. PNEUOMA works at the physiological level — training the nervous system itself. It complements SEL, it doesn't replace it.</p>
+
+            <h3>What about students with special needs?</h3>
+            <p>Many experiences are designed with sensory sensitivities in mind. We also have specific content for regulation challenges common in special education settings.</p>
+
+            <h3>Can parents use this at home?</h3>
+            <p>Yes. The PNEU app allows home practice, and we provide parent guides for continuity between school and home.</p>
+        </section>
+
+        <!-- Contact -->
+        <div class="contact-section">
+            <h2>Ready to Start?</h2>
+            <p>Let's schedule a call to discuss your district's specific needs and design a pilot that works for you.</p>
+            
+            <div class="contact-info">
+                <div class="contact-row">
+                    <span>👤</span>
+                    <strong>Camryn Jackson</strong> — Founder & Architect
+                </div>
+                <div class="contact-row">
+                    <span>📧</span>
+                    <a href="mailto:camryn@pneuoma.com">camryn@pneuoma.com</a>
+                </div>
+                <div class="contact-row">
+                    <span>🌐</span>
+                    <a href="https://pneuoma.com">pneuoma.com</a>
+                </div>
+                <div class="contact-row">
+                    <span>📅</span>
+                    <span>Schedule a call: <a href="https://pneuoma.com/schedule">pneuoma.com/schedule</a></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="doc-footer">
+            <p>© 2025 PNEUOMA. Building the nervous system layer of modern education.</p>
+            <p style="margin-top: 8px;">This document is confidential and intended for the recipient district only.</p>
+        </footer>
+    </div>
+
+    <!-- Print Button -->
+    <button class="print-btn no-print" onclick="window.print()">
+        <span>🖨️</span>
+        <span>Print / Save PDF</span>
+    </button>
+</body>
+</html>
+
