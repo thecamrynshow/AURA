@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Focus — Study Session Reset for Teens | PNEUOMA</title>
+    <meta name="title" content="Focus — Study Session Reset for Teens | PNEUOMA">
+    <meta name="description" content="Can't focus on homework? Quick 5-10 minute attention reset for teens. Clear your head, train your focus, and get back to studying.">
+    <meta name="keywords" content="study focus, homework help, teen concentration, attention training, study breaks, focus exercises, adhd study help, cant focus on homework">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/focus/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-grid">
+            <div class="grid-lines"></div>
+            <div class="glow-center"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="timer" id="timer">
+                <span class="timer-value">0:00</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="target-icon">
+                    <div class="target-rings">
+                        <div class="ring r1"></div>
+                        <div class="ring r2"></div>
+                        <div class="ring r3"></div>
+                    </div>
+                    <div class="target-dot"></div>
+                </div>
+                <h1 class="title">focus</h1>
+                <p class="tagline">reset your attention</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>let's focus</span>
+                </button>
+                
+                <p class="time-note">~5-10 min</p>
+            </div>
+        </div>
+
+        <!-- Distraction Check Screen -->
+        <div class="screen" id="distractionScreen">
+            <div class="check-content">
+                <h2 class="question">how scattered is your brain rn?</h2>
+                
+                <div class="slider-container">
+                    <input type="range" min="1" max="10" value="5" id="distractionSlider" class="focus-slider">
+                    <div class="slider-labels">
+                        <span>a little fuzzy</span>
+                        <span>total chaos</span>
+                    </div>
+                    <div class="slider-value" id="distractionValue">5</div>
+                </div>
+                
+                <button class="continue-btn" id="distractionContinue">let's fix that</button>
+            </div>
+        </div>
+
+        <!-- Brain Dump Screen -->
+        <div class="screen" id="dumpScreen">
+            <div class="dump-content">
+                <div class="phase-icon">🧠</div>
+                <h2 class="phase-title">brain dump</h2>
+                <p class="phase-desc">tap each thought to let it go</p>
+                
+                <div class="thoughts-container" id="thoughtsContainer">
+                    <button class="thought-bubble" data-thought="1">that thing I said</button>
+                    <button class="thought-bubble" data-thought="2">my phone</button>
+                    <button class="thought-bubble" data-thought="3">what they think</button>
+                    <button class="thought-bubble" data-thought="4">that video</button>
+                    <button class="thought-bubble" data-thought="5">later plans</button>
+                    <button class="thought-bubble" data-thought="6">random worry</button>
+                </div>
+                
+                <div class="dump-progress">
+                    <span class="progress-text" id="dumpProgress">0/6</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Focus Breathing Screen -->
+        <div class="screen" id="breatheScreen">
+            <div class="breathe-content">
+                <div class="phase-icon">🎯</div>
+                <h2 class="phase-title">focus breath</h2>
+                
+                <div class="focus-circle-container">
+                    <div class="focus-circle" id="focusCircle">
+                        <div class="focus-dot" id="focusDot"></div>
+                    </div>
+                    <p class="breath-text" id="breathText">follow the dot</p>
+                </div>
+                
+                <div class="breath-count" id="breathCount">
+                    <span class="count-current">1</span>
+                    <span class="count-total">/ 3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attention Training Screen -->
+        <div class="screen" id="attentionScreen">
+            <div class="attention-content">
+                <div class="phase-icon">👁️</div>
+                <h2 class="phase-title">attention training</h2>
+                <p class="phase-desc" id="attentionDesc">focus on the center dot</p>
+                
+                <div class="attention-field" id="attentionField">
+                    <div class="center-target">
+                        <div class="target-core"></div>
+                    </div>
+                    <div class="distraction d1">✨</div>
+                    <div class="distraction d2">📱</div>
+                    <div class="distraction d3">💭</div>
+                    <div class="distraction d4">🎵</div>
+                </div>
+                
+                <div class="attention-timer" id="attentionTimer">
+                    <div class="timer-fill" id="timerFill"></div>
+                </div>
+                <p class="attention-time" id="attentionTime">15s</p>
+            </div>
+        </div>
+
+        <!-- Intention Screen -->
+        <div class="screen" id="intentionScreen">
+            <div class="intention-content">
+                <div class="phase-icon">📝</div>
+                <h2 class="phase-title">set your target</h2>
+                <p class="phase-desc">what are you going to focus on?</p>
+                
+                <div class="intention-options" id="intentionOptions">
+                    <button class="intention-btn" data-intention="homework">📚 Homework</button>
+                    <button class="intention-btn" data-intention="reading">📖 Reading</button>
+                    <button class="intention-btn" data-intention="project">🎨 Project</button>
+                    <button class="intention-btn" data-intention="studying">📝 Studying</button>
+                    <button class="intention-btn" data-intention="writing">✍️ Writing</button>
+                    <button class="intention-btn" data-intention="other">✨ Something else</button>
+                </div>
+                
+                <div class="time-select" id="timeSelect">
+                    <p class="time-label">how long?</p>
+                    <div class="time-options">
+                        <button class="time-btn" data-time="15">15 min</button>
+                        <button class="time-btn active" data-time="25">25 min</button>
+                        <button class="time-btn" data-time="45">45 min</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Launch Screen -->
+        <div class="screen" id="launchScreen">
+            <div class="launch-content">
+                <div class="launch-target">
+                    <div class="launch-rings">
+                        <div class="launch-ring r1"></div>
+                        <div class="launch-ring r2"></div>
+                        <div class="launch-ring r3"></div>
+                    </div>
+                    <div class="launch-countdown" id="launchCountdown">3</div>
+                </div>
+                
+                <h2 class="launch-title">locked in</h2>
+                <p class="launch-task" id="launchTask">📚 Homework for 25 min</p>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-icon">🎯</div>
+                <h2 class="complete-title">focused</h2>
+                <p class="complete-message">your brain is ready</p>
+                
+                <div class="focus-stats">
+                    <div class="stat">
+                        <span class="stat-before" id="statBefore">7</span>
+                        <span class="stat-arrow">→</span>
+                        <span class="stat-after" id="statAfter">3</span>
+                    </div>
+                    <p class="stat-label">distraction level</p>
+                </div>
+                
+                <div class="session-info" id="sessionInfo">
+                    <p class="session-task">📚 Homework</p>
+                    <p class="session-time">25 minutes</p>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="goBtn">start studying</button>
+                    <button class="btn-secondary" id="againBtn">need more reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/exercises.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
