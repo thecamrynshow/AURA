@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Sync — Couples Co-Regulation Game | Breathe Together | PNEUOMA</title>
+    <meta name="title" content="Sync — Couples Co-Regulation Game | Breathe Together | PNEUOMA">
+    <meta name="description" content="A beautiful co-regulation experience for couples. Sync your breathing, calm your nervous systems together, and deepen your connection through shared presence.">
+    <meta name="keywords" content="couples meditation, partner breathing, co-regulation, couples therapy, relationship anxiety, couples mindfulness, sync breathing, nervous system couples">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/sync/">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pneuoma.com/games/sync/">
+    <meta property="og:title" content="Sync — Couples Co-Regulation">
+    <meta property="og:description" content="Breathe together. Regulate together. Connect deeper.">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Ambient Background -->
+        <div class="ambient-bg">
+            <div class="glow glow-1"></div>
+            <div class="glow glow-2"></div>
+            <div class="particles" id="particles"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back</a>
+            <div class="session-timer" id="sessionTimer">
+                <span class="timer-value">0:00</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="hearts-icon">
+                    <span class="heart h1">♥</span>
+                    <span class="heart h2">♥</span>
+                </div>
+                <h1 class="title">Sync</h1>
+                <p class="subtitle">Couples Co-Regulation</p>
+                <p class="tagline">
+                    Two nervous systems,<br>
+                    one shared rhythm.
+                </p>
+                
+                <div class="instructions-preview">
+                    <div class="instruction-item">
+                        <span class="step">1</span>
+                        <span>Sit facing each other</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="step">2</span>
+                        <span>Place device between you</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="step">3</span>
+                        <span>Each person controls one side</span>
+                    </div>
+                </div>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>Begin Together</span>
+                </button>
+                
+                <p class="time-note">~10-15 minutes</p>
+            </div>
+        </div>
+
+        <!-- Setup Screen -->
+        <div class="screen" id="setupScreen">
+            <div class="setup-content">
+                <h2 class="setup-title">Get Comfortable</h2>
+                
+                <div class="setup-steps">
+                    <div class="setup-step active" data-step="1">
+                        <div class="step-icon">🪑</div>
+                        <p>Sit facing each other, close enough to touch</p>
+                    </div>
+                    <div class="setup-step" data-step="2">
+                        <div class="step-icon">📱</div>
+                        <p>Place the phone between you, screen visible to both</p>
+                    </div>
+                    <div class="setup-step" data-step="3">
+                        <div class="step-icon">👐</div>
+                        <p>You can hold hands if you'd like</p>
+                    </div>
+                    <div class="setup-step" data-step="4">
+                        <div class="step-icon">👀</div>
+                        <p>Make soft eye contact when ready</p>
+                    </div>
+                </div>
+                
+                <button class="continue-btn" id="setupContinue">We're Ready</button>
+            </div>
+        </div>
+
+        <!-- Sync Screen -->
+        <div class="screen" id="syncScreen">
+            <div class="sync-content">
+                <!-- Phase Message -->
+                <div class="phase-header" id="phaseHeader">
+                    <h2 class="phase-title" id="phaseTitle">Arriving Together</h2>
+                    <p class="phase-instruction" id="phaseInstruction">Take a moment to settle</p>
+                </div>
+                
+                <!-- Dual Orbs -->
+                <div class="orbs-container" id="orbsContainer">
+                    <!-- Person 1 (left/top) -->
+                    <div class="person-orb" id="orb1" data-person="1">
+                        <div class="orb-glow"></div>
+                        <div class="orb-core"></div>
+                        <div class="orb-ring"></div>
+                        <p class="orb-label">Partner 1</p>
+                        <p class="orb-state" id="state1">Tap to breathe</p>
+                    </div>
+                    
+                    <!-- Connection Line -->
+                    <div class="connection-line" id="connectionLine">
+                        <div class="sync-indicator" id="syncIndicator">
+                            <span class="sync-text">Syncing...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Person 2 (right/bottom) -->
+                    <div class="person-orb" id="orb2" data-person="2">
+                        <div class="orb-glow"></div>
+                        <div class="orb-core"></div>
+                        <div class="orb-ring"></div>
+                        <p class="orb-label">Partner 2</p>
+                        <p class="orb-state" id="state2">Tap to breathe</p>
+                    </div>
+                </div>
+                
+                <!-- Shared Breath Guide (appears when synced) -->
+                <div class="shared-breath" id="sharedBreath">
+                    <div class="shared-circle"></div>
+                    <p class="shared-text" id="sharedText">Breathe together</p>
+                </div>
+                
+                <!-- Touch Prompt -->
+                <div class="touch-prompt" id="touchPrompt">
+                    <p class="prompt-text" id="promptText"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-hearts">
+                    <span class="heart-merged">♥</span>
+                </div>
+                <h2 class="complete-title">Synced</h2>
+                <p class="complete-message" id="completeMessage">
+                    You've shared this time together.<br>
+                    Your nervous systems are more connected now.
+                </p>
+                
+                <div class="session-summary">
+                    <div class="summary-stat">
+                        <span class="stat-value" id="syncTime">10:00</span>
+                        <span class="stat-label">Time Together</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="stat-value" id="syncPercent">85%</span>
+                        <span class="stat-label">Sync Rate</span>
+                    </div>
+                </div>
+                
+                <div class="complete-prompt">
+                    <p>Before you return to your day...</p>
+                    <p class="prompt-action">Share one word about how you feel.</p>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn btn-primary" id="againBtn">Sync Again</button>
+                    <a href="../../platform/games/" class="btn btn-secondary">All Games</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/visuals.js"></script>
+    <script src="src/js/phases.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
