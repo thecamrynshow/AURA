@@ -102,7 +102,27 @@
         <priority>0.8</priority>
     </url>
     
-    <!-- Adult Games (Coming Soon) -->
+    <!-- Teen Games -->
+    <url>
+        <loc>https://pneuoma.com/games/chill/</loc>
+        <lastmod>2026-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/focus/</loc>
+        <lastmod>2026-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/bounce/</loc>
+        <lastmod>2026-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- Adult Games -->
     <url>
         <loc>https://pneuoma.com/games/drift/</loc>
         <lastmod>2024-12-31</lastmod>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Bounce — Rejection Recovery for Teens | PNEUOMA</title>
+    <meta name="title" content="Bounce — Rejection Recovery for Teens | PNEUOMA">
+    <meta name="description" content="Didn't make the team? Got rejected? Failed a test? Quick 5-8 minute recovery game for teens to process disappointment and bounce back stronger.">
+    <meta name="keywords" content="teen rejection, failure recovery, didn't make the team, teen disappointment, resilience for teens, bounce back, teen coping skills">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/bounce/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-gradient">
+            <div class="bounce-line"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="progress-dots" id="progressDots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="ball-container">
+                    <div class="bounce-ball" id="titleBall"></div>
+                    <div class="ball-shadow"></div>
+                </div>
+                <h1 class="title">bounce</h1>
+                <p class="tagline">you fell. now rise.</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>let's go</span>
+                </button>
+                
+                <p class="time-note">~5-8 min</p>
+            </div>
+        </div>
+
+        <!-- What Happened Screen -->
+        <div class="screen" id="whatScreen">
+            <div class="what-content">
+                <h2 class="question">what happened?</h2>
+                <p class="sub-question">no judgment. just pick one.</p>
+                
+                <div class="rejection-grid" id="rejectionGrid">
+                    <button class="rejection-btn" data-type="team">
+                        <span class="rej-icon">🏆</span>
+                        <span class="rej-text">didn't make it</span>
+                    </button>
+                    <button class="rejection-btn" data-type="social">
+                        <span class="rej-icon">👥</span>
+                        <span class="rej-text">left out</span>
+                    </button>
+                    <button class="rejection-btn" data-type="grade">
+                        <span class="rej-icon">📝</span>
+                        <span class="rej-text">bad grade</span>
+                    </button>
+                    <button class="rejection-btn" data-type="crush">
+                        <span class="rej-icon">💔</span>
+                        <span class="rej-text">rejected</span>
+                    </button>
+                    <button class="rejection-btn" data-type="mistake">
+                        <span class="rej-icon">😬</span>
+                        <span class="rej-text">messed up</span>
+                    </button>
+                    <button class="rejection-btn" data-type="other">
+                        <span class="rej-icon">💫</span>
+                        <span class="rej-text">something else</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feel It Screen -->
+        <div class="screen" id="feelScreen">
+            <div class="feel-content">
+                <div class="phase-num">1</div>
+                <h2 class="phase-title">feel it</h2>
+                <p class="phase-desc">it's okay to feel this</p>
+                
+                <div class="feeling-ball" id="feelingBall">
+                    <div class="feeling-core"></div>
+                    <div class="feeling-pulse"></div>
+                </div>
+                
+                <p class="feeling-prompt" id="feelingPrompt">tap and hold the feeling</p>
+                
+                <div class="hold-progress" id="holdProgress">
+                    <div class="hold-fill" id="holdFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ground Screen -->
+        <div class="screen" id="groundScreen">
+            <div class="ground-content">
+                <div class="phase-num">2</div>
+                <h2 class="phase-title">ground</h2>
+                <p class="phase-desc" id="groundDesc">push your feet into the floor</p>
+                
+                <div class="ground-visual">
+                    <div class="feet-icons">
+                        <span class="foot left" id="footLeft">🦶</span>
+                        <span class="foot right" id="footRight">🦶</span>
+                    </div>
+                    <div class="ground-line"></div>
+                </div>
+                
+                <p class="ground-prompt" id="groundPrompt">tap when you feel it</p>
+                
+                <button class="tap-btn" id="groundTap">
+                    <span>i feel it</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Perspective Screen -->
+        <div class="screen" id="perspectiveScreen">
+            <div class="perspective-content">
+                <div class="phase-num">3</div>
+                <h2 class="phase-title">perspective</h2>
+                
+                <div class="truth-card" id="truthCard">
+                    <p class="truth-text" id="truthText">one rejection doesn't define you</p>
+                </div>
+                
+                <div class="swipe-hint">
+                    <span>swipe for more →</span>
+                </div>
+                
+                <button class="continue-btn" id="perspectiveContinue">that helps</button>
+            </div>
+        </div>
+
+        <!-- Bounce Screen -->
+        <div class="screen" id="bounceScreen">
+            <div class="bounce-content">
+                <div class="phase-num">4</div>
+                <h2 class="phase-title">bounce</h2>
+                <p class="phase-desc">tap the ball to bounce back</p>
+                
+                <div class="bounce-area" id="bounceArea">
+                    <div class="active-ball" id="activeBall"></div>
+                    <div class="bounce-floor"></div>
+                </div>
+                
+                <div class="bounce-counter">
+                    <span class="bounce-count" id="bounceCount">0</span>
+                    <span class="bounce-label">/ 10 bounces</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forward Screen -->
+        <div class="screen" id="forwardScreen">
+            <div class="forward-content">
+                <div class="phase-num">5</div>
+                <h2 class="phase-title">forward</h2>
+                <p class="phase-desc">one small thing you can do now</p>
+                
+                <div class="forward-options" id="forwardOptions">
+                    <button class="forward-btn" data-action="talk">💬 talk to someone</button>
+                    <button class="forward-btn" data-action="move">🚶 take a walk</button>
+                    <button class="forward-btn" data-action="rest">😴 rest & reset</button>
+                    <button class="forward-btn" data-action="try">💪 try again</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-ball">
+                    <div class="ball-up"></div>
+                    <div class="up-arrow">↑</div>
+                </div>
+                <h2 class="complete-title">you bounced</h2>
+                <p class="complete-message" id="completeMessage">falling is part of the game. getting up is the whole point.</p>
+                
+                <div class="affirmation-box" id="affirmationBox">
+                    <p class="affirmation" id="affirmation">you're still in the game</p>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">i'm good</button>
+                    <button class="btn-secondary" id="againBtn">need more</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/content.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
