@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Descent — Ritual | PNEUOMA</title>
+    <meta name="description" content="A 15-20 minute ritual to guide your nervous system into sleep. Fall asleep faster, sleep deeper.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ritual-container">
+        <div class="ambient-bg" id="ambientBg"></div>
+        
+        <div class="audio-toggle">
+            <button class="audio-btn" id="audioBtn">
+                <span class="audio-icon on">🔊</span>
+                <span class="audio-icon off">🔇</span>
+            </button>
+        </div>
+        <a href="../index.html" class="close-btn">✕</a>
+        
+        <div class="ritual-progress">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span class="progress-time" id="progressTime">0:00</span>
+        </div>
+
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="ritual-icon">🌙</div>
+                <h1 class="ritual-title">Sleep Descent</h1>
+                <p class="ritual-subtitle">Sink into rest</p>
+                
+                <div class="ritual-info">
+                    <span class="info-item"><span class="info-icon">⏱</span> 15-20 minutes</span>
+                    <span class="info-item"><span class="info-icon">🎧</span> Audio guided</span>
+                </div>
+
+                <div class="ritual-overview">
+                    <p class="overview-label">What we'll do:</p>
+                    <ol class="overview-steps">
+                        <li>Day completion</li>
+                        <li>4-7-8 breathing</li>
+                        <li>Body scan relaxation</li>
+                        <li>Counting descent</li>
+                        <li>Drift...</li>
+                    </ol>
+                </div>
+
+                <button class="begin-btn" id="beginBtn">Begin Descent</button>
+                <p class="prep-note">Get comfortable in bed. Dim your screen.</p>
+            </div>
+        </div>
+
+        <!-- Completion -->
+        <div class="screen" id="completionScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">1</span><span class="phase-label">Day Complete</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="completionText">The day is done...</p>
+                </div>
+                <div class="visual-element"><div class="sun-set">🌅</div></div>
+            </div>
+        </div>
+
+        <!-- 4-7-8 -->
+        <div class="screen" id="breathScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">2</span><span class="phase-label">4-7-8 Breathing</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="breathText">The sleep breath...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="sleep-orb" id="sleepOrb"></div>
+                    <p class="breath-phase" id="breathPhase">inhale</p>
+                    <p class="breath-count" id="breathCountdown">4</p>
+                </div>
+                <div class="breath-counter"><span id="breathCount">1</span> / 4</div>
+            </div>
+        </div>
+
+        <!-- Body Scan -->
+        <div class="screen" id="bodyScanScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">3</span><span class="phase-label">Body Relaxation</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="bodyScanText">Let each part grow heavy...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="relaxation-wave" id="relaxationWave"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Counting -->
+        <div class="screen" id="countingScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">4</span><span class="phase-label">Counting Down</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text">With each number, sink deeper...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="count-number" id="countNumber">10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drift -->
+        <div class="screen" id="driftScreen">
+            <div class="screen-content">
+                <div class="drift-content">
+                    <p class="drift-text" id="driftText">drifting...</p>
+                    <div class="stars">
+                        <span class="star">✦</span>
+                        <span class="star">✧</span>
+                        <span class="star">✦</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="ritual.js"></script>
+</body>
+</html>
+

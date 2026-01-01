@@ -1,0 +1,82 @@
+/* Before Ritual — Pre-Performance */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg-dark: #0a0f0a;
+    --bg-mid: #0f1a0f;
+    --green: #68d391;
+    --green-dim: rgba(104, 211, 145, 0.15);
+    --green-glow: rgba(104, 211, 145, 0.3);
+    --text-primary: #e8f5e8;
+    --text-secondary: rgba(232, 245, 232, 0.7);
+    --text-muted: rgba(232, 245, 232, 0.4);
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+}
+
+body { font-family: var(--font-body); background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow: hidden; }
+.ritual-container { width: 100%; height: 100vh; position: relative; }
+.ambient-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at center, var(--bg-mid) 0%, var(--bg-dark) 70%); }
+
+.audio-toggle { position: fixed; top: 20px; left: 20px; z-index: 100; }
+.audio-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.audio-icon { font-size: 1.2rem; }
+.audio-icon.off { display: none; }
+.audio-btn.muted .audio-icon.on { display: none; }
+.audio-btn.muted .audio-icon.off { display: inline; }
+
+.close-btn { position: fixed; top: 20px; right: 20px; z-index: 100; color: var(--text-muted); text-decoration: none; font-size: 1.5rem; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; }
+
+.ritual-progress { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; z-index: 100; }
+.progress-bar { width: 120px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); width: 0%; transition: width 0.5s ease; }
+.progress-time { font-size: 0.85rem; color: var(--text-muted); }
+
+.screen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.8s ease; z-index: 10; padding: 40px 20px; }
+.screen.active { opacity: 1; visibility: visible; }
+.screen-content { max-width: 480px; width: 100%; text-align: center; }
+
+.ritual-icon { font-size: 3rem; margin-bottom: 20px; }
+.ritual-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--green); margin-bottom: 10px; }
+.ritual-subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 30px; }
+.ritual-info { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
+.info-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-muted); }
+.ritual-overview { background: var(--green-dim); border-radius: 12px; padding: 25px; margin-bottom: 30px; text-align: left; }
+.overview-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+.overview-steps { margin: 0; padding-left: 20px; color: var(--text-secondary); line-height: 1.8; }
+.begin-btn { background: var(--green); color: var(--bg-dark); border: none; padding: 16px 48px; border-radius: 30px; font-size: 1rem; font-weight: 500; cursor: pointer; margin-bottom: 20px; }
+.prep-note { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+
+.phase-indicator { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 40px; }
+.phase-num { width: 32px; height: 32px; background: var(--green-dim); border: 1px solid var(--green); color: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.phase-label { font-family: var(--font-display); font-size: 1.3rem; color: var(--green); }
+.guidance-container { min-height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 40px; }
+.guidance-text { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); font-style: italic; transition: opacity 0.5s ease; }
+
+.visual-element { margin: 30px 0; }
+.heart-visual { font-size: 4rem; animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+.sigh-circle { width: 120px; height: 120px; margin: 0 auto 20px; border: 3px solid var(--green); border-radius: 50%; transition: all 0.5s ease; }
+.sigh-circle.inhale1 { transform: scale(1.1); }
+.sigh-circle.inhale2 { transform: scale(1.3); }
+.sigh-circle.exhale { transform: scale(0.8); opacity: 0.6; }
+.sigh-instruction { font-size: 1rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; }
+.breath-counter { margin-top: 20px; color: var(--text-muted); }
+.breath-counter span { color: var(--green); font-size: 1.2rem; }
+
+.power-icon { font-size: 5rem; margin-bottom: 20px; }
+.power-timer { font-size: 3rem; color: var(--green); font-family: var(--font-display); }
+
+.visualize-eye { font-size: 4rem; animation: blink 4s ease-in-out infinite; }
+@keyframes blink { 0%, 90%, 100% { opacity: 1; } 95% { opacity: 0.3; } }
+
+.cue-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
+.cue-btn { background: var(--green-dim); border: 2px solid transparent; color: var(--text-secondary); padding: 12px 24px; border-radius: 25px; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; }
+.cue-btn:hover, .cue-btn.selected { border-color: var(--green); color: var(--green); }
+
+.complete-icon { font-size: 3rem; margin-bottom: 20px; }
+.complete-title { font-family: var(--font-display); font-size: 2.5rem; color: var(--green); margin-bottom: 20px; }
+.complete-message { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 30px; }
+.btn-primary { background: var(--green); color: var(--bg-dark); border: none; padding: 16px 40px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+

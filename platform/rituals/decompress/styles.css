@@ -1,0 +1,78 @@
+/* Decompress Ritual — After Stress */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg-dark: #0f0a14;
+    --bg-mid: #1a1020;
+    --purple: #b794f6;
+    --purple-dim: rgba(183, 148, 246, 0.15);
+    --purple-glow: rgba(183, 148, 246, 0.3);
+    --text-primary: #f0e8ff;
+    --text-secondary: rgba(240, 232, 255, 0.7);
+    --text-muted: rgba(240, 232, 255, 0.4);
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+}
+
+body { font-family: var(--font-body); background: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow: hidden; }
+.ritual-container { width: 100%; height: 100vh; position: relative; }
+.ambient-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at center, var(--bg-mid) 0%, var(--bg-dark) 70%); }
+
+.audio-toggle { position: fixed; top: 20px; left: 20px; z-index: 100; }
+.audio-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.audio-icon { font-size: 1.2rem; }
+.audio-icon.off { display: none; }
+.audio-btn.muted .audio-icon.on { display: none; }
+.audio-btn.muted .audio-icon.off { display: inline; }
+.close-btn { position: fixed; top: 20px; right: 20px; z-index: 100; color: var(--text-muted); text-decoration: none; font-size: 1.5rem; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 50%; }
+
+.ritual-progress { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; z-index: 100; }
+.progress-bar { width: 120px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--purple); width: 0%; transition: width 0.5s ease; }
+.progress-time { font-size: 0.85rem; color: var(--text-muted); }
+
+.screen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.8s ease; z-index: 10; padding: 40px 20px; }
+.screen.active { opacity: 1; visibility: visible; }
+.screen-content { max-width: 480px; width: 100%; text-align: center; }
+
+.ritual-icon { font-size: 3rem; margin-bottom: 20px; }
+.ritual-title { font-family: var(--font-display); font-size: 2.8rem; color: var(--purple); margin-bottom: 10px; }
+.ritual-subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 30px; }
+.ritual-info { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; }
+.info-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-muted); }
+.ritual-overview { background: var(--purple-dim); border-radius: 12px; padding: 25px; margin-bottom: 30px; text-align: left; }
+.overview-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+.overview-steps { margin: 0; padding-left: 20px; color: var(--text-secondary); line-height: 1.8; }
+.begin-btn { background: var(--purple); color: var(--bg-dark); border: none; padding: 16px 48px; border-radius: 30px; font-size: 1rem; font-weight: 500; cursor: pointer; margin-bottom: 20px; }
+.prep-note { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+
+.phase-indicator { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 40px; }
+.phase-num { width: 32px; height: 32px; background: var(--purple-dim); border: 1px solid var(--purple); color: var(--purple); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.phase-label { font-family: var(--font-display); font-size: 1.3rem; color: var(--purple); }
+.guidance-container { min-height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 40px; }
+.guidance-text { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary); font-style: italic; transition: opacity 0.5s ease; }
+.visual-element { margin: 30px 0; }
+
+.body-map { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.body-zone { background: var(--purple-dim); border: 1px solid transparent; padding: 12px 20px; border-radius: 20px; font-size: 0.9rem; color: var(--text-secondary); transition: all 0.3s ease; }
+.body-zone.active { border-color: var(--purple); color: var(--purple); box-shadow: 0 0 15px var(--purple-glow); }
+
+.tension-meter { width: 200px; height: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; margin: 0 auto 15px; overflow: hidden; }
+.tension-meter .meter-fill { height: 100%; background: var(--purple); width: 0%; transition: width 0.3s ease; }
+.tension-label { font-size: 1rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; }
+
+.breath-wave { width: 200px; height: 60px; margin: 0 auto; border: 2px solid var(--purple); border-radius: 50%; transition: all 4s ease; }
+.breath-wave.inhale { transform: scaleX(1.3) scaleY(0.7); }
+.breath-wave.exhale { transform: scaleX(0.8) scaleY(1.2); }
+.breath-counter { margin-top: 20px; color: var(--text-muted); }
+.breath-counter span { color: var(--purple); font-size: 1.2rem; }
+
+.gratitude-prompts { margin-top: 30px; }
+.gratitude-item { background: var(--purple-dim); padding: 15px 20px; border-radius: 10px; margin-bottom: 10px; font-size: 1rem; color: var(--text-secondary); opacity: 0; transform: translateY(10px); transition: all 0.5s ease; }
+.gratitude-item.visible { opacity: 1; transform: translateY(0); }
+
+.complete-icon { font-size: 3rem; margin-bottom: 20px; }
+.complete-title { font-family: var(--font-display); font-size: 2.5rem; color: var(--purple); margin-bottom: 20px; }
+.complete-message { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 30px; }
+.btn-primary { background: var(--purple); color: var(--bg-dark); border: none; padding: 16px 40px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+

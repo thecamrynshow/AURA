@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Reset — Ritual | PNEUOMA</title>
+    <meta name="description" content="A 2-3 minute fast-acting protocol for panic, overwhelm, or shutdown. Return to safety when dysregulation hits hard.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ritual-container">
+        <div class="ambient-bg" id="ambientBg"></div>
+        
+        <a href="../index.html" class="close-btn">✕</a>
+
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="ritual-icon">🚨</div>
+                <h1 class="ritual-title">Emergency Reset</h1>
+                <p class="ritual-subtitle">Fast-acting. You're safe.</p>
+                
+                <div class="ritual-info">
+                    <span class="info-item"><span class="info-icon">⏱</span> 2-3 minutes</span>
+                </div>
+
+                <button class="begin-btn" id="beginBtn">Help Me Now</button>
+                <p class="prep-note">For panic, overwhelm, or shutdown.</p>
+            </div>
+        </div>
+
+        <!-- Ground -->
+        <div class="screen" id="groundScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">1</span><span class="phase-label">Ground</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="groundText">5-4-3-2-1</p>
+                </div>
+                <div class="grounding-prompts" id="groundingPrompts">
+                    <div class="ground-item" data-sense="see">👁️ 5 things you can SEE</div>
+                    <div class="ground-item" data-sense="touch">✋ 4 things you can TOUCH</div>
+                    <div class="ground-item" data-sense="hear">👂 3 things you can HEAR</div>
+                    <div class="ground-item" data-sense="smell">👃 2 things you can SMELL</div>
+                    <div class="ground-item" data-sense="taste">👅 1 thing you can TASTE</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sigh -->
+        <div class="screen" id="sighScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">2</span><span class="phase-label">Physiological Sigh</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="sighText">Double inhale, long exhale</p>
+                </div>
+                <div class="visual-element">
+                    <div class="sigh-circle" id="sighCircle"></div>
+                    <p class="sigh-instruction" id="sighInstruction">inhale</p>
+                </div>
+                <div class="breath-counter"><span id="sighCount">1</span> / 5</div>
+            </div>
+        </div>
+
+        <!-- Cold -->
+        <div class="screen" id="coldScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">3</span><span class="phase-label">Cold Water</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="coldText">Cold water on your wrists</p>
+                </div>
+                <div class="visual-element">
+                    <div class="cold-icon">💧</div>
+                    <p class="cold-instruction">Or hold something cold. Ice. A cold can.</p>
+                </div>
+                <div class="timer-display" id="coldTimer">30</div>
+            </div>
+        </div>
+
+        <!-- Reassess -->
+        <div class="screen" id="reassessScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">4</span><span class="phase-label">Reassess</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="reassessText">Check in with yourself...</p>
+                </div>
+                <div class="reassess-options">
+                    <button class="reassess-btn" id="betterBtn">I feel better</button>
+                    <button class="reassess-btn" id="againBtn">I need more</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Safe -->
+        <div class="screen" id="safeScreen">
+            <div class="screen-content">
+                <div class="complete-icon">💚</div>
+                <h2 class="complete-title">You're okay</h2>
+                <p class="complete-message">You made it through.<br>You're safe now.</p>
+                <button class="btn-primary" id="doneBtn">Continue</button>
+            </div>
+        </div>
+    </div>
+    <script src="ritual.js"></script>
+</body>
+</html>
+

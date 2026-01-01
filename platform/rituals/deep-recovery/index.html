@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Recovery — Ritual | PNEUOMA</title>
+    <meta name="description" content="A 20-30 minute complete nervous system reset. For burnout, grief, trauma recovery, or when you need comprehensive restoration.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ritual-container">
+        <div class="ambient-bg" id="ambientBg">
+            <div class="ambient-glow"></div>
+        </div>
+        
+        <div class="audio-toggle">
+            <button class="audio-btn" id="audioBtn">
+                <span class="audio-icon on">🔊</span>
+                <span class="audio-icon off">🔇</span>
+            </button>
+        </div>
+        <a href="../index.html" class="close-btn">✕</a>
+        
+        <div class="ritual-progress">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span class="progress-time" id="progressTime">0:00</span>
+        </div>
+
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="ritual-icon">💚</div>
+                <h1 class="ritual-title">Deep Recovery</h1>
+                <p class="ritual-subtitle">Complete nervous system restoration</p>
+                
+                <div class="ritual-info">
+                    <span class="info-item"><span class="info-icon">⏱</span> 20-30 minutes</span>
+                    <span class="info-item"><span class="info-icon">🎧</span> Audio guided</span>
+                </div>
+
+                <div class="ritual-overview">
+                    <p class="overview-label">What we'll do:</p>
+                    <ol class="overview-steps">
+                        <li>Acknowledgment</li>
+                        <li>Safety signals</li>
+                        <li>Extended breathing</li>
+                        <li>Full body release</li>
+                        <li>Self-compassion</li>
+                        <li>Integration</li>
+                    </ol>
+                </div>
+
+                <button class="begin-btn" id="beginBtn">Begin Recovery</button>
+                <p class="prep-note">For burnout, grief, or when you need deep healing.</p>
+            </div>
+        </div>
+
+        <!-- Acknowledgment -->
+        <div class="screen" id="acknowledgeScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">1</span><span class="phase-label">Acknowledgment</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="acknowledgeText">You've been carrying a lot...</p>
+                </div>
+                <div class="visual-element"><div class="heart-container"><span class="heart-icon">💚</span></div></div>
+            </div>
+        </div>
+
+        <!-- Safety -->
+        <div class="screen" id="safetyScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">2</span><span class="phase-label">Safety Signals</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="safetyText">You are safe right now...</p>
+                </div>
+                <div class="safety-signals">
+                    <div class="signal" id="signal1">Feel the ground beneath you</div>
+                    <div class="signal" id="signal2">Feel the support behind you</div>
+                    <div class="signal" id="signal3">You are held</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breathing -->
+        <div class="screen" id="breathingScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">3</span><span class="phase-label">Extended Breathing</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="breathingText">Long, slow breaths...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="breath-sphere" id="breathSphere"></div>
+                    <p class="breath-instruction" id="breathInstruction">breathe</p>
+                </div>
+                <div class="breath-counter"><span id="breathCount">1</span> / 10</div>
+            </div>
+        </div>
+
+        <!-- Body Release -->
+        <div class="screen" id="releaseScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">4</span><span class="phase-label">Body Release</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="releaseText">Let your body let go...</p>
+                </div>
+                <div class="body-area" id="bodyArea">
+                    <div class="body-part">forehead</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compassion -->
+        <div class="screen" id="compassionScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">5</span><span class="phase-label">Self-Compassion</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="compassionText">Place your hand on your heart...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="hand-heart">🫶</div>
+                </div>
+                <div class="affirmation" id="affirmation"></div>
+            </div>
+        </div>
+
+        <!-- Integration -->
+        <div class="screen" id="integrationScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">6</span><span class="phase-label">Integration</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="integrationText">Take your time returning...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="integration-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-icon">🌱</div>
+                <h2 class="complete-title">Restored</h2>
+                <p class="complete-message">
+                    You gave yourself deep care today.<br>
+                    Healing happens in moments like these.<br>
+                    Be gentle with yourself.
+                </p>
+                <button class="btn-primary" id="doneBtn">Continue Gently</button>
+            </div>
+        </div>
+    </div>
+    <script src="ritual.js"></script>
+</body>
+</html>
+

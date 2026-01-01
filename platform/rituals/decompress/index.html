@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decompress — After Stress Ritual | PNEUOMA</title>
+    <meta name="description" content="A 10-15 minute ritual to process and release accumulated stress. Don't carry today's tension into tomorrow.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ritual-container">
+        <div class="ambient-bg" id="ambientBg"></div>
+        
+        <div class="audio-toggle">
+            <button class="audio-btn" id="audioBtn">
+                <span class="audio-icon on">🔊</span>
+                <span class="audio-icon off">🔇</span>
+            </button>
+        </div>
+        <a href="../index.html" class="close-btn">✕</a>
+        
+        <div class="ritual-progress">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span class="progress-time" id="progressTime">0:00</span>
+        </div>
+
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="ritual-icon">💆</div>
+                <h1 class="ritual-title">Decompress</h1>
+                <p class="ritual-subtitle">Release what you're carrying</p>
+                
+                <div class="ritual-info">
+                    <span class="info-item"><span class="info-icon">⏱</span> 10-15 minutes</span>
+                    <span class="info-item"><span class="info-icon">🎧</span> Audio guided</span>
+                </div>
+
+                <div class="ritual-overview">
+                    <p class="overview-label">What we'll do:</p>
+                    <ol class="overview-steps">
+                        <li>Body tension scan</li>
+                        <li>Progressive release</li>
+                        <li>Slow breathing</li>
+                        <li>Gratitude noting</li>
+                        <li>Completion signal</li>
+                    </ol>
+                </div>
+
+                <button class="begin-btn" id="beginBtn">Begin Release</button>
+                <p class="prep-note">Best done after work or stressful events.</p>
+            </div>
+        </div>
+
+        <!-- Scan -->
+        <div class="screen" id="scanScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">1</span><span class="phase-label">Body Scan</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="scanText">Where are you holding tension?</p>
+                </div>
+                <div class="visual-element">
+                    <div class="body-map">
+                        <div class="body-zone head">head</div>
+                        <div class="body-zone shoulders">shoulders</div>
+                        <div class="body-zone chest">chest</div>
+                        <div class="body-zone belly">belly</div>
+                        <div class="body-zone back">back</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Release -->
+        <div class="screen" id="releaseScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">2</span><span class="phase-label">Progressive Release</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="releaseText">Tense... and release.</p>
+                </div>
+                <div class="visual-element">
+                    <div class="tension-meter">
+                        <div class="meter-fill" id="tensionFill"></div>
+                    </div>
+                    <p class="tension-label" id="tensionLabel">shoulders</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breathe -->
+        <div class="screen" id="breatheScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">3</span><span class="phase-label">Slow Breathing</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="breatheText">Slow it all the way down...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="breath-wave" id="breathWave"></div>
+                </div>
+                <div class="breath-counter"><span id="breathCount">1</span> / 6</div>
+            </div>
+        </div>
+
+        <!-- Gratitude -->
+        <div class="screen" id="gratitudeScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">4</span><span class="phase-label">Gratitude</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="gratitudeText">Three things from today...</p>
+                </div>
+                <div class="gratitude-prompts">
+                    <div class="gratitude-item">1. Something that went well</div>
+                    <div class="gratitude-item">2. Someone who helped</div>
+                    <div class="gratitude-item">3. A small pleasure</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">5</span><span class="phase-label">Complete</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="completeText">The day is done.</p>
+                </div>
+                <div class="complete-icon">✨</div>
+                <h2 class="complete-title">Released</h2>
+                <p class="complete-message">You've processed today's stress.<br>You're ready for rest.</p>
+                <button class="btn-primary" id="doneBtn">Rest Well</button>
+            </div>
+        </div>
+    </div>
+    <script src="ritual.js"></script>
+</body>
+</html>
+

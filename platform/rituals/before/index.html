@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before — Pre-Performance Ritual | PNEUOMA</title>
+    <meta name="description" content="A 5 minute ritual for tests, presentations, interviews, competitions. Arrive in the optimal state, every time.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ritual-container">
+        <div class="ambient-bg" id="ambientBg"></div>
+        
+        <div class="audio-toggle">
+            <button class="audio-btn" id="audioBtn">
+                <span class="audio-icon on">🔊</span>
+                <span class="audio-icon off">🔇</span>
+            </button>
+        </div>
+        <a href="../index.html" class="close-btn">✕</a>
+        
+        <div class="ritual-progress">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span class="progress-time" id="progressTime">0:00</span>
+        </div>
+
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="ritual-icon">▶️</div>
+                <h1 class="ritual-title">Before</h1>
+                <p class="ritual-subtitle">Pre-performance preparation</p>
+                
+                <div class="ritual-info">
+                    <span class="info-item"><span class="info-icon">⏱</span> 5 minutes</span>
+                    <span class="info-item"><span class="info-icon">🎧</span> Audio guided</span>
+                </div>
+
+                <div class="ritual-overview">
+                    <p class="overview-label">What we'll do:</p>
+                    <ol class="overview-steps">
+                        <li>Acknowledge nerves</li>
+                        <li>Physiological sigh x3</li>
+                        <li>Power posture</li>
+                        <li>Visualization</li>
+                        <li>Action cue</li>
+                    </ol>
+                </div>
+
+                <button class="begin-btn" id="beginBtn">Prepare Me</button>
+                <p class="prep-note">For tests, interviews, presentations, competitions.</p>
+            </div>
+        </div>
+
+        <!-- Acknowledge -->
+        <div class="screen" id="acknowledgeScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">1</span><span class="phase-label">Acknowledge</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="acknowledgeText">It's normal to feel nervous...</p>
+                </div>
+                <div class="visual-element"><div class="heart-visual">💓</div></div>
+            </div>
+        </div>
+
+        <!-- Sigh -->
+        <div class="screen" id="sighScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">2</span><span class="phase-label">Physiological Sigh</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="sighText">Double inhale, long exhale...</p>
+                </div>
+                <div class="visual-element">
+                    <div class="sigh-circle" id="sighCircle"></div>
+                    <p class="sigh-instruction" id="sighInstruction">inhale</p>
+                </div>
+                <div class="breath-counter"><span id="sighCount">1</span> / 3</div>
+            </div>
+        </div>
+
+        <!-- Power -->
+        <div class="screen" id="powerScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">3</span><span class="phase-label">Power Posture</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="powerText">Stand tall. Take up space.</p>
+                </div>
+                <div class="visual-element"><div class="power-icon">🦸</div></div>
+                <p class="power-timer" id="powerTimer">60</p>
+            </div>
+        </div>
+
+        <!-- Visualize -->
+        <div class="screen" id="visualizeScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">4</span><span class="phase-label">Visualize</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="visualizeText">See yourself succeeding...</p>
+                </div>
+                <div class="visual-element"><div class="visualize-eye">👁️</div></div>
+            </div>
+        </div>
+
+        <!-- Cue -->
+        <div class="screen" id="cueScreen">
+            <div class="screen-content">
+                <div class="phase-indicator"><span class="phase-num">5</span><span class="phase-label">Action Cue</span></div>
+                <div class="guidance-container">
+                    <p class="guidance-text" id="cueText">One word. Your power word.</p>
+                </div>
+                <div class="cue-options">
+                    <button class="cue-btn">ready</button>
+                    <button class="cue-btn">strong</button>
+                    <button class="cue-btn">calm</button>
+                    <button class="cue-btn">focus</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-icon">🚀</div>
+                <h2 class="complete-title">Ready</h2>
+                <p class="complete-message">You've prepared your nervous system.<br>Now go show them what you've got.</p>
+                <button class="btn-primary" id="doneBtn">Let's Go</button>
+            </div>
+        </div>
+    </div>
+    <script src="ritual.js"></script>
+</body>
+</html>
+
