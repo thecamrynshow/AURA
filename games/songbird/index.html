@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songbird — Whistle with the Forest | PNEUOMA</title>
+    <meta name="description" content="Whistle to call birds, match their melodies, and create harmony with nature.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            <div class="birds-counter">
+                <span class="bird-icon">🐦</span>
+                <span class="bird-count" id="birdCount">0</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <section class="screen title-screen active" id="titleScreen">
+            <div class="forest-bg">
+                <div class="tree tree-1"></div>
+                <div class="tree tree-2"></div>
+                <div class="tree tree-3"></div>
+                <div class="floating-bird b1">🐦</div>
+                <div class="floating-bird b2">🕊️</div>
+                <div class="floating-bird b3">🐤</div>
+            </div>
+            
+            <div class="title-content">
+                <div class="title-bird">🎵</div>
+                <h1 class="game-title">Songbird</h1>
+                <p class="game-tagline">Whistle with the forest</p>
+                
+                <div class="title-description">
+                    <p>Call to the birds with your whistle 🎶</p>
+                    <p>Match their melodies to make friends</p>
+                </div>
+
+                <button class="btn-primary" id="startBtn">
+                    <span>Enter the Forest</span>
+                    <span class="btn-icon">🌲</span>
+                </button>
+
+                <div class="title-meta">
+                    <span class="meta-item">All Ages</span>
+                    <span class="meta-item">5-10 min</span>
+                    <span class="meta-item">Whistle</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Microphone Permission Screen -->
+        <section class="screen mic-screen" id="micScreen">
+            <div class="mic-content">
+                <div class="mic-icon-large">🎤</div>
+                <h2>Enable Microphone</h2>
+                <p>Songbird needs to hear your whistle!</p>
+                
+                <div class="control-choice">
+                    <button class="btn-primary" id="enableMicBtn">
+                        <span>🎵 Allow Microphone</span>
+                    </button>
+                    <button class="btn-secondary" id="useKeyboardBtn">
+                        <span>⌨️ Use Keyboard Instead</span>
+                    </button>
+                </div>
+                
+                <p class="mic-hint">
+                    Keyboard: Use number keys 1-8 to whistle different notes
+                </p>
+            </div>
+        </section>
+
+        <!-- Game Screen -->
+        <section class="screen game-screen" id="gameScreen">
+            <canvas id="forestCanvas"></canvas>
+            
+            <!-- Pitch Indicator -->
+            <div class="pitch-indicator" id="pitchIndicator">
+                <div class="pitch-bar">
+                    <div class="pitch-fill" id="pitchFill"></div>
+                    <div class="pitch-marker" id="pitchMarker"></div>
+                </div>
+                <div class="pitch-labels">
+                    <span>Low</span>
+                    <span>High</span>
+                </div>
+            </div>
+            
+            <!-- Note Display -->
+            <div class="note-display" id="noteDisplay">
+                <span class="current-note">♪</span>
+            </div>
+            
+            <!-- Bird Call Challenge -->
+            <div class="challenge-display" id="challengeDisplay">
+                <p class="challenge-text">Listen to the bird...</p>
+                <div class="challenge-notes" id="challengeNotes"></div>
+            </div>
+            
+            <!-- Whistle Prompt -->
+            <div class="whistle-prompt" id="whistlePrompt">
+                <span class="prompt-icon">🎵</span>
+                <span class="prompt-text">Whistle!</span>
+            </div>
+        </section>
+
+        <!-- Success Screen -->
+        <section class="screen success-screen" id="successScreen">
+            <div class="success-content">
+                <div class="success-birds">
+                    <span class="success-bird">🐦</span>
+                    <span class="success-bird">🕊️</span>
+                    <span class="success-bird">🐤</span>
+                </div>
+                
+                <h2 class="success-title">Beautiful Harmony!</h2>
+                <p class="success-message">You've befriended the forest birds</p>
+                
+                <div class="success-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="birdsFound">0</span>
+                        <span class="stat-label">birds befriended</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="melodiesMatched">0</span>
+                        <span class="stat-label">melodies matched</span>
+                    </div>
+                </div>
+                
+                <div class="success-actions">
+                    <button class="btn-primary" id="playAgainBtn">
+                        <span>Play Again</span>
+                        <span class="btn-icon">🎵</span>
+                    </button>
+                    <a href="../../platform/games/index.html" class="btn-secondary">More Games</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/birds.js"></script>
+    <script src="src/js/forest.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

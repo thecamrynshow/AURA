@@ -479,6 +479,64 @@
     50% { opacity: 1; transform: scale(1.1); }
 }
 
+/* Songbird Visual */
+.songbird-bg {
+    background: linear-gradient(180deg, #87ceeb 0%, #a8d8ea 50%, #4a7a4a 100%);
+}
+
+.songbird-visual {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.songbird-tree {
+    width: 40px;
+    height: 100px;
+    background: #2d4a2d;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    position: absolute;
+    bottom: 20%;
+}
+
+.songbird-bird {
+    font-size: 3rem;
+    position: absolute;
+    top: 30%;
+    animation: bird-bob 2s ease-in-out infinite;
+}
+
+@keyframes bird-bob {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.songbird-notes {
+    position: absolute;
+    top: 20%;
+    left: 60%;
+}
+
+.songbird-notes .note {
+    position: absolute;
+    font-size: 1.5rem;
+    color: #ffd700;
+    opacity: 0;
+    animation: note-rise 2s ease-out infinite;
+}
+
+.songbird-notes .n1 { animation-delay: 0s; }
+.songbird-notes .n2 { animation-delay: 1s; left: 20px; }
+
+@keyframes note-rise {
+    0% { opacity: 0; transform: translateY(0); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-40px); }
+}
+
 /* Visual Elements */
 .game-orb {
     width: 100px;
