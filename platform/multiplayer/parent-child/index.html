@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent + Child — PNEUOMA Multiplayer</title>
+    <meta name="description" content="Attachment-based co-regulation. Synchronize breath with your child. The most powerful way to help a child regulate.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Role Selection -->
+        <div class="screen active" id="roleScreen">
+            <div class="screen-content">
+                <div class="logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                </div>
+                
+                <h1 class="welcome-title">Parent + Child</h1>
+                <p class="welcome-subtitle">Breathe together. Regulate together.</p>
+                
+                <div class="role-options">
+                    <button class="role-btn parent-btn" id="parentBtn">
+                        <div class="role-orb parent-orb"></div>
+                        <span class="role-title">I'm the Parent</span>
+                        <span class="role-desc">Lead the session</span>
+                    </button>
+                    
+                    <button class="role-btn child-btn" id="childBtn">
+                        <div class="role-orb child-orb"></div>
+                        <span class="role-title">I'm the Child</span>
+                        <span class="role-desc">Follow along</span>
+                    </button>
+                </div>
+                
+                <p class="demo-note">Demo Mode: Experience both roles</p>
+            </div>
+        </div>
+
+        <!-- Parent Setup -->
+        <div class="screen" id="parentSetupScreen">
+            <div class="screen-content">
+                <h2 class="setup-title">Choose a Mode</h2>
+                
+                <div class="mode-options">
+                    <button class="mode-btn" data-mode="calm">
+                        <span class="mode-icon">🌊</span>
+                        <span class="mode-name">Calm Together</span>
+                        <span class="mode-desc">When emotions are high</span>
+                        <span class="mode-time">3-5 min</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="connect">
+                        <span class="mode-icon">💕</span>
+                        <span class="mode-name">Connect</span>
+                        <span class="mode-desc">Quality bonding time</span>
+                        <span class="mode-time">5 min</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="bedtime">
+                        <span class="mode-icon">🌙</span>
+                        <span class="mode-name">Bedtime</span>
+                        <span class="mode-desc">Prepare for sleep</span>
+                        <span class="mode-time">5-10 min</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="bigfeel">
+                        <span class="mode-icon">🌈</span>
+                        <span class="mode-name">Big Feelings</span>
+                        <span class="mode-desc">Process emotions</span>
+                        <span class="mode-time">3-5 min</span>
+                    </button>
+                </div>
+                
+                <button class="back-btn" id="backToRoleBtn">← Back</button>
+            </div>
+        </div>
+
+        <!-- Main Co-Regulation Experience -->
+        <div class="screen" id="sessionScreen">
+            <div class="session-layout">
+                <!-- Connection Visual -->
+                <div class="connection-area">
+                    <div class="connection-line" id="connectionLine"></div>
+                    
+                    <!-- Parent Orb -->
+                    <div class="person-container parent-container">
+                        <div class="person-orb parent-orb" id="parentOrb">
+                            <div class="orb-glow"></div>
+                            <div class="orb-core"></div>
+                        </div>
+                        <span class="person-label">Parent</span>
+                    </div>
+                    
+                    <!-- Child Orb -->
+                    <div class="person-container child-container">
+                        <div class="person-orb child-orb" id="childOrb">
+                            <div class="orb-glow"></div>
+                            <div class="orb-core"></div>
+                        </div>
+                        <span class="person-label">Child</span>
+                    </div>
+                    
+                    <!-- Connection Heart -->
+                    <div class="connection-heart" id="connectionHeart">💕</div>
+                </div>
+
+                <!-- Guidance -->
+                <div class="guidance-area">
+                    <p class="session-mode" id="sessionMode">Calm Together</p>
+                    <p class="guidance-text" id="guidanceText">Sit together. Make eye contact.</p>
+                    <p class="breath-instruction" id="breathInstruction"></p>
+                </div>
+
+                <!-- Connection Meter -->
+                <div class="connection-meter">
+                    <div class="meter-label">Connection</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" id="connectionMeter"></div>
+                    </div>
+                    <div class="meter-value" id="connectionValue">0%</div>
+                </div>
+
+                <!-- Controls -->
+                <div class="session-controls">
+                    <button class="control-btn" id="endSessionBtn">End Session</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Child Waiting -->
+        <div class="screen" id="childWaitingScreen">
+            <div class="screen-content">
+                <div class="waiting-visual">
+                    <div class="waiting-orb"></div>
+                </div>
+                <h2>Waiting for your grown-up...</h2>
+                <p class="waiting-hint">Ask them to start the session!</p>
+                <button class="back-btn" id="childBackBtn">← Back</button>
+            </div>
+        </div>
+
+        <!-- Completion -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-hearts">💕</div>
+                <h2 class="complete-title">Beautiful!</h2>
+                <p class="complete-message" id="completeMessage">
+                    You regulated together.
+                </p>
+                
+                <div class="session-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="statBreaths">12</span>
+                        <span class="stat-label">Breaths Together</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statConnection">87%</span>
+                        <span class="stat-label">Peak Connection</span>
+                    </div>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">Done</button>
+                    <button class="btn-secondary" id="againBtn">Breathe Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="parent-child.js"></script>
+</body>
+</html>
+
