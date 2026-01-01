@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partners — PNEUOMA Multiplayer</title>
+    <meta name="description" content="Couple co-regulation. Sync nervous systems with your partner. Before difficult conversations, after conflict, or just to connect.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                </div>
+                
+                <h1 class="welcome-title">Partners</h1>
+                <p class="welcome-subtitle">Sync your nervous systems</p>
+                
+                <div class="partner-visual">
+                    <div class="partner-orb left-orb"></div>
+                    <div class="partner-connection"></div>
+                    <div class="partner-orb right-orb"></div>
+                </div>
+                
+                <div class="session-options">
+                    <button class="session-btn" id="createBtn">
+                        <span class="btn-icon">✨</span>
+                        <span class="btn-text">Start Session</span>
+                        <span class="btn-desc">Create a room for your partner</span>
+                    </button>
+                    
+                    <div class="join-section">
+                        <p class="join-label">Or join with code:</p>
+                        <div class="join-input-group">
+                            <input type="text" id="joinCode" placeholder="SYNC-0000" maxlength="9" class="join-input">
+                            <button class="join-btn" id="joinBtn">Join</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waiting Room (Host) -->
+        <div class="screen" id="waitingScreen">
+            <div class="screen-content">
+                <h2 class="waiting-title">Waiting for Partner</h2>
+                
+                <div class="code-display">
+                    <p class="code-label">Share this code:</p>
+                    <div class="code-box" id="sessionCode">SYNC-4829</div>
+                    <button class="copy-btn" id="copyBtn">Copy Code</button>
+                </div>
+                
+                <div class="waiting-visual">
+                    <div class="waiting-orb"></div>
+                    <div class="waiting-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+                
+                <p class="waiting-hint">When they join, the session will begin</p>
+                
+                <button class="cancel-btn" id="cancelBtn">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Mode Selection -->
+        <div class="screen" id="modeScreen">
+            <div class="screen-content">
+                <h2 class="mode-title">What brings you here?</h2>
+                <p class="mode-subtitle">Choose your intention</p>
+                
+                <div class="mode-options">
+                    <button class="mode-btn" data-mode="connect">
+                        <span class="mode-icon">💕</span>
+                        <span class="mode-name">Just Connect</span>
+                        <span class="mode-desc">Quality time together</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="before-talk">
+                        <span class="mode-icon">💬</span>
+                        <span class="mode-name">Before a Conversation</span>
+                        <span class="mode-desc">Prepare for something hard</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="after-conflict">
+                        <span class="mode-icon">🌈</span>
+                        <span class="mode-name">After Conflict</span>
+                        <span class="mode-desc">Reconnect and repair</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="intimacy">
+                        <span class="mode-icon">🔥</span>
+                        <span class="mode-name">Build Intimacy</span>
+                        <span class="mode-desc">Deepen your connection</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="stress">
+                        <span class="mode-icon">🌊</span>
+                        <span class="mode-name">Decompress Together</span>
+                        <span class="mode-desc">Release the day's stress</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Session -->
+        <div class="screen" id="sessionScreen">
+            <div class="session-layout">
+                <!-- Two Partners -->
+                <div class="partners-area">
+                    <div class="partner-container left">
+                        <div class="partner-breath-orb" id="leftOrb">
+                            <div class="orb-inner"></div>
+                        </div>
+                        <span class="partner-label" id="leftLabel">You</span>
+                    </div>
+                    
+                    <div class="sync-bridge">
+                        <div class="bridge-line" id="bridgeLine"></div>
+                        <div class="sync-heart" id="syncHeart">❤️</div>
+                    </div>
+                    
+                    <div class="partner-container right">
+                        <div class="partner-breath-orb" id="rightOrb">
+                            <div class="orb-inner"></div>
+                        </div>
+                        <span class="partner-label" id="rightLabel">Partner</span>
+                    </div>
+                </div>
+
+                <!-- Guidance -->
+                <div class="session-guidance">
+                    <p class="session-mode-label" id="modeLabel">Just Connect</p>
+                    <p class="guidance-text" id="guidanceText">Face each other...</p>
+                    <p class="breath-cue" id="breathCue"></p>
+                </div>
+
+                <!-- Sync Meter -->
+                <div class="sync-meter">
+                    <div class="sync-label">Synchronization</div>
+                    <div class="sync-bar">
+                        <div class="sync-fill" id="syncFill"></div>
+                    </div>
+                    <div class="sync-value" id="syncValue">0%</div>
+                </div>
+
+                <!-- Timer -->
+                <div class="session-timer" id="sessionTimer">5:00</div>
+
+                <button class="end-btn" id="endBtn">End Session</button>
+            </div>
+        </div>
+
+        <!-- Completion -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-visual">
+                    <div class="complete-hearts">
+                        <span>❤️</span>
+                        <span>❤️</span>
+                    </div>
+                </div>
+                
+                <h2 class="complete-title">In Sync</h2>
+                <p class="complete-message" id="completeMessage">
+                    Your nervous systems connected.
+                </p>
+                
+                <div class="session-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="statDuration">5:00</span>
+                        <span class="stat-label">Time Together</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statSync">92%</span>
+                        <span class="stat-label">Peak Sync</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statBreaths">15</span>
+                        <span class="stat-label">Breaths</span>
+                    </div>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">Done</button>
+                    <button class="btn-secondary" id="againBtn">Breathe Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="partners.js"></script>
+</body>
+</html>
+
