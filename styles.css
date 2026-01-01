@@ -959,7 +959,13 @@ body {
     
     .nav-buttons {
         flex-direction: column;
-        gap: var(--space-xs);
+        gap: 6px;
+        align-items: flex-end;
+    }
+    
+    .nav-buttons .nav-cta {
+        padding: 6px 14px;
+        font-size: 0.85rem;
     }
     
     .nav-games {
