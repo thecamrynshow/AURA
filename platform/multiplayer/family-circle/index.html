@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Circle — PNEUOMA Multiplayer</title>
+    <meta name="description" content="Whole family regulation. Up to 6 members. Morning rituals, dinner wind-downs, weekend resets. Build a family culture of regulation.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                </div>
+                
+                <h1 class="welcome-title">Family Circle</h1>
+                <p class="welcome-subtitle">Regulate together as a family</p>
+                
+                <div class="family-visual">
+                    <div class="family-member m1">👨</div>
+                    <div class="family-member m2">👩</div>
+                    <div class="family-member m3">👦</div>
+                    <div class="family-member m4">👧</div>
+                    <div class="family-center">❤️</div>
+                </div>
+                
+                <div class="session-options">
+                    <button class="option-btn" id="createBtn">
+                        <span class="btn-icon">✨</span>
+                        <span class="btn-text">Start Family Session</span>
+                    </button>
+                    
+                    <div class="join-row">
+                        <input type="text" id="joinCode" placeholder="FAM-0000" maxlength="8" class="join-input">
+                        <button class="join-btn" id="joinBtn">Join</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Family Setup -->
+        <div class="screen" id="setupScreen">
+            <div class="screen-content">
+                <h2 class="setup-title">Who's joining?</h2>
+                
+                <div class="member-selection">
+                    <p class="selection-label">Tap to add family members</p>
+                    <div class="member-grid">
+                        <button class="member-btn active" data-role="parent" data-emoji="👨">
+                            <span class="member-emoji">👨</span>
+                            <span class="member-label">Dad</span>
+                        </button>
+                        <button class="member-btn" data-role="parent" data-emoji="👩">
+                            <span class="member-emoji">👩</span>
+                            <span class="member-label">Mom</span>
+                        </button>
+                        <button class="member-btn" data-role="child" data-emoji="👦">
+                            <span class="member-emoji">👦</span>
+                            <span class="member-label">Son</span>
+                        </button>
+                        <button class="member-btn" data-role="child" data-emoji="👧">
+                            <span class="member-emoji">👧</span>
+                            <span class="member-label">Daughter</span>
+                        </button>
+                        <button class="member-btn" data-role="child" data-emoji="👶">
+                            <span class="member-emoji">👶</span>
+                            <span class="member-label">Baby</span>
+                        </button>
+                        <button class="member-btn" data-role="elder" data-emoji="👴">
+                            <span class="member-emoji">👴</span>
+                            <span class="member-label">Grandpa</span>
+                        </button>
+                        <button class="member-btn" data-role="elder" data-emoji="👵">
+                            <span class="member-emoji">👵</span>
+                            <span class="member-label">Grandma</span>
+                        </button>
+                        <button class="member-btn" data-role="pet" data-emoji="🐕">
+                            <span class="member-emoji">🐕</span>
+                            <span class="member-label">Pet</span>
+                        </button>
+                    </div>
+                    <p class="member-count"><span id="memberCount">1</span>/6 members</p>
+                </div>
+                
+                <button class="next-btn" id="nextBtn">Choose Activity →</button>
+                <button class="back-btn" id="backToWelcome">← Back</button>
+            </div>
+        </div>
+
+        <!-- Activity Selection -->
+        <div class="screen" id="activityScreen">
+            <div class="screen-content">
+                <h2 class="activity-title">What's the moment?</h2>
+                
+                <div class="activity-options">
+                    <button class="activity-btn" data-activity="morning">
+                        <span class="activity-icon">🌅</span>
+                        <div class="activity-info">
+                            <span class="activity-name">Morning Start</span>
+                            <span class="activity-desc">Begin the day together</span>
+                        </div>
+                        <span class="activity-time">5 min</span>
+                    </button>
+                    
+                    <button class="activity-btn" data-activity="dinner">
+                        <span class="activity-icon">🍽️</span>
+                        <div class="activity-info">
+                            <span class="activity-name">Dinner Reset</span>
+                            <span class="activity-desc">Transition to family time</span>
+                        </div>
+                        <span class="activity-time">3 min</span>
+                    </button>
+                    
+                    <button class="activity-btn" data-activity="bedtime">
+                        <span class="activity-icon">🌙</span>
+                        <div class="activity-info">
+                            <span class="activity-name">Bedtime Wind-Down</span>
+                            <span class="activity-desc">Calm before sleep</span>
+                        </div>
+                        <span class="activity-time">5 min</span>
+                    </button>
+                    
+                    <button class="activity-btn" data-activity="weekend">
+                        <span class="activity-icon">☀️</span>
+                        <div class="activity-info">
+                            <span class="activity-name">Weekend Reset</span>
+                            <span class="activity-desc">Quality family time</span>
+                        </div>
+                        <span class="activity-time">10 min</span>
+                    </button>
+                    
+                    <button class="activity-btn" data-activity="tough">
+                        <span class="activity-icon">🌈</span>
+                        <div class="activity-info">
+                            <span class="activity-name">After a Tough Moment</span>
+                            <span class="activity-desc">Reconnect after conflict</span>
+                        </div>
+                        <span class="activity-time">5 min</span>
+                    </button>
+                </div>
+                
+                <button class="back-btn" id="backToSetup">← Back</button>
+            </div>
+        </div>
+
+        <!-- Waiting Room -->
+        <div class="screen" id="waitingScreen">
+            <div class="screen-content">
+                <h2 class="waiting-title">Family Room</h2>
+                
+                <div class="code-display">
+                    <p class="code-label">Share this code:</p>
+                    <div class="code-box" id="sessionCode">FAM-2847</div>
+                </div>
+                
+                <div class="family-preview" id="familyPreview">
+                    <!-- Members shown here -->
+                </div>
+                
+                <p class="waiting-hint">Waiting for everyone to join...</p>
+                
+                <button class="start-btn" id="startBtn">Start When Ready</button>
+                <button class="cancel-btn" id="cancelBtn">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Member Waiting -->
+        <div class="screen" id="memberWaitingScreen">
+            <div class="screen-content">
+                <div class="member-waiting-visual">
+                    <div class="waiting-pulse"></div>
+                </div>
+                <h2>You're in!</h2>
+                <p>Waiting for everyone else...</p>
+                <p class="session-code-small" id="joinedCode">FAM-2847</p>
+            </div>
+        </div>
+
+        <!-- Main Session -->
+        <div class="screen" id="sessionScreen">
+            <div class="session-layout">
+                <!-- Family Circle -->
+                <div class="family-circle-area">
+                    <div class="family-circle" id="familyCircle">
+                        <!-- Members arranged in circle -->
+                        <div class="circle-center-heart" id="centerHeart">❤️</div>
+                    </div>
+                </div>
+
+                <!-- Activity Info -->
+                <div class="activity-info-bar">
+                    <span class="current-activity" id="currentActivity">Morning Start</span>
+                    <span class="session-timer" id="sessionTimer">5:00</span>
+                </div>
+
+                <!-- Guidance -->
+                <div class="session-guidance">
+                    <p class="guidance-text" id="guidanceText">Gather in a circle...</p>
+                    <p class="breath-cue" id="breathCue"></p>
+                </div>
+
+                <!-- Family Connection -->
+                <div class="family-connection">
+                    <div class="connection-label">Family Connection</div>
+                    <div class="connection-bar">
+                        <div class="connection-fill" id="connectionFill"></div>
+                    </div>
+                    <div class="connection-value" id="connectionValue">0%</div>
+                </div>
+
+                <button class="end-btn" id="endBtn">End Early</button>
+            </div>
+        </div>
+
+        <!-- Completion -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-celebration">
+                    <span class="celebration-emoji">🎉</span>
+                </div>
+                
+                <h2 class="complete-title">Family Time Complete!</h2>
+                
+                <div class="family-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="statMembers">4</span>
+                        <span class="stat-label">Family Members</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statTime">5:00</span>
+                        <span class="stat-label">Together</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statConnection">92%</span>
+                        <span class="stat-label">Connection</span>
+                    </div>
+                </div>
+                
+                <div class="streak-display">
+                    <span class="streak-icon">🔥</span>
+                    <span class="streak-text">Family Streak: <strong id="streakCount">3</strong> days</span>
+                </div>
+                
+                <div class="family-message" id="familyMessage">
+                    "Families that breathe together, grow together."
+                </div>
+                
+                <button class="done-btn" id="doneBtn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="family.js"></script>
+</body>
+</html>
+

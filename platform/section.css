@@ -806,6 +806,30 @@
     50% { transform: scaleY(0.5); }
 }
 
+.family-visual-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding: 15px;
+}
+
+.family-visual-icons span {
+    animation: family-bob 2s ease-in-out infinite;
+}
+
+.family-visual-icons span:nth-child(1) { animation-delay: 0s; }
+.family-visual-icons span:nth-child(2) { animation-delay: 0.3s; }
+.family-visual-icons span:nth-child(3) { animation-delay: 0.6s; }
+.family-visual-icons span:nth-child(4) { animation-delay: 0.9s; }
+
+@keyframes family-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .waitlist-form {
