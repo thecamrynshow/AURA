@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solfège — Sing the Scale | PNEUOMA</title>
+    <meta name="description" content="Learn to sing with a visual piano. Hum notes, match pitches, and master Do Re Mi through play.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            <div class="score-display">
+                <span class="score-icon">⭐</span>
+                <span class="score-value" id="scoreValue">0</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <section class="screen title-screen active" id="titleScreen">
+            <div class="title-visual">
+                <div class="floating-notes">
+                    <span class="note n1">♪</span>
+                    <span class="note n2">♫</span>
+                    <span class="note n3">♪</span>
+                </div>
+                <div class="mini-piano">
+                    <div class="mini-key white"></div>
+                    <div class="mini-key black"></div>
+                    <div class="mini-key white"></div>
+                    <div class="mini-key black"></div>
+                    <div class="mini-key white"></div>
+                    <div class="mini-key white"></div>
+                    <div class="mini-key black"></div>
+                    <div class="mini-key white"></div>
+                </div>
+            </div>
+            
+            <div class="title-content">
+                <h1 class="game-title">Solfège</h1>
+                <p class="game-tagline">Do Re Mi Fa Sol La Ti Do</p>
+                
+                <div class="title-description">
+                    <p>Sing to play the piano 🎹</p>
+                    <p>Match pitches, learn the scale</p>
+                </div>
+
+                <button class="btn-primary" id="startBtn">
+                    <span>Start Singing</span>
+                    <span class="btn-icon">🎵</span>
+                </button>
+
+                <div class="title-meta">
+                    <span class="meta-item">All Ages</span>
+                    <span class="meta-item">5-10 min</span>
+                    <span class="meta-item">Voice</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mic Permission Screen -->
+        <section class="screen mic-screen" id="micScreen">
+            <div class="mic-content">
+                <div class="mic-icon-large">🎤</div>
+                <h2>Enable Your Voice</h2>
+                <p>Solfège needs to hear you sing!</p>
+                
+                <div class="control-choice">
+                    <button class="btn-primary" id="enableMicBtn">
+                        <span>🎵 Allow Microphone</span>
+                    </button>
+                    <button class="btn-secondary" id="useKeyboardBtn">
+                        <span>⌨️ Use Keyboard (A-K)</span>
+                    </button>
+                </div>
+                
+                <p class="mic-hint">
+                    Keyboard: A=Do, S=Re, D=Mi, F=Fa, G=Sol, H=La, J=Ti, K=Do
+                </p>
+            </div>
+        </section>
+
+        <!-- Game Screen -->
+        <section class="screen game-screen" id="gameScreen">
+            <!-- Current Note Display -->
+            <div class="note-target" id="noteTarget">
+                <div class="target-solfege" id="targetSolfege">Do</div>
+                <div class="target-instruction" id="targetInstruction">Listen...</div>
+            </div>
+            
+            <!-- Your Pitch Display -->
+            <div class="your-pitch" id="yourPitch">
+                <div class="pitch-label">Your voice:</div>
+                <div class="pitch-solfege" id="yourSolfege">—</div>
+            </div>
+
+            <!-- Piano Keyboard -->
+            <div class="piano-container">
+                <div class="piano" id="piano">
+                    <div class="piano-key white" data-note="C4" data-solfege="Do">
+                        <span class="key-label">Do</span>
+                    </div>
+                    <div class="piano-key black" data-note="C#4" data-solfege="">
+                    </div>
+                    <div class="piano-key white" data-note="D4" data-solfege="Re">
+                        <span class="key-label">Re</span>
+                    </div>
+                    <div class="piano-key black" data-note="D#4" data-solfege="">
+                    </div>
+                    <div class="piano-key white" data-note="E4" data-solfege="Mi">
+                        <span class="key-label">Mi</span>
+                    </div>
+                    <div class="piano-key white" data-note="F4" data-solfege="Fa">
+                        <span class="key-label">Fa</span>
+                    </div>
+                    <div class="piano-key black" data-note="F#4" data-solfege="">
+                    </div>
+                    <div class="piano-key white" data-note="G4" data-solfege="Sol">
+                        <span class="key-label">Sol</span>
+                    </div>
+                    <div class="piano-key black" data-note="G#4" data-solfege="">
+                    </div>
+                    <div class="piano-key white" data-note="A4" data-solfege="La">
+                        <span class="key-label">La</span>
+                    </div>
+                    <div class="piano-key black" data-note="A#4" data-solfege="">
+                    </div>
+                    <div class="piano-key white" data-note="B4" data-solfege="Ti">
+                        <span class="key-label">Ti</span>
+                    </div>
+                    <div class="piano-key white" data-note="C5" data-solfege="Do">
+                        <span class="key-label">Do</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress -->
+            <div class="exercise-progress" id="exerciseProgress">
+                <div class="progress-dots" id="progressDots"></div>
+                <div class="progress-label" id="progressLabel">Scale 1 of 3</div>
+            </div>
+            
+            <!-- Feedback -->
+            <div class="feedback" id="feedback">
+                <span class="feedback-icon">✨</span>
+                <span class="feedback-text">Perfect!</span>
+            </div>
+        </section>
+
+        <!-- Complete Screen -->
+        <section class="screen complete-screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-icon">🎹</div>
+                <h2 class="complete-title">Beautiful Music!</h2>
+                <p class="complete-message">You're learning the scale wonderfully</p>
+                
+                <div class="complete-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="notesHit">0</span>
+                        <span class="stat-label">notes matched</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="accuracy">0%</span>
+                        <span class="stat-label">accuracy</span>
+                    </div>
+                </div>
+
+                <div class="solfege-display">
+                    <span class="sol do">Do</span>
+                    <span class="sol re">Re</span>
+                    <span class="sol mi">Mi</span>
+                    <span class="sol fa">Fa</span>
+                    <span class="sol sol">Sol</span>
+                    <span class="sol la">La</span>
+                    <span class="sol ti">Ti</span>
+                    <span class="sol do2">Do</span>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="playAgainBtn">
+                        <span>Sing Again</span>
+                        <span class="btn-icon">🎵</span>
+                    </button>
+                    <a href="../../platform/games/index.html" class="btn-secondary">More Games</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/piano.js"></script>
+    <script src="src/js/exercises.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

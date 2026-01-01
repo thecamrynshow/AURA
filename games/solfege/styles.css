@@ -1,0 +1,625 @@
+/* ============================================
+   SOLFÈGE — Sing the Scale | PNEUOMA
+   Do Re Mi Fa Sol La Ti Do
+   ============================================ */
+
+:root {
+    /* Warm Musical Theme */
+    --bg-dark: #1a1a2e;
+    --bg-mid: #16213e;
+    --bg-light: #0f3460;
+    
+    /* Solfege Colors */
+    --do-color: #e94560;
+    --re-color: #ff6b35;
+    --mi-color: #f7c52d;
+    --fa-color: #26c485;
+    --sol-color: #3498db;
+    --la-color: #9b59b6;
+    --ti-color: #e056fd;
+    --do2-color: #e94560;
+    
+    /* Piano */
+    --key-white: #fafafa;
+    --key-white-hover: #f0f0f0;
+    --key-white-active: #e0e0e0;
+    --key-black: #2c2c2c;
+    --key-black-hover: #3c3c3c;
+    --key-black-active: #4c4c4c;
+    
+    /* Text */
+    --text-light: #f8f8f8;
+    --text-muted: rgba(248, 248, 248, 0.7);
+    
+    /* Accent */
+    --accent-gold: #f7c52d;
+    --accent-glow: rgba(247, 197, 45, 0.4);
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'SF Pro Rounded', -apple-system, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+/* Game Container */
+.game-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
+}
+
+/* Navigation */
+.game-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
+}
+
+.back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: var(--text-light);
+}
+
+.score-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+}
+
+.score-icon {
+    font-size: 1.2rem;
+}
+
+.score-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ========== TITLE SCREEN ========== */
+.title-visual {
+    margin-bottom: 30px;
+}
+
+.floating-notes {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.floating-notes .note {
+    font-size: 3rem;
+    animation: float-note 3s ease-in-out infinite;
+}
+
+.floating-notes .n1 { color: var(--do-color); animation-delay: 0s; }
+.floating-notes .n2 { color: var(--mi-color); animation-delay: 0.5s; }
+.floating-notes .n3 { color: var(--sol-color); animation-delay: 1s; }
+
+@keyframes float-note {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.mini-piano {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}
+
+.mini-key {
+    height: 60px;
+    border-radius: 0 0 4px 4px;
+}
+
+.mini-key.white {
+    width: 30px;
+    background: var(--key-white);
+}
+
+.mini-key.black {
+    width: 20px;
+    height: 40px;
+    background: var(--key-black);
+    margin: 0 -10px;
+    z-index: 1;
+}
+
+.title-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.game-title {
+    font-size: 4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--do-color), var(--mi-color), var(--sol-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+.game-tagline {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.title-description {
+    margin-bottom: 30px;
+}
+
+.title-description p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+/* Buttons */
+.btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 36px;
+    background: linear-gradient(135deg, var(--do-color), var(--mi-color));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(233, 69, 96, 0.3);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(233, 69, 96, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.3rem;
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.title-meta {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.meta-item {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+}
+
+/* ========== MIC SCREEN ========== */
+.mic-content {
+    text-align: center;
+    padding: 20px;
+    max-width: 400px;
+}
+
+.mic-icon-large {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.mic-content h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.mic-content > p {
+    color: var(--text-muted);
+    margin-bottom: 30px;
+}
+
+.control-choice {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.mic-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+/* ========== GAME SCREEN ========== */
+.game-screen {
+    padding-top: 80px;
+    justify-content: space-between;
+    padding-bottom: 40px;
+}
+
+/* Note Target */
+.note-target {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.target-solfege {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--do-color);
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+.target-instruction {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+/* Your Pitch */
+.your-pitch {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.pitch-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.pitch-solfege {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-light);
+    min-height: 48px;
+}
+
+/* Piano */
+.piano-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.piano {
+    display: flex;
+    position: relative;
+    background: linear-gradient(180deg, #333 0%, #222 100%);
+    padding: 15px 10px 10px;
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.piano-key {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.piano-key.white {
+    width: 50px;
+    height: 180px;
+    background: linear-gradient(180deg, var(--key-white) 0%, #e8e8e8 100%);
+    border-radius: 0 0 6px 6px;
+    margin: 0 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 10px;
+    z-index: 1;
+}
+
+.piano-key.white:hover {
+    background: linear-gradient(180deg, var(--key-white-hover) 0%, #e0e0e0 100%);
+}
+
+.piano-key.white.active {
+    background: linear-gradient(180deg, var(--key-white-active) 0%, #d0d0d0 100%);
+    transform: translateY(2px);
+}
+
+.piano-key.white.playing {
+    box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Solfege-specific colors when active */
+.piano-key[data-solfege="Do"].lit { background: linear-gradient(180deg, var(--do-color), #c73e55) !important; }
+.piano-key[data-solfege="Re"].lit { background: linear-gradient(180deg, var(--re-color), #e05a2a) !important; }
+.piano-key[data-solfege="Mi"].lit { background: linear-gradient(180deg, var(--mi-color), #e0b020) !important; }
+.piano-key[data-solfege="Fa"].lit { background: linear-gradient(180deg, var(--fa-color), #1fb070) !important; }
+.piano-key[data-solfege="Sol"].lit { background: linear-gradient(180deg, var(--sol-color), #2980b9) !important; }
+.piano-key[data-solfege="La"].lit { background: linear-gradient(180deg, var(--la-color), #8e44ad) !important; }
+.piano-key[data-solfege="Ti"].lit { background: linear-gradient(180deg, var(--ti-color), #c94bdb) !important; }
+
+.piano-key.lit .key-label {
+    color: white !important;
+}
+
+.piano-key.black {
+    width: 30px;
+    height: 110px;
+    background: linear-gradient(180deg, var(--key-black) 0%, #1a1a1a 100%);
+    border-radius: 0 0 4px 4px;
+    margin: 0 -15px;
+    z-index: 2;
+}
+
+.piano-key.black:hover {
+    background: linear-gradient(180deg, var(--key-black-hover) 0%, #2a2a2a 100%);
+}
+
+.piano-key.black.active {
+    background: linear-gradient(180deg, var(--key-black-active) 0%, #3a3a3a 100%);
+    transform: translateY(2px);
+}
+
+.key-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    transition: color 0.2s ease;
+}
+
+/* Exercise Progress */
+.exercise-progress {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.progress-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.progress-dot.complete {
+    background: var(--accent-gold);
+}
+
+.progress-dot.current {
+    background: var(--do-color);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.progress-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Feedback */
+.feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    background: rgba(38, 196, 133, 0.9);
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 200;
+}
+
+.feedback.visible {
+    opacity: 1;
+}
+
+.feedback.error {
+    background: rgba(233, 69, 96, 0.9);
+}
+
+.feedback-icon {
+    font-size: 1.5rem;
+}
+
+/* ========== COMPLETE SCREEN ========== */
+.complete-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.complete-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.complete-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--do-color), var(--mi-color), var(--sol-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.complete-message {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+}
+
+.complete-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.solfege-display {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.sol {
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.sol.do, .sol.do2 { background: var(--do-color); }
+.sol.re { background: var(--re-color); }
+.sol.mi { background: var(--mi-color); color: #333; }
+.sol.fa { background: var(--fa-color); }
+.sol.sol { background: var(--sol-color); }
+.sol.la { background: var(--la-color); }
+.sol.ti { background: var(--ti-color); }
+
+.complete-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 600px) {
+    .game-title {
+        font-size: 2.5rem;
+    }
+
+    .piano-key.white {
+        width: 35px;
+        height: 140px;
+    }
+
+    .piano-key.black {
+        width: 22px;
+        height: 85px;
+        margin: 0 -11px;
+    }
+
+    .target-solfege {
+        font-size: 3rem;
+    }
+
+    .key-label {
+        font-size: 0.65rem;
+    }
+}
+

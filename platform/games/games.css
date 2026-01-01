@@ -537,6 +537,58 @@
     100% { opacity: 0; transform: translateY(-40px); }
 }
 
+/* Solfege Visual */
+.solfege-bg {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.solfege-visual {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.solfege-piano {
+    display: flex;
+    gap: 2px;
+}
+
+.piano-key-mini {
+    width: 20px;
+    height: 50px;
+    background: #fafafa;
+    border-radius: 0 0 3px 3px;
+}
+
+.piano-key-mini.black {
+    width: 14px;
+    height: 32px;
+    background: #2c2c2c;
+    margin: 0 -7px;
+    z-index: 1;
+}
+
+.solfege-notes {
+    display: flex;
+    gap: 8px;
+}
+
+.solfege-notes span {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.solfege-notes span:nth-child(1) { background: #e94560; color: white; }
+.solfege-notes span:nth-child(2) { background: #ff6b35; color: white; }
+.solfege-notes span:nth-child(3) { background: #f7c52d; color: #333; }
+
 /* Visual Elements */
 .game-orb {
     width: 100px;
