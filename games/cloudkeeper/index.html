@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Keeper — Gentle Sky Play | PNEUOMA</title>
+    <meta name="description" content="Blow clouds across the sky. Shape them with your breath. The gentlest game for the youngest players.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            <div class="cloud-counter">
+                <span class="cloud-icon">☁️</span>
+                <span class="cloud-count" id="cloudCount">0</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <section class="screen title-screen active" id="titleScreen">
+            <div class="sky-bg">
+                <div class="sun"></div>
+                <div class="floating-cloud cloud-1"></div>
+                <div class="floating-cloud cloud-2"></div>
+                <div class="floating-cloud cloud-3"></div>
+            </div>
+            
+            <div class="title-content">
+                <div class="title-cloud">
+                    <svg viewBox="0 0 200 120" class="big-cloud">
+                        <ellipse cx="70" cy="70" rx="50" ry="40" fill="white"/>
+                        <ellipse cx="120" cy="60" rx="45" ry="35" fill="white"/>
+                        <ellipse cx="95" cy="45" rx="35" ry="30" fill="white"/>
+                        <ellipse cx="140" cy="75" rx="30" ry="25" fill="white"/>
+                    </svg>
+                </div>
+                
+                <h1 class="game-title">Cloud Keeper</h1>
+                <p class="game-tagline">Gentle sky play</p>
+                
+                <div class="title-description">
+                    <p>Blow the clouds across the sky! 🌬️</p>
+                    <p>Make shapes and find the sunshine! ☀️</p>
+                </div>
+
+                <button class="btn-start" id="startBtn">
+                    <span>Let's Play!</span>
+                    <span class="btn-cloud">☁️</span>
+                </button>
+
+                <div class="title-footer">
+                    <span class="badge">Ages 4+</span>
+                    <span class="badge">3-8 min</span>
+                    <span class="badge">Blow</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Play Screen -->
+        <section class="screen howto-screen" id="howtoScreen">
+            <div class="howto-content">
+                <h2 class="howto-title">How to Play</h2>
+                
+                <div class="howto-demo">
+                    <div class="demo-face">😙</div>
+                    <div class="demo-wind">💨</div>
+                    <div class="demo-cloud">☁️</div>
+                </div>
+                
+                <p class="howto-text">Blow gently to move the clouds!</p>
+                <p class="howto-subtext">Or tap/click on clouds to push them</p>
+                
+                <div class="control-choice">
+                    <button class="btn-choice" id="useMicBtn">
+                        <span class="choice-icon">🎤</span>
+                        <span>Use My Voice</span>
+                    </button>
+                    <button class="btn-choice" id="useTouchBtn">
+                        <span class="choice-icon">👆</span>
+                        <span>Tap to Play</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Screen -->
+        <section class="screen game-screen" id="gameScreen">
+            <canvas id="skyCanvas"></canvas>
+            
+            <!-- Breath Indicator (for mic mode) -->
+            <div class="breath-bubble" id="breathBubble">
+                <div class="bubble-fill" id="bubbleFill"></div>
+                <span class="bubble-emoji">😙</span>
+            </div>
+            
+            <!-- Encouragement Popup -->
+            <div class="encouragement" id="encouragement">
+                <span class="encourage-text">Great job!</span>
+            </div>
+            
+            <!-- Stars Found -->
+            <div class="stars-found" id="starsFound">
+                <span class="star">⭐</span>
+                <span class="star">⭐</span>
+                <span class="star">⭐</span>
+            </div>
+            
+            <!-- Pause/Menu Button -->
+            <button class="btn-pause" id="pauseBtn">
+                <span>✨</span>
+            </button>
+        </section>
+
+        <!-- Celebration Screen -->
+        <section class="screen celebration-screen" id="celebrationScreen">
+            <div class="celebration-content">
+                <div class="celebration-sun">
+                    <div class="sun-face">☀️</div>
+                    <div class="sun-rays"></div>
+                </div>
+                
+                <h2 class="celebration-title">You did it!</h2>
+                <p class="celebration-message">You found all the sunshine!</p>
+                
+                <div class="celebration-stars">
+                    <span class="big-star">⭐</span>
+                    <span class="big-star">⭐</span>
+                    <span class="big-star">⭐</span>
+                </div>
+                
+                <div class="clouds-moved">
+                    <span class="stat-number" id="totalClouds">0</span>
+                    <span class="stat-label">clouds moved</span>
+                </div>
+                
+                <div class="celebration-actions">
+                    <button class="btn-start" id="playAgainBtn">
+                        <span>Play Again!</span>
+                        <span class="btn-cloud">☁️</span>
+                    </button>
+                    <a href="../../platform/games/index.html" class="btn-secondary">More Games</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/clouds.js"></script>
+    <script src="src/js/sky.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
