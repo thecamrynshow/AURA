@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threshold — State Transition Training | PNEUOMA</title>
+    <meta name="description" content="Practice moving between states. Wake up, wind down, reset, recover. Master the art of intentional transition.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            <div class="session-info">
+                <span class="transitions-count" id="transitionsCount">0</span>
+                <span class="transitions-label">transitions</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <section class="screen title-screen active" id="titleScreen">
+            <div class="title-bg">
+                <div class="floating-particles"></div>
+                <div class="threshold-portal">
+                    <div class="portal-ring ring-1"></div>
+                    <div class="portal-ring ring-2"></div>
+                    <div class="portal-ring ring-3"></div>
+                    <div class="portal-core"></div>
+                </div>
+            </div>
+            
+            <div class="title-content">
+                <p class="title-eyebrow">State Transition Training</p>
+                <h1 class="game-title">Threshold</h1>
+                <p class="game-tagline">Master the art of intentional change</p>
+                
+                <div class="title-description">
+                    <p>Your nervous system can shift states on command.</p>
+                    <p>Learn to cross the threshold between who you are and who you need to be.</p>
+                </div>
+
+                <button class="btn-primary" id="startBtn">
+                    <span>Begin Training</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                </button>
+
+                <div class="title-meta">
+                    <span class="meta-item">Ages 13+</span>
+                    <span class="meta-item">5-10 min</span>
+                    <span class="meta-item">Breath</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- State Selection Screen -->
+        <section class="screen state-screen" id="stateScreen">
+            <div class="state-content">
+                <h2 class="state-title">Where are you now?</h2>
+                <p class="state-subtitle">Select your current state</p>
+                
+                <div class="state-grid" id="currentStates">
+                    <button class="state-card" data-state="stressed">
+                        <div class="state-icon">⚡</div>
+                        <span class="state-name">Stressed</span>
+                        <span class="state-desc">Tense, overwhelmed, racing thoughts</span>
+                    </button>
+                    <button class="state-card" data-state="tired">
+                        <div class="state-icon">🌙</div>
+                        <span class="state-name">Tired</span>
+                        <span class="state-desc">Low energy, foggy, sluggish</span>
+                    </button>
+                    <button class="state-card" data-state="anxious">
+                        <div class="state-icon">🌀</div>
+                        <span class="state-name">Anxious</span>
+                        <span class="state-desc">Worried, restless, on edge</span>
+                    </button>
+                    <button class="state-card" data-state="scattered">
+                        <div class="state-icon">💫</div>
+                        <span class="state-name">Scattered</span>
+                        <span class="state-desc">Unfocused, distracted, all over</span>
+                    </button>
+                    <button class="state-card" data-state="wired">
+                        <div class="state-icon">🔥</div>
+                        <span class="state-name">Wired</span>
+                        <span class="state-desc">Overstimulated, can't wind down</span>
+                    </button>
+                    <button class="state-card" data-state="neutral">
+                        <div class="state-icon">◯</div>
+                        <span class="state-name">Neutral</span>
+                        <span class="state-desc">Baseline, ready for anything</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Target Selection Screen -->
+        <section class="screen target-screen" id="targetScreen">
+            <div class="state-content">
+                <h2 class="state-title">Where do you want to be?</h2>
+                <p class="state-subtitle">Select your target state</p>
+                
+                <div class="state-grid" id="targetStates">
+                    <button class="state-card" data-state="calm">
+                        <div class="state-icon">🌊</div>
+                        <span class="state-name">Calm</span>
+                        <span class="state-desc">Peaceful, relaxed, at ease</span>
+                    </button>
+                    <button class="state-card" data-state="focused">
+                        <div class="state-icon">🎯</div>
+                        <span class="state-name">Focused</span>
+                        <span class="state-desc">Clear, sharp, locked in</span>
+                    </button>
+                    <button class="state-card" data-state="energized">
+                        <div class="state-icon">☀️</div>
+                        <span class="state-name">Energized</span>
+                        <span class="state-desc">Alert, awake, ready to go</span>
+                    </button>
+                    <button class="state-card" data-state="grounded">
+                        <div class="state-icon">🌿</div>
+                        <span class="state-name">Grounded</span>
+                        <span class="state-desc">Stable, present, connected</span>
+                    </button>
+                    <button class="state-card" data-state="sleepy">
+                        <div class="state-icon">🌙</div>
+                        <span class="state-name">Sleepy</span>
+                        <span class="state-desc">Ready for rest, winding down</span>
+                    </button>
+                    <button class="state-card" data-state="confident">
+                        <div class="state-icon">💎</div>
+                        <span class="state-name">Confident</span>
+                        <span class="state-desc">Strong, capable, ready</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transition Screen -->
+        <section class="screen transition-screen" id="transitionScreen">
+            <canvas id="thresholdCanvas"></canvas>
+            
+            <!-- Transition Header -->
+            <div class="transition-header">
+                <div class="from-state" id="fromState">
+                    <span class="state-label">From</span>
+                    <span class="state-value">Stressed</span>
+                </div>
+                <div class="transition-arrow">→</div>
+                <div class="to-state" id="toState">
+                    <span class="state-label">To</span>
+                    <span class="state-value">Calm</span>
+                </div>
+            </div>
+            
+            <!-- Breathing Guide -->
+            <div class="breath-guide" id="breathGuide">
+                <div class="breath-circle" id="breathCircle">
+                    <div class="breath-progress" id="breathProgress"></div>
+                    <span class="breath-text" id="breathText">Breathe</span>
+                </div>
+                <p class="breath-instruction" id="breathInstruction">Follow the circle</p>
+            </div>
+            
+            <!-- Progress -->
+            <div class="transition-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0%</span>
+            </div>
+        </section>
+
+        <!-- Complete Screen -->
+        <section class="screen complete-screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-portal">
+                    <div class="portal-success"></div>
+                </div>
+                
+                <h2 class="complete-title">Threshold Crossed</h2>
+                <p class="complete-message" id="completeMessage">You've transitioned to a new state</p>
+                
+                <div class="complete-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="breathsTaken">0</span>
+                        <span class="stat-label">breaths taken</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="timeTaken">0:00</span>
+                        <span class="stat-label">duration</span>
+                    </div>
+                </div>
+                
+                <div class="new-state-card" id="newStateCard">
+                    <div class="new-state-icon">🌊</div>
+                    <span class="new-state-name">Calm</span>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="newTransitionBtn">
+                        <span>New Transition</span>
+                    </button>
+                    <a href="../../platform/games/index.html" class="btn-secondary">More Games</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/breathing.js"></script>
+    <script src="src/js/portal.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

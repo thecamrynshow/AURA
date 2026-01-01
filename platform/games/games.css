@@ -366,7 +366,64 @@
 }
 
 .threshold-bg {
-    background: linear-gradient(135deg, #140a1a 0%, #1a0a14 100%);
+    background: radial-gradient(ellipse at center, #1a1a25 0%, #0a0a0f 100%);
+}
+
+/* Threshold Visual */
+.threshold-visual {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.threshold-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid;
+    opacity: 0.6;
+}
+
+.threshold-ring.t1 {
+    width: 90px;
+    height: 90px;
+    border-color: #a78bfa;
+    animation: rotate-threshold 20s linear infinite;
+}
+
+.threshold-ring.t2 {
+    width: 70px;
+    height: 70px;
+    border-color: #8b5cf6;
+    animation: rotate-threshold 15s linear infinite reverse;
+}
+
+.threshold-ring.t3 {
+    width: 50px;
+    height: 50px;
+    border-color: #6366f1;
+    animation: rotate-threshold 10s linear infinite;
+}
+
+@keyframes rotate-threshold {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.threshold-core {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+    border-radius: 50%;
+    animation: threshold-pulse 3s ease-in-out infinite;
+}
+
+@keyframes threshold-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
 }
 
 .before-bg {
