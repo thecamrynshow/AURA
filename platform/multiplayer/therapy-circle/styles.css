@@ -1,0 +1,960 @@
+/* ============================================
+   Therapy Circle — Group Therapy Regulation
+   Clinical, professional, calming aesthetic
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0c0e12;
+    --bg-card: #14171e;
+    --bg-hover: #1c2029;
+    --border: rgba(255,255,255,0.08);
+    
+    --teal: #4fd1c5;
+    --teal-dim: rgba(79, 209, 197, 0.12);
+    --teal-glow: rgba(79, 209, 197, 0.3);
+    
+    --regulated: #68d391;
+    --activating: #fbd38d;
+    --dysregulated: #fc8181;
+    
+    --text-primary: #e8edf5;
+    --text-secondary: rgba(232, 237, 245, 0.7);
+    --text-muted: rgba(232, 237, 245, 0.4);
+    
+    --font-display: 'Inter', sans-serif;
+    --font-accent: 'Cormorant Garamond', Georgia, serif;
+    
+    --radius: 12px;
+    --radius-sm: 8px;
+    --transition: 0.3s ease;
+}
+
+body {
+    font-family: var(--font-display);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.app-container {
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Screens */
+.screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+    padding: 40px 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.screen-content {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+    color: var(--teal);
+}
+
+.logo-badge {
+    font-size: 0.7rem;
+    background: var(--teal-dim);
+    color: var(--teal);
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+}
+
+.logo-small {
+    font-size: 1.2rem;
+    color: var(--teal);
+}
+
+/* Welcome */
+.welcome-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.welcome-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+/* Role Selection */
+.role-options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.role-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all var(--transition);
+    text-align: left;
+}
+
+.role-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--teal);
+    transform: translateY(-2px);
+}
+
+.role-icon {
+    font-size: 2rem;
+}
+
+.role-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+}
+
+.role-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.compliance-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.compliance-icon {
+    font-size: 1rem;
+}
+
+/* Setup Form */
+.setup-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.setup-form {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--teal);
+}
+
+.participant-select, .focus-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.part-btn, .focus-btn {
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.part-btn:hover, .focus-btn:hover {
+    border-color: var(--teal);
+}
+
+.part-btn.active, .focus-btn.active {
+    background: var(--teal-dim);
+    border-color: var(--teal);
+    color: var(--teal);
+}
+
+.start-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--teal);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: all var(--transition);
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px var(--teal-glow);
+}
+
+.back-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Waiting Room */
+.waiting-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.code-display {
+    margin-bottom: 30px;
+}
+
+.code-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.code-box {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--teal);
+    background: var(--bg-card);
+    padding: 16px 32px;
+    border-radius: var(--radius);
+    border: 2px solid var(--teal-dim);
+    display: inline-block;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+}
+
+.copy-btn {
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    padding: 6px 16px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.copy-btn:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+}
+
+.participants-preview {
+    margin-bottom: 30px;
+}
+
+.preview-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.participant-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.participant-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px dashed var(--border);
+    transition: all 0.5s ease;
+}
+
+.participant-dot.joined {
+    background: var(--teal-dim);
+    border: 2px solid var(--teal);
+    animation: dot-pop 0.3s ease;
+}
+
+@keyframes dot-pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.begin-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--teal);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.cancel-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Join Screen */
+.join-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.join-form {
+    margin-bottom: 30px;
+}
+
+.join-form label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.code-input {
+    width: 200px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 15px;
+}
+
+.code-input:focus {
+    outline: none;
+    border-color: var(--teal);
+}
+
+.join-btn {
+    padding: 14px 40px;
+    background: var(--teal);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Client Waiting */
+.waiting-visual {
+    margin-bottom: 25px;
+}
+
+.waiting-circle {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    border: 3px solid var(--teal);
+    border-radius: 50%;
+    animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+.waiting-message {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.session-name-display {
+    color: var(--teal);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   Therapist Dashboard
+   ============================================ */
+
+.dashboard-layout {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.session-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.session-info span:first-child {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.session-code-small {
+    font-size: 0.8rem;
+    color: var(--teal);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.participant-badge {
+    background: var(--teal-dim);
+    color: var(--teal);
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+}
+
+.end-btn {
+    background: transparent;
+    border: 1px solid var(--dysregulated);
+    color: var(--dysregulated);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.dash-main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    padding: 24px;
+    overflow: auto;
+}
+
+/* Circle Section */
+.circle-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.therapy-circle {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+.circle-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.coherence-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.coherence-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--teal);
+}
+
+.coherence-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.member-node {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(0,0,0,0.7);
+    transition: all 0.5s ease;
+    cursor: pointer;
+}
+
+.member-node.regulated { background: var(--regulated); }
+.member-node.activating { background: var(--activating); }
+.member-node.dysregulated { background: var(--dysregulated); }
+
+.circle-legend {
+    display: flex;
+    gap: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.legend-item span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-item.regulated span { background: var(--regulated); }
+.legend-item.activating span { background: var(--activating); }
+.legend-item.dysregulated span { background: var(--dysregulated); }
+
+/* Controls */
+.controls-section {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+}
+
+.controls-section h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.exercise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.exercise-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.exercise-btn:hover {
+    border-color: var(--teal);
+    background: var(--bg-hover);
+}
+
+.ex-icon {
+    font-size: 1.5rem;
+}
+
+.ex-name {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 12px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* Exercise Overlay */
+.exercise-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 14, 18, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.exercise-overlay.hidden {
+    display: none;
+}
+
+.overlay-content {
+    text-align: center;
+    max-width: 500px;
+    padding: 40px;
+}
+
+.overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.exercise-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--teal);
+}
+
+.stop-btn {
+    background: transparent;
+    border: 1px solid var(--dysregulated);
+    color: var(--dysregulated);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.group-breath-visual {
+    margin: 40px 0;
+}
+
+.group-circle-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 25px;
+}
+
+.group-circle {
+    width: 100%;
+    height: 100%;
+    border: 4px solid var(--teal);
+    border-radius: 50%;
+    transition: all 4s ease;
+}
+
+.group-circle.expand {
+    transform: scale(1.25);
+    box-shadow: 0 0 50px var(--teal-glow);
+}
+
+.group-circle.contract {
+    transform: scale(0.75);
+    opacity: 0.7;
+}
+
+.group-coherence {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--teal);
+}
+
+.breath-instruction {
+    font-family: var(--font-accent);
+    font-size: 1.8rem;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+.exercise-timer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.timer-bar {
+    width: 200px;
+    height: 6px;
+    background: var(--bg-card);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.timer-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 1s linear;
+}
+
+.timer-value {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    min-width: 50px;
+}
+
+/* Client Exercise */
+.client-exercise-layout {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.client-exercise-label {
+    font-size: 1rem;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 40px;
+}
+
+.client-breath-visual {
+    margin-bottom: 40px;
+}
+
+.client-circle {
+    width: 200px;
+    height: 200px;
+    border: 5px solid var(--teal);
+    border-radius: 50%;
+    box-shadow: 0 0 50px var(--teal-glow);
+    transition: all 4s ease;
+}
+
+.client-circle.expand {
+    transform: scale(1.3);
+}
+
+.client-circle.contract {
+    transform: scale(0.7);
+    opacity: 0.6;
+}
+
+.client-instruction {
+    font-family: var(--font-accent);
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: 40px;
+}
+
+.client-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--regulated);
+    border-radius: 50%;
+    animation: status-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Complete */
+.complete-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--teal);
+    color: var(--bg-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+}
+
+.complete-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.session-summary {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.summary-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.summary-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--teal);
+}
+
+.summary-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.notes-section {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.notes-section label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.notes-section textarea {
+    width: 100%;
+    height: 100px;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+.copy-notes-btn {
+    background: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.done-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--teal);
+    border: none;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .dash-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .therapy-circle {
+        width: 250px;
+        height: 250px;
+    }
+}
+

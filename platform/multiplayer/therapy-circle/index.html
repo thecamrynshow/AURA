@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapy Circle — PNEUOMA Multiplayer</title>
+    <meta name="description" content="Group therapy regulation tool. Collective biofeedback, shared regulation, and group coherence tracking for therapeutic settings.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Role Selection -->
+        <div class="screen active" id="roleScreen">
+            <div class="screen-content">
+                <div class="logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-badge">CLINICAL</span>
+                </div>
+                
+                <h1 class="welcome-title">Therapy Circle</h1>
+                <p class="welcome-subtitle">Group regulation for therapeutic settings</p>
+                
+                <div class="role-options">
+                    <button class="role-btn therapist-btn" id="therapistBtn">
+                        <span class="role-icon">🩺</span>
+                        <span class="role-title">Therapist / Facilitator</span>
+                        <span class="role-desc">Lead the group session</span>
+                    </button>
+                    
+                    <button class="role-btn client-btn" id="clientBtn">
+                        <span class="role-icon">👤</span>
+                        <span class="role-title">Group Member</span>
+                        <span class="role-desc">Join the session</span>
+                    </button>
+                </div>
+                
+                <div class="compliance-note">
+                    <span class="compliance-icon">🔒</span>
+                    <span>HIPAA-Ready Design • No Data Stored</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Therapist Setup -->
+        <div class="screen" id="setupScreen">
+            <div class="screen-content">
+                <h2 class="setup-title">Session Setup</h2>
+                
+                <div class="setup-form">
+                    <div class="form-group">
+                        <label>Session Name (optional)</label>
+                        <input type="text" id="sessionName" placeholder="e.g., Tuesday Anxiety Group" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Expected Participants</label>
+                        <div class="participant-select">
+                            <button class="part-btn" data-count="4">4</button>
+                            <button class="part-btn active" data-count="6">6</button>
+                            <button class="part-btn" data-count="8">8</button>
+                            <button class="part-btn" data-count="10">10</button>
+                            <button class="part-btn" data-count="12">12</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Session Focus</label>
+                        <div class="focus-options">
+                            <button class="focus-btn active" data-focus="grounding">Grounding</button>
+                            <button class="focus-btn" data-focus="anxiety">Anxiety Relief</button>
+                            <button class="focus-btn" data-focus="trauma">Trauma Processing</button>
+                            <button class="focus-btn" data-focus="connection">Group Connection</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="start-btn" id="startSessionBtn">Create Session</button>
+                <button class="back-btn" id="backBtn">← Back</button>
+            </div>
+        </div>
+
+        <!-- Waiting Room -->
+        <div class="screen" id="waitingScreen">
+            <div class="screen-content">
+                <h2 class="waiting-title">Waiting Room</h2>
+                
+                <div class="code-display">
+                    <p class="code-label">Session Code</p>
+                    <div class="code-box" id="sessionCode">HEAL-7293</div>
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                </div>
+                
+                <div class="participants-preview">
+                    <p class="preview-label">Participants (<span id="joinedCount">0</span>/<span id="expectedCount">6</span>)</p>
+                    <div class="participant-dots" id="participantDots">
+                        <!-- Dots generated dynamically -->
+                    </div>
+                </div>
+                
+                <button class="begin-btn" id="beginBtn">Begin When Ready</button>
+                <button class="cancel-btn" id="cancelBtn">Cancel Session</button>
+            </div>
+        </div>
+
+        <!-- Client Join -->
+        <div class="screen" id="joinScreen">
+            <div class="screen-content">
+                <h2 class="join-title">Join Session</h2>
+                
+                <div class="join-form">
+                    <label>Enter Session Code</label>
+                    <input type="text" id="joinCode" placeholder="HEAL-0000" maxlength="9" class="code-input">
+                    <button class="join-btn" id="joinBtn">Join</button>
+                </div>
+                
+                <button class="back-btn" id="clientBackBtn">← Back</button>
+            </div>
+        </div>
+
+        <!-- Client Waiting -->
+        <div class="screen" id="clientWaitingScreen">
+            <div class="screen-content">
+                <div class="waiting-visual">
+                    <div class="waiting-circle"></div>
+                </div>
+                <h2>Connected</h2>
+                <p class="waiting-message">Waiting for facilitator to begin...</p>
+                <p class="session-name-display" id="sessionNameDisplay"></p>
+            </div>
+        </div>
+
+        <!-- Therapist Dashboard -->
+        <div class="screen" id="dashboardScreen">
+            <div class="dashboard-layout">
+                <header class="dash-header">
+                    <div class="header-left">
+                        <span class="logo-small">πνεῦμα</span>
+                        <span class="session-info">
+                            <span id="dashSessionName">Group Session</span>
+                            <span class="session-code-small" id="dashCode">HEAL-7293</span>
+                        </span>
+                    </div>
+                    <div class="header-right">
+                        <span class="participant-badge">
+                            <span id="activeCount">6</span> participants
+                        </span>
+                        <button class="end-btn" id="endSessionBtn">End</button>
+                    </div>
+                </header>
+
+                <main class="dash-main">
+                    <!-- Circle Visualization -->
+                    <section class="circle-section">
+                        <div class="therapy-circle" id="therapyCircle">
+                            <!-- Participants arranged in circle -->
+                            <div class="circle-center">
+                                <div class="coherence-display">
+                                    <span class="coherence-value" id="coherenceValue">0%</span>
+                                    <span class="coherence-label">Group Coherence</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="circle-legend">
+                            <span class="legend-item regulated"><span></span> Regulated</span>
+                            <span class="legend-item activating"><span></span> Activating</span>
+                            <span class="legend-item dysregulated"><span></span> Dysregulated</span>
+                        </div>
+                    </section>
+
+                    <!-- Controls -->
+                    <section class="controls-section">
+                        <h3>Lead Exercise</h3>
+                        
+                        <div class="exercise-grid">
+                            <button class="exercise-btn" data-exercise="grounding">
+                                <span class="ex-icon">🌍</span>
+                                <span class="ex-name">5-4-3-2-1 Ground</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="breath">
+                                <span class="ex-icon">🌬️</span>
+                                <span class="ex-name">Group Breath</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="body-scan">
+                                <span class="ex-icon">🧘</span>
+                                <span class="ex-name">Body Scan</span>
+                            </button>
+                            <button class="exercise-btn" data-exercise="container">
+                                <span class="ex-icon">📦</span>
+                                <span class="ex-name">Container</span>
+                            </button>
+                        </div>
+                        
+                        <div class="quick-actions">
+                            <button class="action-btn" id="pauseBtn">⏸️ Pause</button>
+                            <button class="action-btn" id="checkInBtn">💬 Check-in</button>
+                        </div>
+                    </section>
+                </main>
+
+                <!-- Active Exercise Overlay -->
+                <div class="exercise-overlay hidden" id="exerciseOverlay">
+                    <div class="overlay-content">
+                        <div class="overlay-header">
+                            <span class="exercise-title" id="exerciseTitle">Group Breath</span>
+                            <button class="stop-btn" id="stopBtn">Stop</button>
+                        </div>
+                        
+                        <div class="group-breath-visual">
+                            <div class="group-circle-container">
+                                <div class="group-circle" id="groupCircle"></div>
+                                <div class="group-coherence" id="groupCoherence">67%</div>
+                            </div>
+                            <p class="breath-instruction" id="breathInstruction">Breathe In</p>
+                        </div>
+                        
+                        <div class="exercise-timer">
+                            <div class="timer-bar">
+                                <div class="timer-fill" id="timerFill"></div>
+                            </div>
+                            <span class="timer-value" id="timerValue">3:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Exercise View -->
+        <div class="screen" id="clientExerciseScreen">
+            <div class="client-exercise-layout">
+                <p class="client-exercise-label" id="clientExerciseLabel">Group Breath</p>
+                
+                <div class="client-breath-visual">
+                    <div class="client-circle" id="clientCircle"></div>
+                </div>
+                
+                <p class="client-instruction" id="clientInstruction">Breathe In</p>
+                
+                <div class="client-status">
+                    <div class="status-dot"></div>
+                    <span>Connected with group</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session Complete -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-icon">✓</div>
+                <h2 class="complete-title">Session Complete</h2>
+                
+                <div class="session-summary">
+                    <div class="summary-stat">
+                        <span class="summary-value" id="summaryDuration">12:34</span>
+                        <span class="summary-label">Duration</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="summary-value" id="summaryParticipants">6</span>
+                        <span class="summary-label">Participants</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="summary-value" id="summaryCoherence">78%</span>
+                        <span class="summary-label">Peak Coherence</span>
+                    </div>
+                </div>
+                
+                <div class="notes-section">
+                    <label>Session Notes (not stored)</label>
+                    <textarea id="sessionNotes" placeholder="Add notes for your records..."></textarea>
+                    <button class="copy-notes-btn" id="copyNotesBtn">Copy Notes</button>
+                </div>
+                
+                <button class="done-btn" id="doneBtn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="therapy.js"></script>
+</body>
+</html>
+
