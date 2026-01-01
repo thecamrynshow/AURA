@@ -58,15 +58,25 @@ class World {
 
     resize() {
         const dpr = window.devicePixelRatio || 1;
+        
+        // Get actual viewport dimensions as fallback
         const rect = this.canvas.getBoundingClientRect();
+        const width = rect.width || window.innerWidth;
+        const height = rect.height || window.innerHeight;
         
-        this.canvas.width = rect.width * dpr;
-        this.canvas.height = rect.height * dpr;
+        // Set canvas buffer size
+        this.canvas.width = width * dpr;
+        this.canvas.height = height * dpr;
         
+        // Reset transform and apply device pixel ratio scaling
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         this.ctx.scale(dpr, dpr);
         
-        this.width = rect.width;
-        this.height = rect.height;
+        // Store logical dimensions
+        this.width = width;
+        this.height = height;
+        
+        console.log('Canvas resized:', this.width, 'x', this.height);
     }
 
     generate() {
@@ -263,6 +273,12 @@ class World {
     render() {
         const ctx = this.ctx;
         
+        // Debug check
+        if (!this.width || !this.height) {
+            console.warn('Canvas dimensions not set:', this.width, this.height);
+            return;
+        }
+        
         // Clear canvas
         ctx.clearRect(0, 0, this.width, this.height);
         
@@ -322,6 +338,11 @@ class World {
     drawStars() {
         const ctx = this.ctx;
         
+        // Debug: log first frame
+        if (this.time < 0.1) {
+            console.log('Drawing stars, count:', this.stars.length, 'width:', this.width, 'height:', this.height);
+        }
+        
         this.stars.forEach(star => {
             const screenX = star.x - this.camera.x * 0.3; // Parallax
             const screenY = star.y - this.camera.y * 0.3;
@@ -330,22 +351,23 @@ class World {
             if (screenY < -10 || screenY > this.height + 10) return;
             
             const twinkle = Math.sin(this.time * star.twinkleSpeed + star.twinkleOffset) * 0.3 + 0.7;
-            const brightness = star.brightness * twinkle * (0.5 + this.coherence * 0.5);
+            // Increased minimum brightness for visibility
+            const brightness = Math.max(0.3, star.brightness * twinkle * (0.6 + this.coherence * 0.4));
             
             ctx.beginPath();
-            ctx.arc(screenX, screenY, star.size, 0, Math.PI * 2);
+            ctx.arc(screenX, screenY, star.size * 1.5, 0, Math.PI * 2);  // Slightly larger
             ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
             ctx.fill();
             
             // Glow effect for brighter stars
-            if (star.brightness > 0.7) {
+            if (star.brightness > 0.5) {
                 ctx.beginPath();
-                ctx.arc(screenX, screenY, star.size * 3, 0, Math.PI * 2);
+                ctx.arc(screenX, screenY, star.size * 4, 0, Math.PI * 2);
                 const gradient = ctx.createRadialGradient(
                     screenX, screenY, 0,
-                    screenX, screenY, star.size * 3
+                    screenX, screenY, star.size * 4
                 );
-                gradient.addColorStop(0, `rgba(200, 220, 255, ${brightness * 0.3})`);
+                gradient.addColorStop(0, `rgba(200, 220, 255, ${brightness * 0.5})`);
                 gradient.addColorStop(1, 'rgba(200, 220, 255, 0)');
                 ctx.fillStyle = gradient;
                 ctx.fill();
