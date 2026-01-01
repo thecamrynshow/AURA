@@ -101,5 +101,43 @@
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
+    
+    <!-- Adult Games (Coming Soon) -->
+    <url>
+        <loc>https://pneuoma.com/games/drift/</loc>
+        <lastmod>2024-12-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/reset/</loc>
+        <lastmod>2024-12-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/anchor/</loc>
+        <lastmod>2024-12-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/sync/</loc>
+        <lastmod>2024-12-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/forge/</loc>
+        <lastmod>2024-12-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/decompress/</loc>
+        <lastmod>2024-12-31</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
 </urlset>
 

@@ -589,6 +589,355 @@
 .solfege-notes span:nth-child(2) { background: #ff6b35; color: white; }
 .solfege-notes span:nth-child(3) { background: #f7c52d; color: #333; }
 
+/* ===================== */
+/* ADULT GAMES (18+) */
+/* ===================== */
+
+/* Drift - Sleep Preparation */
+.drift-bg {
+    background: linear-gradient(180deg, #0d1b2a 0%, #1b263b 50%, #415a77 100%);
+}
+
+.drift-visual {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.drift-moon {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, #ffecd2 0%, #e0c3a8 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(255, 236, 210, 0.5);
+    animation: drift-glow 4s ease-in-out infinite;
+}
+
+.drift-stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.drift-stars .star {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+.drift-stars .s1 { top: 20%; left: 20%; animation-delay: 0s; }
+.drift-stars .s2 { top: 30%; right: 25%; animation-delay: 0.7s; }
+.drift-stars .s3 { bottom: 35%; left: 30%; animation-delay: 1.4s; }
+
+.drift-waves {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(180deg, transparent 0%, rgba(65, 90, 119, 0.3) 100%);
+}
+
+@keyframes drift-glow {
+    0%, 100% { box-shadow: 0 0 40px rgba(255, 236, 210, 0.5); }
+    50% { box-shadow: 0 0 60px rgba(255, 236, 210, 0.8); }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* Reset - Workplace Stress Relief */
+.reset-bg {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.reset-visual {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reset-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(100, 255, 218, 0.3);
+}
+
+.reset-circle.outer {
+    width: 100px;
+    height: 100px;
+    animation: reset-spin 8s linear infinite;
+}
+
+.reset-circle.middle {
+    width: 70px;
+    height: 70px;
+    animation: reset-spin 6s linear infinite reverse;
+}
+
+.reset-circle.inner {
+    width: 40px;
+    height: 40px;
+    animation: reset-spin 4s linear infinite;
+}
+
+.reset-icon {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+    animation: reset-pulse 2s ease-in-out infinite;
+}
+
+@keyframes reset-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes reset-pulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Anchor - Anxiety Grounding */
+.anchor-bg {
+    background: linear-gradient(180deg, #0a192f 0%, #112240 100%);
+}
+
+.anchor-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+}
+
+.anchor-icon {
+    font-size: 2.5rem;
+    z-index: 2;
+}
+
+.anchor-rings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.anchor-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px solid rgba(100, 255, 218, 0.2);
+    animation: anchor-expand 3s ease-out infinite;
+}
+
+.anchor-ring.r1 { width: 60px; height: 60px; animation-delay: 0s; }
+.anchor-ring.r2 { width: 80px; height: 80px; animation-delay: 1s; }
+.anchor-ring.r3 { width: 100px; height: 100px; animation-delay: 2s; }
+
+@keyframes anchor-expand {
+    0% { opacity: 0.8; transform: translate(-50%, -50%) scale(0.8); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* Sync - Couples Co-Regulation */
+.sync-bg {
+    background: linear-gradient(135deg, #2d132c 0%, #801336 50%, #c72c41 100%);
+}
+
+.sync-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+}
+
+.sync-heart {
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+    animation: sync-beat 1.5s ease-in-out infinite;
+}
+
+.sync-heart.h2 {
+    animation-delay: 0.75s;
+}
+
+.sync-line {
+    position: absolute;
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.8), rgba(255,255,255,0.3));
+    animation: sync-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes sync-beat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.2); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.1); }
+}
+
+@keyframes sync-pulse {
+    0%, 100% { opacity: 0.3; width: 20px; }
+    50% { opacity: 1; width: 50px; }
+}
+
+/* Forge - Performance State Building */
+.forge-bg {
+    background: linear-gradient(180deg, #1a0a0a 0%, #2d1810 50%, #451a03 100%);
+}
+
+.forge-visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.forge-flame {
+    font-size: 3rem;
+    animation: forge-flicker 0.5s ease-in-out infinite alternate;
+}
+
+.forge-sparks {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.forge-sparks .spark {
+    position: absolute;
+    color: #ff9500;
+    font-size: 0.6rem;
+    animation: spark-rise 2s ease-out infinite;
+}
+
+.spark.sp1 { left: 30%; animation-delay: 0s; }
+.spark.sp2 { left: 50%; animation-delay: 0.5s; }
+.spark.sp3 { left: 70%; animation-delay: 1s; }
+
+@keyframes forge-flicker {
+    from { transform: scale(1) rotate(-2deg); }
+    to { transform: scale(1.05) rotate(2deg); }
+}
+
+@keyframes spark-rise {
+    0% { bottom: 40%; opacity: 1; }
+    100% { bottom: 80%; opacity: 0; }
+}
+
+/* Decompress - End of Day Unwinding */
+.decompress-bg {
+    background: linear-gradient(180deg, #ff6b35 0%, #f7931e 30%, #1a1a2e 70%, #0a0a0f 100%);
+}
+
+.decompress-visual {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.decompress-sunset {
+    position: absolute;
+    bottom: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, #ffd700 0%, #ff6b35 60%, transparent 70%);
+    border-radius: 50%;
+    animation: sunset-glow 4s ease-in-out infinite;
+}
+
+.decompress-horizon {
+    position: absolute;
+    bottom: 35%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.decompress-waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35%;
+}
+
+.decompress-waves .wave {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: rgba(26, 26, 46, 0.8);
+    border-radius: 50% 50% 0 0;
+    animation: wave-move 8s linear infinite;
+}
+
+.decompress-waves .w1 {
+    bottom: 0;
+    left: -50%;
+}
+
+.decompress-waves .w2 {
+    bottom: 5px;
+    left: -30%;
+    opacity: 0.5;
+    animation-delay: -4s;
+}
+
+@keyframes sunset-glow {
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 1; }
+}
+
+@keyframes wave-move {
+    from { transform: translateX(0); }
+    to { transform: translateX(50%); }
+}
+
+/* New Intention Colors for Adult Games */
+.intention.sleep {
+    background: rgba(183, 148, 246, 0.15);
+    color: #b794f6;
+}
+
+.intention.ground {
+    background: rgba(139, 90, 43, 0.2);
+    color: #d4a574;
+}
+
+.intention.connect {
+    background: rgba(255, 107, 129, 0.15);
+    color: #ff6b81;
+}
+
+.intention.release {
+    background: rgba(255, 159, 67, 0.15);
+    color: #ff9f43;
+}
+
+.intention.play {
+    background: rgba(116, 185, 255, 0.15);
+    color: #74b9ff;
+}
+
 /* Visual Elements */
 .game-orb {
     width: 100px;
