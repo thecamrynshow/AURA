@@ -172,6 +172,22 @@ body {
     text-transform: uppercase;
 }
 
+.nav-games {
+    display: none;
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: var(--space-xs) var(--space-md);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+}
+
+.nav-games:hover {
+    background: var(--accent-primary-dim);
+}
+
 .nav-links {
     display: flex;
     align-items: center;
@@ -941,6 +957,10 @@ body {
     
     .nav {
         padding: var(--space-sm);
+    }
+    
+    .nav-games {
+        display: block;
     }
     
     .nav-links a:not(.nav-cta) {
