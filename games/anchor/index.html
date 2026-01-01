@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Anchor — Free Anxiety Grounding Game | 5-4-3-2-1 Technique | PNEUOMA</title>
+    <meta name="title" content="Anchor — Free Anxiety Grounding Game | 5-4-3-2-1 Technique | PNEUOMA">
+    <meta name="description" content="Ground yourself during anxiety with the proven 5-4-3-2-1 technique. Interactive sensory awareness exercise that brings you back to the present moment.">
+    <meta name="keywords" content="anxiety grounding, 5-4-3-2-1 technique, panic attack help, anxiety relief, grounding exercises, sensory awareness, calm anxiety, present moment">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/anchor/">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pneuoma.com/games/anchor/">
+    <meta property="og:title" content="Anchor — Anxiety Grounding">
+    <meta property="og:description" content="5-4-3-2-1 sensory grounding for anxiety relief. Come back to the present.">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Ocean Background -->
+        <div class="ocean-bg" id="oceanBg">
+            <div class="water-layer layer-1"></div>
+            <div class="water-layer layer-2"></div>
+            <div class="water-layer layer-3"></div>
+            <div class="bubbles" id="bubbles"></div>
+            <div class="light-rays"></div>
+        </div>
+
+        <!-- Depth Indicator -->
+        <div class="depth-indicator" id="depthIndicator">
+            <div class="depth-track">
+                <div class="depth-fill" id="depthFill"></div>
+                <div class="anchor-icon" id="anchorIcon">⚓</div>
+            </div>
+            <div class="depth-labels">
+                <span>Surface</span>
+                <span>Grounded</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back</a>
+            <div class="phase-counter" id="phaseCounter">
+                <span class="current">—</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="anchor-symbol">⚓</div>
+                <h1 class="title">Anchor</h1>
+                <p class="subtitle">Anxiety Grounding</p>
+                <p class="tagline">
+                    When anxiety pulls you away,<br>
+                    come back to right here, right now.
+                </p>
+                
+                <div class="technique-preview">
+                    <p class="technique-label">The 5-4-3-2-1 Technique</p>
+                    <div class="technique-steps">
+                        <span><strong>5</strong> See</span>
+                        <span><strong>4</strong> Touch</span>
+                        <span><strong>3</strong> Hear</span>
+                        <span><strong>2</strong> Smell</span>
+                        <span><strong>1</strong> Taste</span>
+                    </div>
+                </div>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>Begin Grounding</span>
+                </button>
+                
+                <p class="time-estimate">~5-10 minutes</p>
+            </div>
+        </div>
+
+        <!-- Check-in Screen -->
+        <div class="screen" id="checkinScreen">
+            <div class="checkin-content">
+                <h2 class="checkin-title">How are you feeling?</h2>
+                <p class="checkin-subtitle">Rate your anxiety right now</p>
+                
+                <div class="anxiety-scale" id="anxietyScale">
+                    <div class="scale-track">
+                        <input type="range" min="1" max="10" value="5" id="anxietySlider">
+                        <div class="scale-fill" id="scaleFill"></div>
+                    </div>
+                    <div class="scale-labels">
+                        <span>Calm</span>
+                        <span>Moderate</span>
+                        <span>Intense</span>
+                    </div>
+                    <div class="scale-value" id="scaleValue">5</div>
+                </div>
+                
+                <button class="continue-btn" id="checkinContinue">Continue</button>
+            </div>
+        </div>
+
+        <!-- Grounding Screen -->
+        <div class="screen" id="groundingScreen">
+            <div class="grounding-content">
+                <!-- Sense Header -->
+                <div class="sense-header">
+                    <div class="sense-number" id="senseNumber">5</div>
+                    <div class="sense-info">
+                        <h2 class="sense-name" id="senseName">Things You Can See</h2>
+                        <p class="sense-instruction" id="senseInstruction">Look around. What catches your eye?</p>
+                    </div>
+                    <div class="sense-icon" id="senseIcon">👁️</div>
+                </div>
+                
+                <!-- Items Container -->
+                <div class="items-container" id="itemsContainer">
+                    <!-- Items will be generated here -->
+                </div>
+                
+                <!-- Progress -->
+                <div class="sense-progress">
+                    <div class="progress-dots" id="progressDots">
+                        <!-- Dots generated dynamically -->
+                    </div>
+                    <p class="progress-hint" id="progressHint">Tap each circle as you notice something</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breath Break Screen -->
+        <div class="screen" id="breathScreen">
+            <div class="breath-content">
+                <div class="breath-circle" id="breathCircle">
+                    <div class="breath-ring"></div>
+                    <p class="breath-text" id="breathText">Breathe</p>
+                </div>
+                <p class="breath-instruction" id="breathInstruction">Take a moment before the next sense</p>
+            </div>
+        </div>
+
+        <!-- Checkout Screen -->
+        <div class="screen" id="checkoutScreen">
+            <div class="checkout-content">
+                <div class="grounded-icon">✓</div>
+                <h2 class="checkout-title">Grounded</h2>
+                <p class="checkout-subtitle">How do you feel now?</p>
+                
+                <div class="anxiety-scale" id="anxietyScaleAfter">
+                    <div class="scale-track">
+                        <input type="range" min="1" max="10" value="5" id="anxietySliderAfter">
+                        <div class="scale-fill" id="scaleFillAfter"></div>
+                    </div>
+                    <div class="scale-labels">
+                        <span>Calm</span>
+                        <span>Moderate</span>
+                        <span>Intense</span>
+                    </div>
+                    <div class="scale-value" id="scaleValueAfter">5</div>
+                </div>
+                
+                <button class="continue-btn" id="checkoutContinue">See Results</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="resultsScreen">
+            <div class="results-content">
+                <h2 class="results-title" id="resultsTitle">You're more grounded</h2>
+                
+                <div class="results-comparison">
+                    <div class="result-before">
+                        <span class="result-label">Before</span>
+                        <span class="result-value" id="resultBefore">7</span>
+                    </div>
+                    <div class="result-arrow">→</div>
+                    <div class="result-after">
+                        <span class="result-label">After</span>
+                        <span class="result-value" id="resultAfter">4</span>
+                    </div>
+                </div>
+                
+                <div class="results-change" id="resultsChange">
+                    <span class="change-value">-3</span>
+                    <span class="change-label">anxiety reduction</span>
+                </div>
+                
+                <p class="results-message" id="resultsMessage">
+                    You've practiced bringing yourself back to the present moment. 
+                    This skill gets stronger with use.
+                </p>
+                
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="againBtn">Anchor Again</button>
+                    <a href="../../platform/games/" class="btn btn-secondary">All Games</a>
+                </div>
+                
+                <p class="results-tip">💡 Tip: Save this for moments of anxiety</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/visuals.js"></script>
+    <script src="src/js/grounding.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
