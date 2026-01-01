@@ -348,6 +348,67 @@
                 radial-gradient(circle at 50% 50%, rgba(99, 179, 237, 0.1) 0%, transparent 40%);
 }
 
+/* The Deep Visual */
+.deep-visual {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deep-diver {
+    width: 30px;
+    height: 50px;
+    background: rgba(0, 50, 80, 0.6);
+    border-radius: 10px 10px 5px 5px;
+    position: relative;
+    animation: diver-sink 4s ease-in-out infinite;
+}
+
+.deep-diver::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 50, 80, 0.6);
+    border-radius: 50%;
+}
+
+@keyframes diver-sink {
+    0%, 100% { transform: translateY(-10px); }
+    50% { transform: translateY(10px); }
+}
+
+.deep-bubbles {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.deep-bubbles span {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    animation: deep-bubble 3s ease-in infinite;
+}
+
+.deep-bubbles span:nth-child(1) { left: -15px; animation-delay: 0s; }
+.deep-bubbles span:nth-child(2) { left: 0; animation-delay: 0.5s; width: 6px; height: 6px; }
+.deep-bubbles span:nth-child(3) { left: 10px; animation-delay: 1s; width: 4px; height: 4px; }
+
+@keyframes deep-bubble {
+    0% { transform: translateY(0); opacity: 0.6; }
+    100% { transform: translateY(-80px); opacity: 0; }
+}
+
 .cloud-puffs {
     width: 120px;
     height: 60px;
