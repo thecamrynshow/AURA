@@ -1,0 +1,641 @@
+/* ============================================
+   Chill — Social Anxiety Cool-Down
+   Modern, cool, teen-friendly aesthetic
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0f0f1a;
+    --bg-mid: #1a1a2e;
+    --bg-card: #252540;
+    --ice-1: #67e8f9;
+    --ice-2: #22d3ee;
+    --ice-3: #06b6d4;
+    --mint: #a7f3d0;
+    --lavender: #c4b5fd;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --glow: rgba(103, 232, 249, 0.3);
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+    --transition: 0.3s ease;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Waves */
+.bg-waves {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.wave {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, var(--ice-1) 50.5%, transparent 51%);
+    opacity: 0.03;
+    animation: wave-float 20s ease-in-out infinite;
+}
+
+.wave-1 {
+    top: -50%;
+    left: -50%;
+    animation-delay: 0s;
+}
+
+.wave-2 {
+    top: -30%;
+    left: -60%;
+    animation-delay: -7s;
+    opacity: 0.02;
+}
+
+.wave-3 {
+    top: -70%;
+    left: -40%;
+    animation-delay: -14s;
+    opacity: 0.025;
+}
+
+@keyframes wave-float {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+}
+
+/* Navigation */
+.game-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    transition: opacity var(--transition);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-full);
+}
+
+.back-link:hover {
+    opacity: 1;
+}
+
+.timer {
+    font-size: 1rem;
+    color: var(--ice-1);
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity var(--transition);
+    font-variant-numeric: tabular-nums;
+}
+
+.timer.visible {
+    opacity: 1;
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    z-index: 10;
+    padding: 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Title Screen */
+.title-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.ice-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--ice-1) 0%, var(--ice-3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tagline {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.start-btn {
+    background: linear-gradient(135deg, var(--ice-1) 0%, var(--ice-3) 100%);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 48px;
+    border-radius: var(--radius-full);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 16px;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 40px var(--glow);
+}
+
+.time-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Situation Screen */
+.situation-content, .anxiety-content {
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+}
+
+.question {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+}
+
+.situation-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.situation-btn {
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.situation-btn:hover, .situation-btn:focus {
+    border-color: var(--ice-1);
+    transform: translateY(-2px);
+}
+
+.situation-btn.selected {
+    border-color: var(--ice-1);
+    background: rgba(103, 232, 249, 0.1);
+}
+
+.sit-icon {
+    font-size: 1.8rem;
+}
+
+.sit-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Anxiety Slider */
+.anxiety-slider-container {
+    margin-bottom: 40px;
+}
+
+.anxiety-slider {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--bg-card);
+    border-radius: var(--radius-full);
+    outline: none;
+    margin-bottom: 12px;
+}
+
+.anxiety-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--ice-1), var(--ice-3));
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--glow);
+}
+
+.anxiety-slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--ice-1), var(--ice-3));
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.anxiety-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.anxiety-value {
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: var(--ice-1);
+}
+
+.continue-btn {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 2px solid var(--ice-1);
+    padding: 14px 36px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.continue-btn:hover {
+    background: var(--ice-1);
+    color: var(--bg-dark);
+}
+
+/* Phase Screens */
+.phase-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.phase-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.phase-title {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--ice-1);
+}
+
+.phase-instruction {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+/* Tap Prompt */
+.tap-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.tap-circle {
+    width: 80px;
+    height: 80px;
+    border: 3px solid var(--ice-1);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition);
+    animation: pulse-ring 2s ease-out infinite;
+}
+
+.tap-circle:hover {
+    background: rgba(103, 232, 249, 0.2);
+}
+
+.tap-circle.tapped {
+    background: var(--ice-1);
+    animation: none;
+    transform: scale(0.9);
+}
+
+@keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 var(--glow); }
+    70% { box-shadow: 0 0 0 20px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.tap-prompt p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Breath Circle */
+.breath-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.breath-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(103, 232, 249, 0.2), rgba(6, 182, 212, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.breath-inner {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ice-1), var(--ice-3));
+    transition: transform 4s ease-in-out;
+    box-shadow: 0 0 40px var(--glow);
+}
+
+.breath-circle.inhale .breath-inner {
+    transform: scale(1.3);
+}
+
+.breath-circle.exhale .breath-inner {
+    transform: scale(0.7);
+}
+
+.breath-text {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.breath-count {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.count-current {
+    color: var(--ice-1);
+    font-weight: 600;
+}
+
+/* Reframe Screen */
+.reframe-text {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+/* Launch Screen */
+.launch-content {
+    animation: fade-up 0.6s ease;
+}
+
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.launch-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.launch-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--ice-1), var(--mint));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.launch-affirmation {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+.countdown {
+    margin-top: 20px;
+}
+
+.countdown-number {
+    font-size: 4rem;
+    font-weight: 200;
+    color: var(--ice-1);
+    animation: pulse-number 1s ease-in-out infinite;
+}
+
+@keyframes pulse-number {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* Complete Screen */
+.complete-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.complete-check {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mint), var(--ice-1));
+    color: var(--bg-dark);
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: pop-in 0.5s ease;
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.complete-title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--ice-1);
+}
+
+.complete-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.complete-stats {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.stat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.stat-before {
+    font-size: 2rem;
+    color: #f87171;
+    font-weight: 500;
+}
+
+.stat-arrow {
+    color: var(--text-muted);
+    font-size: 1.5rem;
+}
+
+.stat-after {
+    font-size: 2rem;
+    color: var(--mint);
+    font-weight: 500;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.complete-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--ice-1), var(--ice-3));
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 36px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px var(--glow);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    padding: 12px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: color var(--transition);
+}
+
+.btn-secondary:hover {
+    color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 380px) {
+    .title {
+        font-size: 3rem;
+    }
+    
+    .situation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .situation-btn {
+        padding: 16px 12px;
+    }
+    
+    .breath-circle {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .breath-inner {
+        width: 100px;
+        height: 100px;
+    }
+}
+

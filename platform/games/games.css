@@ -938,6 +938,214 @@
     color: #74b9ff;
 }
 
+/* ====================================
+   TEEN GAMES (13+) Visual Styles
+   ==================================== */
+
+/* Chill - Social Anxiety Cool-Down */
+.chill-bg {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #252540 100%);
+}
+
+.chill-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+}
+
+.chill-ice {
+    font-size: 3rem;
+    z-index: 2;
+    animation: chill-float 3s ease-in-out infinite;
+}
+
+.chill-waves {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.chill-wave {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px solid rgba(103, 232, 249, 0.3);
+    animation: chill-expand 4s ease-out infinite;
+}
+
+.chill-wave.w1 { width: 80px; height: 80px; }
+.chill-wave.w2 { width: 100px; height: 100px; animation-delay: 2s; }
+
+@keyframes chill-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes chill-expand {
+    0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.8); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* Focus - Study Session Reset */
+.focus-bg {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 50%, #1a1a2e 100%);
+}
+
+.focus-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+}
+
+.focus-target {
+    width: 20px;
+    height: 20px;
+    background: #ffd93d;
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 20px rgba(255, 217, 61, 0.5);
+}
+
+.focus-rings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.focus-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 217, 61, 0.3);
+}
+
+.focus-ring.r1 { width: 60px; height: 60px; }
+.focus-ring.r2 { width: 100px; height: 100px; }
+
+/* Bounce - Rejection Recovery */
+.bounce-bg {
+    background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 100%);
+}
+
+.bounce-visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100px;
+}
+
+.bounce-ball {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+    border-radius: 50%;
+    animation: bounce-ball 1.5s ease-in-out infinite;
+    box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+}
+
+.bounce-shadow {
+    width: 40px;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    animation: bounce-shadow 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce-ball {
+    0%, 100% { transform: translateY(-30px); }
+    50% { transform: translateY(0); }
+}
+
+@keyframes bounce-shadow {
+    0%, 100% { transform: scale(0.6); opacity: 0.3; }
+    50% { transform: scale(1); opacity: 0.6; }
+}
+
+/* Pause - Phone Break */
+.pause-bg {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+}
+
+.pause-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+}
+
+.pause-icon {
+    font-size: 3rem;
+    z-index: 2;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.pause-glow {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pause-pulse 3s ease-in-out infinite;
+}
+
+@keyframes pause-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+/* Vibe Check - Emotional Check-In */
+.vibe-bg {
+    background: linear-gradient(135deg, #2d132c 0%, #3d1a4a 100%);
+}
+
+.vibe-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+}
+
+.vibe-emoji {
+    font-size: 3rem;
+    z-index: 2;
+    animation: vibe-rotate 5s ease-in-out infinite;
+}
+
+.vibe-waves {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196, 181, 253, 0.2) 0%, transparent 60%);
+    animation: vibe-glow 3s ease-in-out infinite;
+}
+
+@keyframes vibe-rotate {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+@keyframes vibe-glow {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
 /* Visual Elements */
 .game-orb {
     width: 100px;

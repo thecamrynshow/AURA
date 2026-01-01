@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Chill — Social Anxiety Cool-Down for Teens | PNEUOMA</title>
+    <meta name="title" content="Chill — Social Anxiety Cool-Down for Teens | PNEUOMA">
+    <meta name="description" content="Quick 3-5 minute anxiety reset before school, parties, or social situations. Modern breathing game designed for teens dealing with social anxiety.">
+    <meta name="keywords" content="teen anxiety, social anxiety teen, school anxiety, party anxiety, teen stress relief, teen breathing exercise, teen mental health, anxiety before school">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/chill/">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pneuoma.com/games/chill/">
+    <meta property="og:title" content="Chill — Social Anxiety Cool-Down">
+    <meta property="og:description" content="Quick anxiety reset before social situations. 3-5 min.">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Animated Background -->
+        <div class="bg-waves">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="timer" id="timer">
+                <span class="timer-value">3:00</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="ice-icon">❄️</div>
+                <h1 class="title">chill</h1>
+                <p class="tagline">cool down before you go</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>let's go</span>
+                </button>
+                
+                <p class="time-note">~3 min</p>
+            </div>
+        </div>
+
+        <!-- Situation Screen -->
+        <div class="screen" id="situationScreen">
+            <div class="situation-content">
+                <h2 class="question">what's coming up?</h2>
+                
+                <div class="situation-grid" id="situationGrid">
+                    <button class="situation-btn" data-situation="school">
+                        <span class="sit-icon">🏫</span>
+                        <span class="sit-text">school</span>
+                    </button>
+                    <button class="situation-btn" data-situation="party">
+                        <span class="sit-icon">🎉</span>
+                        <span class="sit-text">party</span>
+                    </button>
+                    <button class="situation-btn" data-situation="presentation">
+                        <span class="sit-icon">🎤</span>
+                        <span class="sit-text">presenting</span>
+                    </button>
+                    <button class="situation-btn" data-situation="conversation">
+                        <span class="sit-icon">💬</span>
+                        <span class="sit-text">hard convo</span>
+                    </button>
+                    <button class="situation-btn" data-situation="new-people">
+                        <span class="sit-icon">👋</span>
+                        <span class="sit-text">new people</span>
+                    </button>
+                    <button class="situation-btn" data-situation="other">
+                        <span class="sit-icon">✨</span>
+                        <span class="sit-text">something else</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Anxiety Check Screen -->
+        <div class="screen" id="anxietyScreen">
+            <div class="anxiety-content">
+                <h2 class="question">how anxious rn?</h2>
+                
+                <div class="anxiety-slider-container">
+                    <input type="range" min="1" max="10" value="5" id="anxietySlider" class="anxiety-slider">
+                    <div class="anxiety-labels">
+                        <span>a little</span>
+                        <span>a lot</span>
+                    </div>
+                    <div class="anxiety-value" id="anxietyValue">5</div>
+                </div>
+                
+                <button class="continue-btn" id="anxietyContinue">ok let's fix that</button>
+            </div>
+        </div>
+
+        <!-- Ground Phase -->
+        <div class="screen" id="groundScreen">
+            <div class="phase-content">
+                <div class="phase-icon">🦶</div>
+                <h2 class="phase-title">ground</h2>
+                <p class="phase-instruction" id="groundInstruction">feel your feet on the floor</p>
+                
+                <div class="tap-prompt" id="groundTap">
+                    <div class="tap-circle"></div>
+                    <p>tap when you feel it</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breathe Phase -->
+        <div class="screen" id="breatheScreen">
+            <div class="phase-content">
+                <div class="breath-container">
+                    <div class="breath-circle" id="breathCircle">
+                        <div class="breath-inner"></div>
+                    </div>
+                    <p class="breath-text" id="breathText">breathe in</p>
+                </div>
+                
+                <div class="breath-count" id="breathCount">
+                    <span class="count-current">1</span>
+                    <span class="count-total">/ 4</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reframe Phase -->
+        <div class="screen" id="reframeScreen">
+            <div class="phase-content">
+                <div class="phase-icon">💭</div>
+                <h2 class="phase-title">quick thought</h2>
+                <p class="reframe-text" id="reframeText">everyone's too worried about themselves to notice you</p>
+                
+                <button class="continue-btn" id="reframeContinue">facts</button>
+            </div>
+        </div>
+
+        <!-- Launch Phase -->
+        <div class="screen" id="launchScreen">
+            <div class="phase-content launch-content">
+                <div class="launch-icon">🚀</div>
+                <h2 class="launch-title" id="launchTitle">you got this</h2>
+                <p class="launch-affirmation" id="launchAffirmation">you've done hard things before</p>
+                
+                <div class="countdown" id="countdown">
+                    <span class="countdown-number">3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-check">✓</div>
+                <h2 class="complete-title">chilled</h2>
+                <p class="complete-message">go do your thing 💪</p>
+                
+                <div class="complete-stats">
+                    <div class="stat">
+                        <span class="stat-before" id="statBefore">7</span>
+                        <span class="stat-arrow">→</span>
+                        <span class="stat-after" id="statAfter">4</span>
+                    </div>
+                    <p class="stat-label">anxiety level</p>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">i'm ready</button>
+                    <button class="btn-secondary" id="againBtn">need more time</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/content.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
