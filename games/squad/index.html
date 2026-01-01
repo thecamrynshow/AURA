@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Squad — Group Regulation for Teens | PNEUOMA</title>
+    <meta name="title" content="Squad — Group Regulation for Teens | PNEUOMA">
+    <meta name="description" content="Multiplayer breathing for friend groups. Sync up with your squad before big moments, competitions, or just to hang. 5-10 minute group regulation.">
+    <meta name="keywords" content="group breathing, team breathing, friends meditation, group regulation, teen mindfulness, squad goals, team sync">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/squad/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-gradient">
+            <div class="bg-particles" id="bgParticles"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="progress-dots" id="progressDots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="squad-preview">
+                    <div class="preview-orb o1"></div>
+                    <div class="preview-orb o2"></div>
+                    <div class="preview-orb o3"></div>
+                    <div class="preview-lines">
+                        <div class="preview-line l1"></div>
+                        <div class="preview-line l2"></div>
+                        <div class="preview-line l3"></div>
+                    </div>
+                </div>
+                <h1 class="title">squad</h1>
+                <p class="tagline">breathe together</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>gather up</span>
+                </button>
+                
+                <p class="time-note">~5-10 min · 2-6 people</p>
+            </div>
+        </div>
+
+        <!-- Squad Size Screen -->
+        <div class="screen" id="sizeScreen">
+            <div class="size-content">
+                <h2 class="phase-title">how many of you?</h2>
+                <p class="phase-desc">everyone gather around</p>
+                
+                <div class="size-options" id="sizeOptions">
+                    <button class="size-btn" data-size="2">
+                        <span class="size-num">2</span>
+                        <span class="size-label">duo</span>
+                    </button>
+                    <button class="size-btn" data-size="3">
+                        <span class="size-num">3</span>
+                        <span class="size-label">trio</span>
+                    </button>
+                    <button class="size-btn" data-size="4">
+                        <span class="size-num">4</span>
+                        <span class="size-label">quad</span>
+                    </button>
+                    <button class="size-btn" data-size="5">
+                        <span class="size-num">5</span>
+                        <span class="size-label">five</span>
+                    </button>
+                    <button class="size-btn" data-size="6">
+                        <span class="size-num">6</span>
+                        <span class="size-label">squad</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Purpose Screen -->
+        <div class="screen" id="purposeScreen">
+            <div class="purpose-content">
+                <h2 class="phase-title">what's the vibe?</h2>
+                <p class="phase-desc">pick your squad's intention</p>
+                
+                <div class="purpose-options" id="purposeOptions">
+                    <button class="purpose-btn" data-purpose="hype">
+                        <span class="purpose-icon">🔥</span>
+                        <span class="purpose-text">get hyped</span>
+                        <span class="purpose-desc">before a game or event</span>
+                    </button>
+                    <button class="purpose-btn" data-purpose="calm">
+                        <span class="purpose-icon">🌊</span>
+                        <span class="purpose-text">calm down</span>
+                        <span class="purpose-desc">too much energy</span>
+                    </button>
+                    <button class="purpose-btn" data-purpose="focus">
+                        <span class="purpose-icon">🎯</span>
+                        <span class="purpose-text">lock in</span>
+                        <span class="purpose-desc">study or work mode</span>
+                    </button>
+                    <button class="purpose-btn" data-purpose="connect">
+                        <span class="purpose-icon">💫</span>
+                        <span class="purpose-text">just connect</span>
+                        <span class="purpose-desc">no reason needed</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sync Screen -->
+        <div class="screen" id="syncScreen">
+            <div class="sync-content">
+                <h2 class="phase-title" id="syncTitle">syncing up</h2>
+                <p class="phase-desc" id="syncDesc">breathe together</p>
+                
+                <div class="squad-circle" id="squadCircle">
+                    <!-- Orbs will be generated here -->
+                    <div class="center-breath" id="centerBreath">
+                        <div class="breath-ring"></div>
+                        <p class="breath-text" id="breathText">inhale</p>
+                    </div>
+                </div>
+                
+                <div class="sync-progress">
+                    <div class="sync-bar">
+                        <div class="sync-fill" id="syncFill"></div>
+                    </div>
+                    <p class="sync-round" id="syncRound">round 1 of 5</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-squad" id="completeSquad">
+                    <!-- Connected orbs animation -->
+                </div>
+                <h2 class="complete-title">synced</h2>
+                <p class="complete-message" id="completeMessage">
+                    your squad is locked in together
+                </p>
+                
+                <div class="squad-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="statPeople">3</span>
+                        <span class="stat-label">people</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statBreaths">15</span>
+                        <span class="stat-label">breaths</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statTime">5:00</span>
+                        <span class="stat-label">together</span>
+                    </div>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">we're good</button>
+                    <button class="btn-secondary" id="againBtn">another round</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
