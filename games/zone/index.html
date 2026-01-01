@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZONE — Find Your Calm | PNEUOMA</title>
+    <meta name="description" content="Identify your emotional zone and discover pathways back to calm. A regulation game for all ages.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            <div class="session-info">
+                <span class="current-zone-indicator" id="zoneIndicator">—</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <section class="screen title-screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="zone-logo">
+                    <div class="zone-rings">
+                        <div class="ring ring-red"></div>
+                        <div class="ring ring-yellow"></div>
+                        <div class="ring ring-green"></div>
+                        <div class="ring ring-blue"></div>
+                        <div class="ring-center"></div>
+                    </div>
+                </div>
+                <h1 class="game-title">ZONE</h1>
+                <p class="game-tagline">Find your calm</p>
+                
+                <div class="title-description">
+                    <p>We all move through different zones throughout the day.</p>
+                    <p>Let's find out where you are — and help you get where you want to be.</p>
+                </div>
+
+                <button class="btn-primary" id="startBtn">
+                    <span>Check In</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+
+                <div class="title-footer">
+                    <span class="age-badge">Ages 5+</span>
+                    <span class="time-badge">3-5 min</span>
+                    <span class="control-badge">Touch</span>
+                </div>
+            </div>
+
+            <!-- Ambient background -->
+            <div class="ambient-bg" id="ambientBg"></div>
+        </section>
+
+        <!-- Zone Check-In Screen -->
+        <section class="screen checkin-screen" id="checkinScreen">
+            <div class="checkin-content">
+                <h2 class="checkin-title">How are you feeling right now?</h2>
+                <p class="checkin-subtitle">Tap the zone that matches how your body and mind feel</p>
+
+                <div class="zones-grid">
+                    <!-- Blue Zone -->
+                    <button class="zone-card zone-blue" data-zone="blue">
+                        <div class="zone-icon">
+                            <svg viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="30" fill="currentColor" opacity="0.2"/>
+                                <path d="M30 45 Q40 55 50 45" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <circle cx="32" cy="38" r="3" fill="currentColor"/>
+                                <circle cx="48" cy="38" r="3" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3 class="zone-name">Blue Zone</h3>
+                        <p class="zone-desc">Tired, sad, slow, bored</p>
+                        <div class="zone-feelings">
+                            <span>😴</span>
+                            <span>😢</span>
+                            <span>😶</span>
+                        </div>
+                    </button>
+
+                    <!-- Green Zone -->
+                    <button class="zone-card zone-green" data-zone="green">
+                        <div class="zone-icon">
+                            <svg viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="30" fill="currentColor" opacity="0.2"/>
+                                <path d="M28 42 Q40 52 52 42" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <circle cx="32" cy="35" r="3" fill="currentColor"/>
+                                <circle cx="48" cy="35" r="3" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3 class="zone-name">Green Zone</h3>
+                        <p class="zone-desc">Calm, focused, happy, ready</p>
+                        <div class="zone-feelings">
+                            <span>😊</span>
+                            <span>😌</span>
+                            <span>🙂</span>
+                        </div>
+                    </button>
+
+                    <!-- Yellow Zone -->
+                    <button class="zone-card zone-yellow" data-zone="yellow">
+                        <div class="zone-icon">
+                            <svg viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="30" fill="currentColor" opacity="0.2"/>
+                                <path d="M28 45 L52 45" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <circle cx="32" cy="35" r="3" fill="currentColor"/>
+                                <circle cx="48" cy="35" r="3" fill="currentColor"/>
+                                <path d="M26 30 L34 33" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M54 30 L46 33" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="zone-name">Yellow Zone</h3>
+                        <p class="zone-desc">Worried, frustrated, silly, wiggly</p>
+                        <div class="zone-feelings">
+                            <span>😬</span>
+                            <span>😤</span>
+                            <span>🤪</span>
+                        </div>
+                    </button>
+
+                    <!-- Red Zone -->
+                    <button class="zone-card zone-red" data-zone="red">
+                        <div class="zone-icon">
+                            <svg viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="30" fill="currentColor" opacity="0.2"/>
+                                <path d="M28 48 Q40 40 52 48" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                <circle cx="32" cy="35" r="3" fill="currentColor"/>
+                                <circle cx="48" cy="35" r="3" fill="currentColor"/>
+                                <path d="M26 28 L36 32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M54 28 L44 32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="zone-name">Red Zone</h3>
+                        <p class="zone-desc">Angry, scared, out of control</p>
+                        <div class="zone-feelings">
+                            <span>😡</span>
+                            <span>😱</span>
+                            <span>🤯</span>
+                        </div>
+                    </button>
+                </div>
+
+                <p class="checkin-note">There's no wrong answer — all zones are okay to feel</p>
+            </div>
+        </section>
+
+        <!-- Activity Screen -->
+        <section class="screen activity-screen" id="activityScreen">
+            <div class="activity-landscape" id="activityLandscape">
+                <canvas id="landscapeCanvas"></canvas>
+            </div>
+
+            <div class="activity-content" id="activityContent">
+                <!-- Dynamic content loaded based on zone -->
+            </div>
+
+            <div class="activity-progress">
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-zones">
+                    <span class="pz pz-start" id="startZoneLabel">Yellow</span>
+                    <span class="pz pz-end">Green</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Breathing Activity -->
+        <div class="activity-overlay" id="breathingActivity">
+            <div class="breathing-circle" id="breathingCircle">
+                <div class="breath-ring"></div>
+                <div class="breath-core">
+                    <span class="breath-text" id="breathText">Breathe In</span>
+                </div>
+            </div>
+            <p class="breath-instruction" id="breathInstruction">Follow the circle with your breath</p>
+            <div class="breath-counter">
+                <span id="breathCount">0</span> / <span id="breathTotal">5</span> breaths
+            </div>
+        </div>
+
+        <!-- Grounding Activity -->
+        <div class="activity-overlay" id="groundingActivity">
+            <div class="grounding-content">
+                <h3 class="grounding-title" id="groundingTitle">5-4-3-2-1 Grounding</h3>
+                <p class="grounding-prompt" id="groundingPrompt">Look around and find...</p>
+                
+                <div class="grounding-step" id="groundingStep">
+                    <span class="step-number">5</span>
+                    <span class="step-sense">things you can SEE</span>
+                </div>
+
+                <div class="grounding-items" id="groundingItems">
+                    <button class="ground-item" data-index="0"></button>
+                    <button class="ground-item" data-index="1"></button>
+                    <button class="ground-item" data-index="2"></button>
+                    <button class="ground-item" data-index="3"></button>
+                    <button class="ground-item" data-index="4"></button>
+                </div>
+
+                <p class="grounding-hint">Tap each circle as you notice something</p>
+            </div>
+        </div>
+
+        <!-- Movement Activity -->
+        <div class="activity-overlay" id="movementActivity">
+            <div class="movement-content">
+                <h3 class="movement-title">Shake It Out</h3>
+                <div class="movement-figure" id="movementFigure">
+                    <svg viewBox="0 0 100 150" class="figure-svg">
+                        <circle cx="50" cy="20" r="15" class="figure-head"/>
+                        <line x1="50" y1="35" x2="50" y2="80" class="figure-body"/>
+                        <line x1="50" y1="50" x2="25" y2="70" class="figure-arm figure-arm-left"/>
+                        <line x1="50" y1="50" x2="75" y2="70" class="figure-arm figure-arm-right"/>
+                        <line x1="50" y1="80" x2="30" y2="120" class="figure-leg figure-leg-left"/>
+                        <line x1="50" y1="80" x2="70" y2="120" class="figure-leg figure-leg-right"/>
+                    </svg>
+                </div>
+                <p class="movement-instruction" id="movementInstruction">Shake your hands really fast!</p>
+                <div class="movement-timer">
+                    <div class="timer-fill" id="movementTimerFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <section class="screen complete-screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-visual">
+                    <div class="complete-glow"></div>
+                    <div class="complete-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="3" opacity="0.3"/>
+                            <path d="M35 50 L45 60 L65 40" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <h2 class="complete-title">You did it!</h2>
+                <p class="complete-message" id="completeMessage">You moved from Yellow to Green Zone</p>
+
+                <div class="complete-journey">
+                    <div class="journey-start" id="journeyStart">
+                        <span class="journey-zone">😬</span>
+                        <span class="journey-label">Started</span>
+                    </div>
+                    <div class="journey-arrow">
+                        <svg viewBox="0 0 50 20">
+                            <path d="M0 10 L40 10 M35 5 L40 10 L35 15" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="journey-end">
+                        <span class="journey-zone">😌</span>
+                        <span class="journey-label">Now</span>
+                    </div>
+                </div>
+
+                <div class="complete-tip">
+                    <p class="tip-label">Remember:</p>
+                    <p class="tip-text" id="tipText">You can use breathing anytime you feel your zone changing</p>
+                </div>
+
+                <div class="complete-actions">
+                    <button class="btn-secondary" id="playAgainBtn">Check In Again</button>
+                    <a href="../../platform/games/index.html" class="btn-primary">More Games</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/zones.js"></script>
+    <script src="src/js/activities.js"></script>
+    <script src="src/js/world.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
