@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Forge — Performance State Building | PNEUOMA</title>
+    <meta name="title" content="Forge — Performance State Building | PNEUOMA">
+    <meta name="description" content="Build your peak performance state before workouts, competitions, or presentations. Energy activation without caffeine. Flow state induction in 5-10 minutes.">
+    <meta name="keywords" content="performance breathing, pre-workout breathing, flow state, peak performance, activation, energy boost, competition prep, presentation nerves">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/forge/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-gradient">
+            <div class="ember-container" id="emberContainer"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="progress-bar-mini">
+                <div class="progress-fill-mini" id="progressFill"></div>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="forge-icon">
+                    <div class="flame f1">🔥</div>
+                    <div class="flame f2">🔥</div>
+                    <div class="flame f3">🔥</div>
+                </div>
+                <h1 class="title">forge</h1>
+                <p class="tagline">build your fire</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>ignite</span>
+                </button>
+                
+                <p class="time-note">~5-10 min</p>
+            </div>
+        </div>
+
+        <!-- Target Screen -->
+        <div class="screen" id="targetScreen">
+            <div class="target-content">
+                <h2 class="phase-title">what are you forging for?</h2>
+                
+                <div class="target-options" id="targetOptions">
+                    <button class="target-btn" data-target="workout">
+                        <span class="target-icon">💪</span>
+                        <span class="target-text">workout</span>
+                    </button>
+                    <button class="target-btn" data-target="competition">
+                        <span class="target-icon">🏆</span>
+                        <span class="target-text">competition</span>
+                    </button>
+                    <button class="target-btn" data-target="presentation">
+                        <span class="target-icon">🎤</span>
+                        <span class="target-text">presentation</span>
+                    </button>
+                    <button class="target-btn" data-target="interview">
+                        <span class="target-icon">💼</span>
+                        <span class="target-text">interview</span>
+                    </button>
+                    <button class="target-btn" data-target="creative">
+                        <span class="target-icon">🎨</span>
+                        <span class="target-text">creative work</span>
+                    </button>
+                    <button class="target-btn" data-target="general">
+                        <span class="target-icon">⚡</span>
+                        <span class="target-text">just energy</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Foundation Screen -->
+        <div class="screen" id="foundationScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">1</span>
+                    <span class="phase-name">foundation</span>
+                </div>
+                <p class="phase-desc">establish your base</p>
+                
+                <div class="forge-visual" id="foundationVisual">
+                    <div class="forge-base">
+                        <div class="base-glow"></div>
+                    </div>
+                    <div class="breath-guide" id="foundationGuide">
+                        <span class="guide-text" id="foundationText">breathe in</span>
+                    </div>
+                </div>
+                
+                <div class="intensity-meter">
+                    <div class="meter-label">intensity</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" id="foundationMeter" style="width: 20%"></div>
+                    </div>
+                </div>
+                
+                <div class="round-counter">
+                    <span id="foundationRound">1</span> / 4
+                </div>
+            </div>
+        </div>
+
+        <!-- Build Screen -->
+        <div class="screen" id="buildScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">2</span>
+                    <span class="phase-name">build</span>
+                </div>
+                <p class="phase-desc">increase the heat</p>
+                
+                <div class="forge-visual" id="buildVisual">
+                    <div class="forge-fire level-2">
+                        <div class="fire-layer l1"></div>
+                        <div class="fire-layer l2"></div>
+                    </div>
+                    <div class="breath-guide" id="buildGuide">
+                        <span class="guide-text" id="buildText">breathe in</span>
+                    </div>
+                </div>
+                
+                <div class="intensity-meter">
+                    <div class="meter-label">intensity</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill level-2" id="buildMeter" style="width: 50%"></div>
+                    </div>
+                </div>
+                
+                <div class="round-counter">
+                    <span id="buildRound">1</span> / 4
+                </div>
+            </div>
+        </div>
+
+        <!-- Ignite Screen -->
+        <div class="screen" id="igniteScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">3</span>
+                    <span class="phase-name">ignite</span>
+                </div>
+                <p class="phase-desc">full power</p>
+                
+                <div class="forge-visual" id="igniteVisual">
+                    <div class="forge-fire level-3">
+                        <div class="fire-layer l1"></div>
+                        <div class="fire-layer l2"></div>
+                        <div class="fire-layer l3"></div>
+                        <div class="sparks">
+                            <span class="spark s1">✦</span>
+                            <span class="spark s2">✦</span>
+                            <span class="spark s3">✦</span>
+                        </div>
+                    </div>
+                    <div class="breath-guide" id="igniteGuide">
+                        <span class="guide-text" id="igniteText">power in</span>
+                    </div>
+                </div>
+                
+                <div class="intensity-meter">
+                    <div class="meter-label">intensity</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill level-3" id="igniteMeter" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="round-counter">
+                    <span id="igniteRound">1</span> / 6
+                </div>
+            </div>
+        </div>
+
+        <!-- Lock Screen -->
+        <div class="screen" id="lockScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">4</span>
+                    <span class="phase-name">lock</span>
+                </div>
+                <p class="phase-desc">hold the state</p>
+                
+                <div class="forge-visual" id="lockVisual">
+                    <div class="forge-core">
+                        <div class="core-ring r1"></div>
+                        <div class="core-ring r2"></div>
+                        <div class="core-center"></div>
+                    </div>
+                    <div class="breath-guide">
+                        <span class="guide-text" id="lockText">deep breath in</span>
+                    </div>
+                </div>
+                
+                <div class="lock-timer">
+                    <span id="lockTimer">5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="forged-icon">
+                    <div class="forged-core"></div>
+                    <div class="forged-rays">
+                        <span class="ray r1"></span>
+                        <span class="ray r2"></span>
+                        <span class="ray r3"></span>
+                        <span class="ray r4"></span>
+                    </div>
+                </div>
+                <h2 class="complete-title">forged</h2>
+                <p class="complete-message" id="completeMessage">
+                    you're ready to perform
+                </p>
+                
+                <div class="affirmation-card" id="affirmationCard">
+                    <p class="affirmation" id="affirmation">I am focused. I am ready. I am unstoppable.</p>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">let's go</button>
+                    <button class="btn-secondary" id="againBtn">build more</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/content.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

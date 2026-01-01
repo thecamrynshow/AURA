@@ -167,15 +167,15 @@
     </url>
     <url>
         <loc>https://pneuoma.com/games/forge/</loc>
-        <lastmod>2024-12-31</lastmod>
+        <lastmod>2026-01-01</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/decompress/</loc>
-        <lastmod>2024-12-31</lastmod>
+        <lastmod>2026-01-01</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
 </urlset>
 

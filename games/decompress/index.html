@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Decompress — End of Day Unwinding | PNEUOMA</title>
+    <meta name="title" content="Decompress — End of Day Unwinding | PNEUOMA">
+    <meta name="description" content="Transition from work to home with intention. Release accumulated stress, process the workday, and arrive present for what matters. 10-15 minute unwinding.">
+    <meta name="keywords" content="end of day, work stress relief, transition ritual, work life balance, decompress, unwinding, stress release, evening routine">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/decompress/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-gradient" id="bgGradient">
+            <div class="sun" id="sun"></div>
+            <div class="horizon"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="progress-dots" id="progressDots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="sunset-icon">
+                    <div class="sun-glow"></div>
+                    <div class="horizon-line"></div>
+                </div>
+                <h1 class="title">decompress</h1>
+                <p class="tagline">let the day go</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>begin</span>
+                </button>
+                
+                <p class="time-note">~10-15 min</p>
+            </div>
+        </div>
+
+        <!-- Acknowledge Screen -->
+        <div class="screen" id="acknowledgeScreen">
+            <div class="acknowledge-content">
+                <div class="phase-num">1</div>
+                <h2 class="phase-title">acknowledge</h2>
+                <p class="phase-desc">what are you carrying from today?</p>
+                
+                <div class="carry-options" id="carryOptions">
+                    <button class="carry-btn" data-carry="stress">
+                        <span class="carry-icon">😮‍💨</span>
+                        <span class="carry-text">stress</span>
+                    </button>
+                    <button class="carry-btn" data-carry="frustration">
+                        <span class="carry-icon">😤</span>
+                        <span class="carry-text">frustration</span>
+                    </button>
+                    <button class="carry-btn" data-carry="exhaustion">
+                        <span class="carry-icon">😩</span>
+                        <span class="carry-text">exhaustion</span>
+                    </button>
+                    <button class="carry-btn" data-carry="worry">
+                        <span class="carry-icon">😟</span>
+                        <span class="carry-text">worry</span>
+                    </button>
+                    <button class="carry-btn" data-carry="tension">
+                        <span class="carry-icon">😬</span>
+                        <span class="carry-text">tension</span>
+                    </button>
+                    <button class="carry-btn" data-carry="nothing">
+                        <span class="carry-icon">😌</span>
+                        <span class="carry-text">nothing heavy</span>
+                    </button>
+                </div>
+                
+                <p class="carry-note">select all that apply, then continue</p>
+                <button class="continue-btn" id="acknowledgeContinue" disabled>continue</button>
+            </div>
+        </div>
+
+        <!-- Release Screen -->
+        <div class="screen" id="releaseScreen">
+            <div class="release-content">
+                <div class="phase-num">2</div>
+                <h2 class="phase-title">release</h2>
+                <p class="phase-desc">sighing breath to let go</p>
+                
+                <div class="release-visual">
+                    <div class="release-circle" id="releaseCircle">
+                        <div class="release-ring"></div>
+                        <p class="release-text" id="releaseText">breathe in deep</p>
+                    </div>
+                </div>
+                
+                <div class="sigh-counter">
+                    <span id="sighCount">0</span> / 5 sighs
+                </div>
+            </div>
+        </div>
+
+        <!-- Body Release Screen -->
+        <div class="screen" id="bodyScreen">
+            <div class="body-content">
+                <div class="phase-num">3</div>
+                <h2 class="phase-title">body release</h2>
+                <p class="phase-desc" id="bodyDesc">let your shoulders drop</p>
+                
+                <div class="body-visual">
+                    <div class="body-part active" id="bodyPart">
+                        <span class="part-emoji">🫁</span>
+                    </div>
+                </div>
+                
+                <p class="body-instruction" id="bodyInstruction">take a breath and release</p>
+                
+                <button class="tap-btn" id="bodyRelease">released</button>
+            </div>
+        </div>
+
+        <!-- Transition Screen -->
+        <div class="screen" id="transitionScreen">
+            <div class="transition-content">
+                <div class="phase-num">4</div>
+                <h2 class="phase-title">transition</h2>
+                <p class="phase-desc">work is done. you are leaving it behind.</p>
+                
+                <div class="transition-visual">
+                    <div class="door-frame">
+                        <div class="door" id="door">
+                            <div class="door-handle"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="transition-prompt" id="transitionPrompt">tap to close the door on work</p>
+                
+                <button class="tap-btn" id="closeDoor">close</button>
+            </div>
+        </div>
+
+        <!-- Arrive Screen -->
+        <div class="screen" id="arriveScreen">
+            <div class="arrive-content">
+                <div class="phase-num">5</div>
+                <h2 class="phase-title">arrive</h2>
+                <p class="phase-desc">you are here. you are present.</p>
+                
+                <div class="arrive-visual">
+                    <div class="present-circle" id="presentCircle">
+                        <div class="present-ring r1"></div>
+                        <div class="present-ring r2"></div>
+                        <div class="present-core">now</div>
+                    </div>
+                </div>
+                
+                <p class="arrive-text" id="arriveText">3 slow breaths to arrive</p>
+                
+                <div class="arrive-counter">
+                    <span id="arriveCount">0</span> / 3
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-icon">
+                    <div class="moon">🌙</div>
+                </div>
+                <h2 class="complete-title">decompressed</h2>
+                <p class="complete-message">
+                    the workday is behind you.<br>
+                    this moment is yours.
+                </p>
+                
+                <div class="intention-box">
+                    <p class="intention-label">for this evening, i intend to...</p>
+                    <div class="intention-options" id="intentionOptions">
+                        <button class="intention-btn" data-intent="rest">rest deeply</button>
+                        <button class="intention-btn" data-intent="connect">connect with loved ones</button>
+                        <button class="intention-btn" data-intent="enjoy">enjoy my time</button>
+                        <button class="intention-btn" data-intent="be">just be</button>
+                    </div>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">i'm present</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,646 @@
+/* ============================================
+   Decompress — End of Day Unwinding
+   Sunset, calm, peaceful aesthetic
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dusk: #1e1b4b;
+    --bg-twilight: #312e81;
+    --sunset-orange: #fb923c;
+    --sunset-pink: #f472b6;
+    --sunset-purple: #a78bfa;
+    --night-blue: #3730a3;
+    --moon-glow: rgba(251, 191, 36, 0.3);
+    --text-primary: #e0e7ff;
+    --text-secondary: #a5b4fc;
+    --text-muted: #6366f1;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+    --transition: 0.3s ease;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg-dusk);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background */
+.bg-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, 
+        var(--bg-twilight) 0%, 
+        var(--night-blue) 40%,
+        var(--bg-dusk) 100%);
+    transition: background 2s ease;
+}
+
+.sun {
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(180deg, var(--sunset-orange) 0%, var(--sunset-pink) 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 60px var(--sunset-orange);
+    transition: bottom 3s ease, opacity 3s ease;
+}
+
+.sun.setting {
+    bottom: 10%;
+    opacity: 0.5;
+}
+
+.sun.set {
+    bottom: -5%;
+    opacity: 0;
+}
+
+.horizon {
+    position: absolute;
+    bottom: 25%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--sunset-purple), transparent);
+    opacity: 0.5;
+}
+
+/* Navigation */
+.game-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-full);
+}
+
+.progress-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transition: all var(--transition);
+}
+
+.dot.active {
+    background: var(--sunset-purple);
+    box-shadow: 0 0 10px var(--sunset-purple);
+}
+
+.dot.complete {
+    background: var(--sunset-pink);
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    z-index: 10;
+    padding: 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Title Screen */
+.title-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.sunset-icon {
+    position: relative;
+    width: 100px;
+    height: 60px;
+    margin: 0 auto 25px;
+}
+
+.sun-glow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 25px;
+    background: linear-gradient(180deg, var(--sunset-orange) 0%, transparent 100%);
+    border-radius: 50px 50px 0 0;
+}
+
+.horizon-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--sunset-purple);
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    color: var(--sunset-purple);
+}
+
+.tagline {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.start-btn {
+    background: linear-gradient(135deg, var(--sunset-purple) 0%, var(--sunset-pink) 100%);
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    border-radius: var(--radius-full);
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 16px;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 40px rgba(167, 139, 250, 0.4);
+}
+
+.time-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Phase Screens Common */
+.phase-num {
+    width: 40px;
+    height: 40px;
+    background: var(--sunset-purple);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 auto 15px;
+}
+
+.phase-title {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: var(--sunset-purple);
+}
+
+.phase-desc {
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+}
+
+/* Acknowledge Screen */
+.acknowledge-content {
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+}
+
+.carry-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.carry-btn {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 16px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.carry-btn:hover {
+    border-color: var(--sunset-purple);
+}
+
+.carry-btn.selected {
+    border-color: var(--sunset-pink);
+    background: rgba(244, 114, 182, 0.15);
+}
+
+.carry-icon {
+    font-size: 1.8rem;
+}
+
+.carry-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.carry-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.continue-btn {
+    background: var(--sunset-purple);
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.continue-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.continue-btn:hover:not(:disabled) {
+    transform: scale(1.02);
+}
+
+/* Release Screen */
+.release-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.release-visual {
+    margin: 30px 0;
+}
+
+.release-circle {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.release-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--sunset-purple);
+    border-radius: 50%;
+    opacity: 0.5;
+    transition: all 0.5s ease;
+}
+
+.release-circle.inhale .release-ring {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
+.release-circle.exhale .release-ring {
+    transform: scale(0.8);
+    opacity: 0.6;
+}
+
+.release-text {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.sigh-counter {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.sigh-counter span {
+    color: var(--sunset-pink);
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+/* Body Release Screen */
+.body-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.body-visual {
+    margin: 30px 0;
+}
+
+.body-part {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.body-part.active {
+    background: rgba(167, 139, 250, 0.2);
+    box-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+}
+
+.part-emoji {
+    font-size: 3rem;
+}
+
+.body-instruction {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.tap-btn {
+    background: transparent;
+    border: 2px solid var(--sunset-purple);
+    color: var(--sunset-purple);
+    padding: 14px 40px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.tap-btn:hover {
+    background: var(--sunset-purple);
+    color: white;
+}
+
+/* Transition Screen */
+.transition-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.transition-visual {
+    margin: 30px 0;
+}
+
+.door-frame {
+    width: 100px;
+    height: 150px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-md);
+    padding: 8px;
+    position: relative;
+}
+
+.door {
+    width: 100%;
+    height: 100%;
+    background: var(--sunset-purple);
+    border-radius: var(--radius-sm);
+    position: relative;
+    transition: transform 0.5s ease;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+}
+
+.door.closed {
+    transform: perspective(400px) rotateY(-80deg);
+}
+
+.door-handle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 8px;
+    height: 16px;
+    background: var(--sunset-pink);
+    border-radius: 4px;
+}
+
+.transition-prompt {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+/* Arrive Screen */
+.arrive-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.arrive-visual {
+    margin: 30px 0;
+}
+
+.present-circle {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.present-ring {
+    position: absolute;
+    border: 2px solid var(--sunset-purple);
+    border-radius: 50%;
+    animation: present-pulse 3s ease-in-out infinite;
+}
+
+.present-ring.r1 {
+    inset: 0;
+}
+
+.present-ring.r2 {
+    inset: 20px;
+    animation-delay: 0.5s;
+}
+
+@keyframes present-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+.present-core {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--sunset-pink);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.arrive-text {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.arrive-counter {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.arrive-counter span {
+    color: var(--sunset-pink);
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+/* Complete Screen */
+.complete-content {
+    text-align: center;
+    max-width: 340px;
+}
+
+.complete-icon {
+    margin-bottom: 20px;
+}
+
+.moon {
+    font-size: 4rem;
+}
+
+.complete-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 15px;
+    color: var(--sunset-purple);
+}
+
+.complete-message {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.intention-box {
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.intention-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+.intention-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.intention-btn {
+    background: transparent;
+    border: 1px solid var(--sunset-purple);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.intention-btn:hover {
+    background: rgba(167, 139, 250, 0.2);
+}
+
+.intention-btn.selected {
+    background: var(--sunset-purple);
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--sunset-purple) 0%, var(--sunset-pink) 100%);
+    color: white;
+    border: none;
+    padding: 16px 40px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+}
+
+/* Responsive */
+@media (max-width: 380px) {
+    .title {
+        font-size: 2.5rem;
+    }
+    
+    .carry-options {
+        gap: 8px;
+    }
+    
+    .carry-btn {
+        padding: 12px;
+    }
+}
+
