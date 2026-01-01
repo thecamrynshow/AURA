@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before — Pre-Event Regulation | PNEUOMA</title>
+    <meta name="description" content="Prepare for meetings, presentations, tests, or any big moment. Arrive in the right state, every time.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">← Back to PNEUOMA</a>
+            <div class="timer-display" id="timerDisplay">
+                <span class="timer-value">5:00</span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <section class="screen title-screen active" id="titleScreen">
+            <div class="title-bg">
+                <div class="clock-visual">
+                    <div class="clock-face">
+                        <div class="clock-hand"></div>
+                        <div class="clock-center"></div>
+                    </div>
+                    <div class="clock-glow"></div>
+                </div>
+            </div>
+            
+            <div class="title-content">
+                <p class="title-eyebrow">Pre-Event Regulation</p>
+                <h1 class="game-title">Before</h1>
+                <p class="game-tagline">Arrive ready. Every time.</p>
+                
+                <div class="title-description">
+                    <p>5 minutes to transform your state.</p>
+                    <p>From nervous to confident. From scattered to focused.</p>
+                </div>
+
+                <button class="btn-primary" id="startBtn">
+                    <span>Prepare Now</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                </button>
+
+                <div class="title-meta">
+                    <span class="meta-item">Ages 13+</span>
+                    <span class="meta-item">5 min</span>
+                    <span class="meta-item">Breath</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Selection Screen -->
+        <section class="screen event-screen" id="eventScreen">
+            <div class="event-content">
+                <h2 class="section-title">What's coming up?</h2>
+                <p class="section-subtitle">Select your event</p>
+                
+                <div class="event-grid" id="eventGrid">
+                    <button class="event-card" data-event="meeting">
+                        <div class="event-icon">💼</div>
+                        <span class="event-name">Meeting</span>
+                        <span class="event-desc">Work call, interview, 1:1</span>
+                    </button>
+                    <button class="event-card" data-event="presentation">
+                        <div class="event-icon">🎤</div>
+                        <span class="event-name">Presentation</span>
+                        <span class="event-desc">Pitch, speech, performance</span>
+                    </button>
+                    <button class="event-card" data-event="test">
+                        <div class="event-icon">📝</div>
+                        <span class="event-name">Test</span>
+                        <span class="event-desc">Exam, assessment, evaluation</span>
+                    </button>
+                    <button class="event-card" data-event="social">
+                        <div class="event-icon">👥</div>
+                        <span class="event-name">Social</span>
+                        <span class="event-desc">Party, date, networking</span>
+                    </button>
+                    <button class="event-card" data-event="athletic">
+                        <div class="event-icon">🏃</div>
+                        <span class="event-name">Athletic</span>
+                        <span class="event-desc">Game, race, competition</span>
+                    </button>
+                    <button class="event-card" data-event="creative">
+                        <div class="event-icon">🎨</div>
+                        <span class="event-name">Creative</span>
+                        <span class="event-desc">Brainstorm, create, perform</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Goal Selection Screen -->
+        <section class="screen goal-screen" id="goalScreen">
+            <div class="goal-content">
+                <h2 class="section-title">How do you want to arrive?</h2>
+                <p class="section-subtitle">Choose your target state</p>
+                
+                <div class="goal-grid" id="goalGrid">
+                    <button class="goal-card" data-goal="confident">
+                        <div class="goal-icon">💎</div>
+                        <span class="goal-name">Confident</span>
+                        <span class="goal-desc">Strong, capable, ready</span>
+                    </button>
+                    <button class="goal-card" data-goal="calm">
+                        <div class="goal-icon">🌊</div>
+                        <span class="goal-name">Calm</span>
+                        <span class="goal-desc">Relaxed, at ease, peaceful</span>
+                    </button>
+                    <button class="goal-card" data-goal="focused">
+                        <div class="goal-icon">🎯</div>
+                        <span class="goal-name">Focused</span>
+                        <span class="goal-desc">Sharp, clear, locked in</span>
+                    </button>
+                    <button class="goal-card" data-goal="energized">
+                        <div class="goal-icon">⚡</div>
+                        <span class="goal-name">Energized</span>
+                        <span class="goal-desc">Alert, awake, fired up</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prep Session Screen -->
+        <section class="screen prep-screen" id="prepScreen">
+            <canvas id="prepCanvas"></canvas>
+            
+            <!-- Session Header -->
+            <div class="prep-header">
+                <div class="event-badge" id="eventBadge">
+                    <span class="badge-icon">💼</span>
+                    <span class="badge-text">Meeting</span>
+                </div>
+                <div class="goal-badge" id="goalBadge">
+                    <span class="badge-text">→ Confident</span>
+                </div>
+            </div>
+            
+            <!-- Phase Display -->
+            <div class="phase-display" id="phaseDisplay">
+                <h3 class="phase-name" id="phaseName">Breathe</h3>
+                <p class="phase-instruction" id="phaseInstruction">Follow the circle</p>
+            </div>
+            
+            <!-- Breathing Circle -->
+            <div class="breath-circle" id="breathCircle">
+                <div class="circle-progress" id="circleProgress"></div>
+                <span class="circle-text" id="circleText">Ready</span>
+            </div>
+            
+            <!-- Affirmation Display -->
+            <div class="affirmation" id="affirmation">
+                <p class="affirmation-text" id="affirmationText">You've got this.</p>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="session-progress">
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-phases">
+                    <span class="phase-dot active" data-phase="ground">Ground</span>
+                    <span class="phase-dot" data-phase="breathe">Breathe</span>
+                    <span class="phase-dot" data-phase="visualize">Visualize</span>
+                    <span class="phase-dot" data-phase="affirm">Affirm</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ready Screen -->
+        <section class="screen ready-screen" id="readyScreen">
+            <div class="ready-content">
+                <div class="ready-icon">
+                    <div class="checkmark">✓</div>
+                </div>
+                
+                <h2 class="ready-title">You're Ready</h2>
+                <p class="ready-message" id="readyMessage">Time to go be amazing.</p>
+                
+                <div class="ready-state">
+                    <div class="state-achieved" id="stateAchieved">
+                        <span class="state-icon">💎</span>
+                        <span class="state-name">Confident</span>
+                    </div>
+                </div>
+                
+                <div class="ready-affirmation" id="readyAffirmation">
+                    "I am prepared. I am capable. I am ready."
+                </div>
+                
+                <div class="ready-actions">
+                    <button class="btn-primary btn-large" id="goTimeBtn">
+                        <span>Go Time</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <button class="btn-secondary" id="prepAgainBtn">Prepare Again</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/protocols.js"></script>
+    <script src="src/js/visuals.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
