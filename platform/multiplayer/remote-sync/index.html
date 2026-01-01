@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Sync — PNEUOMA Multiplayer</title>
+    <meta name="description" content="Long-distance co-regulation. Regulate with someone across the world. Feel connected through breath, no matter the distance.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Stars Background -->
+        <div class="stars-bg">
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+        </div>
+
+        <!-- Welcome -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="screen-content">
+                <div class="logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                </div>
+                
+                <h1 class="welcome-title">Remote Sync</h1>
+                <p class="welcome-subtitle">Breathe together, anywhere on Earth</p>
+                
+                <div class="globe-visual">
+                    <div class="globe">
+                        <div class="globe-line"></div>
+                        <div class="globe-line"></div>
+                        <div class="globe-line"></div>
+                    </div>
+                    <div class="connection-dot dot-1"></div>
+                    <div class="connection-dot dot-2"></div>
+                    <div class="connection-wave"></div>
+                </div>
+                
+                <div class="session-options">
+                    <button class="option-btn primary" id="createBtn">
+                        <span class="btn-icon">📡</span>
+                        <span class="btn-text">Start Session</span>
+                    </button>
+                    
+                    <div class="join-row">
+                        <input type="text" id="joinCode" placeholder="SYNC-0000" maxlength="9" class="join-input">
+                        <button class="join-btn" id="joinBtn">Connect</button>
+                    </div>
+                    
+                    <button class="option-btn secondary" id="scheduleBtn">
+                        <span class="btn-icon">📅</span>
+                        <span class="btn-text">Schedule for Later</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup -->
+        <div class="screen" id="setupScreen">
+            <div class="screen-content">
+                <h2 class="setup-title">Who are you connecting with?</h2>
+                
+                <div class="relationship-options">
+                    <button class="rel-btn" data-rel="family">
+                        <span class="rel-icon">👨‍👩‍👧</span>
+                        <span class="rel-name">Family</span>
+                        <span class="rel-desc">Parents, siblings, grandparents</span>
+                    </button>
+                    
+                    <button class="rel-btn" data-rel="friend">
+                        <span class="rel-icon">🤝</span>
+                        <span class="rel-name">Friend</span>
+                        <span class="rel-desc">Close friend far away</span>
+                    </button>
+                    
+                    <button class="rel-btn" data-rel="partner">
+                        <span class="rel-icon">💕</span>
+                        <span class="rel-name">Partner</span>
+                        <span class="rel-desc">Long-distance relationship</span>
+                    </button>
+                    
+                    <button class="rel-btn" data-rel="therapist">
+                        <span class="rel-icon">🩺</span>
+                        <span class="rel-name">Therapist</span>
+                        <span class="rel-desc">Remote therapy session</span>
+                    </button>
+                    
+                    <button class="rel-btn" data-rel="support">
+                        <span class="rel-icon">💜</span>
+                        <span class="rel-name">Support Person</span>
+                        <span class="rel-desc">Someone who helps you regulate</span>
+                    </button>
+                </div>
+                
+                <button class="back-btn" id="backToWelcome">← Back</button>
+            </div>
+        </div>
+
+        <!-- Mode Selection -->
+        <div class="screen" id="modeScreen">
+            <div class="screen-content">
+                <h2 class="mode-title">Choose your mode</h2>
+                
+                <div class="mode-options">
+                    <button class="mode-btn" data-mode="realtime">
+                        <span class="mode-icon">⚡</span>
+                        <div class="mode-info">
+                            <span class="mode-name">Real-Time Sync</span>
+                            <span class="mode-desc">Breathe together live</span>
+                        </div>
+                        <span class="mode-time">5-15 min</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="async">
+                        <span class="mode-icon">📨</span>
+                        <div class="mode-info">
+                            <span class="mode-name">Async Breathing</span>
+                            <span class="mode-desc">Send a breath message</span>
+                        </div>
+                        <span class="mode-time">3 min</span>
+                    </button>
+                    
+                    <button class="mode-btn" data-mode="scheduled">
+                        <span class="mode-icon">🕐</span>
+                        <div class="mode-info">
+                            <span class="mode-name">Scheduled Meet</span>
+                            <span class="mode-desc">Set a time to sync</span>
+                        </div>
+                        <span class="mode-time">Any time</span>
+                    </button>
+                </div>
+                
+                <button class="back-btn" id="backToSetup">← Back</button>
+            </div>
+        </div>
+
+        <!-- Waiting Room -->
+        <div class="screen" id="waitingScreen">
+            <div class="screen-content">
+                <div class="waiting-globe">
+                    <div class="globe small">
+                        <div class="globe-line"></div>
+                        <div class="globe-line"></div>
+                    </div>
+                    <div class="signal-rings">
+                        <div class="signal-ring"></div>
+                        <div class="signal-ring"></div>
+                        <div class="signal-ring"></div>
+                    </div>
+                </div>
+                
+                <h2 class="waiting-title">Waiting for Connection</h2>
+                
+                <div class="code-display">
+                    <p class="code-label">Share this code:</p>
+                    <div class="code-box" id="sessionCode">SYNC-7849</div>
+                    <button class="copy-btn" id="copyBtn">Copy</button>
+                </div>
+                
+                <p class="waiting-hint">Your partner can join from anywhere in the world</p>
+                
+                <div class="distance-display" id="distanceDisplay" style="display: none;">
+                    <span class="distance-icon">🌍</span>
+                    <span class="distance-text">Connected across <strong id="distanceValue">4,293</strong> miles</span>
+                </div>
+                
+                <button class="cancel-btn" id="cancelBtn">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Partner Joined -->
+        <div class="screen" id="connectedScreen">
+            <div class="screen-content">
+                <div class="connected-visual">
+                    <div class="connected-dot you"></div>
+                    <div class="connection-line-anim"></div>
+                    <div class="connected-dot them"></div>
+                </div>
+                
+                <h2 class="connected-title">Connected!</h2>
+                <p class="connected-subtitle" id="partnerName">Your partner is ready</p>
+                
+                <div class="distance-badge">
+                    <span>🌍</span>
+                    <span id="connectedDistance">4,293 miles apart</span>
+                </div>
+                
+                <button class="start-btn" id="startBtn">Begin Breathing</button>
+            </div>
+        </div>
+
+        <!-- Main Session -->
+        <div class="screen" id="sessionScreen">
+            <div class="session-layout">
+                <!-- Connection Visual -->
+                <div class="sync-visual">
+                    <div class="sync-orb you-orb" id="youOrb">
+                        <span class="orb-label">You</span>
+                    </div>
+                    <div class="sync-bridge" id="syncBridge">
+                        <div class="bridge-particles">
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                        </div>
+                    </div>
+                    <div class="sync-orb them-orb" id="themOrb">
+                        <span class="orb-label" id="themLabel">Partner</span>
+                    </div>
+                </div>
+
+                <!-- Session Info -->
+                <div class="session-info-bar">
+                    <span class="session-mode" id="sessionMode">Real-Time Sync</span>
+                    <span class="session-timer" id="sessionTimer">5:00</span>
+                </div>
+
+                <!-- Breath Guidance -->
+                <div class="breath-guidance">
+                    <p class="breath-text" id="breathText">Breathe together...</p>
+                    <p class="breath-cue" id="breathCue"></p>
+                </div>
+
+                <!-- Sync Meter -->
+                <div class="sync-meter">
+                    <div class="sync-label">Sync Level</div>
+                    <div class="sync-bar">
+                        <div class="sync-fill" id="syncFill"></div>
+                    </div>
+                    <div class="sync-value" id="syncValue">0%</div>
+                </div>
+
+                <!-- Distance Reminder -->
+                <div class="distance-reminder">
+                    <span class="reminder-icon">🌍</span>
+                    <span class="reminder-text" id="reminderDistance">Breathing together across 4,293 miles</span>
+                </div>
+
+                <button class="end-btn" id="endBtn">End Session</button>
+            </div>
+        </div>
+
+        <!-- Async Mode -->
+        <div class="screen" id="asyncScreen">
+            <div class="screen-content">
+                <h2 class="async-title">Send a Breath</h2>
+                <p class="async-subtitle">Record a breathing moment for your partner</p>
+                
+                <div class="async-recorder">
+                    <div class="record-orb" id="recordOrb">
+                        <span class="record-icon">🫁</span>
+                    </div>
+                    <p class="record-status" id="recordStatus">Tap to start recording</p>
+                    <p class="record-timer" id="recordTimer">0:00</p>
+                </div>
+                
+                <textarea class="breath-message" id="breathMessage" placeholder="Add a message (optional)..."></textarea>
+                
+                <button class="send-btn" id="sendBtn" disabled>Send Breath</button>
+                <button class="back-btn" id="backFromAsync">← Back</button>
+            </div>
+        </div>
+
+        <!-- Completion -->
+        <div class="screen" id="completeScreen">
+            <div class="screen-content">
+                <div class="complete-visual">
+                    <div class="complete-globe">
+                        <div class="complete-dots">
+                            <div class="complete-dot d1"></div>
+                            <div class="complete-dot d2"></div>
+                        </div>
+                        <div class="complete-connection"></div>
+                    </div>
+                </div>
+                
+                <h2 class="complete-title">Session Complete</h2>
+                <p class="complete-subtitle">Distance doesn't disconnect us</p>
+                
+                <div class="session-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="statTime">5:00</span>
+                        <span class="stat-label">Together</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statSync">87%</span>
+                        <span class="stat-label">Peak Sync</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="statDistance">4,293</span>
+                        <span class="stat-label">Miles Apart</span>
+                    </div>
+                </div>
+                
+                <div class="connection-streak">
+                    <span class="streak-icon">🔗</span>
+                    <span class="streak-text">Connection Streak: <strong id="streakCount">5</strong></span>
+                </div>
+                
+                <div class="session-quote" id="sessionQuote">
+                    "Breath knows no borders."
+                </div>
+                
+                <button class="done-btn" id="doneBtn">Done</button>
+            </div>
+        </div>
+
+        <!-- Schedule Screen -->
+        <div class="screen" id="scheduleScreen">
+            <div class="screen-content">
+                <h2 class="schedule-title">Schedule a Sync</h2>
+                <p class="schedule-subtitle">Set a time to breathe together</p>
+                
+                <div class="schedule-form">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="scheduleDate" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <input type="time" id="scheduleTime" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Your Timezone</label>
+                        <select id="timezone" class="form-input">
+                            <option value="PST">Pacific (PST)</option>
+                            <option value="MST">Mountain (MST)</option>
+                            <option value="CST">Central (CST)</option>
+                            <option value="EST">Eastern (EST)</option>
+                            <option value="GMT">GMT</option>
+                            <option value="CET">Central Europe (CET)</option>
+                            <option value="IST">India (IST)</option>
+                            <option value="JST">Japan (JST)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="schedule-preview">
+                    <p>Your partner will see:</p>
+                    <div class="preview-time" id="previewTime">--:-- in their timezone</div>
+                </div>
+                
+                <button class="schedule-btn" id="confirmSchedule">Create Invite Link</button>
+                <button class="back-btn" id="backFromSchedule">← Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="remote.js"></script>
+</body>
+</html>
+
