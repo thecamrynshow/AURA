@@ -47,6 +47,13 @@ class DeepGame {
         this.lastBreathState = 'neutral';
         this.currentZone = null;
         
+        // Control mode
+        this.controlMode = 'mic'; // 'mic' or 'keyboard'
+        this.keyboardState = {
+            up: false,
+            down: false
+        };
+        
         // Breath processing interval
         this.breathInterval = null;
         
@@ -79,7 +86,14 @@ class DeepGame {
         
         // Enable mic button
         document.getElementById('enableMicBtn').addEventListener('click', () => {
+            this.controlMode = 'mic';
             this.requestMicrophone();
+        });
+        
+        // Use keyboard button
+        document.getElementById('useKeyboardBtn').addEventListener('click', () => {
+            this.controlMode = 'keyboard';
+            this.startGameWithKeyboard();
         });
         
         // Dive again button
@@ -87,6 +101,80 @@ class DeepGame {
             this.reset();
             this.showScreen('calibration');
         });
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (!this.isPlaying || this.controlMode !== 'keyboard') return;
+            
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+                this.keyboardState.up = true;
+                this.handleBreathChange('inhale');
+            }
+            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+                this.keyboardState.down = true;
+                this.handleBreathChange('exhale');
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            if (!this.isPlaying || this.controlMode !== 'keyboard') return;
+            
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+                this.keyboardState.up = false;
+            }
+            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+                this.keyboardState.down = false;
+            }
+            
+            if (!this.keyboardState.up && !this.keyboardState.down) {
+                this.handleBreathChange('neutral');
+            }
+        });
+        
+        // Touch controls for mobile
+        this.setupTouchControls();
+    }
+    
+    setupTouchControls() {
+        const canvas = this.canvas;
+        let touchY = 0;
+        
+        canvas.addEventListener('touchstart', (e) => {
+            if (!this.isPlaying) return;
+            touchY = e.touches[0].clientY;
+        });
+        
+        canvas.addEventListener('touchmove', (e) => {
+            if (!this.isPlaying) return;
+            e.preventDefault();
+            
+            const currentY = e.touches[0].clientY;
+            const deltaY = currentY - touchY;
+            
+            if (deltaY < -10) {
+                this.handleBreathChange('inhale');
+            } else if (deltaY > 10) {
+                this.handleBreathChange('exhale');
+            }
+            
+            touchY = currentY;
+        });
+        
+        canvas.addEventListener('touchend', () => {
+            if (!this.isPlaying) return;
+            this.handleBreathChange('neutral');
+        });
+    }
+    
+    startGameWithKeyboard() {
+        // Show brief instruction
+        const hint = document.getElementById('controlHint');
+        hint.innerHTML = 'Starting... Use <kbd>↑</kbd>/<kbd>W</kbd> to rise, <kbd>↓</kbd>/<kbd>S</kbd> to sink';
+        hint.style.color = 'var(--biolum-cyan)';
+        
+        setTimeout(() => {
+            this.startGame();
+        }, 1500);
     }
 
     showScreen(screenName) {
@@ -192,12 +280,14 @@ class DeepGame {
         // Start ambient audio
         deepAudio.startAmbient();
         
-        // Start breath processing
-        this.breathInterval = setInterval(() => {
-            if (this.isPlaying) {
-                deepAudio.processBreath();
-            }
-        }, 50);
+        // Start breath processing (only for mic mode)
+        if (this.controlMode === 'mic') {
+            this.breathInterval = setInterval(() => {
+                if (this.isPlaying) {
+                    deepAudio.processBreath();
+                }
+            }, 50);
+        }
         
         // Start game loop
         this.gameLoop();
@@ -211,8 +301,21 @@ class DeepGame {
     gameLoop() {
         if (!this.isPlaying) return;
         
+        // Get breath state based on control mode
+        let breathState = 'neutral';
+        if (this.controlMode === 'mic') {
+            breathState = deepAudio.breathState;
+        } else {
+            // Keyboard mode
+            if (this.keyboardState.up) {
+                breathState = 'inhale';
+            } else if (this.keyboardState.down) {
+                breathState = 'exhale';
+            }
+        }
+        
         // Update ocean with breath state
-        this.ocean.updatePlayer(deepAudio.breathState, 1/60);
+        this.ocean.updatePlayer(breathState, 1/60);
         
         // Update depth display
         const depth = Math.floor(this.ocean.depth);

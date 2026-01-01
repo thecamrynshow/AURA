@@ -331,7 +331,34 @@ body {
 
 .mic-permission p {
     color: var(--text-secondary);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.control-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.control-options .btn-primary,
+.control-options .btn-secondary {
+    width: 100%;
+    justify-content: center;
+}
+
+.control-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.control-hint kbd {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
 }
 
 .calibration-breathing h2 {

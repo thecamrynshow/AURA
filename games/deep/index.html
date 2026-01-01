@@ -76,9 +76,21 @@
                             <line x1="8" y1="23" x2="16" y2="23"/>
                         </svg>
                     </div>
-                    <h2>Enable Microphone</h2>
-                    <p>The Deep uses your microphone to detect breathing.</p>
-                    <button class="btn-primary" id="enableMicBtn">Allow Microphone</button>
+                    <h2>Choose Your Control</h2>
+                    <p>How would you like to dive?</p>
+                    
+                    <div class="control-options">
+                        <button class="btn-primary" id="enableMicBtn">
+                            <span>🎤 Use Microphone</span>
+                        </button>
+                        <button class="btn-secondary" id="useKeyboardBtn">
+                            <span>⌨️ Use Keyboard</span>
+                        </button>
+                    </div>
+                    
+                    <p class="control-hint" id="controlHint">
+                        Keyboard: Hold <kbd>↑</kbd> to rise, <kbd>↓</kbd> to sink
+                    </p>
                 </div>
 
                 <div class="calibration-breathing hidden" id="calibrationBreathing">
