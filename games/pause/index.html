@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Pause — Phone Break for Teens | PNEUOMA</title>
+    <meta name="title" content="Pause — Phone Break for Teens | PNEUOMA">
+    <meta name="description" content="Been scrolling too long? Quick 2-5 minute digital detox to break the doom-scroll cycle. Step away, ground yourself, and come back intentional.">
+    <meta name="keywords" content="phone break, digital detox, doom scroll break, screen time, teen phone addiction, mindful phone use, scroll break">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/pause/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-gradient">
+            <div class="bg-glow"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="progress-dots" id="progressDots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="pause-icon-big">
+                    <div class="pause-bar"></div>
+                    <div class="pause-bar"></div>
+                </div>
+                <h1 class="title">pause</h1>
+                <p class="tagline">the scroll can wait</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>take a break</span>
+                </button>
+                
+                <p class="time-note">~2-5 min</p>
+            </div>
+        </div>
+
+        <!-- Awareness Screen -->
+        <div class="screen" id="awarenessScreen">
+            <div class="awareness-content">
+                <div class="phase-num">1</div>
+                <h2 class="phase-title">notice</h2>
+                <p class="phase-desc">how long have you been scrolling?</p>
+                
+                <div class="time-options" id="timeOptions">
+                    <button class="time-btn" data-time="few">just a few min</button>
+                    <button class="time-btn" data-time="while">a while...</button>
+                    <button class="time-btn" data-time="long">way too long</button>
+                    <button class="time-btn" data-time="lost">i lost track</button>
+                </div>
+                
+                <p class="awareness-note">no judgment — just noticing</p>
+            </div>
+        </div>
+
+        <!-- Put Down Screen -->
+        <div class="screen" id="putdownScreen">
+            <div class="putdown-content">
+                <div class="phase-num">2</div>
+                <h2 class="phase-title">set it down</h2>
+                <p class="phase-desc" id="putdownDesc">place your phone face-down somewhere nearby</p>
+                
+                <div class="phone-visual">
+                    <div class="phone-icon" id="phoneIcon">
+                        <div class="phone-screen"></div>
+                    </div>
+                    <div class="surface-line"></div>
+                </div>
+                
+                <p class="putdown-prompt">or just hold it loosely</p>
+                
+                <button class="continue-btn" id="putdownContinue">
+                    <span>done</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Eyes Away Screen -->
+        <div class="screen" id="eyesScreen">
+            <div class="eyes-content">
+                <div class="phase-num">3</div>
+                <h2 class="phase-title">eyes up</h2>
+                <p class="phase-desc">look around the real world</p>
+                
+                <div class="look-visual">
+                    <div class="eye-icon">👁</div>
+                    <div class="look-directions">
+                        <span class="direction up">↑</span>
+                        <span class="direction left">←</span>
+                        <span class="direction right">→</span>
+                    </div>
+                </div>
+                
+                <div class="look-prompts" id="lookPrompts">
+                    <p class="look-prompt active" id="lookPrompt">find something blue near you</p>
+                </div>
+                
+                <div class="look-progress">
+                    <div class="look-dot active"></div>
+                    <div class="look-dot"></div>
+                    <div class="look-dot"></div>
+                </div>
+                
+                <button class="tap-btn" id="foundIt">found it</button>
+            </div>
+        </div>
+
+        <!-- Body Check Screen -->
+        <div class="screen" id="bodyScreen">
+            <div class="body-content">
+                <div class="phase-num">4</div>
+                <h2 class="phase-title">body check</h2>
+                <p class="phase-desc">notice how your body feels right now</p>
+                
+                <div class="body-visual">
+                    <div class="body-outline">
+                        <div class="check-point shoulders" data-part="shoulders">
+                            <span class="point-dot"></span>
+                        </div>
+                        <div class="check-point neck" data-part="neck">
+                            <span class="point-dot"></span>
+                        </div>
+                        <div class="check-point eyes" data-part="eyes">
+                            <span class="point-dot"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="body-prompt" id="bodyPrompt">tap each point to check in</p>
+                
+                <div class="body-checks" id="bodyChecks">
+                    <span class="check-item" data-part="eyes">eyes tired?</span>
+                    <span class="check-item" data-part="neck">neck stiff?</span>
+                    <span class="check-item" data-part="shoulders">shoulders tense?</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breath Screen -->
+        <div class="screen" id="breathScreen">
+            <div class="breath-content">
+                <div class="phase-num">5</div>
+                <h2 class="phase-title">breathe</h2>
+                <p class="phase-desc">just 3 slow breaths</p>
+                
+                <div class="breath-circle" id="breathCircle">
+                    <div class="breath-ring"></div>
+                    <p class="breath-instruction" id="breathInstruction">tap to start</p>
+                </div>
+                
+                <div class="breath-counter">
+                    <span class="breath-count" id="breathCount">0</span>
+                    <span class="breath-label">/ 3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intention Screen -->
+        <div class="screen" id="intentionScreen">
+            <div class="intention-content">
+                <h2 class="phase-title">what now?</h2>
+                <p class="phase-desc">choose your next move</p>
+                
+                <div class="intention-options" id="intentionOptions">
+                    <button class="intention-btn" data-intent="stay">
+                        <span class="intent-icon">🚶</span>
+                        <span class="intent-text">stay offline a bit</span>
+                    </button>
+                    <button class="intention-btn" data-intent="purpose">
+                        <span class="intent-icon">🎯</span>
+                        <span class="intent-text">use with purpose</span>
+                    </button>
+                    <button class="intention-btn" data-intent="person">
+                        <span class="intent-icon">💬</span>
+                        <span class="intent-text">talk to someone irl</span>
+                    </button>
+                    <button class="intention-btn" data-intent="move">
+                        <span class="intent-icon">🏃</span>
+                        <span class="intent-text">do something active</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-icon">
+                    <div class="play-symbol">▶</div>
+                </div>
+                <h2 class="complete-title">unplugged</h2>
+                <p class="complete-message" id="completeMessage">you chose to be present. that takes strength.</p>
+                
+                <div class="stat-box">
+                    <p class="stat-label">you just took</p>
+                    <p class="stat-value" id="pauseTime">0:00</p>
+                    <p class="stat-label">for yourself</p>
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">i'm good</button>
+                    <button class="btn-secondary" id="againBtn">need more time</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

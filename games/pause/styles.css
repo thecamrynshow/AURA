@@ -1,0 +1,743 @@
+/* ============================================
+   Pause — Phone Break / Digital Detox
+   Soft, calming, present aesthetic
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #1a1a2e;
+    --bg-soft: #252547;
+    --lavender: #9b8dc7;
+    --lavender-light: #b8aed8;
+    --lavender-dim: rgba(155, 141, 199, 0.15);
+    --lavender-glow: rgba(155, 141, 199, 0.4);
+    --sage: #8fbc8f;
+    --sage-dim: rgba(143, 188, 143, 0.15);
+    --peach: #ffb5a7;
+    --text-primary: #f8fafc;
+    --text-secondary: #a0aec0;
+    --text-muted: #718096;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+    --transition: 0.3s ease;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background */
+.bg-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, var(--bg-dark) 0%, var(--bg-soft) 100%);
+}
+
+.bg-glow {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--lavender-glow) 0%, transparent 70%);
+    opacity: 0.3;
+    animation: glow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% { opacity: 0.2; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.4; transform: translateX(-50%) scale(1.1); }
+}
+
+/* Navigation */
+.game-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-full);
+}
+
+.progress-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transition: all var(--transition);
+}
+
+.dot.active {
+    background: var(--lavender);
+    box-shadow: 0 0 10px var(--lavender-glow);
+}
+
+.dot.complete {
+    background: var(--sage);
+}
+
+/* Screens */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    z-index: 10;
+    padding: 20px;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Title Screen */
+.title-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.pause-icon-big {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.pause-bar {
+    width: 20px;
+    height: 60px;
+    background: var(--lavender);
+    border-radius: var(--radius-sm);
+    animation: pause-breathe 2s ease-in-out infinite;
+}
+
+.pause-bar:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+@keyframes pause-breathe {
+    0%, 100% { opacity: 0.6; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    color: var(--lavender);
+}
+
+.tagline {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.start-btn {
+    background: var(--lavender);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 48px;
+    border-radius: var(--radius-full);
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-bottom: 16px;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 40px var(--lavender-glow);
+}
+
+.time-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Phase Screens Common */
+.phase-num {
+    width: 40px;
+    height: 40px;
+    background: var(--lavender);
+    color: var(--bg-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 auto 15px;
+}
+
+.phase-title {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: var(--lavender);
+    letter-spacing: 0.05em;
+}
+
+.phase-desc {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+/* Awareness Screen */
+.awareness-content {
+    text-align: center;
+    max-width: 340px;
+    width: 100%;
+}
+
+.time-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.time-btn {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid transparent;
+    color: var(--text-primary);
+    padding: 16px 24px;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.time-btn:hover {
+    border-color: var(--lavender);
+}
+
+.time-btn.selected {
+    border-color: var(--lavender);
+    background: var(--lavender-dim);
+}
+
+.awareness-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Put Down Screen */
+.putdown-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.phone-visual {
+    margin: 30px 0;
+    position: relative;
+}
+
+.phone-icon {
+    width: 60px;
+    height: 100px;
+    background: var(--bg-soft);
+    border: 3px solid var(--lavender);
+    border-radius: 12px;
+    margin: 0 auto;
+    position: relative;
+    transition: transform 0.5s ease;
+}
+
+.phone-icon.flipped {
+    transform: rotateY(180deg);
+}
+
+.phone-screen {
+    position: absolute;
+    inset: 8px;
+    background: var(--lavender-dim);
+    border-radius: 6px;
+}
+
+.phone-icon.flipped .phone-screen {
+    opacity: 0;
+}
+
+.surface-line {
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--lavender), transparent);
+    margin: 20px auto 0;
+    border-radius: var(--radius-full);
+}
+
+.putdown-prompt {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+}
+
+.continue-btn {
+    background: transparent;
+    border: 2px solid var(--lavender);
+    color: var(--lavender);
+    padding: 14px 40px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.continue-btn:hover {
+    background: var(--lavender);
+    color: var(--bg-dark);
+}
+
+/* Eyes Away Screen */
+.eyes-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.look-visual {
+    margin: 25px 0;
+    position: relative;
+}
+
+.eye-icon {
+    font-size: 3rem;
+    animation: eye-look 3s ease-in-out infinite;
+}
+
+@keyframes eye-look {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.look-directions {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 15px;
+    font-size: 1.5rem;
+    color: var(--lavender);
+    opacity: 0.5;
+}
+
+.direction {
+    animation: direction-pulse 1.5s ease-in-out infinite;
+}
+
+.direction.up { animation-delay: 0s; }
+.direction.left { animation-delay: 0.3s; }
+.direction.right { animation-delay: 0.6s; }
+
+@keyframes direction-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+}
+
+.look-prompt {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    min-height: 50px;
+    margin-bottom: 20px;
+}
+
+.look-progress {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.look-dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transition: all var(--transition);
+}
+
+.look-dot.active {
+    background: var(--lavender);
+}
+
+.look-dot.complete {
+    background: var(--sage);
+}
+
+.tap-btn {
+    background: var(--lavender);
+    color: var(--bg-dark);
+    border: none;
+    padding: 14px 40px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.tap-btn:hover {
+    transform: scale(1.02);
+}
+
+/* Body Check Screen */
+.body-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.body-visual {
+    margin: 25px 0;
+}
+
+.body-outline {
+    width: 80px;
+    height: 150px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.check-point {
+    position: absolute;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.point-dot {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: var(--lavender);
+    border-radius: 50%;
+    animation: point-pulse 2s ease-in-out infinite;
+}
+
+.check-point.checked .point-dot {
+    background: var(--sage);
+    animation: none;
+}
+
+@keyframes point-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.check-point.eyes {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.check-point.neck {
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.check-point.shoulders {
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.check-point.shoulders .point-dot {
+    width: 16px;
+    height: 16px;
+}
+
+.body-prompt {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.body-checks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.check-item {
+    background: rgba(255,255,255,0.05);
+    padding: 10px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.check-item:hover {
+    background: var(--lavender-dim);
+    color: var(--lavender);
+}
+
+.check-item.checked {
+    background: var(--sage-dim);
+    color: var(--sage);
+}
+
+/* Breath Screen */
+.breath-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.breath-circle {
+    width: 180px;
+    height: 180px;
+    margin: 20px auto 25px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.breath-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--lavender);
+    border-radius: 50%;
+    opacity: 0.5;
+    transition: all 0.5s ease;
+}
+
+.breath-circle.breathing .breath-ring {
+    opacity: 1;
+}
+
+.breath-circle.inhale .breath-ring {
+    transform: scale(1.2);
+}
+
+.breath-circle.exhale .breath-ring {
+    transform: scale(0.8);
+}
+
+.breath-instruction {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    transition: all var(--transition);
+}
+
+.breath-circle.breathing .breath-instruction {
+    color: var(--lavender);
+    font-size: 1.2rem;
+}
+
+.breath-counter {
+    color: var(--text-secondary);
+}
+
+.breath-count {
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--lavender);
+}
+
+/* Intention Screen */
+.intention-content {
+    text-align: center;
+    max-width: 340px;
+    width: 100%;
+}
+
+.intention-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.intention-btn {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.intention-btn:hover {
+    border-color: var(--sage);
+    transform: translateY(-2px);
+}
+
+.intention-btn.selected {
+    border-color: var(--sage);
+    background: var(--sage-dim);
+}
+
+.intent-icon {
+    font-size: 1.8rem;
+}
+
+.intent-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Complete Screen */
+.complete-content {
+    text-align: center;
+    max-width: 320px;
+}
+
+.complete-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: var(--sage-dim);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-symbol {
+    font-size: 2rem;
+    color: var(--sage);
+    margin-left: 5px;
+}
+
+.complete-title {
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: var(--sage);
+    letter-spacing: 0.05em;
+}
+
+.complete-message {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.stat-box {
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: var(--sage);
+    margin: 5px 0;
+}
+
+.complete-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-primary {
+    background: var(--sage);
+    color: var(--bg-dark);
+    border: none;
+    padding: 16px 36px;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(143, 188, 143, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    padding: 12px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 380px) {
+    .title {
+        font-size: 3rem;
+    }
+    
+    .intention-options {
+        gap: 10px;
+    }
+    
+    .intention-btn {
+        padding: 16px 12px;
+    }
+    
+    .breath-circle {
+        width: 150px;
+        height: 150px;
+    }
+}
+
