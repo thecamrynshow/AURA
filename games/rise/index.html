@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Rise — Morning Ritual | PNEUOMA</title>
+    <meta name="title" content="Rise — Morning Ritual | PNEUOMA">
+    <meta name="description" content="Start your day with intention. A gentle 5-10 minute morning ritual to awaken body and mind. Better than scrolling, better than snoozing.">
+    <meta name="keywords" content="morning ritual, wake up routine, morning breathing, start day, intention setting, morning meditation, gentle wakeup">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://pneuoma.com/games/rise/">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Background -->
+        <div class="bg-gradient" id="bgGradient">
+            <div class="horizon-glow" id="horizonGlow"></div>
+            <div class="sun" id="sun"></div>
+            <div class="stars" id="stars">
+                <span class="star">✦</span>
+                <span class="star">✧</span>
+                <span class="star">✦</span>
+                <span class="star">✧</span>
+                <span class="star">✦</span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="game-nav">
+            <a href="../../index.html" class="back-link">←</a>
+            <div class="progress-bar-mini">
+                <div class="progress-fill-mini" id="progressFill"></div>
+            </div>
+        </nav>
+
+        <!-- Title Screen -->
+        <div class="screen active" id="titleScreen">
+            <div class="title-content">
+                <div class="sunrise-icon">
+                    <div class="sun-peek"></div>
+                    <div class="horizon-line"></div>
+                </div>
+                <h1 class="title">rise</h1>
+                <p class="tagline">begin with intention</p>
+                
+                <button class="start-btn" id="startBtn">
+                    <span>awaken</span>
+                </button>
+                
+                <p class="time-note">~5-10 min</p>
+            </div>
+        </div>
+
+        <!-- Awaken Screen -->
+        <div class="screen" id="awakenScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">1</span>
+                    <span class="phase-name">awaken</span>
+                </div>
+                
+                <p class="instruction" id="awakenInstruction">
+                    take a moment before you move
+                </p>
+                
+                <div class="awaken-visual">
+                    <div class="eye-container">
+                        <div class="eye" id="eye">
+                            <div class="iris"></div>
+                            <div class="eyelid" id="eyelid"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="sub-instruction" id="awakenSub">
+                    notice you are awake
+                </p>
+            </div>
+        </div>
+
+        <!-- Stretch Screen -->
+        <div class="screen" id="stretchScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">2</span>
+                    <span class="phase-name">stretch</span>
+                </div>
+                
+                <p class="instruction" id="stretchInstruction">
+                    reach your arms overhead
+                </p>
+                
+                <div class="stretch-visual">
+                    <div class="body-outline" id="bodyOutline">
+                        <div class="body-core"></div>
+                        <div class="arm left" id="armLeft"></div>
+                        <div class="arm right" id="armRight"></div>
+                    </div>
+                </div>
+                
+                <div class="stretch-progress">
+                    <span id="stretchCount">1</span> / 4
+                </div>
+            </div>
+        </div>
+
+        <!-- Breathe Screen -->
+        <div class="screen" id="breatheScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">3</span>
+                    <span class="phase-name">energize</span>
+                </div>
+                
+                <p class="instruction">
+                    awakening breath
+                </p>
+                
+                <div class="breathe-visual">
+                    <div class="breath-orb" id="breathOrb">
+                        <div class="orb-ring r1"></div>
+                        <div class="orb-ring r2"></div>
+                        <div class="orb-core"></div>
+                    </div>
+                    <p class="breath-text" id="breathText">breathe in through your nose</p>
+                </div>
+                
+                <div class="breath-counter">
+                    <span id="breathCount">1</span> / 5
+                </div>
+            </div>
+        </div>
+
+        <!-- Intention Screen -->
+        <div class="screen" id="intentionScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">4</span>
+                    <span class="phase-name">intention</span>
+                </div>
+                
+                <p class="instruction">
+                    how do you want to feel today?
+                </p>
+                
+                <div class="intention-options" id="intentionOptions">
+                    <button class="intention-btn" data-intention="calm">
+                        <span class="intention-emoji">🌊</span>
+                        <span>calm</span>
+                    </button>
+                    <button class="intention-btn" data-intention="focused">
+                        <span class="intention-emoji">🎯</span>
+                        <span>focused</span>
+                    </button>
+                    <button class="intention-btn" data-intention="energized">
+                        <span class="intention-emoji">⚡</span>
+                        <span>energized</span>
+                    </button>
+                    <button class="intention-btn" data-intention="open">
+                        <span class="intention-emoji">💫</span>
+                        <span>open</span>
+                    </button>
+                    <button class="intention-btn" data-intention="grateful">
+                        <span class="intention-emoji">🙏</span>
+                        <span>grateful</span>
+                    </button>
+                    <button class="intention-btn" data-intention="strong">
+                        <span class="intention-emoji">💪</span>
+                        <span>strong</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Affirmation Screen -->
+        <div class="screen" id="affirmationScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">5</span>
+                    <span class="phase-name">affirm</span>
+                </div>
+                
+                <div class="affirmation-container">
+                    <p class="affirmation-label">say it with your breath</p>
+                    <div class="affirmation-card">
+                        <p class="affirmation-text" id="affirmationText">
+                            Today I choose calm
+                        </p>
+                    </div>
+                    <p class="affirmation-instruction" id="affirmationInstruction">
+                        breathe in...
+                    </p>
+                </div>
+                
+                <div class="affirmation-progress">
+                    <span id="affirmCount">1</span> / 3
+                </div>
+            </div>
+        </div>
+
+        <!-- Rise Screen -->
+        <div class="screen" id="riseScreen">
+            <div class="phase-content">
+                <div class="phase-header">
+                    <span class="phase-number">6</span>
+                    <span class="phase-name">rise</span>
+                </div>
+                
+                <div class="rise-visual">
+                    <div class="full-sun" id="fullSun"></div>
+                    <div class="rays">
+                        <span class="ray r1"></span>
+                        <span class="ray r2"></span>
+                        <span class="ray r3"></span>
+                        <span class="ray r4"></span>
+                        <span class="ray r5"></span>
+                        <span class="ray r6"></span>
+                        <span class="ray r7"></span>
+                        <span class="ray r8"></span>
+                    </div>
+                </div>
+                
+                <p class="rise-text" id="riseText">
+                    you are ready
+                </p>
+            </div>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="screen" id="completeScreen">
+            <div class="complete-content">
+                <div class="complete-icon">
+                    <span class="complete-sun">☀️</span>
+                </div>
+                <h2 class="complete-title">risen</h2>
+                <p class="complete-intention" id="completeIntention">
+                    today you choose calm
+                </p>
+                
+                <div class="gratitude-prompt">
+                    <p class="gratitude-label">one thing you're grateful for:</p>
+                    <input type="text" class="gratitude-input" id="gratitudeInput" placeholder="type here (optional)">
+                </div>
+                
+                <div class="complete-actions">
+                    <button class="btn-primary" id="doneBtn">begin my day</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/content.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

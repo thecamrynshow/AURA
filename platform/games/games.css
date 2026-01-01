@@ -1892,3 +1892,55 @@
     50% { opacity: 1; }
 }
 
+/* Rise - Morning Ritual */
+.rise-bg {
+    background: linear-gradient(180deg, #1a1025 0%, #4a3f5c 30%, #fd79a8 60%, #f7b731 100%);
+}
+
+.rise-visual {
+    position: relative;
+    width: 120px;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.rise-sun-peek {
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(180deg, #fed330 0%, #f7b731 100%);
+    border-radius: 60px 60px 0 0;
+    box-shadow: 0 0 30px rgba(247, 183, 49, 0.6);
+    position: relative;
+    z-index: 2;
+}
+
+.rise-horizon {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.rise-rays {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.rise-ray {
+    position: absolute;
+    width: 3px;
+    height: 20px;
+    background: rgba(254, 211, 48, 0.6);
+    border-radius: 2px;
+}
+
+.rise-ray.ray1 { left: -20px; transform: rotate(-20deg); }
+.rise-ray.ray2 { left: 0; transform: translateX(-50%); }
+.rise-ray.ray3 { left: 20px; transform: rotate(20deg); }
+
