@@ -24,6 +24,7 @@ class ExerciseManager {
 
     generateExercises() {
         this.exercises = [
+            // === WARM UP ===
             // Exercise 1: Ascending scale
             {
                 name: 'Ascending Scale',
@@ -38,6 +39,25 @@ class ExerciseManager {
             {
                 name: 'Do Mi Sol',
                 notes: ['C4', 'E4', 'G4', 'E4', 'C4']
+            },
+            
+            // === SONGS ===
+            // Exercise 4: Twinkle Twinkle Little Star (first verse)
+            {
+                name: '⭐ Twinkle Twinkle',
+                notes: [
+                    'C4', 'C4', 'G4', 'G4', 'A4', 'A4', 'G4',  // Twinkle twinkle little star
+                    'F4', 'F4', 'E4', 'E4', 'D4', 'D4', 'C4'   // How I wonder what you are
+                ]
+            },
+            // Exercise 5: Mary Had a Little Lamb
+            {
+                name: '🐑 Mary Had a Little Lamb',
+                notes: [
+                    'E4', 'D4', 'C4', 'D4', 'E4', 'E4', 'E4',  // Mary had a little lamb
+                    'D4', 'D4', 'D4',                          // Little lamb
+                    'E4', 'G4', 'G4'                           // Little lamb
+                ]
             }
         ];
         
