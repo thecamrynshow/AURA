@@ -18,10 +18,10 @@ class SoundDetector {
         this.smoothedPitch = 0;
         this.soundType = 'silence'; // silence, breath, hum, voice
         
-        // Detection thresholds
-        this.silenceThreshold = 0.02;
-        this.breathThreshold = 0.08;
-        this.humThreshold = 0.15;
+        // Detection thresholds (lowered for better sensitivity)
+        this.silenceThreshold = 0.01;
+        this.breathThreshold = 0.04;
+        this.humThreshold = 0.08;
         
         // Pitch tracking
         this.pitchHistory = [];
@@ -54,7 +54,7 @@ class SoundDetector {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.analyser = this.audioContext.createAnalyser();
             this.analyser.fftSize = 2048;
-            this.analyser.smoothingTimeConstant = 0.8;
+            this.analyser.smoothingTimeConstant = 0.6;
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.microphone.connect(this.analyser);

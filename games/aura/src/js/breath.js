@@ -31,10 +31,10 @@ class BreathDetector {
         this.breathTimes = [];
         this.maxHistoryLength = 300;    // ~5 seconds at 60fps
         
-        // Detection thresholds
-        this.inhaleThreshold = 0.3;
-        this.exhaleThreshold = 0.15;
-        this.holdThreshold = 0.05;
+        // Detection thresholds (lowered for better sensitivity)
+        this.inhaleThreshold = 0.15;
+        this.exhaleThreshold = 0.08;
+        this.holdThreshold = 0.03;
         
         // State tracking
         this.lastPhaseChange = 0;
@@ -60,8 +60,8 @@ class BreathDetector {
 
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 512;
-            this.analyser.smoothingTimeConstant = 0.8;
+            this.analyser.fftSize = 1024;
+            this.analyser.smoothingTimeConstant = 0.6;
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.microphone.connect(this.analyser);

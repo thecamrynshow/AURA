@@ -17,10 +17,10 @@ class BreathDetector {
         this.isInhaling = false;
         this.breathPhase = 0; // 0-1, where 0-0.5 is inhale, 0.5-1 is exhale
         
-        // Detection parameters
-        this.sensitivity = 1.2;
-        this.smoothing = 0.15;
-        this.threshold = 0.08;
+        // Detection parameters (improved sensitivity)
+        this.sensitivity = 1.5;
+        this.smoothing = 0.2;
+        this.threshold = 0.04;
         this.lastPeakTime = 0;
         this.breathCycle = [];
         this.avgBreathDuration = 4000; // 4 seconds default
@@ -32,15 +32,16 @@ class BreathDetector {
             
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: { 
-                    echoCancellation: true,
-                    noiseSuppression: true 
+                    echoCancellation: false,
+                    noiseSuppression: false,
+                    autoGainControl: false
                 } 
             });
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 256;
-            this.analyser.smoothingTimeConstant = 0.8;
+            this.analyser.fftSize = 512;
+            this.analyser.smoothingTimeConstant = 0.6;
             
             this.microphone.connect(this.analyser);
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);

@@ -15,12 +15,12 @@ class DeepAudio {
         
         this.oscillators = [];
         
-        // Breath detection
+        // Breath detection (improved sensitivity)
         this.breathState = 'neutral'; // 'inhale', 'exhale', 'neutral'
         this.breathLevel = 0;
         this.breathThreshold = {
-            inhale: 0.15,
-            exhale: 0.08
+            inhale: 0.08,
+            exhale: 0.04
         };
         this.calibrated = false;
         this.baselineNoise = 0;
@@ -56,16 +56,16 @@ class DeepAudio {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true
+                    echoCancellation: false,
+                    noiseSuppression: false,
+                    autoGainControl: false
                 }
             });
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 256;
-            this.analyser.smoothingTimeConstant = 0.8;
+            this.analyser.fftSize = 512;
+            this.analyser.smoothingTimeConstant = 0.6;
             
             this.microphone.connect(this.analyser);
             

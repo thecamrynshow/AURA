@@ -12,10 +12,10 @@ class CloudAudio {
         
         this.masterGain = null;
         
-        // Breath detection
+        // Breath detection (improved sensitivity)
         this.isBlowing = false;
         this.blowLevel = 0;
-        this.blowThreshold = 0.1;
+        this.blowThreshold = 0.05;
         this.baselineNoise = 0;
         this.calibrated = false;
         
@@ -45,15 +45,15 @@ class CloudAudio {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ 
                 audio: {
-                    echoCancellation: true,
+                    echoCancellation: false,
                     noiseSuppression: false,
-                    autoGainControl: true
+                    autoGainControl: false
                 }
             });
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 256;
+            this.analyser.fftSize = 512;
             this.analyser.smoothingTimeConstant = 0.5;
             
             this.microphone.connect(this.analyser);

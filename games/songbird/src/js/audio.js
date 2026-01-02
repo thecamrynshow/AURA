@@ -13,11 +13,11 @@ class SongbirdAudio {
         
         this.masterGain = null;
         
-        // Whistle detection
+        // Whistle detection (improved sensitivity)
         this.isWhistling = false;
         this.currentFrequency = 0;
         this.currentNote = null;
-        this.whistleThreshold = 0.02;
+        this.whistleThreshold = 0.01;
         
         // Callbacks
         this.onWhistleStart = null;
@@ -56,8 +56,8 @@ class SongbirdAudio {
             
             // Create analyser for pitch detection
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 2048;
-            this.analyser.smoothingTimeConstant = 0.8;
+            this.analyser.fftSize = 4096;
+            this.analyser.smoothingTimeConstant = 0.6;
             
             this.microphone.connect(this.analyser);
             
