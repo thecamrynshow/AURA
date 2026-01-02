@@ -8,13 +8,13 @@ class ClassroomSync {
     constructor() {
         this.role = null;
         this.sessionCode = null;
-        this.students = [];
+        this.studentName = null;
+        this.students = new Map(); // Real students only - Map of id -> student data
         this.exerciseActive = false;
         this.exerciseTimer = null;
         this.breathTimer = null;
         this.audioContext = null;
         this.sync = null; // PneuomaSync client
-        this.realStudentCount = 0;
         
         this.exercises = {
             'breath-reset': { name: 'Breath Reset', duration: 120, inhale: 4, exhale: 4 },
@@ -51,13 +51,16 @@ class ClassroomSync {
                 this.updateConnectionStatus(false);
             },
             onParticipantJoined: (data) => {
-                this.realStudentCount++;
-                this.$('#connectedCount').textContent = 24 + this.realStudentCount;
-                console.log(`👋 ${data.name} joined!`);
+                console.log(`👋 ${data.name} joined! ID: ${data.participantId}`, data);
+                if (this.role === 'teacher') {
+                    this.addStudent(data.participantId, data.name);
+                }
             },
             onParticipantLeft: (data) => {
-                this.realStudentCount = Math.max(0, this.realStudentCount - 1);
-                this.$('#connectedCount').textContent = 24 + this.realStudentCount;
+                console.log(`👋 ${data.name || data.participantId} left`, data);
+                if (this.role === 'teacher') {
+                    this.removeStudent(data.participantId);
+                }
             },
             onExerciseStart: (data) => {
                 if (this.role === 'student') {
@@ -151,28 +154,55 @@ class ClassroomSync {
         return `${word}-${num}`;
     }
     
-    generateStudents() {
-        this.students = [];
-        const firstNames = ['Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'Oliver', 'Isabella', 'Elijah', 
-            'Sophia', 'Lucas', 'Mia', 'Mason', 'Charlotte', 'Logan', 'Amelia', 'Alexander',
-            'Harper', 'Ethan', 'Evelyn', 'Aiden', 'Abigail', 'James', 'Emily', 'Benjamin'];
+    // Add a real student when they join
+    addStudent(id, name) {
+        if (this.role !== 'teacher') return;
         
-        for (let i = 0; i < 24; i++) {
-            const states = ['calm', 'alert', 'stressed'];
-            const weights = [0.3, 0.5, 0.2];
-            const rand = Math.random();
-            let state;
-            if (rand < weights[0]) state = 'calm';
-            else if (rand < weights[0] + weights[1]) state = 'alert';
-            else state = 'stressed';
-            
-            this.students.push({
-                id: i + 1,
-                name: firstNames[i],
-                state: state,
-                isReal: false
-            });
+        this.students.set(id, {
+            id: id,
+            name: name || 'Anonymous',
+            state: 'calm', // Start calm
+            joinTime: Date.now()
+        });
+        
+        this.updateTeacherUI();
+        this.showConnectionToast(`${name || 'A student'} joined!`, 'success');
+    }
+    
+    // Remove a student when they leave
+    removeStudent(id) {
+        if (this.role !== 'teacher') return;
+        
+        const student = this.students.get(id);
+        if (student) {
+            this.students.delete(id);
+            this.updateTeacherUI();
+            this.showConnectionToast(`${student.name} left`, 'warning');
         }
+    }
+    
+    // Update the entire teacher UI based on real students
+    updateTeacherUI() {
+        const count = this.students.size;
+        
+        // Update header count
+        this.$('#connectedCount').textContent = count;
+        this.$('#studentLabel').textContent = count === 1 ? 'student' : 'students';
+        
+        // Show/hide waiting message vs student grid
+        const waitingDiv = this.$('#waitingForStudents');
+        const gridDiv = this.$('#classGrid');
+        
+        if (count === 0) {
+            if (waitingDiv) waitingDiv.classList.remove('hidden');
+            if (gridDiv) gridDiv.classList.add('hidden');
+        } else {
+            if (waitingDiv) waitingDiv.classList.add('hidden');
+            if (gridDiv) gridDiv.classList.remove('hidden');
+            this.renderClassGrid();
+        }
+        
+        this.updateStats();
     }
     
     bindEvents() {
@@ -183,8 +213,18 @@ class ClassroomSync {
         this.$('#endSessionBtn').addEventListener('click', () => this.endSession());
         this.$('#stopExerciseBtn').addEventListener('click', () => this.stopExercise());
         
+        // Copy code button
+        const copyBtn = this.$('#copyCodeBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => this.copySessionCode());
+        }
+        
         // Enter key to join
         this.$('#joinCodeInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.joinSession();
+        });
+        
+        this.$('#studentNameInput')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.joinSession();
         });
         
@@ -197,6 +237,21 @@ class ClassroomSync {
             e.target.value = val;
         });
         
+        // Anonymous checkbox toggles name input
+        const anonCheck = this.$('#anonymousCheck');
+        const nameInput = this.$('#studentNameInput');
+        if (anonCheck && nameInput) {
+            anonCheck.addEventListener('change', (e) => {
+                nameInput.disabled = e.target.checked;
+                if (e.target.checked) {
+                    nameInput.value = '';
+                    nameInput.placeholder = 'Anonymous';
+                } else {
+                    nameInput.placeholder = 'Enter your name';
+                }
+            });
+        }
+        
         this.$$('.exercise-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const exercise = e.currentTarget.dataset.exercise;
@@ -205,11 +260,25 @@ class ClassroomSync {
         });
     }
     
+    copySessionCode() {
+        if (this.sessionCode) {
+            navigator.clipboard.writeText(this.sessionCode).then(() => {
+                const btn = this.$('#copyCodeBtn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    }
+    
     // ==================== SESSION MANAGEMENT ====================
     
     async startTeacherSession() {
         this.role = 'teacher';
-        this.generateStudents();
+        this.students = new Map(); // Start fresh with no students
         
         // Create session via sync server
         try {
@@ -238,10 +307,11 @@ class ClassroomSync {
         this.$$('.screen').forEach(s => s.classList.remove('active'));
         this.$('#teacherScreen').classList.add('active');
         this.$('#sessionCode').textContent = this.sessionCode;
+        this.$('#shareCode').textContent = this.sessionCode;
         
-        this.renderClassGrid();
+        // Update UI to show waiting for students
+        this.updateTeacherUI();
         this.initAudio();
-        this.startSimulation();
         
         console.log('Teacher session started:', this.sessionCode);
     }
@@ -261,6 +331,19 @@ class ClassroomSync {
     
     async joinSession() {
         const code = this.$('#joinCodeInput').value.toUpperCase().trim();
+        const isAnonymous = this.$('#anonymousCheck')?.checked;
+        const nameInput = this.$('#studentNameInput')?.value.trim();
+        
+        // Get student name
+        if (isAnonymous) {
+            this.studentName = 'Anonymous';
+        } else if (!nameInput) {
+            this.$('#codeError').textContent = 'Please enter your name or choose anonymous';
+            this.$('#codeError').classList.remove('hidden');
+            return;
+        } else {
+            this.studentName = nameInput;
+        }
         
         if (code.length < 8) {
             this.$('#codeError').textContent = 'Please enter the full code (e.g., CALM-1234)';
@@ -270,9 +353,9 @@ class ClassroomSync {
         
         // Try to join via sync server first
         if (this.sync && this.sync.isConnected()) {
-            console.log('🔄 Attempting to join session via server:', code);
+            console.log('🔄 Attempting to join session via server:', code, 'as', this.studentName);
             try {
-                const result = await this.sync.joinSession(code, 'Student', 'student');
+                const result = await this.sync.joinSession(code, this.studentName, 'student');
                 
                 this.role = 'student';
                 this.sessionCode = code;
@@ -281,6 +364,7 @@ class ClassroomSync {
                 this.$$('.screen').forEach(s => s.classList.remove('active'));
                 this.$('#studentScreen').classList.add('active');
                 this.$('#studentSessionCode').textContent = code;
+                this.$('#studentNameDisplay').textContent = this.studentName;
                 
                 // Check if exercise is already running
                 if (result.session && result.session.exercise) {
@@ -329,9 +413,15 @@ class ClassroomSync {
         this.$$('.screen').forEach(s => s.classList.remove('active'));
         this.$('#studentScreen').classList.add('active');
         this.$('#studentSessionCode').textContent = code;
+        this.$('#studentNameDisplay').textContent = this.studentName;
         
-        // Notify teacher via local broadcast
-        this.broadcastState({ type: 'student_joined', code: code });
+        // Notify teacher via local broadcast with student name
+        this.broadcastState({ 
+            type: 'student_joined', 
+            code: code,
+            studentId: Date.now().toString(),
+            studentName: this.studentName
+        });
         
         // Start listening for updates
         this.startStudentSync();
@@ -342,7 +432,7 @@ class ClassroomSync {
         }
         
         this.initAudio();
-        console.log('Joined session locally:', code);
+        console.log('Joined session locally:', code, 'as', this.studentName);
     }
     
     setupSyncChannel() {
@@ -393,9 +483,10 @@ class ClassroomSync {
             }
         } else if (this.role === 'teacher') {
             if (data.type === 'student_joined') {
-                // Add real student indicator
-                this.$('#connectedCount').textContent = 
-                    parseInt(this.$('#connectedCount').textContent) + 1;
+                // Add real student via local broadcast
+                this.addStudent(data.studentId, data.studentName);
+            } else if (data.type === 'student_left') {
+                this.removeStudent(data.studentId);
             }
         }
     }
@@ -556,55 +647,75 @@ class ClassroomSync {
     
     renderClassGrid() {
         const grid = this.$('#classGrid');
+        if (!grid) return;
+        
         grid.innerHTML = '';
         
-        this.students.forEach(student => {
+        this.students.forEach((student, id) => {
             const dot = document.createElement('div');
             dot.className = `student-dot ${student.state}`;
-            dot.dataset.id = student.id;
+            dot.dataset.id = id;
             dot.dataset.name = student.name;
-            dot.textContent = student.name.charAt(0);
+            
+            // Show first letter or emoji for anonymous
+            if (student.name === 'Anonymous') {
+                dot.textContent = '👤';
+                dot.style.fontSize = '1rem';
+            } else {
+                dot.textContent = student.name.charAt(0).toUpperCase();
+            }
+            
             grid.appendChild(dot);
         });
-        
-        this.updateStats();
     }
     
     updateStats() {
         const counts = { calm: 0, alert: 0, stressed: 0 };
+        const total = this.students.size;
+        
         this.students.forEach(s => counts[s.state]++);
         
         this.$('#calmCount').textContent = counts.calm;
         this.$('#alertCount').textContent = counts.alert;
         this.$('#stressedCount').textContent = counts.stressed;
         
-        const maxCount = Math.max(counts.calm, counts.alert, counts.stressed);
-        const coherence = Math.round((maxCount / 24) * 100);
-        this.$('#coherenceScore').textContent = coherence + '%';
+        // Calculate coherence based on actual students
+        let coherence;
+        if (total === 0) {
+            coherence = '--';
+        } else {
+            const maxCount = Math.max(counts.calm, counts.alert, counts.stressed);
+            coherence = Math.round((maxCount / total) * 100) + '%';
+        }
+        
+        this.$('#coherenceScore').textContent = coherence;
         
         if (this.$('#liveCoherence')) {
-            this.$('#liveCoherence').textContent = coherence + '%';
+            this.$('#liveCoherence').textContent = coherence;
         }
     }
     
-    startSimulation() {
-        setInterval(() => {
-            if (this.exerciseActive) return;
-            
-            const student = this.students[Math.floor(Math.random() * this.students.length)];
-            const states = ['calm', 'alert', 'stressed'];
-            const currentIdx = states.indexOf(student.state);
-            
-            if (Math.random() > 0.7) {
-                if (currentIdx === 0) student.state = 'alert';
-                else if (currentIdx === 2) student.state = Math.random() > 0.5 ? 'alert' : 'stressed';
-                else student.state = Math.random() > 0.5 ? 'calm' : 'stressed';
-            }
+    // Simulate natural state changes (subtle, for realism)
+    // Called periodically during exercise to show student states changing
+    simulateStateChanges() {
+        if (this.students.size === 0) return;
+        
+        const studentsArray = Array.from(this.students.values());
+        const randomStudent = studentsArray[Math.floor(Math.random() * studentsArray.length)];
+        const states = ['calm', 'alert', 'stressed'];
+        const currentIdx = states.indexOf(randomStudent.state);
+        
+        // Subtle random changes
+        if (Math.random() > 0.7) {
+            if (currentIdx === 0) randomStudent.state = 'alert';
+            else if (currentIdx === 2) randomStudent.state = Math.random() > 0.5 ? 'alert' : 'stressed';
+            else randomStudent.state = Math.random() > 0.5 ? 'calm' : 'stressed';
             
             if (this.role === 'teacher') {
                 this.renderClassGrid();
+                this.updateStats();
             }
-        }, 3000);
+        }
     }
     
     startExercise(exerciseKey) {
@@ -716,7 +827,9 @@ class ClassroomSync {
     }
     
     improveClassState() {
-        this.students.forEach(student => {
+        if (this.students.size === 0) return;
+        
+        this.students.forEach((student) => {
             if (Math.random() > 0.6) {
                 if (student.state === 'stressed') {
                     student.state = 'alert';
@@ -728,6 +841,7 @@ class ClassroomSync {
         
         if (this.role === 'teacher') {
             this.renderClassGrid();
+            this.updateStats();
         }
     }
     
@@ -786,7 +900,8 @@ class ClassroomSync {
         this.$('#roleScreen').classList.add('active');
         this.role = null;
         this.sessionCode = null;
-        this.realStudentCount = 0;
+        this.studentName = null;
+        this.students = new Map();
     }
     
     studentSessionEnded(message) {

@@ -61,7 +61,7 @@
                     </div>
                     <div class="header-right">
                         <span class="student-count">
-                            <span id="connectedCount">24</span> students connected
+                            <span id="connectedCount">0</span> <span id="studentLabel">students</span> connected
                         </span>
                         <button class="end-session-btn" id="endSessionBtn">End Session</button>
                     </div>
@@ -72,31 +72,45 @@
                     <!-- Class Heatmap -->
                     <section class="heatmap-section">
                         <div class="section-header">
-                            <h2>Class State</h2>
+                            <h2>Students</h2>
                             <div class="heatmap-legend">
                                 <span class="legend-item calm">Calm</span>
                                 <span class="legend-item alert">Alert</span>
                                 <span class="legend-item stressed">Stressed</span>
                             </div>
                         </div>
-                        <div class="class-grid" id="classGrid">
-                            <!-- Students will be generated here -->
+                        
+                        <!-- Waiting for students -->
+                        <div class="waiting-for-students" id="waitingForStudents">
+                            <div class="waiting-icon-large">👥</div>
+                            <h3>Waiting for Students</h3>
+                            <p>Share the code above with your class</p>
+                            <div class="share-code-box">
+                                <span class="share-code" id="shareCode">CALM-0000</span>
+                                <button class="copy-code-btn" id="copyCodeBtn">Copy</button>
+                            </div>
                         </div>
-                        <div class="class-stats">
+                        
+                        <!-- Students grid (shown when students join) -->
+                        <div class="class-grid hidden" id="classGrid">
+                            <!-- Real students will appear here -->
+                        </div>
+                        
+                        <div class="class-stats" id="classStats">
                             <div class="stat">
-                                <span class="stat-value calm" id="calmCount">8</span>
+                                <span class="stat-value calm" id="calmCount">0</span>
                                 <span class="stat-label">Calm</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-value alert" id="alertCount">12</span>
+                                <span class="stat-value alert" id="alertCount">0</span>
                                 <span class="stat-label">Alert</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-value stressed" id="stressedCount">4</span>
+                                <span class="stat-value stressed" id="stressedCount">0</span>
                                 <span class="stat-label">Stressed</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-value coherence" id="coherenceScore">67%</span>
+                                <span class="stat-value coherence" id="coherenceScore">--</span>
                                 <span class="stat-label">Coherence</span>
                             </div>
                         </div>
@@ -185,11 +199,24 @@
                     <span class="status-text">Connecting...</span>
                 </div>
                 
-                <h1 class="join-title">Enter Session Code</h1>
-                <p class="join-subtitle">Ask your teacher for the code</p>
+                <h1 class="join-title">Join Your Class</h1>
+                <p class="join-subtitle">Enter the code from your teacher</p>
                 
-                <div class="code-input-container">
-                    <input type="text" id="joinCodeInput" class="code-input" placeholder="CALM-0000" maxlength="9" autocomplete="off">
+                <div class="join-form">
+                    <div class="input-group">
+                        <label for="joinCodeInput" class="input-label">Session Code</label>
+                        <input type="text" id="joinCodeInput" class="code-input" placeholder="CALM-0000" maxlength="9" autocomplete="off">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="studentNameInput" class="input-label">Your Name</label>
+                        <input type="text" id="studentNameInput" class="name-input" placeholder="Enter your name" maxlength="20" autocomplete="off">
+                        <label class="anonymous-option">
+                            <input type="checkbox" id="anonymousCheck">
+                            <span class="checkbox-label">Join anonymously</span>
+                        </label>
+                    </div>
+                    
                     <p class="code-error hidden" id="codeError">Session not found. Check the code and try again.</p>
                 </div>
                 
@@ -204,6 +231,9 @@
             <div class="student-layout">
                 <header class="student-header">
                     <span class="logo-small">πνεῦμα</span>
+                    <span class="student-name-display">
+                        <span id="studentNameDisplay">Student</span>
+                    </span>
                     <span class="session-joined">Session: <span id="studentSessionCode">CALM-2847</span></span>
                 </header>
 

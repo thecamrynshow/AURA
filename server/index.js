@@ -204,7 +204,7 @@ io.on('connection', (socket) => {
         
         // Notify everyone in the room
         io.to(sessionCode).emit('participant_joined', {
-            id: socket.id,
+            participantId: socket.id,
             name: name || 'Anonymous',
             participants: session.getParticipantCount()
         });
@@ -327,11 +327,13 @@ io.on('connection', (socket) => {
         // Remove from all sessions
         for (const [code, session] of sessions) {
             if (session.participants.has(socket.id)) {
+                const participant = session.participants.get(socket.id);
                 const wasHost = session.isHost(socket.id);
                 session.removeParticipant(socket.id);
                 
                 io.to(code).emit('participant_left', {
-                    id: socket.id,
+                    participantId: socket.id,
+                    name: participant?.name || 'Anonymous',
                     participants: session.getParticipantCount()
                 });
                 
@@ -343,7 +345,7 @@ io.on('connection', (socket) => {
                     });
                 }
                 
-                console.log(`👋 Removed ${socket.id} from session: ${code}`);
+                console.log(`👋 ${participant?.name || socket.id} left session: ${code}`);
             }
         }
     });
