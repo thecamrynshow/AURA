@@ -9,25 +9,32 @@ class DeepAudio {
         this.analyser = null;
         this.microphone = null;
         this.dataArray = null;
+        this.timeDataArray = null;
         
         this.masterGain = null;
         this.ambientGain = null;
         
         this.oscillators = [];
         
-        // Breath detection (improved sensitivity)
+        // Detect mobile device
+        this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        // Breath detection (mobile-optimized)
         this.breathState = 'neutral'; // 'inhale', 'exhale', 'neutral'
         this.breathLevel = 0;
         this.breathThreshold = {
-            inhale: 0.08,
-            exhale: 0.04
+            inhale: this.isMobile ? 0.025 : 0.08,
+            exhale: this.isMobile ? 0.012 : 0.04
         };
+        this.sensitivityMultiplier = this.isMobile ? 3.0 : 1.0;
         this.calibrated = false;
         this.baselineNoise = 0;
         
         // Callbacks
         this.onBreathChange = null;
         this.onBreathLevel = null;
+        
+        console.log(`The Deep: ${this.isMobile ? 'Mobile' : 'Desktop'} mode`);
     }
 
     async init() {
@@ -54,24 +61,33 @@ class DeepAudio {
 
     async requestMicrophone() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                audio: {
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                }
-            });
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    }
+                });
+            } catch (constraintError) {
+                console.log('Using fallback audio constraints for mobile');
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 512;
-            this.analyser.smoothingTimeConstant = 0.6;
+            this.analyser.fftSize = this.isMobile ? 1024 : 512;
+            this.analyser.smoothingTimeConstant = this.isMobile ? 0.4 : 0.6;
+            this.analyser.minDecibels = -100;
+            this.analyser.maxDecibels = -10;
             
             this.microphone.connect(this.analyser);
             
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+            this.timeDataArray = new Uint8Array(this.analyser.fftSize);
             
-            console.log('Microphone connected');
+            console.log(`Microphone connected (${this.isMobile ? 'mobile' : 'desktop'} mode)`);
             return true;
         } catch (e) {
             console.warn('Microphone access denied:', e);
@@ -110,6 +126,18 @@ class DeepAudio {
     getRawBreathLevel() {
         if (!this.analyser || !this.dataArray) return 0;
         
+        // Use time-domain RMS for mobile (more reliable for breath)
+        if (this.isMobile && this.timeDataArray) {
+            this.analyser.getByteTimeDomainData(this.timeDataArray);
+            let sum = 0;
+            for (let i = 0; i < this.timeDataArray.length; i++) {
+                const val = (this.timeDataArray[i] - 128) / 128;
+                sum += val * val;
+            }
+            return Math.sqrt(sum / this.timeDataArray.length) * this.sensitivityMultiplier;
+        }
+        
+        // Desktop: use frequency data
         this.analyser.getByteFrequencyData(this.dataArray);
         
         // Focus on lower frequencies for breath detection

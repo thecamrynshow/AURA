@@ -10,20 +10,27 @@ class SongbirdAudio {
         this.microphone = null;
         this.dataArray = null;
         this.frequencyData = null;
+        this.timeDataArray = null;
         
         this.masterGain = null;
         
-        // Whistle detection (improved sensitivity)
+        // Detect mobile device
+        this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        // Whistle detection (mobile-optimized)
         this.isWhistling = false;
         this.currentFrequency = 0;
         this.currentNote = null;
-        this.whistleThreshold = 0.01;
+        this.whistleThreshold = this.isMobile ? 0.003 : 0.01;
+        this.sensitivityMultiplier = this.isMobile ? 3.0 : 1.0;
         
         // Callbacks
         this.onWhistleStart = null;
         this.onWhistleEnd = null;
         this.onNoteChange = null;
         this.onPitchChange = null;
+        
+        console.log(`Songbird: ${this.isMobile ? 'Mobile' : 'Desktop'} mode, threshold: ${this.whistleThreshold}`);
     }
 
     async init() {
@@ -44,27 +51,36 @@ class SongbirdAudio {
 
     async requestMicrophone() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                }
-            });
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    }
+                });
+            } catch (constraintError) {
+                console.log('Using fallback audio constraints for mobile');
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             
             // Create analyser for pitch detection
             this.analyser = this.audioContext.createAnalyser();
             this.analyser.fftSize = 4096;
-            this.analyser.smoothingTimeConstant = 0.6;
+            this.analyser.smoothingTimeConstant = this.isMobile ? 0.4 : 0.6;
+            this.analyser.minDecibels = -100;
+            this.analyser.maxDecibels = -10;
             
             this.microphone.connect(this.analyser);
             
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
             this.frequencyData = new Float32Array(this.analyser.frequencyBinCount);
+            this.timeDataArray = new Uint8Array(this.analyser.fftSize);
             
-            console.log('Microphone connected for whistle detection');
+            console.log(`Microphone connected for whistle detection (${this.isMobile ? 'mobile' : 'desktop'} mode)`);
             return true;
         } catch (e) {
             console.warn('Microphone access denied:', e);
@@ -146,6 +162,18 @@ class SongbirdAudio {
     getVolume() {
         if (!this.analyser) return 0;
         
+        // Use time-domain RMS for mobile (more accurate)
+        if (this.isMobile && this.timeDataArray) {
+            this.analyser.getByteTimeDomainData(this.timeDataArray);
+            let sum = 0;
+            for (let i = 0; i < this.timeDataArray.length; i++) {
+                const val = (this.timeDataArray[i] - 128) / 128;
+                sum += val * val;
+            }
+            return Math.sqrt(sum / this.timeDataArray.length) * this.sensitivityMultiplier;
+        }
+        
+        // Desktop: use frequency sum
         let sum = 0;
         for (let i = 0; i < this.dataArray.length; i++) {
             sum += this.dataArray[i];

@@ -9,7 +9,11 @@ class BreathDetector {
         this.analyser = null;
         this.microphone = null;
         this.dataArray = null;
+        this.timeDataArray = null;
         this.bufferLength = 0;
+        
+        // Detect mobile device
+        this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
         // Breath state
         this.breathLevel = 0;           // Current breath intensity (0-1)
@@ -31,10 +35,11 @@ class BreathDetector {
         this.breathTimes = [];
         this.maxHistoryLength = 300;    // ~5 seconds at 60fps
         
-        // Detection thresholds (lowered for better sensitivity)
-        this.inhaleThreshold = 0.15;
-        this.exhaleThreshold = 0.08;
-        this.holdThreshold = 0.03;
+        // Detection thresholds (mobile-optimized)
+        this.sensitivityMultiplier = this.isMobile ? 3.0 : 1.0;
+        this.inhaleThreshold = this.isMobile ? 0.05 : 0.15;
+        this.exhaleThreshold = this.isMobile ? 0.025 : 0.08;
+        this.holdThreshold = this.isMobile ? 0.01 : 0.03;
         
         // State tracking
         this.lastPhaseChange = 0;
@@ -45,34 +50,46 @@ class BreathDetector {
         this.onStateChange = null;
         
         this.enabled = false;
+        
+        console.log(`Project AURA: ${this.isMobile ? 'Mobile' : 'Desktop'} mode`);
     }
 
     async init() {
         try {
             // Request microphone access
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                }
-            });
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    }
+                });
+            } catch (constraintError) {
+                // Fallback for mobile devices
+                console.log('Using fallback audio constraints for mobile');
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
 
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 1024;
-            this.analyser.smoothingTimeConstant = 0.6;
+            this.analyser.fftSize = this.isMobile ? 2048 : 1024;
+            this.analyser.smoothingTimeConstant = this.isMobile ? 0.4 : 0.6;
+            this.analyser.minDecibels = -100;
+            this.analyser.maxDecibels = -10;
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.microphone.connect(this.analyser);
             
             this.bufferLength = this.analyser.frequencyBinCount;
             this.dataArray = new Uint8Array(this.bufferLength);
+            this.timeDataArray = new Uint8Array(this.analyser.fftSize);
             
             this.enabled = true;
             this.startCalibration();
             
-            console.log('Breath detector initialized');
+            console.log(`Breath detector initialized (${this.isMobile ? 'mobile' : 'desktop'} mode)`);
             return true;
         } catch (error) {
             console.error('Failed to initialize breath detector:', error);
@@ -162,21 +179,36 @@ class BreathDetector {
     }
 
     updateFromMic() {
-        this.analyser.getByteFrequencyData(this.dataArray);
+        let rawLevel;
         
-        // Focus on lower frequencies where breath is most prominent
-        let sum = 0;
-        const breathRange = Math.floor(this.bufferLength * 0.3); // Lower 30% of frequencies
-        
-        for (let i = 0; i < breathRange; i++) {
-            sum += this.dataArray[i];
+        // Use time-domain RMS for mobile (more reliable for breath)
+        if (this.isMobile && this.timeDataArray) {
+            this.analyser.getByteTimeDomainData(this.timeDataArray);
+            let sum = 0;
+            for (let i = 0; i < this.timeDataArray.length; i++) {
+                const val = (this.timeDataArray[i] - 128) / 128;
+                sum += val * val;
+            }
+            rawLevel = Math.sqrt(sum / this.timeDataArray.length) * this.sensitivityMultiplier;
+        } else {
+            // Desktop: use frequency data
+            this.analyser.getByteFrequencyData(this.dataArray);
+            
+            // Focus on lower frequencies where breath is most prominent
+            let sum = 0;
+            const breathRange = Math.floor(this.bufferLength * 0.3); // Lower 30% of frequencies
+            
+            for (let i = 0; i < breathRange; i++) {
+                sum += this.dataArray[i];
+            }
+            
+            rawLevel = sum / breathRange / 255;
         }
         
-        const average = sum / breathRange / 255;
-        this.breathLevel = average;
+        this.breathLevel = rawLevel;
         
         if (this.isCalibrating) {
-            this.calibrationSamples.push(average);
+            this.calibrationSamples.push(rawLevel);
         }
     }
 

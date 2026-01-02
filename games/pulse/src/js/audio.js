@@ -9,7 +9,11 @@ class BreathDetector {
         this.analyser = null;
         this.microphone = null;
         this.dataArray = null;
+        this.timeDataArray = null;
         this.isActive = false;
+        
+        // Detect mobile device
+        this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
         // Breath state
         this.breathLevel = 0;
@@ -17,36 +21,49 @@ class BreathDetector {
         this.isInhaling = false;
         this.breathPhase = 0; // 0-1, where 0-0.5 is inhale, 0.5-1 is exhale
         
-        // Detection parameters (improved sensitivity)
-        this.sensitivity = 1.5;
-        this.smoothing = 0.2;
-        this.threshold = 0.04;
+        // Detection parameters (mobile-optimized)
+        this.sensitivity = this.isMobile ? 3.0 : 1.5;
+        this.smoothing = this.isMobile ? 0.3 : 0.2;
+        this.threshold = this.isMobile ? 0.015 : 0.04;
         this.lastPeakTime = 0;
         this.breathCycle = [];
         this.avgBreathDuration = 4000; // 4 seconds default
+        
+        console.log(`Pulse: ${this.isMobile ? 'Mobile' : 'Desktop'} mode, threshold: ${this.threshold}`);
     }
 
     async init() {
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                audio: { 
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                } 
-            });
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: { 
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    } 
+                });
+            } catch (constraintError) {
+                // Fallback for mobile devices that don't support these constraints
+                console.log('Using fallback audio constraints for mobile');
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 512;
-            this.analyser.smoothingTimeConstant = 0.6;
+            this.analyser.fftSize = this.isMobile ? 1024 : 512;
+            this.analyser.smoothingTimeConstant = this.isMobile ? 0.4 : 0.6;
+            this.analyser.minDecibels = -100;
+            this.analyser.maxDecibels = -10;
             
             this.microphone.connect(this.analyser);
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+            this.timeDataArray = new Uint8Array(this.analyser.fftSize);
             
             this.isActive = true;
+            console.log(`Microphone connected (${this.isMobile ? 'mobile' : 'desktop'} mode)`);
             return true;
         } catch (error) {
             console.error('Microphone access denied:', error);
@@ -57,16 +74,29 @@ class BreathDetector {
     update() {
         if (!this.isActive || !this.analyser) return;
 
-        this.analyser.getByteFrequencyData(this.dataArray);
+        let rawLevel;
         
-        // Focus on lower frequencies for breath sounds
-        let sum = 0;
-        const lowFreqBins = Math.floor(this.dataArray.length * 0.4);
-        for (let i = 0; i < lowFreqBins; i++) {
-            sum += this.dataArray[i];
+        // Use time-domain RMS for mobile (more reliable for breath)
+        if (this.isMobile && this.timeDataArray) {
+            this.analyser.getByteTimeDomainData(this.timeDataArray);
+            let sum = 0;
+            for (let i = 0; i < this.timeDataArray.length; i++) {
+                const val = (this.timeDataArray[i] - 128) / 128;
+                sum += val * val;
+            }
+            rawLevel = Math.sqrt(sum / this.timeDataArray.length) * this.sensitivity;
+        } else {
+            // Desktop: use frequency data
+            this.analyser.getByteFrequencyData(this.dataArray);
+            let sum = 0;
+            const lowFreqBins = Math.floor(this.dataArray.length * 0.4);
+            for (let i = 0; i < lowFreqBins; i++) {
+                sum += this.dataArray[i];
+            }
+            rawLevel = (sum / lowFreqBins / 255) * this.sensitivity;
         }
         
-        this.breathLevel = (sum / lowFreqBins / 255) * this.sensitivity;
+        this.breathLevel = rawLevel;
         this.smoothedLevel = Utils.lerp(this.smoothedLevel, this.breathLevel, this.smoothing);
         
         // Detect breath phase changes

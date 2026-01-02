@@ -11,6 +11,9 @@ class SoundDetector {
         this.dataArray = null;
         this.bufferLength = 0;
         
+        // Detect mobile device
+        this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
         // Sound state
         this.volume = 0;
         this.smoothedVolume = 0;
@@ -18,10 +21,11 @@ class SoundDetector {
         this.smoothedPitch = 0;
         this.soundType = 'silence'; // silence, breath, hum, voice
         
-        // Detection thresholds (lowered for better sensitivity)
-        this.silenceThreshold = 0.01;
-        this.breathThreshold = 0.04;
-        this.humThreshold = 0.08;
+        // Detection thresholds (mobile-optimized)
+        this.silenceThreshold = this.isMobile ? 0.003 : 0.01;
+        this.breathThreshold = this.isMobile ? 0.012 : 0.04;
+        this.humThreshold = this.isMobile ? 0.025 : 0.08;
+        this.sensitivityMultiplier = this.isMobile ? 3.0 : 1.0;
         
         // Pitch tracking
         this.pitchHistory = [];
@@ -39,22 +43,34 @@ class SoundDetector {
         
         this.enabled = false;
         this.simulated = false;
+        
+        console.log(`Echo Garden: ${this.isMobile ? 'Mobile' : 'Desktop'} mode`);
     }
     
     async init() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true
-                }
-            });
+            let stream;
+            try {
+                // Try raw audio first for better detection
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    }
+                });
+            } catch (constraintError) {
+                // Fallback for mobile devices
+                console.log('Using fallback audio constraints for mobile');
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
             
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.analyser = this.audioContext.createAnalyser();
             this.analyser.fftSize = 2048;
-            this.analyser.smoothingTimeConstant = 0.6;
+            this.analyser.smoothingTimeConstant = this.isMobile ? 0.4 : 0.6;
+            this.analyser.minDecibels = -100;
+            this.analyser.maxDecibels = -10;
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             this.microphone.connect(this.analyser);
@@ -65,7 +81,7 @@ class SoundDetector {
             this.enabled = true;
             this.startCalibration();
             
-            console.log('Sound detector initialized');
+            console.log(`Sound detector initialized (${this.isMobile ? 'mobile' : 'desktop'} mode)`);
             return true;
         } catch (error) {
             console.error('Failed to initialize sound detector:', error);
@@ -150,7 +166,7 @@ class SoundDetector {
         for (let i = 0; i < this.bufferLength; i++) {
             sum += this.dataArray[i] * this.dataArray[i];
         }
-        this.volume = Math.sqrt(sum / this.bufferLength);
+        this.volume = Math.sqrt(sum / this.bufferLength) * this.sensitivityMultiplier;
         
         if (this.isCalibrating) {
             this.calibrationSamples.push(this.volume);

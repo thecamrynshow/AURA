@@ -9,19 +9,26 @@ class SolfegeAudio {
         this.analyser = null;
         this.microphone = null;
         this.dataArray = null;
+        this.timeDataArray = null;
         
         this.masterGain = null;
         
-        // Voice detection
+        // Detect mobile device
+        this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        // Voice detection (mobile-optimized)
         this.isVocalizing = false;
         this.currentFrequency = 0;
         this.currentSolfege = null;
-        this.vocalThreshold = 0.008;  // Lowered for better sensitivity
+        this.vocalThreshold = this.isMobile ? 0.003 : 0.008;
+        this.sensitivityMultiplier = this.isMobile ? 3.0 : 1.0;
         
         // Callbacks
         this.onSolfegeDetected = null;
         this.onVoiceStart = null;
         this.onVoiceEnd = null;
+        
+        console.log(`Solfège: ${this.isMobile ? 'Mobile' : 'Desktop'} mode, threshold: ${this.vocalThreshold}`);
     }
 
     async init() {
@@ -42,25 +49,35 @@ class SolfegeAudio {
 
     async requestMicrophone() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                }
-            });
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    }
+                });
+            } catch (constraintError) {
+                // Fallback for mobile devices
+                console.log('Using fallback audio constraints for mobile');
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
             
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             
             this.analyser = this.audioContext.createAnalyser();
             this.analyser.fftSize = 4096;  // Higher resolution for better pitch detection
-            this.analyser.smoothingTimeConstant = 0.6;  // More responsive
+            this.analyser.smoothingTimeConstant = this.isMobile ? 0.4 : 0.6;
+            this.analyser.minDecibels = -100;
+            this.analyser.maxDecibels = -10;
             
             this.microphone.connect(this.analyser);
             
             this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+            this.timeDataArray = new Uint8Array(this.analyser.fftSize);
             
-            console.log('Microphone connected for voice detection');
+            console.log(`Microphone connected for voice detection (${this.isMobile ? 'mobile' : 'desktop'} mode)`);
             return true;
         } catch (e) {
             console.warn('Microphone access denied:', e);
@@ -137,6 +154,18 @@ class SolfegeAudio {
     getVolume() {
         if (!this.analyser) return 0;
         
+        // Use time-domain RMS for mobile (more accurate)
+        if (this.isMobile && this.timeDataArray) {
+            this.analyser.getByteTimeDomainData(this.timeDataArray);
+            let sum = 0;
+            for (let i = 0; i < this.timeDataArray.length; i++) {
+                const val = (this.timeDataArray[i] - 128) / 128;
+                sum += val * val;
+            }
+            return Math.sqrt(sum / this.timeDataArray.length) * this.sensitivityMultiplier;
+        }
+        
+        // Desktop: use frequency sum
         let sum = 0;
         for (let i = 0; i < this.dataArray.length; i++) {
             sum += this.dataArray[i];
