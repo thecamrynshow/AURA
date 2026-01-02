@@ -330,3 +330,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.ritual = new MorningRiseRitual();
 });
 
+

@@ -122,3 +122,4 @@ class Piano {
 
 console.log('Solfege Piano loaded');
 
+

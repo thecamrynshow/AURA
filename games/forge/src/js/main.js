@@ -199,3 +199,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.game = new ForgeGame();
 });
 
+

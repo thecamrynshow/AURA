@@ -35,8 +35,8 @@ class PneuomaSync {
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3001';
         }
-        // Production server URL - update this when deployed
-        return 'https://pneuoma-sync.onrender.com'; // Example Render URL
+        // Production server URL
+        return 'https://pneuoma.onrender.com';
     }
 
     async connect() {
@@ -276,4 +276,5 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 console.log('🔗 PNEUOMA Sync Client loaded');
+
 

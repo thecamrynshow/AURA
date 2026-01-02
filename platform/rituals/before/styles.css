@@ -80,3 +80,4 @@ body { font-family: var(--font-body); background: var(--bg-dark); color: var(--t
 .complete-message { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 30px; }
 .btn-primary { background: var(--green); color: var(--bg-dark); border: none; padding: 16px 40px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; }
 
+

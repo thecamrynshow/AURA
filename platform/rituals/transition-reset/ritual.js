@@ -279,3 +279,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.ritual = new TransitionResetRitual();
 });
 
+

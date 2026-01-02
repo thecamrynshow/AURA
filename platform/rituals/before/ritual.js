@@ -173,3 +173,4 @@ class BeforeRitual {
 }
 document.addEventListener('DOMContentLoaded', () => new BeforeRitual());
 
+

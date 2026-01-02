@@ -272,3 +272,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.ritual = new DeepFocusRitual();
 });
 
+

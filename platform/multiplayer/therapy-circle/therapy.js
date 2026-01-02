@@ -429,3 +429,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.therapyCircle = new TherapyCircle();
 });
 
+
