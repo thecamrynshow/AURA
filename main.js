@@ -229,6 +229,59 @@ function initNavScroll() {
 }
 
 // ============================================
+// Mobile Menu Toggle
+// ============================================
+function initMobileMenu() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const nav = document.querySelector('.nav');
+    
+    if (!navToggle || !navLinks) return;
+    
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.className = 'nav-overlay';
+    nav.appendChild(overlay);
+    
+    function toggleMenu() {
+        const isOpen = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !isOpen);
+        navLinks.classList.toggle('open');
+        overlay.classList.toggle('visible');
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+    }
+    
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navLinks.classList.remove('open');
+        overlay.classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+    
+    navToggle.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', closeMenu);
+    
+    // Close menu when clicking a link
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+            closeMenu();
+        }
+    });
+    
+    // Close menu on resize to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            closeMenu();
+        }
+    });
+}
+
+// ============================================
 // Initialize
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -244,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCategoryTabs();
     initScrollAnimations();
     initNavScroll();
+    initMobileMenu();
     
     // Trigger initial scroll check
     window.dispatchEvent(new Event('scroll'));

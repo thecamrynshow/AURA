@@ -942,6 +942,44 @@ body {
     }
 }
 
+/* ============================================
+   Mobile Navigation
+   ============================================ */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001;
+}
+
+.hamburger-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
 @media (max-width: 768px) {
     :root {
         --space-lg: 1.5rem;
@@ -953,23 +991,71 @@ body {
         padding: var(--space-sm);
     }
     
-    .nav-links > a:not(.nav-cta) {
-        display: none;
+    .nav-toggle {
+        display: flex;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 320px;
+        height: 100vh;
+        background: var(--bg-mid);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px var(--space-lg) var(--space-lg);
+        gap: var(--space-md);
+        transition: right 0.3s ease;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+    
+    .nav-links.open {
+        right: 0;
+    }
+    
+    .nav-links > a {
+        display: block !important;
+        font-size: 1.1rem;
+        padding: var(--space-sm) 0;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .nav-buttons {
         flex-direction: column;
-        gap: 10px;
-        align-items: flex-end;
+        gap: 12px;
+        width: 100%;
+        margin-top: var(--space-md);
     }
     
     .nav-buttons .nav-cta {
-        padding: 6px 14px;
-        font-size: 0.85rem;
+        padding: 12px 20px;
+        font-size: 1rem;
+        width: 100%;
+        text-align: center;
     }
     
     .nav-games {
         display: flex;
+    }
+    
+    /* Mobile menu overlay */
+    .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+    
+    .nav-overlay.visible {
+        opacity: 1;
+        visibility: visible;
     }
     
     .metrics-grid {
