@@ -224,14 +224,13 @@ body {
 }
 
 .hero-human {
-    font-size: 1.15rem;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
     margin-bottom: var(--space-lg);
     line-height: 1.6;
-    max-width: 500px;
-    font-style: italic;
-    opacity: 0.9;
+    max-width: 540px;
+    letter-spacing: 0.01em;
 }
 
 .hero-eyebrow {
