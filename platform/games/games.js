@@ -140,23 +140,39 @@ class GamesFilter {
     }
     
     gameMatchesFilters(game) {
-        const gameAge = game.dataset.age;
+        const gameAgeData = game.dataset.age || '';
+        const ageValues = gameAgeData.split(',').map(v => v.trim());
         let ageMatch = false;
         
         if (this.filters.age === 'all') {
             ageMatch = true;
         } else if (this.filters.age === 'kids') {
-            // Kids: 4+, 5+, 4-8
-            ageMatch = gameAge === '4+' || gameAge === '5+' || gameAge === '4-8';
+            // Kids (4-8): games for young children
+            ageMatch = ageValues.some(age => 
+                age === '4+' || age === '5+' || age === '4-8' || 
+                age === '4-12' || age === '5-10' || age === '5-12' ||
+                age.startsWith('4-') || age.startsWith('5-')
+            );
         } else if (this.filters.age === 'everyone') {
-            // Everyone/All Ages: 8+, All Ages
-            ageMatch = gameAge === '8+' || gameAge === 'All Ages' || gameAge === 'all';
+            // Everyone (8+): games for 8+ year olds
+            ageMatch = ageValues.some(age => 
+                age === '8+' || age === 'all' || age === 'All Ages' || 
+                age === '8-13' || age === '8-12' || age === '8-18' ||
+                age.startsWith('8-') ||
+                // Also include 5-10 range since it overlaps with 8+
+                age === '5-10' || age === '5-12' || age === '5-10,8-13'
+            );
         } else if (this.filters.age === 'teens') {
-            // Teens: 13+
-            ageMatch = gameAge === '13+';
+            // Teens (13+): games for teenagers
+            ageMatch = ageValues.some(age => 
+                age === '13+' || age === '13-18' || age === '13-17' ||
+                age.startsWith('13-') || age.startsWith('13+')
+            );
         } else if (this.filters.age === 'adults') {
-            // Adults: 18+
-            ageMatch = gameAge === '18+';
+            // Adults (18+): games for adults
+            ageMatch = ageValues.some(age => 
+                age === '18+' || age.startsWith('18')
+            );
         }
         
         const intentionMatch = this.filters.intention === 'all' || 
