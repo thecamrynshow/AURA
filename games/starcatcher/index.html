@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Star Catcher | PNEUOMA</title>
+    <meta name="description" content="Create a magical light net with your breath to catch falling stars in this calming night sky game.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="start-content">
+            <div class="star-icon">⭐</div>
+            <h1 class="title">Star Catcher</h1>
+            <p class="subtitle">Catch falling stars with your breath</p>
+            
+            <div class="demo-area">
+                <div class="demo-net"></div>
+                <div class="demo-star">✨</div>
+                <p class="demo-text">Breathe in to expand your light net<br>Catch stars as they fall</p>
+            </div>
+            
+            <button id="start-btn" class="glow-button">
+                <span>Start Catching</span>
+            </button>
+            
+            <p class="mic-note">🎤 Microphone required for breath detection</p>
+        </div>
+        
+        <div class="stars-bg"></div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD -->
+        <div id="hud">
+            <div class="hud-left">
+                <div class="stars-display">
+                    <span class="star-icon-small">⭐</span>
+                    <span id="stars-caught">0</span>
+                </div>
+                <div class="streak-display">
+                    <span class="streak-icon">🔥</span>
+                    <span id="streak">0</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="breath-indicator">
+                    <div id="net-power" class="net-power-fill"></div>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="timer-display">
+                    <span id="timer">3:00</span>
+                </div>
+                <button id="pause-btn" class="icon-btn">⏸️</button>
+            </div>
+        </div>
+        
+        <!-- Breath Guide -->
+        <div id="breath-guide">
+            <div class="guide-circle expanding"></div>
+            <div class="guide-text">Breathe to grow your net...</div>
+        </div>
+    </div>
+
+    <!-- Pause Screen -->
+    <div id="pause-screen" class="screen">
+        <div class="pause-content">
+            <h2>Paused</h2>
+            <p class="pause-stats">Stars caught: <span id="pause-stars">0</span></p>
+            <div class="pause-buttons">
+                <button id="resume-btn" class="glow-button">Resume</button>
+                <button id="quit-btn" class="secondary-button">End Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-content">
+            <div class="constellation-display" id="constellation"></div>
+            <h2>Beautiful Work!</h2>
+            <p class="end-message">You've created your own constellation!</p>
+            
+            <div class="final-stats">
+                <div class="stat-card">
+                    <span class="stat-value" id="final-stars">0</span>
+                    <span class="stat-label">Stars Caught</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="final-streak">0</span>
+                    <span class="stat-label">Best Streak</span>
+                </div>
+            </div>
+            
+            <div class="end-buttons">
+                <button id="play-again-btn" class="glow-button">Play Again</button>
+                <a href="/platform/games/" class="secondary-button">More Games</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/stars.js"></script>
+    <script src="src/js/net.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+

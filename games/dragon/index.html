@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Dragon's Breath | PNEUOMA</title>
+    <meta name="description" content="Fly a friendly dragon using your breath. Inhale to rise, exhale to glide through magical skies.">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="start-content">
+            <div class="dragon-icon">🐉</div>
+            <h1 class="title">Dragon's Breath</h1>
+            <p class="subtitle">Fly through magical skies</p>
+            
+            <div class="breath-demo">
+                <div class="demo-dragon"></div>
+                <p class="demo-text">Breathe in to rise<br>Breathe out to glide</p>
+            </div>
+            
+            <button id="start-btn" class="glow-button">
+                <span>Take Flight</span>
+            </button>
+            
+            <p class="mic-note">🎤 Microphone required for breath detection</p>
+        </div>
+        
+        <div class="clouds-bg">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD -->
+        <div id="hud">
+            <div class="hud-left">
+                <div class="score-display">
+                    <span class="score-icon">⭐</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="gems-display">
+                    <span class="gems-icon">💎</span>
+                    <span id="gems">0</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="breath-meter">
+                    <div id="breath-fill" class="breath-fill"></div>
+                    <div class="breath-label">BREATH</div>
+                </div>
+            </div>
+            <div class="hud-right">
+                <button id="pause-btn" class="icon-btn">⏸️</button>
+            </div>
+        </div>
+        
+        <!-- Breath Guide -->
+        <div id="breath-guide" class="hidden">
+            <div class="guide-ring"></div>
+            <div class="guide-text">Breathe in...</div>
+        </div>
+        
+        <!-- Level Complete -->
+        <div id="level-complete" class="overlay hidden">
+            <div class="overlay-content">
+                <h2>Level Complete! 🎉</h2>
+                <div class="level-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="level-stars">0</span>
+                        <span class="stat-label">Stars</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="level-gems">0</span>
+                        <span class="stat-label">Gems</span>
+                    </div>
+                </div>
+                <button id="next-level-btn" class="glow-button">Next Level</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Screen -->
+    <div id="pause-screen" class="screen">
+        <div class="pause-content">
+            <h2>Paused</h2>
+            <div class="pause-buttons">
+                <button id="resume-btn" class="glow-button">Resume</button>
+                <button id="quit-btn" class="secondary-button">Return Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-content">
+            <div class="end-dragon">🐉</div>
+            <h2>Great Flying!</h2>
+            <p class="end-message">You helped your dragon soar through the skies!</p>
+            
+            <div class="final-stats">
+                <div class="stat-card">
+                    <span class="stat-value" id="final-stars">0</span>
+                    <span class="stat-label">Stars Collected</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="final-gems">0</span>
+                    <span class="stat-label">Gems Found</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="final-distance">0</span>
+                    <span class="stat-label">Distance Flown</span>
+                </div>
+            </div>
+            
+            <div class="end-buttons">
+                <button id="play-again-btn" class="glow-button">Fly Again</button>
+                <a href="/platform/games/" class="secondary-button">More Games</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/dragon.js"></script>
+    <script src="src/js/world.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
