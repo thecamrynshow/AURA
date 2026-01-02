@@ -13,7 +13,7 @@ class Game {
         this.state = 'menu'; // menu, playing, ending
         this.isRunning = false;
         this.sessionTime = 0;
-        this.maxSessionTime = 10 * 60 * 1000; // 10 minutes
+        this.maxSessionTime = 5 * 60 * 1000; // 5 minutes
         
         // Systems
         this.audio = null;
