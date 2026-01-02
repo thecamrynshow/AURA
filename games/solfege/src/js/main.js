@@ -23,7 +23,7 @@ class Solfege {
         this.score = 0;
         this.lastDetectedNote = null;
         this.noteHoldTime = 0;
-        this.noteHoldRequired = 300; // ms to hold note to count
+        this.noteHoldRequired = 200; // ms to hold note to count (reduced for responsiveness)
         
         this.init();
     }
@@ -66,7 +66,11 @@ class Solfege {
             
             const note = KEYBOARD_MAP[e.key.toLowerCase()];
             if (note) {
-                this.handleNoteInput(note);
+                // Only count keyboard input if NOT using microphone
+                // Piano keys are just for reference when mic is enabled
+                if (!this.useMicrophone) {
+                    this.handleNoteInput(note);
+                }
                 solfegeAudio.playNote(note);
                 this.piano.lightKey(note);
             }
@@ -88,7 +92,11 @@ class Solfege {
             const key = e.target.closest('.piano-key');
             if (key && key.dataset.note) {
                 const note = key.dataset.note;
-                this.handleNoteInput(note);
+                // Only count piano click if NOT using microphone
+                // Piano is just for reference/hearing the note when mic is enabled
+                if (!this.useMicrophone) {
+                    this.handleNoteInput(note);
+                }
                 solfegeAudio.playNote(note);
                 this.piano.lightKey(note);
                 

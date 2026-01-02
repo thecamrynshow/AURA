@@ -16,7 +16,7 @@ class SolfegeAudio {
         this.isVocalizing = false;
         this.currentFrequency = 0;
         this.currentSolfege = null;
-        this.vocalThreshold = 0.015;
+        this.vocalThreshold = 0.008;  // Lowered for better sensitivity
         
         // Callbacks
         this.onSolfegeDetected = null;
@@ -53,8 +53,8 @@ class SolfegeAudio {
             this.microphone = this.audioContext.createMediaStreamSource(stream);
             
             this.analyser = this.audioContext.createAnalyser();
-            this.analyser.fftSize = 2048;
-            this.analyser.smoothingTimeConstant = 0.8;
+            this.analyser.fftSize = 4096;  // Higher resolution for better pitch detection
+            this.analyser.smoothingTimeConstant = 0.6;  // More responsive
             
             this.microphone.connect(this.analyser);
             
@@ -76,8 +76,8 @@ class SolfegeAudio {
         const frequency = this.detectPitch();
         const volume = this.getVolume();
         
-        // Check if this is voice input
-        const isVocalizing = frequency > 150 && frequency < 600 && volume > this.vocalThreshold;
+        // Check if this is voice input (wider range for different voice types)
+        const isVocalizing = frequency > 80 && frequency < 800 && volume > this.vocalThreshold;
         
         if (isVocalizing) {
             this.currentFrequency = frequency;
@@ -116,16 +116,20 @@ class SolfegeAudio {
         let maxIndex = 0;
         let maxValue = 0;
         
-        // Look for voice frequencies (100Hz - 600Hz for singing)
-        const minBin = Math.floor(100 / (this.audioContext.sampleRate / this.analyser.fftSize));
-        const maxBin = Math.floor(600 / (this.audioContext.sampleRate / this.analyser.fftSize));
+        // Look for voice frequencies (80Hz - 800Hz for different voice types)
+        const minBin = Math.floor(80 / (this.audioContext.sampleRate / this.analyser.fftSize));
+        const maxBin = Math.floor(800 / (this.audioContext.sampleRate / this.analyser.fftSize));
         
+        // Find the strongest frequency component
         for (let i = minBin; i < maxBin && i < this.dataArray.length; i++) {
             if (this.dataArray[i] > maxValue) {
                 maxValue = this.dataArray[i];
                 maxIndex = i;
             }
         }
+        
+        // Only return if signal is strong enough
+        if (maxValue < 30) return 0;
         
         return maxIndex * (this.audioContext.sampleRate / this.analyser.fftSize);
     }
