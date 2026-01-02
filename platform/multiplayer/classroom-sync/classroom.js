@@ -1,6 +1,7 @@
 // ============================================
 // Classroom Sync — Teacher-Led Regulation
 // Real-time sync between teacher and students
+// Uses PNEUOMA Sync Server for cross-device sync
 // ============================================
 
 class ClassroomSync {
@@ -12,8 +13,8 @@ class ClassroomSync {
         this.exerciseTimer = null;
         this.breathTimer = null;
         this.audioContext = null;
-        this.syncChannel = null;
-        this.syncInterval = null;
+        this.sync = null; // PneuomaSync client
+        this.realStudentCount = 0;
         
         this.exercises = {
             'breath-reset': { name: 'Breath Reset', duration: 120, inhale: 4, exhale: 4 },
@@ -30,8 +31,66 @@ class ClassroomSync {
     $(s) { return document.querySelector(s); }
     $$(s) { return document.querySelectorAll(s); }
     
-    init() {
+    async init() {
         this.bindEvents();
+        await this.initSync();
+    }
+    
+    async initSync() {
+        // Initialize real-time sync client
+        this.sync = new PneuomaSync({
+            onConnect: () => {
+                console.log('🟢 Connected to sync server');
+                this.updateConnectionStatus(true);
+            },
+            onDisconnect: () => {
+                console.log('🔴 Disconnected from sync server');
+                this.updateConnectionStatus(false);
+            },
+            onParticipantJoined: (data) => {
+                this.realStudentCount++;
+                this.$('#connectedCount').textContent = 24 + this.realStudentCount;
+                console.log(`👋 ${data.name} joined!`);
+            },
+            onParticipantLeft: (data) => {
+                this.realStudentCount = Math.max(0, this.realStudentCount - 1);
+                this.$('#connectedCount').textContent = 24 + this.realStudentCount;
+            },
+            onExerciseStart: (data) => {
+                if (this.role === 'student') {
+                    this.syncToExercise(data);
+                }
+            },
+            onExerciseStop: () => {
+                if (this.role === 'student') {
+                    this.studentExerciseStop();
+                }
+            },
+            onBreathSync: (data) => {
+                if (this.role === 'student') {
+                    this.syncBreathPhase(data.phase, data.instruction);
+                }
+            },
+            onSessionEnded: (data) => {
+                if (this.role === 'student') {
+                    this.studentSessionEnded(data.message);
+                }
+            }
+        });
+        
+        try {
+            await this.sync.connect();
+        } catch (e) {
+            console.log('Using local-only mode');
+        }
+    }
+    
+    updateConnectionStatus(connected) {
+        const badge = this.$('.connection-status');
+        if (badge) {
+            badge.classList.toggle('connected', connected);
+            badge.textContent = connected ? '🟢 Live' : '🟡 Local';
+        }
     }
     
     generateSessionCode() {
@@ -97,12 +156,20 @@ class ClassroomSync {
     
     // ==================== SESSION MANAGEMENT ====================
     
-    startTeacherSession() {
+    async startTeacherSession() {
         this.role = 'teacher';
-        this.sessionCode = this.generateSessionCode();
         this.generateStudents();
         
-        // Store session in localStorage for cross-tab/device sync
+        // Create session via sync server
+        try {
+            const result = await this.sync.createSession('classroom', 'Teacher', 'CALM');
+            this.sessionCode = result.code;
+        } catch (e) {
+            // Fallback to local code
+            this.sessionCode = this.generateSessionCode();
+        }
+        
+        // Also store in localStorage for fallback
         const sessionData = {
             code: this.sessionCode,
             active: true,
@@ -113,7 +180,7 @@ class ClassroomSync {
         };
         localStorage.setItem(`pneuoma_session_${this.sessionCode}`, JSON.stringify(sessionData));
         
-        // Setup BroadcastChannel for same-origin tab sync
+        // Setup BroadcastChannel for same-origin tab sync (fallback)
         this.setupSyncChannel();
         
         // Show teacher screen
@@ -124,9 +191,6 @@ class ClassroomSync {
         this.renderClassGrid();
         this.initAudio();
         this.startSimulation();
-        
-        // Broadcast session started
-        this.broadcastState({ type: 'session_started', code: this.sessionCode });
         
         console.log('Teacher session started:', this.sessionCode);
     }
@@ -144,7 +208,7 @@ class ClassroomSync {
         this.$('#roleScreen').classList.add('active');
     }
     
-    joinSession() {
+    async joinSession() {
         const code = this.$('#joinCodeInput').value.toUpperCase().trim();
         
         if (code.length < 8) {
@@ -153,7 +217,33 @@ class ClassroomSync {
             return;
         }
         
-        // Check if session exists in localStorage
+        // Try to join via sync server first
+        if (this.sync && this.sync.isConnected()) {
+            try {
+                const result = await this.sync.joinSession(code, 'Student', 'student');
+                
+                this.role = 'student';
+                this.sessionCode = code;
+                
+                // Show student screen
+                this.$$('.screen').forEach(s => s.classList.remove('active'));
+                this.$('#studentScreen').classList.add('active');
+                this.$('#studentSessionCode').textContent = code;
+                
+                // Check if exercise is already running
+                if (result.session && result.session.exercise) {
+                    this.syncToExercise(result.session);
+                }
+                
+                this.initAudio();
+                console.log('Joined session via server:', code);
+                return;
+            } catch (e) {
+                console.log('Server join failed, trying local:', e.message);
+            }
+        }
+        
+        // Fallback: Check localStorage
         const sessionData = localStorage.getItem(`pneuoma_session_${code}`);
         
         if (!sessionData) {
@@ -170,11 +260,11 @@ class ClassroomSync {
             return;
         }
         
-        // Successfully joining
+        // Successfully joining locally
         this.role = 'student';
         this.sessionCode = code;
         
-        // Setup sync
+        // Setup local sync
         this.setupSyncChannel();
         
         // Show student screen
@@ -182,7 +272,7 @@ class ClassroomSync {
         this.$('#studentScreen').classList.add('active');
         this.$('#studentSessionCode').textContent = code;
         
-        // Notify teacher
+        // Notify teacher via local broadcast
         this.broadcastState({ type: 'student_joined', code: code });
         
         // Start listening for updates
@@ -194,7 +284,7 @@ class ClassroomSync {
         }
         
         this.initAudio();
-        console.log('Joined session:', code);
+        console.log('Joined session locally:', code);
     }
     
     setupSyncChannel() {
@@ -468,7 +558,12 @@ class ClassroomSync {
         this.$('#activeExerciseName').textContent = exercise.name;
         this.$('#classStatus').textContent = `Leading: ${exercise.name}`;
         
-        // Broadcast to students
+        // Broadcast to students via sync server
+        if (this.sync) {
+            this.sync.startExercise(exerciseKey, exercise);
+        }
+        
+        // Also broadcast locally
         this.broadcastState({ 
             type: 'exercise_start', 
             exercise: exerciseKey,
@@ -517,7 +612,10 @@ class ClassroomSync {
             teacherInst.textContent = 'Breathe In';
             this.playTone(220, inhale / 1000);
             
-            // Broadcast phase
+            // Broadcast phase via sync server
+            if (this.sync) {
+                this.sync.sendBreathPhase('inhale', 'Breathe In');
+            }
             this.broadcastState({ type: 'breath_phase', phase: 'inhale', instruction: 'Breathe In' });
             
             setTimeout(() => {
@@ -525,6 +623,9 @@ class ClassroomSync {
                 
                 if (hold > 0) {
                     teacherInst.textContent = 'Hold';
+                    if (this.sync) {
+                        this.sync.sendBreathPhase('hold', 'Hold');
+                    }
                     this.broadcastState({ type: 'breath_phase', phase: 'hold', instruction: 'Hold' });
                     
                     setTimeout(() => {
@@ -542,6 +643,9 @@ class ClassroomSync {
                 teacherInst.textContent = 'Breathe Out';
                 this.playTone(165, exhale / 1000);
                 
+                if (this.sync) {
+                    this.sync.sendBreathPhase('exhale', 'Breathe Out');
+                }
                 this.broadcastState({ type: 'breath_phase', phase: 'exhale', instruction: 'Breathe Out' });
                 
                 setTimeout(() => {
@@ -588,7 +692,10 @@ class ClassroomSync {
             teacherCircle.classList.remove('expand', 'contract');
         }
         
-        // Broadcast stop
+        // Broadcast stop via sync server
+        if (this.sync && this.role === 'teacher') {
+            this.sync.stopExercise();
+        }
         this.broadcastState({ type: 'exercise_stop', exercise: null });
     }
     
@@ -596,7 +703,12 @@ class ClassroomSync {
         this.stopExercise();
         clearInterval(this.syncInterval);
         
-        // Mark session as ended
+        // End session via sync server
+        if (this.sync && this.role === 'teacher') {
+            this.sync.endSession();
+        }
+        
+        // Mark session as ended in localStorage
         if (this.sessionCode) {
             const sessionData = localStorage.getItem(`pneuoma_session_${this.sessionCode}`);
             if (sessionData) {
@@ -612,6 +724,18 @@ class ClassroomSync {
             this.syncChannel.close();
         }
         
+        this.$$('.screen').forEach(s => s.classList.remove('active'));
+        this.$('#roleScreen').classList.add('active');
+        this.role = null;
+        this.sessionCode = null;
+        this.realStudentCount = 0;
+    }
+    
+    studentSessionEnded(message) {
+        clearInterval(this.syncInterval);
+        this.exerciseActive = false;
+        
+        alert(message || 'The session has ended. Thanks for participating!');
         this.$$('.screen').forEach(s => s.classList.remove('active'));
         this.$('#roleScreen').classList.add('active');
         this.role = null;
