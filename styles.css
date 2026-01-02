@@ -223,6 +223,17 @@ body {
     gap: var(--space-xl);
 }
 
+.hero-human {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+    max-width: 500px;
+    font-style: italic;
+    opacity: 0.9;
+}
+
 .hero-eyebrow {
     font-size: 0.875rem;
     text-transform: uppercase;
