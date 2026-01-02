@@ -4,11 +4,12 @@
    ============================================ */
 
 class Cloud {
-    constructor(x, y, size) {
+    constructor(x, y, size, isCovering = false) {
         this.x = x;
         this.y = y;
         this.baseSize = size;
         this.size = size;
+        this.isCovering = isCovering; // If true, this cloud is meant to cover something
         
         // Movement
         this.vx = 0;
@@ -32,6 +33,18 @@ class Cloud {
     generatePuffs() {
         const puffs = [];
         const numPuffs = randomInt(4, 6);
+        
+        // If this is a covering cloud, ensure center coverage
+        if (this.isCovering) {
+            // Add a central puff that definitely covers the center point
+            puffs.push({
+                offsetX: 0,
+                offsetY: 0,
+                radiusX: this.baseSize * 0.5,
+                radiusY: this.baseSize * 0.4,
+                wobbleOffset: 0
+            });
+        }
         
         for (let i = 0; i < numPuffs; i++) {
             puffs.push({

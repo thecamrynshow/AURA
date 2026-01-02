@@ -13,6 +13,8 @@ class Sky {
         
         // Sky state
         this.time = 0;
+        this.gameStartTime = 0;
+        this.minPlayTime = 10000; // Minimum 10 seconds of play
         
         // Sun
         this.sun = {
@@ -34,6 +36,7 @@ class Sky {
         
         // Stats
         this.cloudsMoved = 0;
+        this.playerInteracted = false; // Track if player has interacted
         
         // Animation
         this.animationFrame = null;
@@ -65,14 +68,15 @@ class Sky {
         for (let i = 0; i < this.numClouds; i++) {
             const x = (i / this.numClouds) * this.width + randomFloat(-50, 50);
             const y = randomFloat(this.height * 0.15, this.height * 0.6);
-            const size = randomFloat(60, 120);
+            const size = randomFloat(80, 140);
             
             this.clouds.push(new Cloud(x, y, size));
         }
         
-        // Add a few clouds covering the sun area
-        this.clouds.push(new Cloud(this.sun.x - 30, this.sun.y - 20, 100));
-        this.clouds.push(new Cloud(this.sun.x + 40, this.sun.y + 10, 80));
+        // Add multiple layered clouds covering the sun area (make it harder to reveal)
+        this.clouds.push(new Cloud(this.sun.x, this.sun.y, 130, true)); // Centered, covering cloud
+        this.clouds.push(new Cloud(this.sun.x - 50, this.sun.y - 20, 110, true));
+        this.clouds.push(new Cloud(this.sun.x + 50, this.sun.y + 20, 100, true));
     }
 
     createStars() {
@@ -81,14 +85,15 @@ class Sky {
         
         // Place stars in different areas
         const positions = [
-            { x: this.width * 0.2, y: this.height * 0.3 },
-            { x: this.width * 0.5, y: this.height * 0.5 },
-            { x: this.width * 0.8, y: this.height * 0.35 }
+            { x: this.width * 0.2, y: this.height * 0.35 },
+            { x: this.width * 0.5, y: this.height * 0.45 },
+            { x: this.width * 0.35, y: this.height * 0.55 }
         ];
         
         positions.forEach(pos => {
-            // Add cloud over each star position
-            this.clouds.push(new Cloud(pos.x, pos.y, 90));
+            // Add multiple clouds over each star position to ensure coverage
+            this.clouds.push(new Cloud(pos.x, pos.y, 120, true)); // Main covering cloud
+            this.clouds.push(new Cloud(pos.x + 30, pos.y - 20, 90, true)); // Secondary
             this.stars.push(new Star(pos.x, pos.y));
         });
     }
@@ -98,6 +103,7 @@ class Sky {
             cloud.blow(force, 1);
         });
         this.cloudsMoved++;
+        this.playerInteracted = true;
     }
 
     pushCloud(x, y) {
@@ -106,6 +112,7 @@ class Sky {
             if (cloud.push(x, y)) {
                 pushed = true;
                 this.cloudsMoved++;
+                this.playerInteracted = true;
             }
         });
         return pushed;
@@ -253,6 +260,8 @@ class Sky {
     }
 
     start() {
+        this.gameStartTime = Date.now();
+        this.playerInteracted = false;
         this.init();
         this.animate();
     }
@@ -271,13 +280,21 @@ class Sky {
     }
 
     // Check if game complete (all stars found + sun revealed)
+    // Requires: player interaction, minimum play time, all objectives met
     isComplete() {
-        return this.starsFound >= this.numStars && this.sun.revealed;
+        const timePlayed = Date.now() - this.gameStartTime;
+        const hasPlayedEnough = timePlayed >= this.minPlayTime;
+        const hasInteracted = this.playerInteracted && this.cloudsMoved >= 3;
+        const objectivesComplete = this.starsFound >= this.numStars && this.sun.revealed;
+        
+        return hasPlayedEnough && hasInteracted && objectivesComplete;
     }
 
     reset() {
         this.cloudsMoved = 0;
         this.starsFound = 0;
+        this.playerInteracted = false;
+        this.gameStartTime = Date.now();
         this.sun.revealed = false;
         this.sun.revealProgress = 0;
         this.createClouds();
