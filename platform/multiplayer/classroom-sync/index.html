@@ -36,11 +36,11 @@
                     <button class="role-btn student-btn" id="studentBtn">
                         <span class="role-icon">🎒</span>
                         <span class="role-title">I'm a Student</span>
-                        <span class="role-desc">Join and follow along</span>
+                        <span class="role-desc">Enter code to join</span>
                     </button>
                 </div>
                 
-                <p class="demo-note">Demo Mode: Simulated class of 24 students</p>
+                <p class="demo-note">Open on multiple devices/tabs to test sync</p>
             </div>
         </div>
 
@@ -169,6 +169,28 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Student Join Screen -->
+        <div class="screen" id="joinScreen">
+            <div class="screen-content">
+                <div class="logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">JOIN CLASS</span>
+                </div>
+                
+                <h1 class="join-title">Enter Session Code</h1>
+                <p class="join-subtitle">Ask your teacher for the 4-letter code</p>
+                
+                <div class="code-input-container">
+                    <input type="text" id="joinCodeInput" class="code-input" placeholder="CALM-0000" maxlength="9" autocomplete="off">
+                    <p class="code-error hidden" id="codeError">Session not found. Check the code and try again.</p>
+                </div>
+                
+                <button class="join-btn" id="joinSessionBtn">Join Session</button>
+                
+                <button class="back-btn" id="backToRoleBtn">← Back</button>
             </div>
         </div>
 
