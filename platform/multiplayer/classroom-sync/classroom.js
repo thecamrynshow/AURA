@@ -37,11 +37,14 @@ class ClassroomSync {
     }
     
     async initSync() {
+        console.log('🔄 Initializing sync connection...');
+        
         // Initialize real-time sync client
         this.sync = new PneuomaSync({
             onConnect: () => {
-                console.log('🟢 Connected to sync server');
+                console.log('🟢 Connected to sync server!');
                 this.updateConnectionStatus(true);
+                this.showConnectionToast('Connected to PNEUOMA Sync!', 'success');
             },
             onDisconnect: () => {
                 console.log('🔴 Disconnected from sync server');
@@ -80,17 +83,65 @@ class ClassroomSync {
         
         try {
             await this.sync.connect();
+            console.log('✅ Sync client initialized, connected:', this.sync.isConnected());
         } catch (e) {
-            console.log('Using local-only mode');
+            console.log('⚠️ Using local-only mode:', e.message);
+            this.showConnectionToast('Offline mode - sessions won\'t sync across devices', 'warning');
         }
     }
     
     updateConnectionStatus(connected) {
+        // Update header badge
         const badge = this.$('.connection-status');
         if (badge) {
             badge.classList.toggle('connected', connected);
             badge.textContent = connected ? '🟢 Live' : '🟡 Local';
         }
+        
+        // Update join screen status
+        const joinStatus = this.$('#joinConnectionStatus');
+        if (joinStatus) {
+            const dot = joinStatus.querySelector('.status-dot');
+            const text = joinStatus.querySelector('.status-text');
+            if (connected) {
+                dot.style.background = '#10b981';
+                text.textContent = 'Connected to PNEUOMA';
+                joinStatus.style.background = 'rgba(16, 185, 129, 0.1)';
+                joinStatus.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+            } else {
+                dot.style.background = '#f59e0b';
+                text.textContent = 'Connecting...';
+                joinStatus.style.background = 'rgba(245, 158, 11, 0.1)';
+                joinStatus.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+            }
+        }
+    }
+    
+    showConnectionToast(message, type = 'info') {
+        // Remove existing toast
+        const existing = this.$('.connection-toast');
+        if (existing) existing.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = `connection-toast ${type}`;
+        toast.innerHTML = message;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 10000;
+            animation: slideUp 0.3s ease;
+            ${type === 'success' ? 'background: #10b981; color: white;' : ''}
+            ${type === 'warning' ? 'background: #f59e0b; color: white;' : ''}
+            ${type === 'error' ? 'background: #ef4444; color: white;' : ''}
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => toast.remove(), 4000);
     }
     
     generateSessionCode() {
@@ -219,6 +270,7 @@ class ClassroomSync {
         
         // Try to join via sync server first
         if (this.sync && this.sync.isConnected()) {
+            console.log('🔄 Attempting to join session via server:', code);
             try {
                 const result = await this.sync.joinSession(code, 'Student', 'student');
                 
@@ -236,11 +288,17 @@ class ClassroomSync {
                 }
                 
                 this.initAudio();
-                console.log('Joined session via server:', code);
+                this.showConnectionToast('Joined session!', 'success');
+                console.log('✅ Joined session via server:', code);
                 return;
             } catch (e) {
-                console.log('Server join failed, trying local:', e.message);
+                console.log('❌ Server join failed:', e.message);
+                this.$('#codeError').textContent = e.message || 'Session not found. Check the code and try again.';
+                this.$('#codeError').classList.remove('hidden');
+                return;
             }
+        } else {
+            console.log('⚠️ Not connected to server, trying local fallback');
         }
         
         // Fallback: Check localStorage
