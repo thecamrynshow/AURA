@@ -31,8 +31,8 @@ class World {
             zoom: 1
         };
         
-        // World bounds
-        this.worldWidth = 3000;
+        // World bounds (expanded for Aurora Veil)
+        this.worldWidth = 4000;
         this.worldHeight = 2000;
         
         // Colors
@@ -179,6 +179,13 @@ class World {
                 y: 500,
                 radius: 150,
                 name: 'The Light Animal'
+            },
+            {
+                id: 'auroraVeil',
+                x: 3200,
+                y: 400,
+                radius: 200,
+                name: 'The Aurora Veil'
             }
         ];
     }

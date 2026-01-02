@@ -13,7 +13,8 @@ class ChallengeManager {
         this.challenges = {
             windCrossing: new WindCrossingChallenge(this),
             crystalGrove: new CrystalGroveChallenge(this),
-            lightAnimal: new LightAnimalChallenge(this)
+            lightAnimal: new LightAnimalChallenge(this),
+            auroraVeil: new AuroraVeilChallenge(this)
         };
         
         // UI elements
@@ -61,7 +62,7 @@ class ChallengeManager {
         this.showMessage('Challenge Complete!', 2000);
         
         // Check if all challenges complete
-        if (this.completedChallenges.size >= 3) {
+        if (this.completedChallenges.size >= 4) {
             setTimeout(() => {
                 this.game.endSession();
             }, 3000);
@@ -628,5 +629,294 @@ class LightAnimalChallenge {
         this.active = false;
         this.manager.hideOverlay();
         this.manager.completeChallenge(this.id);
+    }
+}
+
+// ============================================
+// Challenge 4: The Aurora Veil
+// ============================================
+class AuroraVeilChallenge {
+    constructor(manager) {
+        this.manager = manager;
+        this.id = 'auroraVeil';
+        
+        // Aurora state
+        this.waves = [];
+        this.numWaves = 5;
+        this.intensity = 0;
+        this.colorShift = 0;
+        
+        // Progress tracking
+        this.coherentTime = 0;
+        this.requiredTime = 12000; // 12 seconds of coherent breathing
+        this.peakIntensity = 0;
+        
+        // Position (night sky area)
+        this.centerX = 3200;
+        this.centerY = 400;
+        this.width = 600;
+        this.height = 300;
+        
+        // Visual state
+        this.particles = [];
+        this.starfield = [];
+        
+        this.active = false;
+        this.phase = 'intro';
+    }
+
+    start() {
+        this.active = true;
+        this.phase = 'intro';
+        this.intensity = 0;
+        this.coherentTime = 0;
+        this.peakIntensity = 0;
+        this.colorShift = 0;
+        
+        // Initialize aurora waves
+        this.waves = [];
+        for (let i = 0; i < this.numWaves; i++) {
+            this.waves.push({
+                offset: Utils.random(0, Math.PI * 2),
+                speed: 0.3 + Utils.random(0, 0.2),
+                amplitude: 20 + Utils.random(0, 30),
+                hue: 120 + i * 30, // Green to purple spectrum
+                y: i * (this.height / this.numWaves)
+            });
+        }
+        
+        // Initialize starfield
+        this.starfield = [];
+        for (let i = 0; i < 30; i++) {
+            this.starfield.push({
+                x: Utils.random(this.centerX - this.width/2, this.centerX + this.width/2),
+                y: Utils.random(this.centerY - this.height/2, this.centerY + this.height/2),
+                size: Utils.random(1, 3),
+                twinkle: Utils.random(0, Math.PI * 2)
+            });
+        }
+        
+        // Show intro
+        this.manager.showOverlay(`
+            <h2 class="challenge-title">The Aurora Veil</h2>
+            <p class="challenge-description">
+                The night sky awaits your breath.<br><br>
+                Breathe deeply and steadily.<br>
+                Watch the aurora dance with your rhythm.<br><br>
+                <em>Coherent breathing paints the sky with light.</em>
+            </p>
+            <div class="aurora-container" id="aurora-display">
+                <div class="aurora-wave wave-1"></div>
+                <div class="aurora-wave wave-2"></div>
+                <div class="aurora-wave wave-3"></div>
+                <div class="aurora-stars"></div>
+            </div>
+            <div class="challenge-progress">
+                <div class="challenge-progress-fill aurora-progress" id="aurora-progress"></div>
+            </div>
+        `);
+        
+        // Play ambient aurora sound
+        if (this.manager.game.audio.playAuroraAmbient) {
+            this.manager.game.audio.playAuroraAmbient();
+        }
+        
+        setTimeout(() => {
+            this.phase = 'painting';
+        }, 2000);
+    }
+
+    update(deltaTime, breathState, playerPos) {
+        if (!this.active || this.phase === 'intro') return;
+        
+        const coherence = (breathState.coherence || 50) / 100;
+        const stability = (breathState.stability || 50) / 100;
+        const breathLevel = breathState.level || 0.5;
+        const combinedScore = (coherence + stability) / 2;
+        
+        // Update color shift based on breath phase
+        this.colorShift += deltaTime * 0.001 * breathLevel;
+        
+        // Aurora intensity follows coherence
+        const targetIntensity = combinedScore;
+        this.intensity = Utils.lerp(this.intensity, targetIntensity, 0.03);
+        
+        // Track peak intensity for visual feedback
+        if (this.intensity > this.peakIntensity) {
+            this.peakIntensity = this.intensity;
+        }
+        
+        // Progress when breathing coherently
+        if (combinedScore > 0.5) {
+            this.coherentTime += deltaTime * combinedScore;
+            
+            // Spawn celebration particles at high coherence
+            if (combinedScore > 0.7 && Math.random() < 0.1) {
+                this.spawnParticle();
+            }
+        } else {
+            // Slow decay when not coherent
+            this.coherentTime = Math.max(0, this.coherentTime - deltaTime * 0.2);
+        }
+        
+        // Update wave animation
+        this.waves.forEach((wave, i) => {
+            wave.offset += deltaTime * 0.001 * wave.speed * (1 + this.intensity);
+            wave.hue = 120 + i * 30 + Math.sin(this.colorShift) * 40;
+        });
+        
+        // Update particles
+        this.particles = this.particles.filter(p => {
+            p.y -= p.vy * deltaTime * 0.01;
+            p.x += Math.sin(p.phase) * 0.5;
+            p.phase += deltaTime * 0.005;
+            p.alpha -= deltaTime * 0.0005;
+            p.size *= 0.998;
+            return p.alpha > 0 && p.size > 0.5;
+        });
+        
+        // Update starfield twinkle
+        this.starfield.forEach(star => {
+            star.twinkle += deltaTime * 0.003;
+        });
+        
+        // Update progress bar with aurora glow effect
+        const progress = Math.min(1, this.coherentTime / this.requiredTime);
+        const progressEl = document.getElementById('aurora-progress');
+        if (progressEl) {
+            progressEl.style.width = `${progress * 100}%`;
+            progressEl.style.background = `linear-gradient(90deg, 
+                hsl(${120 + this.colorShift * 50}, 70%, 50%), 
+                hsl(${180 + this.colorShift * 50}, 70%, 60%), 
+                hsl(${280 + this.colorShift * 50}, 70%, 50%))`;
+            progressEl.style.boxShadow = `0 0 ${10 + this.intensity * 20}px hsla(${160 + this.colorShift * 50}, 70%, 50%, ${this.intensity})`;
+        }
+        
+        // Update overlay aurora display
+        const auroraDisplay = document.getElementById('aurora-display');
+        if (auroraDisplay) {
+            auroraDisplay.style.opacity = 0.3 + this.intensity * 0.7;
+            
+            const waveEls = auroraDisplay.querySelectorAll('.aurora-wave');
+            waveEls.forEach((el, i) => {
+                const hue = 120 + i * 40 + Math.sin(this.colorShift + i) * 30;
+                el.style.background = `linear-gradient(180deg, 
+                    hsla(${hue}, 80%, 60%, ${0.1 + this.intensity * 0.4}) 0%,
+                    hsla(${hue + 40}, 80%, 50%, ${0.05 + this.intensity * 0.2}) 50%,
+                    transparent 100%)`;
+                el.style.transform = `translateY(${Math.sin(Date.now() * 0.001 + i) * 10}px)`;
+            });
+        }
+        
+        // Check completion
+        if (this.coherentTime >= this.requiredTime) {
+            this.complete();
+        }
+    }
+
+    spawnParticle() {
+        this.particles.push({
+            x: this.centerX + Utils.random(-this.width/3, this.width/3),
+            y: this.centerY + Utils.random(-this.height/4, this.height/4),
+            vy: Utils.random(0.5, 1.5),
+            size: Utils.random(3, 8),
+            hue: 120 + Utils.random(0, 160),
+            alpha: 0.8,
+            phase: Utils.random(0, Math.PI * 2)
+        });
+    }
+
+    render(ctx, camera) {
+        if (!this.active) return;
+        
+        const cx = this.centerX - camera.x;
+        const cy = this.centerY - camera.y;
+        
+        // Draw starfield
+        this.starfield.forEach(star => {
+            const sx = star.x - camera.x;
+            const sy = star.y - camera.y;
+            const twinkle = (Math.sin(star.twinkle) + 1) / 2;
+            
+            ctx.beginPath();
+            ctx.arc(sx, sy, star.size * twinkle, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + twinkle * 0.7})`;
+            ctx.fill();
+        });
+        
+        // Draw aurora waves
+        this.waves.forEach((wave, i) => {
+            const waveY = cy - this.height/2 + wave.y;
+            
+            ctx.beginPath();
+            ctx.moveTo(cx - this.width/2, waveY);
+            
+            // Create flowing wave shape
+            for (let x = 0; x <= this.width; x += 10) {
+                const wx = cx - this.width/2 + x;
+                const wy = waveY + Math.sin(wave.offset + x * 0.02) * wave.amplitude * this.intensity;
+                ctx.lineTo(wx, wy);
+            }
+            
+            // Complete the shape
+            ctx.lineTo(cx + this.width/2, cy + this.height);
+            ctx.lineTo(cx - this.width/2, cy + this.height);
+            ctx.closePath();
+            
+            // Create gradient fill
+            const gradient = ctx.createLinearGradient(cx, waveY, cx, cy + this.height/2);
+            const alpha = 0.1 + this.intensity * 0.3;
+            gradient.addColorStop(0, `hsla(${wave.hue}, 70%, 60%, ${alpha})`);
+            gradient.addColorStop(0.5, `hsla(${wave.hue + 30}, 70%, 50%, ${alpha * 0.5})`);
+            gradient.addColorStop(1, 'transparent');
+            
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        });
+        
+        // Draw celebration particles
+        this.particles.forEach(p => {
+            const px = p.x - camera.x;
+            const py = p.y - camera.y;
+            
+            // Glow
+            const gradient = ctx.createRadialGradient(px, py, 0, px, py, p.size * 2);
+            gradient.addColorStop(0, `hsla(${p.hue}, 80%, 70%, ${p.alpha})`);
+            gradient.addColorStop(1, 'transparent');
+            
+            ctx.beginPath();
+            ctx.arc(px, py, p.size * 2, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Core
+            ctx.beginPath();
+            ctx.arc(px, py, p.size * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${p.hue}, 80%, 90%, ${p.alpha})`;
+            ctx.fill();
+        });
+        
+        // Draw intensity glow at top
+        if (this.intensity > 0.3) {
+            const glowGradient = ctx.createLinearGradient(cx, cy - this.height/2 - 50, cx, cy);
+            glowGradient.addColorStop(0, `hsla(160, 70%, 60%, ${(this.intensity - 0.3) * 0.3})`);
+            glowGradient.addColorStop(1, 'transparent');
+            
+            ctx.fillStyle = glowGradient;
+            ctx.fillRect(cx - this.width/2, cy - this.height/2 - 50, this.width, this.height);
+        }
+    }
+
+    complete() {
+        this.phase = 'complete';
+        this.active = false;
+        
+        // Flash the aurora bright before completion
+        this.intensity = 1;
+        
+        setTimeout(() => {
+            this.manager.hideOverlay();
+            this.manager.completeChallenge(this.id);
+        }, 1500);
     }
 }

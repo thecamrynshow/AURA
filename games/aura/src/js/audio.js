@@ -417,6 +417,108 @@ class AudioSystem {
         osc.stop(now + 2.5);
     }
 
+    playAuroraAmbient() {
+        if (!this.initialized) return;
+        
+        const now = this.context.currentTime;
+        
+        // Create ethereal aurora soundscape with layered pads
+        const frequencies = [
+            { freq: 82.41, type: 'sine', vol: 0.04 },      // E2 - deep bass drone
+            { freq: 123.47, type: 'sine', vol: 0.03 },     // B2 - fifth
+            { freq: 164.81, type: 'triangle', vol: 0.02 }, // E3 - octave
+            { freq: 329.63, type: 'sine', vol: 0.015 },    // E4 - high shimmer
+            { freq: 493.88, type: 'sine', vol: 0.01 },     // B4 - ethereal high
+        ];
+        
+        this.auroraOscillators = [];
+        
+        frequencies.forEach((note, i) => {
+            const osc = this.context.createOscillator();
+            const gain = this.context.createGain();
+            const filter = this.context.createBiquadFilter();
+            
+            osc.type = note.type;
+            osc.frequency.value = note.freq;
+            
+            // Add slight detuning for ethereal effect
+            osc.detune.value = Math.sin(i) * 5;
+            
+            filter.type = 'lowpass';
+            filter.frequency.value = 1000 + i * 200;
+            filter.Q.value = 0.5;
+            
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(note.vol, now + 3);
+            
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.reverb);
+            
+            // Add slow LFO modulation to frequency for shimmer
+            const lfo = this.context.createOscillator();
+            const lfoGain = this.context.createGain();
+            lfo.frequency.value = 0.1 + i * 0.05;
+            lfoGain.gain.value = note.freq * 0.01;
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc.frequency);
+            lfo.start(now);
+            
+            osc.start(now);
+            
+            this.auroraOscillators.push({ osc, gain, lfo, filter });
+        });
+        
+        // Add sparkling high notes occasionally
+        this.auroraSparkleInterval = setInterval(() => {
+            if (Math.random() < 0.3) {
+                this.playAuroraSparkle();
+            }
+        }, 2000);
+        
+        return {
+            stop: () => {
+                const stopTime = this.context.currentTime;
+                this.auroraOscillators.forEach(({ osc, gain, lfo }) => {
+                    gain.gain.setTargetAtTime(0, stopTime, 1);
+                    setTimeout(() => {
+                        osc.stop();
+                        lfo.stop();
+                    }, 3000);
+                });
+                if (this.auroraSparkleInterval) {
+                    clearInterval(this.auroraSparkleInterval);
+                }
+            }
+        };
+    }
+
+    playAuroraSparkle() {
+        if (!this.initialized) return;
+        
+        const now = this.context.currentTime;
+        
+        // High, delicate sparkle notes
+        const sparkleFreqs = [1318.51, 1567.98, 1975.53, 2349.32]; // E6, G6, B6, D7
+        const freq = sparkleFreqs[Math.floor(Math.random() * sparkleFreqs.length)];
+        
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.02, now + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 2);
+        
+        osc.connect(gain);
+        gain.connect(this.reverb);
+        
+        osc.start(now);
+        osc.stop(now + 2.5);
+    }
+
     playSuccessChime() {
         if (!this.initialized) return;
         
