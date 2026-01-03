@@ -14,10 +14,10 @@ const PneuomaAccess = {
             'ages-18+': ['deep', 'echogarden', 'tidepool']
         },
         
-        // First 3 rituals
-        rituals: ['morning-calm', 'sleep-prep', 'quick-reset'],
+        // First 3 rituals (matching folder names)
+        rituals: ['morning-rise', 'sleep-descent', 'transition-reset'],
         
-        // First 3 multiplayer modes
+        // First 3 multiplayer modes (matching folder names)
         multiplayer: ['partners', 'family-circle', 'classroom-sync']
     },
     

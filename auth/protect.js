@@ -1,29 +1,59 @@
 // ============================================
 // PNEUOMA Page Protection
-// Checks access before allowing game to load
+// Checks access before allowing content to load
 // ============================================
 
 (function() {
-    // Free games - these are always accessible (3 per age group)
-    const FREE_GAMES = [
-        'cloudkeeper', 'pulse', 'songbird',  // Ages 4-8
-        'aura', 'tidepool', 'echogarden',    // Ages 8-13
-        'deep', 'solfege', 'chill',          // Ages 13-18 (teens)
-        'drift', 'reset', 'anchor'           // Ages 18+ (adults)
-    ];
+    // Free content - 3 per category
+    const FREE_CONTENT = {
+        games: [
+            'cloudkeeper', 'pulse', 'songbird',  // Ages 4-8
+            'aura', 'tidepool', 'echogarden',    // Ages 8-13
+            'deep', 'solfege', 'chill',          // Ages 13-18 (teens)
+            'drift', 'reset', 'anchor'           // Ages 18+ (adults)
+        ],
+        rituals: [
+            'morning-rise', 'sleep-descent', 'transition-reset'
+        ],
+        multiplayer: [
+            'partners', 'family-circle', 'classroom-sync'
+        ]
+    };
     
-    // Extract game ID from URL
-    function getGameIdFromUrl() {
+    // Extract content type and ID from URL
+    function getContentFromUrl() {
         const path = window.location.pathname;
-        const match = path.match(/\/games\/([^\/]+)/);
-        return match ? match[1].toLowerCase() : null;
+        
+        // Check games
+        const gameMatch = path.match(/\/games\/([^\/]+)/);
+        if (gameMatch) {
+            return { type: 'games', id: gameMatch[1].toLowerCase() };
+        }
+        
+        // Check rituals
+        const ritualMatch = path.match(/\/rituals\/([^\/]+)/);
+        if (ritualMatch) {
+            return { type: 'rituals', id: ritualMatch[1].toLowerCase() };
+        }
+        
+        // Check multiplayer
+        const multiplayerMatch = path.match(/\/multiplayer\/([^\/]+)/);
+        if (multiplayerMatch) {
+            return { type: 'multiplayer', id: multiplayerMatch[1].toLowerCase() };
+        }
+        
+        return null;
     }
     
-    // Check if current game is free
-    function isCurrentGameFree() {
-        const gameId = getGameIdFromUrl();
-        if (!gameId) return true; // Not a game page
-        return FREE_GAMES.includes(gameId);
+    // Check if current content is free
+    function isCurrentContentFree() {
+        const content = getContentFromUrl();
+        if (!content) return true; // Not a protected page
+        
+        const freeList = FREE_CONTENT[content.type];
+        if (!freeList) return true;
+        
+        return freeList.includes(content.id);
     }
     
     // Check if user has access
@@ -31,7 +61,7 @@
         // Check localStorage for user data
         const storedUser = localStorage.getItem('pneuoma_user');
         if (!storedUser) {
-            return isCurrentGameFree();
+            return isCurrentContentFree();
         }
         
         try {
@@ -48,17 +78,18 @@
                 return true;
             }
             
-            // Free users only get free games
-            return isCurrentGameFree();
+            // Free users only get free content
+            return isCurrentContentFree();
             
         } catch (e) {
-            return isCurrentGameFree();
+            return isCurrentContentFree();
         }
     }
     
     // Show upgrade modal
     function showUpgradeModal() {
-        const gameId = getGameIdFromUrl();
+        const content = getContentFromUrl();
+        const contentType = content?.type || 'content';
         
         // Create modal overlay
         const modal = document.createElement('div');
