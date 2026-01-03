@@ -1,20 +1,66 @@
 {
-    "name": "PNEUOMA — Nervous System Regulation Games & Apps",
+    "name": "PNEUOMA — Free Breathing Games for Kids & Adults",
     "short_name": "PNEUOMA",
-    "description": "The leading platform for nervous system wellness. Games and apps that train regulation through breath, voice, and presence.",
+    "description": "27 FREE biofeedback games that calm anxiety, improve focus & help regulate emotions. Breath-controlled games for ADHD, autism, anxiety. Ages 4+.",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#0a0a0f",
+    "background_color": "#0a0c10",
     "theme_color": "#06b6d4",
     "orientation": "any",
-    "categories": ["health", "education", "games"],
+    "lang": "en-US",
+    "dir": "ltr",
+    "categories": ["health", "education", "games", "medical", "kids"],
+    "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+    "prefer_related_applications": false,
     "icons": [
         {
             "src": "/favicon.svg",
             "sizes": "any",
-            "type": "image/svg+xml"
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/logo-1024.png",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/logo-1024.png",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "label": "PNEUOMA breathing games"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Play Games",
+            "short_name": "Games",
+            "description": "Browse 27 breathing games",
+            "url": "/platform/games/",
+            "icons": [{"src": "/favicon.svg", "sizes": "any"}]
+        },
+        {
+            "name": "Daily Rituals",
+            "short_name": "Rituals",
+            "description": "8 guided breathing rituals",
+            "url": "/platform/rituals/",
+            "icons": [{"src": "/favicon.svg", "sizes": "any"}]
+        },
+        {
+            "name": "For Schools",
+            "short_name": "Schools",
+            "description": "Classroom regulation tools",
+            "url": "/platform/schools/",
+            "icons": [{"src": "/favicon.svg", "sizes": "any"}]
         }
     ]
 }
-
-
