@@ -387,6 +387,15 @@ body {
     background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(100, 255, 218, 0.02));
 }
 
+.plan-card.family {
+    border-color: var(--accent-purple);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(168, 85, 247, 0.02));
+}
+
+.plan-card.family .plan-price {
+    color: var(--accent-purple);
+}
+
 .plan-badge {
     position: absolute;
     top: -10px;
