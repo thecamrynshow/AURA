@@ -44,7 +44,9 @@ const PneuomaAuth = {
     isPremium() {
         if (!this.user) return false;
         if (this.isMaster()) return true;
-        return this.user.subscription === 'premium' || this.user.subscription === 'school';
+        return this.user.subscription === 'premium' || 
+               this.user.subscription === 'family' || 
+               this.user.subscription === 'school';
     },
     
     // Get subscription tier
@@ -181,6 +183,32 @@ const PneuomaAuth = {
             'Content-Type': 'application/json',
             'Authorization': token ? `Bearer ${token}` : ''
         };
+    },
+    
+    // Refresh subscription status from server
+    async refreshSubscription() {
+        if (!this.user) return false;
+        
+        try {
+            const response = await fetch(`${this.serverUrl}/api/stripe/subscription`, {
+                headers: this.getHeaders()
+            });
+            
+            if (!response.ok) return false;
+            
+            const data = await response.json();
+            
+            if (data.subscription) {
+                this.user.subscription = data.subscription;
+                localStorage.setItem('pneuoma_user', JSON.stringify(this.user));
+                return true;
+            }
+            
+            return false;
+        } catch (error) {
+            console.error('Could not refresh subscription:', error);
+            return false;
+        }
     }
 };
 

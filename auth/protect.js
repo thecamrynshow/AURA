@@ -224,8 +224,8 @@
             
             <div class="gate-content">
                 <div class="gate-icon">🔒</div>
-                <h2>Premium Game</h2>
-                <p>This game is part of the PNEUOMA Premium collection. Upgrade to unlock all 25+ games.</p>
+                <h2>Premium ${contentType === 'games' ? 'Game' : contentType === 'rituals' ? 'Ritual' : 'Mode'}</h2>
+                <p>This ${contentType === 'games' ? 'game' : contentType === 'rituals' ? 'ritual' : 'multiplayer mode'} is part of the PNEUOMA Premium collection.</p>
                 
                 <div class="gate-features">
                     <ul>
@@ -241,7 +241,7 @@
                 
                 <div class="gate-buttons">
                     <a href="/auth/subscribe.html" class="btn-gate-primary">Start Free Trial</a>
-                    <a href="/platform/games/" class="btn-gate-secondary">← Browse Free Games</a>
+                    <a href="/platform/${contentType || 'games'}/" class="btn-gate-secondary">← Browse Free ${contentType === 'games' ? 'Games' : contentType === 'rituals' ? 'Rituals' : 'Modes'}</a>
                 </div>
             </div>
         `;
