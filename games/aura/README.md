@@ -1,184 +1,262 @@
-# Project AURA — Regulation Game Prototype v1
+# Project AURA — Flagship Regulation Game
 
-A game designed to actively regulate the nervous system through breath-based gameplay mechanics.
+A breath-controlled exploration game that actively regulates the nervous system through gameplay mechanics.
 
-![Project AURA](https://img.shields.io/badge/Platform-Mobile%20Web-blue)
-![Session Length](https://img.shields.io/badge/Session-5--12%20min-green)
-![Ages](https://img.shields.io/badge/Ages-8%2B-orange)
+[![Play Now](https://img.shields.io/badge/Play-pneuoma.com%2Fgames%2Faura-06b6d4)](https://pneuoma.com/games/aura/)
+[![Platform](https://img.shields.io/badge/Platform-Web%20(Mobile%20%26%20Desktop)-blue)]()
+[![Session](https://img.shields.io/badge/Session-5--12%20min-green)]()
+[![Ages](https://img.shields.io/badge/Ages-8%2B-orange)]()
 
-## 🧩 Prototype Goal
+---
 
-**Primary Goal:** Demonstrate that gameplay can actively regulate the nervous system.
+## 🧩 Core Concept
 
-**Success Metrics:**
-- Player exits calmer than when they entered
-- Player reports increased focus
-- Player willingly returns without craving/compulsion
-- Parent/teacher sees behavioral shift within days
+**Your breath controls everything.**
+
+Project AURA is a floating-world exploration game where the player's breathing patterns directly affect:
+- Movement speed and fluidity
+- World visibility and brightness
+- Music harmony and tempo
+- Challenge accessibility
+
+**Primary Goal:** Player exits calmer than when they entered.
+
+---
 
 ## 🎮 How to Play
 
-### Running the Game
-
-1. **Local Server (Recommended)**
-   ```bash
-   # Using Python
-   python3 -m http.server 8000
-   
-   # Using Node.js
-   npx serve
-   
-   # Using PHP
-   php -S localhost:8000
-   ```
-
-2. Open `http://localhost:8000` in your browser (Chrome/Safari recommended)
-
-3. **For Mobile:** Open the same URL on your phone while on the same network
-
 ### Controls
 
-- **Joystick (Mobile):** Touch and drag the on-screen joystick to move
-- **Keyboard (Desktop):** WASD or Arrow keys to move
-- **Breath:** Breathe into your device's microphone - the game responds to your breath patterns
+| Input | Action |
+|-------|--------|
+| **Joystick (Mobile)** | Touch and drag to move |
+| **WASD / Arrows (Desktop)** | Move around the world |
+| **Microphone** | Breath detection (auto-enabled) |
+
+### Breath Mechanics
+
+| Breath Pattern | World Response |
+|----------------|----------------|
+| Fast / chaotic | Fog increases, movement slows, sky dims |
+| Slow & steady | Clarity increases, movement smooth, sky brightens |
+| Deep exhale | Bridges form, hidden paths reveal |
+| Breath hold | Special interactions unlock |
+
+---
 
 ## 🌿 The World: Field of Still Water
 
 A vast glowing landscape featuring:
-- Floating islands
-- Gentle wind
-- Glowing pathways
-- Soft sky gradients
-- Distant mountains
-- Ambient light creatures
+- ✨ Floating islands with gentle animations
+- 🌬️ Dynamic wind particles
+- 🌟 Glowing star field (brightness tied to breath)
+- 🌈 Soft sky gradients that shift with regulation
+- 🎵 Ambient soundscape that responds to coherence
 
 **No enemies. No timers. No score.**
 
-## 🫁 Core Mechanic: Breath = Power
+---
 
-The microphone detects your breath patterns:
-
-| Breath Pattern | World Response |
-|----------------|----------------|
-| Fast / chaotic | Fog increases, movement slows |
-| Slow & steady | Clarity increases, movement smooth |
-| Deep exhale | Bridges form, paths open |
-
-## 🧭 Movement System
-
-Movement is tied to your breath state:
-
-**When breath is calm:**
-- Glide farther
-- Jump higher
-- World brightens
-- Music resolves into harmony
-
-**When breath is dysregulated:**
-- Gravity increases
-- Sky dims
-- Sounds distort slightly
-
-## 🔮 Challenges
+## 🔮 Challenges (4 Total)
 
 ### Challenge 1: The Wind Crossing
-A floating bridge appears with strong wind pushing against you. Cross by:
-- Slowing your breathing
-- Matching the pulse pattern
-- Remaining steady
+A floating bridge with strong wind pushing against you.
+- **Objective:** Cross to the other side
+- **Mechanic:** Slow, steady breathing counters the wind
+- **Reward:** Path to new area opens
 
 ### Challenge 2: The Crystal Grove
-Crystals hum out of sync. Restore harmony by:
-- Holding breath steady
-- Tapping crystals in rhythm with your pulse
-- Listening deeply
+Crystals humming out of sync, creating dissonance.
+- **Objective:** Restore harmony to the grove
+- **Mechanic:** Hold breath steady, tap crystals in rhythm
+- **Reward:** Crystals align, music resolves
 
 ### Challenge 3: The Light Animal
-A glowing creature appears frightened. Connect with it by:
-- Sitting still
-- Breathing slowly
-- Emitting calming pulses
+A glowing creature appears, startled and cautious.
+- **Objective:** Calm the creature, form a connection
+- **Mechanic:** Sit still, breathe slowly, emit calming pulses
+- **Reward:** Creature follows you, guides to secrets
+
+### Challenge 4: The Aurora Veil ⭐ NEW
+A shimmering aurora barrier blocking a hidden realm.
+- **Objective:** Pass through the veil
+- **Mechanic:** Achieve sustained breath coherence
+- **Reward:** Access to the most peaceful zone
+
+---
 
 ## 🎵 Audio System
 
-Music is dynamic and responsive:
-- Tempo slows as breath slows
-- Harmonics increase with coherence
-- Bass stabilizes with long exhales
+The dynamic audio responds to your state:
 
-This trains the vagus nerve directly.
+| Player State | Audio Response |
+|--------------|----------------|
+| Calm breath | Harmony increases, tempo slows |
+| Coherent pattern | Bass deepens, chords resolve |
+| Long exhale | Melodic phrases complete |
+| Dysregulated | Subtle dissonance, distant thunder |
 
-## 🌈 End of Session Ritual
+This trains the vagus nerve through auditory biofeedback.
 
+---
+
+## 📱 Mobile Optimization
+
+Project AURA is optimized for mobile devices:
+
+- **3x sensitivity boost** on iOS/Android microphones
+- **RMS-based volume detection** for reliable breath capture
+- **Hysteresis** to prevent flickering between states
+- **Touch-friendly joystick** with responsive feel
+- **Auto-rotation** support
+
+Works great on:
+- iPhones (iOS 14+)
+- iPads
+- Android phones/tablets
+- Desktop browsers (Chrome, Safari, Firefox, Edge)
+
+---
+
+## 🌈 Session Flow
+
+### Entry
+1. Ambient music begins softly
+2. World fades in from warm glow
+3. Brief instruction overlay
+4. Microphone permission requested
+
+### Exploration
+- Free roaming through the world
+- Discover challenges organically
+- No required order or completion
+
+### Closure
 Every session ends with:
-- Soft light
-- Final deep breath cycle
-- Screen fades to warm glow
-- Message: "Your nervous system is balanced."
+1. Soft light envelops the screen
+2. Final guided breath cycle (3 breaths)
+3. Fade to warm amber glow
+4. Message: *"Your nervous system is balanced."*
 
 This closure prevents dopamine addiction loops.
+
+---
 
 ## 🧠 PNEU Integration
 
 After each session, the game tracks:
-- Breath stability score
-- Regulation curve
-- Recovery speed
+- **Breath stability score** (0-100)
+- **Regulation curve** (how quickly you calmed)
+- **Coherence peaks** (longest sustained calm)
+- **Recovery speed** (time to re-regulate after challenge)
 
 Over time, PNEU learns:
-- What environments regulate each player
+- What environments regulate this player
 - How long their nervous system takes to settle
 - Which stimuli dysregulate them
 
+---
+
 ## 🔧 Technical Details
 
-### Technologies Used
-- HTML5 Canvas for rendering
-- Web Audio API for dynamic audio
-- MediaDevices API for microphone input
-- LocalStorage for PNEU profile persistence
+### Technologies
+- **HTML5 Canvas** — 60fps rendering with DPR scaling
+- **Web Audio API** — Dynamic generative music
+- **MediaDevices API** — Microphone breath detection
+- **LocalStorage** — PNEU profile persistence
 
 ### Browser Support
-- Chrome (Desktop & Mobile) ✅
-- Safari (Desktop & iOS) ✅
-- Firefox ✅
-- Edge ✅
+| Browser | Support |
+|---------|---------|
+| Chrome (Desktop & Mobile) | ✅ Full |
+| Safari (macOS & iOS) | ✅ Full |
+| Firefox | ✅ Full |
+| Edge | ✅ Full |
 
-### Permissions Required
-- Microphone access (for breath detection)
+### Permissions
+- 🎤 Microphone access (required for breath detection)
 
-## 📁 Project Structure
+---
+
+## 📁 File Structure
 
 ```
-project-aura/
-├── index.html          # Main entry point
-├── README.md           # This file
+games/aura/
+├── index.html           # Main entry point
+├── README.md            # This file
 └── src/
     ├── css/
-    │   └── styles.css  # All styling
+    │   └── styles.css   # Styling + canvas setup
     └── js/
-        ├── utils.js    # Utility functions
-        ├── audio.js    # Dynamic audio system
-        ├── breath.js   # Breath detection
-        ├── world.js    # World rendering
-        ├── player.js   # Player controller
-        ├── challenges.js # Challenge system
-        ├── pneu.js     # PNEU integration
-        └── main.js     # Game controller
+        ├── utils.js     # Utility functions
+        ├── audio.js     # Dynamic audio engine
+        ├── breath.js    # Breath detection (mobile optimized)
+        ├── world.js     # World rendering + zones
+        ├── player.js    # Player controller + joystick
+        ├── challenges.js # Challenge system (4 challenges)
+        ├── pneu.js      # PNEU profile integration
+        └── main.js      # Game controller
 ```
 
-## 🚀 Future Development
+---
 
-- [ ] iOS native app
-- [ ] Biometric sensor integration (heart rate)
-- [ ] Multiplayer calm sessions
-- [ ] Additional worlds and challenges
-- [ ] Parent/teacher dashboard
-- [ ] Cloud PNEU sync
+## 🚀 Local Development
+
+```bash
+# From project root
+cd games/aura
+
+# Start local server
+python3 -m http.server 8000
+# or
+npx serve
+
+# Open http://localhost:8000
+```
+
+### Mobile Testing
+1. Find your computer's local IP (e.g., `192.168.1.100`)
+2. On your phone, visit `http://192.168.1.100:8000`
+3. Ensure both devices are on the same WiFi network
+
+---
+
+## 🎯 Design Principles
+
+1. **Regulate, don't stimulate** — No mechanics that increase arousal
+2. **Reward calm** — Better gameplay when regulated
+3. **No punishment** — Dysregulation just slows, never damages
+4. **Closure matters** — Every session ends intentionally
+5. **The player's body is the controller** — Breath > buttons
+
+---
+
+## 📊 Success Metrics
+
+A successful session means:
+- ✅ Player exits calmer than when they entered
+- ✅ Player reports increased focus post-play
+- ✅ Player willingly returns without craving/compulsion
+- ✅ Parent/teacher sees behavioral shift within days
+
+---
+
+## 🔮 Future Development
+
+- [ ] Additional challenge zones
+- [ ] Biometric sensor integration (heart rate via smartwatch)
+- [ ] Multiplayer calm sessions (2-4 players)
+- [ ] Procedurally generated islands
+- [ ] Weather system tied to collective breath
+- [ ] AR mode (project world onto real space)
+
+---
 
 ## 📄 License
 
-MIT License - Feel free to use and modify for therapeutic and educational purposes.
+Part of the PNEUOMA platform. Proprietary.
+
+For therapeutic or educational licensing: camrynjackson@pneuoma.com
 
 ---
 
