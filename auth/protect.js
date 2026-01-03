@@ -4,11 +4,12 @@
 // ============================================
 
 (function() {
-    // Free games - these are always accessible
+    // Free games - these are always accessible (3 per age group)
     const FREE_GAMES = [
         'cloudkeeper', 'pulse', 'songbird',  // Ages 4-8
         'aura', 'tidepool', 'echogarden',    // Ages 8-13
-        'deep', 'solfege'                     // Teens/Adults overlap
+        'deep', 'solfege', 'chill',          // Ages 13-18 (teens)
+        'drift', 'reset', 'anchor'           // Ages 18+ (adults)
     ];
     
     // Extract game ID from URL

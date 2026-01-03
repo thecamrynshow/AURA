@@ -16,15 +16,15 @@
         'tidepool': true,
         'echogarden': true,
         
-        // Ages 13-18 (teens) - shares some with 8-13
+        // Ages 13-18 (teens)
         'deep': true,
         'solfege': true,
-        // 'aura' already included
+        'chill': true,
         
-        // Ages 18+ (adults) - shares some
-        // 'deep' already included
-        // 'echogarden' already included
-        // 'tidepool' already included
+        // Ages 18+ (adults)
+        'drift': true,
+        'reset': true,
+        'anchor': true
     };
     
     // Game name to ID mapping (from card titles)
