@@ -1944,3 +1944,140 @@
 .rise-ray.ray2 { left: 0; transform: translateX(-50%); }
 .rise-ray.ray3 { left: 20px; transform: rotate(20deg); }
 
+
+/* ============================================
+   Locked Games (Premium Content)
+   ============================================ */
+
+.game-card-full.locked {
+    position: relative;
+}
+
+.game-card-full.locked .game-visual-full {
+    filter: grayscale(50%) brightness(0.7);
+}
+
+.game-card-full.locked::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+}
+
+.lock-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: inherit;
+    z-index: 5;
+}
+
+.lock-overlay svg {
+    color: rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.status-badge.premium-badge {
+    background: linear-gradient(135deg, #a855f7, #6366f1) !important;
+    color: white !important;
+}
+
+.btn-locked {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(168, 85, 247, 0.2);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: var(--radius-md);
+    color: #a855f7;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-locked:hover {
+    background: rgba(168, 85, 247, 0.3);
+    border-color: #a855f7;
+    transform: translateY(-2px);
+}
+
+.btn-locked svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Upgrade Banner */
+.upgrade-banner {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(168, 85, 247, 0.1));
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+}
+
+.upgrade-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.upgrade-banner-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.upgrade-banner-text {
+    flex: 1;
+    min-width: 200px;
+}
+
+.upgrade-banner-text h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.upgrade-banner-text p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.upgrade-banner-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: var(--bg-primary);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.upgrade-banner-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+}
+
+@media (max-width: 768px) {
+    .upgrade-banner-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .upgrade-banner-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
