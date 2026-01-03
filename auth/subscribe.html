@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Plan | PNEUOMA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="subscribe.css">
+</head>
+<body>
+    <div class="subscribe-container">
+        <a href="/" class="auth-logo">
+            <span class="logo-greek">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </a>
+        
+        <h1>Choose Your Regulation Journey</h1>
+        <p class="subscribe-subtitle">Start with free access or unlock everything with Premium</p>
+        
+        <div class="plans-grid">
+            <!-- Free Plan -->
+            <div class="plan-card" data-plan="free">
+                <h2>Free</h2>
+                <p class="plan-price">$0<span>/forever</span></p>
+                <p class="plan-desc">Perfect for trying PNEUOMA</p>
+                
+                <ul class="plan-features">
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>3 games per age group</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>3 daily rituals</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>3 multiplayer modes</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Basic progress tracking</span>
+                    </li>
+                    <li class="disabled">
+                        <svg class="x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        <span>Family profiles</span>
+                    </li>
+                    <li class="disabled">
+                        <svg class="x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        <span>Advanced analytics</span>
+                    </li>
+                </ul>
+                
+                <a href="/platform/" class="btn-plan btn-free">Continue Free</a>
+            </div>
+            
+            <!-- Premium Plan -->
+            <div class="plan-card featured" data-plan="premium">
+                <span class="plan-badge">Most Popular</span>
+                <h2>Premium</h2>
+                <p class="plan-price">$9.99<span>/month</span></p>
+                <p class="plan-desc">Full access for individuals & families</p>
+                
+                <ul class="plan-features">
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span><strong>All 25+ games</strong></span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span><strong>All 8 rituals</strong></span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span><strong>All 6 multiplayer modes</strong></span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Family profiles (up to 5)</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Advanced analytics & insights</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Priority support</span>
+                    </li>
+                </ul>
+                
+                <button class="btn-plan btn-premium" id="subscribe-premium">
+                    Start 7-Day Free Trial
+                </button>
+                <p class="trial-note">Cancel anytime. No charge until trial ends.</p>
+            </div>
+            
+            <!-- Family Plan -->
+            <div class="plan-card" data-plan="family">
+                <h2>Family</h2>
+                <p class="plan-price">$14.99<span>/month</span></p>
+                <p class="plan-desc">For families with multiple children</p>
+                
+                <ul class="plan-features">
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Everything in Premium</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span><strong>Up to 10 family profiles</strong></span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Family dashboard</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Parent controls</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Shared progress view</span>
+                    </li>
+                    <li>
+                        <svg class="check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                        <span>Family challenges</span>
+                    </li>
+                </ul>
+                
+                <button class="btn-plan btn-family" id="subscribe-family">
+                    Start 7-Day Free Trial
+                </button>
+                <p class="trial-note">Cancel anytime. No charge until trial ends.</p>
+            </div>
+        </div>
+        
+        <div class="enterprise-cta">
+            <h3>For Schools & Healthcare</h3>
+            <p>Custom pricing for organizations with classroom sync, bulk licenses, and admin dashboards.</p>
+            <a href="/platform/schools/" class="btn-enterprise">Contact for Pricing</a>
+        </div>
+        
+        <p class="subscribe-footer">
+            Questions? <a href="mailto:camrynjackson@pneuoma.com">Contact us</a>
+        </p>
+    </div>
+    
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Stripe configuration
+        // Replace with your actual Stripe publishable key
+        const STRIPE_KEY = 'pk_test_your_publishable_key_here';
+        
+        // Price IDs from Stripe dashboard
+        const PRICE_IDS = {
+            premium: 'price_premium_monthly',
+            family: 'price_family_monthly'
+        };
+        
+        // Initialize Stripe
+        let stripe;
+        if (STRIPE_KEY && !STRIPE_KEY.includes('your_publishable_key')) {
+            stripe = Stripe(STRIPE_KEY);
+        }
+        
+        // Handle subscription
+        async function subscribe(plan) {
+            // Check if logged in
+            const user = PneuomaAuth.init();
+            if (!user) {
+                // Redirect to signup with plan parameter
+                window.location.href = `/auth/signup.html?plan=${plan}`;
+                return;
+            }
+            
+            if (!stripe) {
+                // Stripe not configured - show message
+                alert('Payment system is being configured. Please check back soon or contact camrynjackson@pneuoma.com for early access.');
+                return;
+            }
+            
+            try {
+                // Create checkout session on backend
+                const response = await fetch(`${PneuomaAuth.serverUrl}/api/stripe/create-checkout`, {
+                    method: 'POST',
+                    headers: PneuomaAuth.getHeaders(),
+                    body: JSON.stringify({ 
+                        priceId: PRICE_IDS[plan],
+                        plan 
+                    })
+                });
+                
+                const { sessionId } = await response.json();
+                
+                // Redirect to Stripe Checkout
+                const { error } = await stripe.redirectToCheckout({ sessionId });
+                
+                if (error) {
+                    console.error('Stripe error:', error);
+                    alert('Could not start checkout. Please try again.');
+                }
+            } catch (error) {
+                console.error('Subscription error:', error);
+                alert('Could not process subscription. Please try again.');
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('subscribe-premium').addEventListener('click', () => subscribe('premium'));
+        document.getElementById('subscribe-family').addEventListener('click', () => subscribe('family'));
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Premium | PNEUOMA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="auth.css">
+    
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .success-content {
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #06b6d4, #64ffda);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease-out;
+        }
+        
+        .success-icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: #0a0c10;
+            stroke-width: 3;
+            fill: none;
+        }
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .success-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #06b6d4, #64ffda);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .success-content p {
+            color: #8b949e;
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .success-features {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .success-features h3 {
+            font-size: 0.875rem;
+            color: #64ffda;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .success-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .success-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: #e6edf3;
+        }
+        
+        .success-features li::before {
+            content: '✓';
+            color: #64ffda;
+            font-weight: bold;
+        }
+        
+        .btn-start {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #06b6d4, #64ffda);
+            color: #0a0c10;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);
+        }
+        
+        .btn-start svg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-content">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            
+            <h1>Welcome to Premium!</h1>
+            <p>Your 7-day free trial has started. You now have full access to everything PNEUOMA offers.</p>
+            
+            <div class="success-features">
+                <h3>What's now unlocked</h3>
+                <ul>
+                    <li>All 25+ regulation games</li>
+                    <li>All 8 daily rituals</li>
+                    <li>All 6 multiplayer modes</li>
+                    <li>Family profiles (up to 5)</li>
+                    <li>Advanced analytics & insights</li>
+                    <li>Priority support</li>
+                </ul>
+            </div>
+            
+            <a href="/platform/" class="btn-start">
+                <span>Start Your Journey</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+    <script>
+        // Update user subscription status
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = PneuomaAuth.init();
+            if (user) {
+                // Refresh subscription status from server
+                try {
+                    const response = await fetch(`${PneuomaAuth.serverUrl}/api/stripe/subscription`, {
+                        headers: PneuomaAuth.getHeaders()
+                    });
+                    const data = await response.json();
+                    
+                    if (data.isPremium) {
+                        user.subscription = data.subscription;
+                        localStorage.setItem('pneuoma_user', JSON.stringify(user));
+                    }
+                } catch (error) {
+                    console.error('Could not verify subscription:', error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

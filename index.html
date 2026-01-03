@@ -150,8 +150,9 @@
             <a href="platform/multiplayer/">Multiplayer</a>
             <a href="platform/schools/">For Schools</a>
             <div class="nav-buttons">
-                <a href="#partner" class="nav-cta">Partner</a>
-                <a href="platform/games/" class="nav-cta nav-games">Games</a>
+                <a href="auth/login.html" class="nav-cta nav-login" id="nav-login">Sign In</a>
+                <a href="auth/signup.html" class="nav-cta nav-signup" id="nav-signup">Get Started</a>
+                <a href="platform/" class="nav-cta nav-dashboard hidden" id="nav-dashboard">Dashboard</a>
             </div>
         </div>
     </nav>
@@ -952,6 +953,26 @@
     </footer>
 
     <script src="audio.js"></script>
+    <script src="auth/auth.js"></script>
     <script src="main.js"></script>
+    <script>
+        // Update nav based on auth state
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = PneuomaAuth.init();
+            const loginBtn = document.getElementById('nav-login');
+            const signupBtn = document.getElementById('nav-signup');
+            const dashboardBtn = document.getElementById('nav-dashboard');
+            
+            if (user) {
+                // User is logged in
+                if (loginBtn) loginBtn.classList.add('hidden');
+                if (signupBtn) signupBtn.classList.add('hidden');
+                if (dashboardBtn) {
+                    dashboardBtn.classList.remove('hidden');
+                    dashboardBtn.textContent = user.firstName || 'Dashboard';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

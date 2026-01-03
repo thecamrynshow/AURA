@@ -211,6 +211,36 @@ body {
     background: rgba(100, 255, 218, 0.25);
 }
 
+.nav-login {
+    background: transparent;
+    border-color: transparent;
+}
+
+.nav-login:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-signup {
+    background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+    color: var(--bg-primary) !important;
+    border: none;
+}
+
+.nav-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+}
+
+.nav-dashboard {
+    background: rgba(100, 255, 218, 0.1);
+    border-color: var(--accent-secondary);
+    color: var(--accent-secondary) !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* ============================================
    Hero Section
    ============================================ */
