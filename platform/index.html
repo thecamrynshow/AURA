@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Your Dashboard | PNEUOMA — Start Playing</title>
+    <meta name="description" content="Access your PNEUOMA games, rituals, and multiplayer modes. Start regulating your nervous system through play.">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0c10;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --accent-cyan: #06b6d4;
+            --accent-violet: #8b5cf6;
+            --accent-rose: #f472b6;
+            --accent-amber: #fbbf24;
+            --accent-emerald: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+            top: -100px;
+            right: -100px;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-rose));
+            bottom: 10%;
+            left: -50px;
+            animation-delay: -7s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(10, 12, 16, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .logo-icon {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+        }
+        
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-email {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .user-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge-free {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+        
+        .badge-premium {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+            color: white;
+        }
+        
+        .badge-master {
+            background: linear-gradient(135deg, var(--accent-amber), var(--accent-rose));
+            color: white;
+        }
+        
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+        
+        /* Main Content */
+        .main {
+            position: relative;
+            z-index: 1;
+            padding: 120px 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Welcome Section */
+        .welcome {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .welcome-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+        
+        .welcome-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Upgrade Banner */
+        .upgrade-banner {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .upgrade-text h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .upgrade-text p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .upgrade-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+        }
+        
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .content-card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-games::before {
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+        }
+        
+        .card-rituals::before {
+            background: linear-gradient(90deg, var(--accent-violet), var(--accent-rose));
+        }
+        
+        .card-multiplayer::before {
+            background: linear-gradient(90deg, var(--accent-emerald), var(--accent-cyan));
+        }
+        
+        .card-apps::before {
+            background: linear-gradient(90deg, var(--accent-amber), var(--accent-rose));
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .card-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .stat-free {
+            color: var(--accent-emerald);
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .quick-actions h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .quick-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .quick-link {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem;
+            }
+            
+            .nav-user {
+                gap: 0.5rem;
+            }
+            
+            .user-email {
+                display: none;
+            }
+            
+            .main {
+                padding: 100px 1rem 3rem;
+            }
+            
+            .upgrade-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* Hide elements based on auth state */
+        .upgrade-banner.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="/" class="nav-logo">
+            <span class="logo-icon">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </a>
+        <div class="nav-user">
+            <span class="user-email" id="userEmail">Loading...</span>
+            <span class="user-badge badge-free" id="userBadge">FREE</span>
+            <button class="logout-btn" id="logoutBtn">Log Out</button>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Welcome -->
+        <section class="welcome">
+            <h1 class="welcome-title">Welcome back</h1>
+            <p class="welcome-subtitle">Choose a category below to start regulating your nervous system through play.</p>
+        </section>
+        
+        <!-- Upgrade Banner (shown to free users) -->
+        <div class="upgrade-banner" id="upgradeBanner">
+            <div class="upgrade-text">
+                <h3>✨ Unlock Everything</h3>
+                <p>Get access to all 27 games, 8 rituals, and 6 multiplayer modes with Premium.</p>
+            </div>
+            <a href="/auth/subscribe.html" class="upgrade-btn">Upgrade Now</a>
+        </div>
+        
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <a href="/platform/games/" class="content-card card-games">
+                <div class="card-icon">🎮</div>
+                <h2 class="card-title">Games</h2>
+                <p class="card-description">Breath-controlled, voice-activated games that train your nervous system through play.</p>
+                <div class="card-stats">
+                    <span class="stat">27 Games</span>
+                    <span class="stat stat-free">12 Free</span>
+                </div>
+            </a>
+            
+            <a href="/platform/rituals/" class="content-card card-rituals">
+                <div class="card-icon">🌙</div>
+                <h2 class="card-title">Rituals</h2>
+                <p class="card-description">Guided breathing experiences for morning, sleep, focus, and crisis recovery.</p>
+                <div class="card-stats">
+                    <span class="stat">8 Rituals</span>
+                    <span class="stat stat-free">3 Free</span>
+                </div>
+            </a>
+            
+            <a href="/platform/multiplayer/" class="content-card card-multiplayer">
+                <div class="card-icon">👥</div>
+                <h2 class="card-title">Multiplayer</h2>
+                <p class="card-description">Co-regulate with others. Family circles, therapy groups, classroom sync, and remote sessions.</p>
+                <div class="card-stats">
+                    <span class="stat">6 Modes</span>
+                    <span class="stat stat-free">3 Free</span>
+                </div>
+            </a>
+            
+            <a href="/platform/apps/" class="content-card card-apps">
+                <div class="card-icon">📱</div>
+                <h2 class="card-title">Apps</h2>
+                <p class="card-description">Daily regulation practices and the PNEU companion app for ongoing wellness.</p>
+                <div class="card-stats">
+                    <span class="stat">PNEU Live</span>
+                    <span class="stat">More Coming</span>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <h3>Quick Links</h3>
+            <div class="quick-links">
+                <a href="/" class="quick-link">🏠 Home</a>
+                <a href="/platform/schools/" class="quick-link">🏫 For Schools</a>
+                <a href="/schedule/" class="quick-link">📅 Schedule Demo</a>
+            </div>
+        </section>
+    </main>
+    
+    <script src="/auth/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const auth = new PneuomaAuth();
+            const userEmail = document.getElementById('userEmail');
+            const userBadge = document.getElementById('userBadge');
+            const upgradeBanner = document.getElementById('upgradeBanner');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            // Check if logged in
+            if (!auth.isLoggedIn()) {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+            
+            // Display user info
+            const user = auth.user;
+            userEmail.textContent = user.email;
+            
+            // Set badge based on subscription
+            if (auth.isMaster()) {
+                userBadge.textContent = 'MASTER';
+                userBadge.className = 'user-badge badge-master';
+                upgradeBanner.classList.add('hidden');
+            } else if (auth.isPremium()) {
+                const sub = user.subscription;
+                userBadge.textContent = sub.toUpperCase();
+                userBadge.className = 'user-badge badge-premium';
+                upgradeBanner.classList.add('hidden');
+            } else {
+                userBadge.textContent = 'FREE';
+                userBadge.className = 'user-badge badge-free';
+            }
+            
+            // Welcome message
+            const welcomeTitle = document.querySelector('.welcome-title');
+            const name = user.email.split('@')[0];
+            welcomeTitle.textContent = `Welcome back, ${name}`;
+            
+            // Logout
+            logoutBtn.addEventListener('click', () => {
+                auth.logout();
+            });
+        });
+    </script>
+</body>
+</html>
+
