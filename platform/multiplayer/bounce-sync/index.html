@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bounce Sync — Classroom Breathing Together | PNEUOMA</title>
+    <meta name="description" content="A calming classroom activity where everyone breathes together to bounce a shared ball. Haptic feedback and synchronized rhythms create collective calm.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="game-canvas"></canvas>
+    
+    <!-- Role Selection Screen -->
+    <div id="role-screen" class="screen active">
+        <div class="role-content">
+            <div class="logo-area">
+                <div class="logo-ball"></div>
+                <h1>Bounce Sync</h1>
+                <p class="tagline">Breathe together. Bounce together.</p>
+            </div>
+            
+            <div class="role-buttons">
+                <button id="host-btn" class="role-btn host-btn">
+                    <span class="role-icon">👨‍🏫</span>
+                    <span class="role-title">I'm Leading</span>
+                    <span class="role-desc">Start a session for your class</span>
+                </button>
+                
+                <button id="join-btn" class="role-btn join-btn">
+                    <span class="role-icon">🙋</span>
+                    <span class="role-title">I'm Joining</span>
+                    <span class="role-desc">Enter a code to join</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Join Screen -->
+    <div id="join-screen" class="screen">
+        <div class="join-content">
+            <button class="back-btn" id="join-back-btn">← Back</button>
+            <h2>Join Session</h2>
+            <p>Enter the code from your teacher</p>
+            
+            <div class="code-input-area">
+                <input type="text" id="join-code" placeholder="CALM-1234" maxlength="9" autocomplete="off">
+                <input type="text" id="join-name" placeholder="Your name" maxlength="20" autocomplete="off">
+            </div>
+            
+            <button id="join-submit" class="submit-btn">
+                Join Session
+            </button>
+            
+            <p id="join-error" class="error-msg hidden"></p>
+        </div>
+    </div>
+    
+    <!-- Host Lobby Screen -->
+    <div id="host-lobby" class="screen">
+        <div class="lobby-content">
+            <h2>Your Session</h2>
+            
+            <div class="session-code-display">
+                <span class="code-label">Session Code</span>
+                <span id="session-code" class="session-code">----</span>
+            </div>
+            
+            <div class="participants-area">
+                <h3>Participants (<span id="participant-count">0</span>)</h3>
+                <div id="participants-list" class="participants-list">
+                    <p class="waiting-msg">Waiting for students to join...</p>
+                </div>
+            </div>
+            
+            <div class="host-controls">
+                <button id="start-session-btn" class="start-btn" disabled>
+                    Start Bounce Sync
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-left">
+                <div id="session-info" class="session-info">
+                    <span id="live-code" class="live-code">CALM-1234</span>
+                    <span id="live-count" class="live-count">0 synced</span>
+                </div>
+            </div>
+            
+            <div class="hud-center">
+                <div class="sync-meter">
+                    <div class="sync-label">GROUP SYNC</div>
+                    <div class="sync-bar">
+                        <div id="sync-fill" class="sync-fill"></div>
+                    </div>
+                    <div id="sync-percent" class="sync-percent">0%</div>
+                </div>
+            </div>
+            
+            <div class="hud-right">
+                <div id="bounce-count" class="bounce-count">
+                    <span class="count-num">0</span>
+                    <span class="count-label">bounces</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Breath prompt -->
+        <div id="breath-guide" class="breath-guide">
+            <div class="guide-text">Breathe out to bounce!</div>
+            <div class="guide-icon">🌬️</div>
+        </div>
+        
+        <!-- Rhythm indicator (for host) -->
+        <div id="rhythm-indicator" class="rhythm-indicator hidden">
+            <div class="rhythm-pulse"></div>
+            <div class="rhythm-text">Set the rhythm</div>
+        </div>
+        
+        <!-- Message display -->
+        <div id="message-display" class="message-display hidden">
+            <span id="message-text"></span>
+        </div>
+        
+        <!-- Host controls during game -->
+        <div id="host-game-controls" class="host-game-controls hidden">
+            <button id="end-session-btn" class="end-btn">End Session</button>
+        </div>
+    </div>
+    
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-content">
+            <div class="celebration-emoji">🎉</div>
+            <h1>Great Sync!</h1>
+            <p class="end-subtitle">You bounced together beautifully</p>
+            
+            <div class="final-stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-bounces">0</span>
+                    <span class="stat-label">Total Bounces</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-sync">0%</span>
+                    <span class="stat-label">Best Sync</span>
+                </div>
+            </div>
+            
+            <button id="restart-btn" class="restart-btn">
+                New Session
+            </button>
+        </div>
+    </div>
+    
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="../sync-client.js"></script>
+    <script src="bounce-sync.js"></script>
+</body>
+</html>
+

@@ -781,6 +781,49 @@
     50% { opacity: 1; transform: scale(1.2); }
 }
 
+/* Bounce Sync Visual */
+.bounce-ball-visual {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bounce-ball {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    animation: ball-bounce 1.5s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+    z-index: 2;
+}
+
+@keyframes ball-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(0.95); }
+}
+
+.bounce-ripple {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(102, 126, 234, 0.4);
+    border-radius: 50%;
+    animation: ripple-expand 1.5s ease-out infinite;
+}
+
+.bounce-ripple.delay {
+    animation-delay: 0.75s;
+}
+
+@keyframes ripple-expand {
+    0% { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+
 .therapy-waves {
     display: flex;
     align-items: center;
