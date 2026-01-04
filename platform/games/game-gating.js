@@ -56,7 +56,9 @@
         'squad sync': 'squad',
         'dragon\'s breath': 'dragon',
         'star catcher': 'starcatcher',
-        'rhythm islands': 'rhythm'
+        'rhythm islands': 'rhythm',
+        'rainbow painter': 'rainbow',
+        'rainbow': 'rainbow'
     };
     
     function initGameGating() {

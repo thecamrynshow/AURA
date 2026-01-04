@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rainbow Painter — Breathe to Paint Rainbows | PNEUOMA</title>
+    <meta name="description" content="A calming breath game for kids. Breathe gently to paint beautiful rainbows across the sky. Ages 4+.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="game-canvas"></canvas>
+    
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="start-content">
+            <div class="rainbow-title">
+                <span class="letter" style="color: #ff6b6b">R</span>
+                <span class="letter" style="color: #ffa94d">A</span>
+                <span class="letter" style="color: #ffd43b">I</span>
+                <span class="letter" style="color: #69db7c">N</span>
+                <span class="letter" style="color: #74c0fc">B</span>
+                <span class="letter" style="color: #b197fc">O</span>
+                <span class="letter" style="color: #f783ac">W</span>
+            </div>
+            <p class="subtitle">Breathe to paint the sky! 🌈</p>
+            
+            <div class="instructions">
+                <div class="instruction-item">
+                    <span class="instruction-icon">🌬️</span>
+                    <span>Blow gently to paint colors</span>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🎨</span>
+                    <span>7 breaths = 1 rainbow</span>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">✨</span>
+                    <span>Fill the sky with rainbows!</span>
+                </div>
+            </div>
+            
+            <button id="start-button" class="rainbow-button">
+                <span>Start Painting!</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <!-- HUD -->
+        <div class="hud">
+            <div class="hud-item breath-meter">
+                <div class="breath-label">BREATH</div>
+                <div class="breath-bar">
+                    <div id="breath-fill" class="breath-fill"></div>
+                </div>
+            </div>
+            
+            <div class="hud-item color-indicator">
+                <div class="color-label">NEXT COLOR</div>
+                <div id="next-color" class="next-color-box"></div>
+            </div>
+            
+            <div class="hud-item rainbow-count">
+                <span id="rainbow-counter">0</span>
+                <span class="rainbow-emoji">🌈</span>
+            </div>
+        </div>
+        
+        <!-- Progress dots -->
+        <div id="color-progress" class="color-progress">
+            <div class="progress-dot" data-color="red"></div>
+            <div class="progress-dot" data-color="orange"></div>
+            <div class="progress-dot" data-color="yellow"></div>
+            <div class="progress-dot" data-color="green"></div>
+            <div class="progress-dot" data-color="blue"></div>
+            <div class="progress-dot" data-color="indigo"></div>
+            <div class="progress-dot" data-color="violet"></div>
+        </div>
+        
+        <!-- Message display -->
+        <div id="message-display" class="message-display hidden">
+            <span id="message-text"></span>
+        </div>
+        
+        <!-- Breath prompt -->
+        <div id="breath-prompt" class="breath-prompt">
+            <div class="prompt-text">Blow gently...</div>
+            <div class="prompt-icon">🌬️</div>
+        </div>
+    </div>
+    
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-content">
+            <h1>Beautiful! 🌈</h1>
+            <p class="end-subtitle">You painted the sky!</p>
+            
+            <div class="final-stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-rainbows">0</span>
+                    <span class="stat-label">Rainbows</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-breaths">0</span>
+                    <span class="stat-label">Breaths</span>
+                </div>
+            </div>
+            
+            <button id="restart-button" class="rainbow-button">
+                Paint Again!
+            </button>
+        </div>
+    </div>
+    
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/audio.js"></script>
+    <script src="src/js/rainbow.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
+
