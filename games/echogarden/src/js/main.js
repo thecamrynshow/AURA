@@ -34,7 +34,9 @@ class Game {
         this.stats = {
             plantsGrown: 0,
             harmoniesFound: 0,
-            humTime: 0
+            humTime: 0,
+            breathCount: 0,
+            seedsPlanted: 0
         };
         
         // Timing
@@ -47,6 +49,12 @@ class Game {
         
         // Harmony tracking
         this.harmonyStreak = 0;
+        
+        // Breath tracking for growing seeds
+        this.breathStreak = 0;
+        this.lastBreathTime = 0;
+        this.breathCooldown = 1500; // Minimum time between breath counts
+        this.isInBreath = false;
         
         // Bind methods
         this.gameLoop = this.gameLoop.bind(this);
@@ -136,7 +144,7 @@ class Game {
         
         requestAnimationFrame(this.gameLoop);
         
-        this.showMessage('Hum to plant seeds...');
+        this.showMessage('Find harmony to plant seeds, breathe to grow them...');
         
         console.log('Game started!');
     }
@@ -174,11 +182,11 @@ class Game {
         // Update audio
         this.audio.update(deltaTime, this.soundState);
         
-        // Check for humming to plant
-        this.checkForPlanting();
-        
-        // Check for harmony
+        // Check for harmony (every 5 harmonies = plant a seed)
         this.checkForHarmony(deltaTime);
+        
+        // Check for breath (every 5 breaths = grow a seed)
+        this.checkForBreath(deltaTime);
         
         // Track hum time
         if (this.soundState.isHumming) {
@@ -187,19 +195,9 @@ class Game {
     }
     
     checkForPlanting() {
-        const now = performance.now();
-        
-        // Plant when sustained hum detected
-        if (this.soundState.isHumming && 
-            this.soundState.humDuration > 800 &&
-            now - this.lastPlantTime > this.plantCooldown) {
-            
-            const plant = this.garden.plantSeed(this.soundState);
-            if (plant) {
-                this.lastPlantTime = now;
-                this.audio.playPlantSound(plant.type);
-            }
-        }
+        // Planting now happens via harmonies (every 5 harmonies = 1 seed)
+        // Growing now happens via breaths (every 5 breaths = 1 plant grows)
+        // This method is kept for legacy but the main mechanics are in checkForHarmony and checkForBreath
     }
     
     checkForHarmony(deltaTime) {
@@ -213,9 +211,44 @@ class Game {
                 this.audio.playHarmonySound();
                 this.updateHarmonyRings();
                 this.showMessage('Harmony found!');
+                
+                // Every 5 harmonies, plant a seed!
+                if (this.stats.harmoniesFound % 5 === 0) {
+                    const seed = this.garden.plantSeedFromHarmony();
+                    if (seed) {
+                        this.stats.seedsPlanted++;
+                        this.audio.playPlantSound(seed.plantType);
+                        this.showMessage('🌱 A seed takes root!', 2000);
+                    }
+                }
             }
         } else {
             this.harmonyStreak = Math.max(0, this.harmonyStreak - deltaTime * 0.5);
+        }
+    }
+    
+    checkForBreath(deltaTime) {
+        const now = performance.now();
+        
+        // Detect breath cycles
+        if (this.soundState.soundType === 'breath' && this.soundState.volume > 0.15) {
+            if (!this.isInBreath && now - this.lastBreathTime > this.breathCooldown) {
+                this.isInBreath = true;
+                this.breathStreak++;
+                this.stats.breathCount++;
+                this.lastBreathTime = now;
+                
+                // Every 5 breaths, grow a seed into a plant!
+                if (this.stats.breathCount % 5 === 0 && this.garden.getSeedCount() > 0) {
+                    const plant = this.garden.growSeedFromBreath();
+                    if (plant) {
+                        this.audio.playGrowSound();
+                        this.showMessage('🌿 A plant emerges!', 2000);
+                    }
+                }
+            }
+        } else {
+            this.isInBreath = false;
         }
     }
     
@@ -273,11 +306,16 @@ class Game {
             timerEl.textContent = Utils.formatTime(this.sessionTime / 1000);
         }
         
-        // Plants count
+        // Plants count (show both seeds and plants)
         const plantsEl = document.getElementById('plants-grown');
         if (plantsEl) {
-            const count = this.garden.plantsGrown;
-            plantsEl.textContent = `${count} plant${count !== 1 ? 's' : ''}`;
+            const plants = this.garden.plantsGrown;
+            const seeds = this.garden.getSeedCount();
+            if (seeds > 0) {
+                plantsEl.textContent = `${plants} plant${plants !== 1 ? 's' : ''} (${seeds} 🌱)`;
+            } else {
+                plantsEl.textContent = `${plants} plant${plants !== 1 ? 's' : ''}`;
+            }
         }
     }
     

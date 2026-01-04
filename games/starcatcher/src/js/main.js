@@ -384,3 +384,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Star Catcher initialized! ⭐');
 });
 
+

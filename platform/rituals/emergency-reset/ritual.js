@@ -129,3 +129,4 @@ class EmergencyResetRitual {
 document.addEventListener('DOMContentLoaded', () => new EmergencyResetRitual());
 
 
+

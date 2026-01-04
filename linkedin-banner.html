@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Banner - PNEUOMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .banner {
+            width: 1584px;
+            height: 396px;
+            background: linear-gradient(135deg, #0a0a0f 0%, #0f1419 50%, #0a0a0f 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Animated breath wave background */
+        .breath-waves {
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+        }
+
+        .wave {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            border-radius: 45%;
+            opacity: 0.3;
+        }
+
+        .wave-1 {
+            background: radial-gradient(ellipse at center, #06b6d4 0%, transparent 70%);
+            top: -80%;
+            left: -50%;
+        }
+
+        .wave-2 {
+            background: radial-gradient(ellipse at center, #0ea5e9 0%, transparent 70%);
+            top: -60%;
+            right: -60%;
+        }
+
+        .wave-3 {
+            background: radial-gradient(ellipse at center, #8b5cf6 0%, transparent 70%);
+            bottom: -100%;
+            left: 20%;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #06b6d4;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .particle:nth-child(1) { left: 10%; top: 20%; }
+        .particle:nth-child(2) { left: 20%; top: 60%; }
+        .particle:nth-child(3) { left: 35%; top: 30%; }
+        .particle:nth-child(4) { left: 50%; top: 70%; }
+        .particle:nth-child(5) { left: 65%; top: 25%; }
+        .particle:nth-child(6) { left: 75%; top: 55%; }
+        .particle:nth-child(7) { left: 85%; top: 35%; }
+        .particle:nth-child(8) { left: 90%; top: 65%; }
+
+        /* Grid pattern */
+        .grid-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Content - new layout */
+        .content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            align-items: center;
+            padding: 0 60px;
+        }
+
+        /* Left section - Logo area (will be partially covered by profile pic) */
+        .left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 20px;
+            align-self: start;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Actual PNEUOMA logo */
+        .logo-svg {
+            width: 50px;
+            height: 50px;
+        }
+
+        .brand-name {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Center section - Tagline (visible between profile pic and stats) */
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 40px;
+        }
+
+        .tagline {
+            font-size: 22px;
+            color: #e2e8f0;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+        }
+
+        .tagline span {
+            color: #06b6d4;
+            font-weight: 500;
+        }
+
+        .mission {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 16px;
+            font-style: italic;
+            max-width: 400px;
+        }
+
+        /* Right section - Stats */
+        .right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 20px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 38px;
+            font-weight: 600;
+            color: #06b6d4;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 6px;
+        }
+
+        /* Decorative elements */
+        .accent-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #06b6d4 20%, 
+                #0ea5e9 50%, 
+                #8b5cf6 80%, 
+                transparent 100%
+            );
+            opacity: 0.8;
+        }
+
+        .corner-accent {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(6, 182, 212, 0.15);
+            border-radius: 16px;
+        }
+
+        .corner-accent.top-right {
+            top: 20px;
+            right: 20px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        /* Instructions */
+        .instructions {
+            margin-top: 30px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .instructions code {
+            background: #2a2a2a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #06b6d4;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="banner">
+            <!-- Background effects -->
+            <div class="breath-waves">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+                <div class="wave wave-3"></div>
+            </div>
+            
+            <div class="particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+
+            <div class="grid-pattern"></div>
+
+            <!-- Decorative corners -->
+            <div class="corner-accent top-right"></div>
+
+            <!-- Main content - 3 column layout -->
+            <div class="content">
+                <!-- Left: Logo (top, partially covered by profile pic) -->
+                <div class="left">
+                    <div class="logo-area">
+                        <!-- Actual PNEUOMA breath wave logo -->
+                        <svg class="logo-svg" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#0a0c10"/>
+                                    <stop offset="100%" stop-color="#12151c"/>
+                                </linearGradient>
+                                <linearGradient id="aura" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#06b6d4"/>
+                                    <stop offset="50%" stop-color="#64ffda"/>
+                                    <stop offset="100%" stop-color="#a5f3fc"/>
+                                </linearGradient>
+                                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="2" result="blur"/>
+                                    <feMerge>
+                                        <feMergeNode in="blur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <circle cx="50" cy="50" r="48" fill="url(#bg)"/>
+                            <circle cx="50" cy="50" r="47" fill="none" stroke="url(#aura)" stroke-width="1.5" opacity="0.4"/>
+                            <g filter="url(#glow)">
+                                <path d="M20 50 Q35 35, 50 50 T80 50" fill="none" stroke="url(#aura)" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M25 40 Q40 30, 50 40 T75 40" fill="none" stroke="url(#aura)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                                <path d="M25 60 Q40 70, 50 60 T75 60" fill="none" stroke="url(#aura)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                            </g>
+                            <circle cx="50" cy="50" r="3" fill="#64ffda"/>
+                        </svg>
+                        <div class="brand-name">PNEUOMA</div>
+                    </div>
+                </div>
+
+                <!-- Center: Tagline (visible between profile pic and stats) -->
+                <div class="center">
+                    <div class="tagline">
+                        Building <span>Nervous System Regulation</span><br>
+                        Platforms for Schools & Communities
+                    </div>
+                    <div class="mission">
+                        "Helping kids and adults calm their minds, focus better, and feel safe — through play."
+                    </div>
+                </div>
+
+                <!-- Right: Stats -->
+                <div class="right">
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-number">27</div>
+                            <div class="stat-label">Games</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">Rituals</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">Multiplayer</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accent-line"></div>
+        </div>
+
+        <p class="instructions">
+            <strong>To save:</strong> Take a screenshot of the banner above (1584 × 396px) or use <code>Cmd + Shift + 4</code> on Mac
+        </p>
+    </div>
+</body>
+</html>

@@ -422,21 +422,150 @@ class VinePlant extends Plant {
     }
 }
 
+// Seed in the ground (waiting to grow)
+class Seed {
+    constructor(x, y, plantType) {
+        this.x = x;
+        this.y = y;
+        this.plantType = plantType;
+        this.pulse = 0;
+        this.glowIntensity = 0;
+        this.isGrowing = false;
+        
+        // Visual properties
+        this.size = Utils.random(6, 10);
+        this.hue = plantType === 'flower' ? Utils.random(280, 340) :
+                   plantType === 'mushroom' ? Utils.random(180, 220) :
+                   plantType === 'crystal' ? Utils.random(40, 60) :
+                   Utils.random(100, 140);
+    }
+    
+    update(deltaTime) {
+        this.pulse += deltaTime * 0.003;
+        // Gentle pulsing glow
+        this.glowIntensity = 0.3 + Math.sin(this.pulse) * 0.2;
+    }
+    
+    render(ctx) {
+        const pulseSize = this.size + Math.sin(this.pulse * 2) * 2;
+        
+        // Ground mound
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y + 3, pulseSize * 1.5, pulseSize * 0.5, 0, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(30, 30%, 20%, 0.6)`;
+        ctx.fill();
+        
+        // Seed glow
+        const gradient = ctx.createRadialGradient(
+            this.x, this.y, 0,
+            this.x, this.y, pulseSize * 3
+        );
+        gradient.addColorStop(0, `hsla(${this.hue}, 70%, 50%, ${this.glowIntensity})`);
+        gradient.addColorStop(1, `hsla(${this.hue}, 70%, 50%, 0)`);
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, pulseSize * 3, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        
+        // Seed itself
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y, pulseSize * 0.8, pulseSize * 0.5, Math.PI * 0.1, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, 50%, 40%, 0.9)`;
+        ctx.fill();
+        
+        // Tiny sprout hint
+        if (Math.sin(this.pulse) > 0.5) {
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y - pulseSize * 0.3);
+            ctx.lineTo(this.x - 2, this.y - pulseSize * 0.8);
+            ctx.lineTo(this.x + 2, this.y - pulseSize * 0.8);
+            ctx.closePath();
+            ctx.fillStyle = `hsla(120, 60%, 40%, 0.7)`;
+            ctx.fill();
+        }
+    }
+}
+
 // Garden manager
 class Garden {
     constructor(width, height) {
         this.width = width;
         this.height = height;
         this.plants = [];
+        this.seeds = []; // Seeds waiting to grow
         this.plantTypes = [GlowFlower, GlowMushroom, CrystalPlant, VinePlant];
+        this.plantTypeNames = ['flower', 'mushroom', 'crystal', 'vine'];
         
         this.plantsGrown = 0;
-        this.harmoniesFound = 0;
+        this.seedsPlanted = 0;
         
         // Planting zones (bottom portion of screen)
         this.groundLevel = height * 0.85;
     }
     
+    // Called every 5 harmonies - plants a seed in the ground
+    plantSeedFromHarmony() {
+        // Choose random plant type
+        const typeIndex = Utils.randomInt(0, this.plantTypeNames.length - 1);
+        const plantType = this.plantTypeNames[typeIndex];
+        
+        // Find a good spot
+        const x = Utils.random(100, this.width - 100);
+        const y = this.groundLevel + Utils.random(-10, 10);
+        
+        // Check for spacing from other seeds and plants
+        const tooCloseToSeed = this.seeds.some(s => 
+            Utils.distance(s.x, s.y, x, y) < 80
+        );
+        const tooCloseToPlant = this.plants.some(p => 
+            Utils.distance(p.x, p.y, x, y) < 80
+        );
+        
+        if (tooCloseToSeed || tooCloseToPlant) {
+            // Try again with offset
+            return this.plantSeedFromHarmony();
+        }
+        
+        const seed = new Seed(x, y, plantType);
+        this.seeds.push(seed);
+        this.seedsPlanted++;
+        
+        GameEvents.emit('seedPlanted', { type: plantType, x, y });
+        
+        return seed;
+    }
+    
+    // Called every 5 breaths - grows a seed into a plant
+    growSeedFromBreath() {
+        if (this.seeds.length === 0) return null;
+        
+        // Get the oldest seed
+        const seed = this.seeds.shift();
+        
+        // Determine plant class based on seed type
+        let PlantClass;
+        switch (seed.plantType) {
+            case 'flower': PlantClass = GlowFlower; break;
+            case 'mushroom': PlantClass = GlowMushroom; break;
+            case 'crystal': PlantClass = CrystalPlant; break;
+            case 'vine': PlantClass = VinePlant; break;
+            default: PlantClass = GlowFlower;
+        }
+        
+        const plant = new PlantClass(seed.x, seed.y);
+        plant.plant();
+        // Start with some growth so it's immediately visible
+        plant.targetGrowth = 0.3;
+        this.plants.push(plant);
+        this.plantsGrown++;
+        
+        GameEvents.emit('plantSprouted', { type: seed.plantType, x: seed.x, y: seed.y });
+        
+        return plant;
+    }
+    
+    // Legacy method for direct planting (kept for compatibility)
     plantSeed(soundState) {
         // Determine plant type based on pitch
         let PlantClass;
@@ -470,23 +599,30 @@ class Garden {
     }
     
     update(deltaTime, soundState) {
+        // Update seeds
+        this.seeds.forEach(seed => seed.update(deltaTime));
+        
+        // Update plants
         this.plants.forEach(plant => {
             plant.update(deltaTime, soundState);
             
             // Nurture growing plants with breath
             if (soundState.soundType === 'breath' && plant.isGrowing) {
-                plant.nurture(0.001 * deltaTime);
+                plant.nurture(0.002 * deltaTime);
             }
             
             // Extra nurture during harmony
             if (soundState.pitchStability > 0.7 && plant.isGrowing) {
-                plant.nurture(0.002 * deltaTime);
+                plant.nurture(0.003 * deltaTime);
             }
         });
     }
     
     render(ctx) {
-        // Sort by y for depth
+        // Render seeds first (they're in the ground)
+        this.seeds.forEach(seed => seed.render(ctx));
+        
+        // Sort plants by y for depth
         const sorted = [...this.plants].sort((a, b) => a.y - b.y);
         sorted.forEach(plant => plant.render(ctx));
     }
@@ -495,6 +631,10 @@ class Garden {
         this.width = width;
         this.height = height;
         this.groundLevel = height * 0.85;
+    }
+    
+    getSeedCount() {
+        return this.seeds.length;
     }
 }
 
