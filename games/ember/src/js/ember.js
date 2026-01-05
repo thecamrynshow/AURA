@@ -84,6 +84,19 @@ class EmberApp {
         this.setupUI();
         this.setupTouch();
         
+        // Initialize audio on ANY first interaction (iOS requirement)
+        this.audioInitialized = false;
+        const initAudioOnTouch = () => {
+            if (!this.audioInitialized) {
+                this.initAudio();
+                this.audioInitialized = true;
+                console.log('🔊 Audio initialized via user interaction');
+            }
+        };
+        
+        document.addEventListener('touchstart', initAudioOnTouch, { once: true });
+        document.addEventListener('click', initAudioOnTouch, { once: true });
+        
         // Start animation loop
         requestAnimationFrame(this.animate);
         
@@ -155,6 +168,11 @@ class EmberApp {
     }
     
     handleTouchStart(x, y) {
+        // CRITICAL: Resume audio on every touch (iOS suspends it)
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+        
         const dist = this.distanceToEmber(x, y);
         
         // Check if touching the ember
@@ -269,13 +287,34 @@ class EmberApp {
     // ==================== HAPTIC ====================
     
     initAudio() {
-        if (this.audioContext) return;
+        if (this.audioContext) {
+            // If already exists, just resume it
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+            return;
+        }
         
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.hapticGain = this.audioContext.createGain();
-            this.hapticGain.gain.value = 0.3;
+            this.hapticGain.gain.value = 0.7; // Louder for more tactile feel
             this.hapticGain.connect(this.audioContext.destination);
+            
+            // Immediately resume (iOS requirement)
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+            
+            // Play a tiny silent sound to fully unlock audio (iOS trick)
+            const unlockOsc = this.audioContext.createOscillator();
+            const unlockGain = this.audioContext.createGain();
+            unlockGain.gain.value = 0.001;
+            unlockOsc.connect(unlockGain);
+            unlockGain.connect(this.audioContext.destination);
+            unlockOsc.start();
+            unlockOsc.stop(this.audioContext.currentTime + 0.001);
+            
             console.log('🔊 Audio initialized for haptic feedback');
         } catch (e) {
             console.warn('Audio init failed:', e);
@@ -298,35 +337,65 @@ class EmberApp {
     }
     
     playHapticSound(pattern) {
-        if (!this.audioContext) return;
+        if (!this.audioContext) {
+            console.log('No audio context for haptic');
+            return;
+        }
         
         // Resume audio context if suspended
         if (this.audioContext.state === 'suspended') {
-            this.audioContext.resume();
+            this.audioContext.resume().then(() => {
+                this.doPlayHapticSound(pattern);
+            });
+        } else {
+            this.doPlayHapticSound(pattern);
         }
+    }
+    
+    doPlayHapticSound(pattern) {
+        if (!this.audioContext || this.audioContext.state !== 'running') return;
         
-        // Calculate total duration from pattern
-        const totalDuration = Array.isArray(pattern) 
-            ? pattern.reduce((a, b) => a + b, 0) / 1000 
-            : pattern / 1000;
+        // Parse pattern - each number is a duration in ms
+        // We play a thump for each on-period
+        const patternArray = Array.isArray(pattern) ? pattern : [pattern];
         
-        // Create a low-frequency "thump" that you can feel through phone speakers
+        let delay = 0;
+        patternArray.forEach((duration, index) => {
+            // Even indices are "on" (vibrate), odd are "off" (pause)
+            if (index % 2 === 0 && duration > 0) {
+                setTimeout(() => {
+                    this.playThump(duration);
+                }, delay);
+            }
+            delay += duration;
+        });
+    }
+    
+    playThump(durationMs) {
+        if (!this.audioContext || this.audioContext.state !== 'running') return;
+        
+        const now = this.audioContext.currentTime;
+        const duration = Math.max(0.05, durationMs / 1000);
+        
+        // Create a punchy low-frequency thump
         const osc = this.audioContext.createOscillator();
         const gain = this.audioContext.createGain();
         
-        // Very low frequency - more felt than heard
-        osc.type = 'sine';
-        osc.frequency.value = 60; // Sub-bass frequency
+        // Use a triangle wave for a fuller thump sound
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(50, now); // Sub-bass
+        osc.frequency.exponentialRampToValueAtTime(30, now + duration); // Drop pitch
         
-        const now = this.audioContext.currentTime;
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + Math.max(0.1, totalDuration));
+        // Punchy envelope - quick attack, medium decay
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.8, now + 0.01); // Quick attack
+        gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
         
         osc.connect(gain);
         gain.connect(this.hapticGain);
         
         osc.start(now);
-        osc.stop(now + Math.max(0.1, totalDuration));
+        osc.stop(now + duration + 0.1);
     }
     
     updateBreathVibration() {
@@ -395,16 +464,21 @@ class EmberApp {
         this.showScreen('ember-screen');
         
         // Initial welcoming vibration - STRONG pattern
-        setTimeout(() => {
-            this.vibrate([100, 50, 100, 50, 150]); // Much stronger welcome
-        }, 300);
+        // Do this immediately since user just tapped (iOS gesture requirement)
+        this.vibrate([100, 50, 100, 50, 150]); // Much stronger welcome
         
         // Second pulse to really feel it
         setTimeout(() => {
             this.vibrate([80, 40, 80]);
-        }, 800);
+        }, 500);
+        
+        // Third pulse - build anticipation
+        setTimeout(() => {
+            this.vibrate([60, 30, 60, 30, 100]);
+        }, 1000);
         
         console.log('🔥 Ember awakened - haptics active');
+        console.log('Audio state:', this.audioContext?.state);
     }
     
     end() {
