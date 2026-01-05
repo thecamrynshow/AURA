@@ -202,29 +202,28 @@ class Solfege {
         const exercise = this.exercises.getCurrentExercise();
         if (!exercise) return;
         
-        // Show exercise name
+        // Show exercise name - NO automatic playback (interferes with mic)
         this.targetInstructionEl.textContent = exercise.name;
         
-        // Play the target notes first so they can hear them
-        this.targetInstructionEl.textContent = 'Listen...';
+        // Show the notes visually without playing them
+        // User can tap piano keys to hear notes if needed
         this.targetSolfegeEl.textContent = '🎵';
         
-        // Play the scale/melody
+        // Brief visual preview - light up keys without sound
         let delay = 0;
         exercise.notes.forEach((note, i) => {
             setTimeout(() => {
-                solfegeAudio.playNote(note, 0.4);
                 this.piano.lightKey(note);
-                setTimeout(() => this.piano.clearKey(note), 350);
+                setTimeout(() => this.piano.clearKey(note), 300);
             }, delay);
-            delay += 400;
+            delay += 350;
         });
         
-        // After playing, show first target
+        // After visual preview, show first target
         setTimeout(() => {
             this.targetInstructionEl.textContent = 'Sing this note:';
             this.updateTargetDisplay();
-        }, delay + 500);
+        }, delay + 300);
     }
 
     updateTargetDisplay() {
