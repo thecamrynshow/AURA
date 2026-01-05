@@ -151,21 +151,53 @@ class EmberApp {
         const dist = this.distanceToEmber(x, y);
         
         // Check if touching the ember
-        if (dist < this.ember.radius * 1.5) {
+        if (dist < this.ember.radius * 2) {
             this.ember.isBeingHeld = true;
             this.ember.holdDuration = 0;
-            this.ember.touchGlow = 0.5;
-            this.ember.touchScale = 1.1;
+            this.ember.touchGlow = 0.8;
+            this.ember.touchScale = 1.15;
             
-            // Immediate haptic response
-            this.vibrate([20]);
+            // STRONG immediate haptic pulse - feel the connection!
+            this.vibrate([50, 30, 80]); // thump-thump heartbeat feel
+            
+            // Start continuous pulse while holding
+            this.startHoldPulse();
             
             // Ripple
             this.addRipple(this.ember.x, this.ember.y);
+            
+            // Extra particles burst
+            for (let i = 0; i < 8; i++) {
+                this.addParticle();
+            }
+        } else {
+            // Touching screen but not orb - light vibration
+            this.vibrate([15]);
         }
         
         // Add to trail
         this.trails.push({ x, y, alpha: 1, radius: 4 });
+    }
+    
+    startHoldPulse() {
+        // Clear any existing pulse
+        if (this.holdPulseInterval) {
+            clearInterval(this.holdPulseInterval);
+        }
+        
+        // Continuous heartbeat pulse while holding - 60 BPM feel
+        this.holdPulseInterval = setInterval(() => {
+            if (this.ember.isBeingHeld) {
+                // Heartbeat pattern: lub-dub
+                this.vibrate([40, 80, 30]);
+                
+                // Visual pulse
+                this.ember.touchGlow = 0.6;
+                this.addRipple(this.ember.x, this.ember.y);
+            } else {
+                clearInterval(this.holdPulseInterval);
+            }
+        }, 1000); // Every second = 60 BPM
     }
     
     handleTouchMove(x, y) {
@@ -182,11 +214,23 @@ class EmberApp {
             this.trails.shift();
         }
         
-        // Subtle vibration while drawing
-        const now = performance.now();
-        if (now - this.lastVibration > 80) {
-            this.vibrate([5]);
-            this.lastVibration = now;
+        // Check if still on ember while moving
+        const dist = this.distanceToEmber(x, y);
+        if (dist < this.ember.radius * 2 && this.ember.isBeingHeld) {
+            // Stroking the ember - warm vibration
+            const now = performance.now();
+            if (now - this.lastVibration > 100) {
+                this.vibrate([20, 10, 15]); // Gentle purr
+                this.lastVibration = now;
+                this.ember.touchGlow = Math.min(1, this.ember.touchGlow + 0.1);
+            }
+        } else {
+            // Drawing on screen - light feedback
+            const now = performance.now();
+            if (now - this.lastVibration > 60) {
+                this.vibrate([8]);
+                this.lastVibration = now;
+            }
         }
     }
     
@@ -195,8 +239,16 @@ class EmberApp {
             this.ember.isBeingHeld = false;
             this.ember.touchScale = 1;
             
-            // Soft release vibration
-            this.vibrate([10, 30, 10]);
+            // Stop the pulse interval
+            if (this.holdPulseInterval) {
+                clearInterval(this.holdPulseInterval);
+            }
+            
+            // Satisfying release vibration - like letting go of something warm
+            this.vibrate([30, 50, 20, 30, 10]);
+            
+            // Gentle ripple on release
+            this.addRipple(this.ember.x, this.ember.y);
         }
     }
     
@@ -219,22 +271,18 @@ class EmberApp {
         // Calculate breath phase (0 to 1, where 0.5 is peak inhale)
         const breathCycle = (Math.sin(this.ember.breathPhase) + 1) / 2;
         
-        // Vibrate on exhale transition
+        // Vibrate on breath transitions - even when not holding
         const isInhale = breathCycle > 0.5;
         
         if (this.wasInhale && !isInhale) {
-            // Just started exhale - gentle vibration
-            this.vibrate([40, 50, 30]);
+            // Just started exhale - noticeable vibration pulse
+            // This is the core "breathing with you" feeling
+            this.vibrate([60, 40, 40, 30, 20]); // Longer, descending exhale feel
         }
         
-        // Continuous gentle pulse while being held
-        if (this.ember.isBeingHeld) {
-            const now = performance.now();
-            if (now - this.lastVibration > 1000) {
-                // Heartbeat-like pulse (60 BPM feel)
-                this.vibrate([30, 100, 20]);
-                this.lastVibration = now;
-            }
+        if (!this.wasInhale && isInhale) {
+            // Just started inhale - subtle lift
+            this.vibrate([20, 30, 25]); // Gentle inhale cue
         }
         
         this.wasInhale = isInhale;
