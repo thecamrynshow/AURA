@@ -58,7 +58,8 @@
         'star catcher': 'starcatcher',
         'rhythm islands': 'rhythm',
         'rainbow painter': 'rainbow',
-        'rainbow': 'rainbow'
+        'rainbow': 'rainbow',
+        'ember': 'ember'
     };
     
     function initGameGating() {

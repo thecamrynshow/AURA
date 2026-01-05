@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ember — A Warm Presence | PNEUOMA</title>
+    <meta name="description" content="A tactile companion for when the world is loud. Hold, touch, and feel the calm. No sound needed.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="ember-canvas"></canvas>
+    
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="start-content">
+            <div class="ember-preview">
+                <div class="preview-glow"></div>
+            </div>
+            <h1>Ember</h1>
+            <p class="tagline">A warm presence in your hands</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">🤫</span>
+                    <span>No sound needed</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📳</span>
+                    <span>Feel the rhythm</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">✨</span>
+                    <span>Touch to connect</span>
+                </div>
+            </div>
+            
+            <button id="start-btn" class="start-btn">
+                Hold Me
+            </button>
+            
+            <p class="hint">Works best with phone in hand</p>
+        </div>
+    </div>
+    
+    <!-- Main Experience -->
+    <div id="ember-screen" class="screen">
+        <!-- Minimal UI - tap corner to exit -->
+        <button id="exit-btn" class="exit-btn">✕</button>
+        
+        <!-- Breath guide (subtle) -->
+        <div id="breath-hint" class="breath-hint">
+            <span id="breath-text">breathe with me</span>
+        </div>
+        
+        <!-- Session time (very subtle) -->
+        <div id="session-time" class="session-time">
+            <span id="time-display">0:00</span>
+        </div>
+    </div>
+    
+    <!-- End Screen -->
+    <div id="end-screen" class="screen">
+        <div class="end-content">
+            <h2>🌙</h2>
+            <p class="end-message">You held space for yourself</p>
+            <p class="end-time">
+                <span id="total-time">0</span> minutes of calm
+            </p>
+            <button id="restart-btn" class="start-btn">
+                Return to Ember
+            </button>
+        </div>
+    </div>
+    
+    <script src="src/js/ember.js"></script>
+</body>
+</html>
+
