@@ -157,6 +157,11 @@ class EmberApp {
     }
     
     handleTouchStart(x, y) {
+        // Ensure audio is ready (iOS requires user gesture)
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+        
         const dist = this.distanceToEmber(x, y);
         
         // Check if touching the ember
@@ -271,7 +276,7 @@ class EmberApp {
     // ==================== HAPTIC ====================
     
     initAudio() {
-        // Simple init like Bounce Sync
+        // Same as Bounce Sync
         if (!this.audioContext) {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
@@ -283,10 +288,47 @@ class EmberApp {
     }
     
     vibrate(pattern) {
-        // SIMPLE - just like Bounce Sync
+        // Native vibration for Android
         if (this.canVibrate) {
             navigator.vibrate(pattern);
         }
+        
+        // ALSO play haptic sound - this is what iPhone users feel!
+        this.playHapticSound(pattern);
+    }
+    
+    playHapticSound(pattern) {
+        // Same technique as Bounce Sync's playBounceSound()
+        // Low frequency audio creates physical sensation through speakers
+        if (!this.audioContext) return;
+        
+        // Resume if suspended
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+        
+        const osc = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        
+        // Calculate duration from pattern
+        const duration = Array.isArray(pattern) 
+            ? pattern.reduce((a, b) => a + b, 0) / 1000 
+            : pattern / 1000;
+        
+        // Low frequency thump - felt more than heard
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, this.audioContext.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, this.audioContext.currentTime + Math.max(0.1, duration));
+        
+        // Quick attack, smooth decay
+        gain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + Math.max(0.1, duration));
+        
+        osc.connect(gain);
+        gain.connect(this.audioContext.destination);
+        
+        osc.start();
+        osc.stop(this.audioContext.currentTime + Math.max(0.1, duration) + 0.1);
     }
     
     updateBreathVibration() {
