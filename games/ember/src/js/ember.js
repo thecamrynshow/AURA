@@ -310,25 +310,31 @@ class EmberApp {
         const osc = this.audioContext.createOscillator();
         const gain = this.audioContext.createGain();
         
-        // Calculate duration from pattern
-        const duration = Array.isArray(pattern) 
+        // Calculate base duration from pattern, then extend for longer release
+        const baseDuration = Array.isArray(pattern) 
             ? pattern.reduce((a, b) => a + b, 0) / 1000 
             : pattern / 1000;
         
+        // Longer release - 3x the base duration, minimum 0.4 seconds
+        const releaseDuration = Math.max(0.4, baseDuration * 3);
+        
+        const now = this.audioContext.currentTime;
+        
         // Low frequency thump - felt more than heard
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(200, this.audioContext.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, this.audioContext.currentTime + Math.max(0.1, duration));
+        osc.frequency.setValueAtTime(150, now); // Start lower
+        osc.frequency.exponentialRampToValueAtTime(60, now + releaseDuration); // Drop to sub-bass
         
-        // Quick attack, smooth decay
-        gain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + Math.max(0.1, duration));
+        // Quick attack, LONG smooth decay
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.setValueAtTime(0.35, now + 0.05); // Hold briefly
+        gain.gain.exponentialRampToValueAtTime(0.01, now + releaseDuration); // Long fade
         
         osc.connect(gain);
         gain.connect(this.audioContext.destination);
         
-        osc.start();
-        osc.stop(this.audioContext.currentTime + Math.max(0.1, duration) + 0.1);
+        osc.start(now);
+        osc.stop(now + releaseDuration + 0.1);
     }
     
     updateBreathVibration() {
