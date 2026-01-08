@@ -43,6 +43,8 @@ class PlanetExplore {
         this.terrain = null;
         this.sky = null;
         this.sun = null;
+        this.moons = [];
+        this.birds = [];
         this.creatureObjects = [];
         this.lifeObjects = [];
         
@@ -150,11 +152,25 @@ class PlanetExplore {
             this.planet = {
                 name: 'New World',
                 terrain: 'earth',
+                skyColor: 'blue',
                 lifeforms: ['trees', 'flowers'],
-                suns: 1,
-                moons: 1
+                extras: [],
+                sunCount: 1,
+                moonCount: 1,
+                clouds: true,
+                cloudDensity: 50,
+                glowIntensity: 50
             };
         }
+        
+        // Normalize data (handle old saves)
+        this.planet.sunCount = this.planet.sunCount || this.planet.suns || 1;
+        this.planet.moonCount = this.planet.moonCount || this.planet.moons || 1;
+        this.planet.lifeforms = this.planet.lifeforms || ['trees', 'flowers'];
+        this.planet.extras = this.planet.extras || [];
+        this.planet.skyColor = this.planet.skyColor || 'blue';
+        
+        console.log('🌍 Loaded planet:', this.planet);
         
         // Load creatures
         const allCreatures = JSON.parse(localStorage.getItem('pneuoma-creatures') || '[]');
@@ -206,54 +222,132 @@ class PlanetExplore {
     setupLighting() {
         const config = this.terrainConfigs[this.planet.terrain] || this.terrainConfigs.earth;
         
-        // Ambient light
-        const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+        // Ambient light (brighter for no suns)
+        const ambientIntensity = this.planet.sunCount > 0 ? 0.4 : 0.6;
+        const ambient = new THREE.AmbientLight(0xffffff, ambientIntensity);
         this.scene.add(ambient);
-        
-        // Sun (directional light)
-        this.sun = new THREE.DirectionalLight(config.sunColor, 1);
-        this.sun.position.set(50, 100, 50);
-        this.sun.castShadow = true;
-        this.sun.shadow.mapSize.width = 2048;
-        this.sun.shadow.mapSize.height = 2048;
-        this.sun.shadow.camera.near = 0.5;
-        this.sun.shadow.camera.far = 500;
-        this.sun.shadow.camera.left = -100;
-        this.sun.shadow.camera.right = 100;
-        this.sun.shadow.camera.top = 100;
-        this.sun.shadow.camera.bottom = -100;
-        this.scene.add(this.sun);
         
         // Hemisphere light for sky/ground color
         const hemi = new THREE.HemisphereLight(config.skyTop, config.groundColor, 0.6);
         this.scene.add(hemi);
         
-        // Sun visual (sphere in sky)
-        const sunGeom = new THREE.SphereGeometry(5, 32, 32);
-        const sunMat = new THREE.MeshBasicMaterial({
-            color: config.sunColor,
-            emissive: config.sunColor,
-            emissiveIntensity: 1
-        });
-        const sunMesh = new THREE.Mesh(sunGeom, sunMat);
-        sunMesh.position.set(80, 100, 80);
-        this.scene.add(sunMesh);
+        // Create suns based on planet data
+        const sunCount = this.planet.sunCount || 1;
+        const sunConfigs = [
+            { color: config.sunColor, position: [80, 100, 80], size: 5, intensity: 1 },
+            { color: 0x82b1ff, position: [-60, 80, 60], size: 4, intensity: 0.7 } // Blue secondary sun
+        ];
         
-        // Add glow to sun
-        const sunGlow = new THREE.PointLight(config.sunColor, 2, 200);
-        sunGlow.position.copy(sunMesh.position);
-        this.scene.add(sunGlow);
+        for (let i = 0; i < Math.min(sunCount, 2); i++) {
+            const sunConfig = sunConfigs[i];
+            
+            // Directional light from sun
+            const sunLight = new THREE.DirectionalLight(sunConfig.color, sunConfig.intensity);
+            sunLight.position.set(...sunConfig.position);
+            sunLight.castShadow = i === 0; // Only first sun casts shadows
+            if (i === 0) {
+                sunLight.shadow.mapSize.width = 2048;
+                sunLight.shadow.mapSize.height = 2048;
+                sunLight.shadow.camera.near = 0.5;
+                sunLight.shadow.camera.far = 500;
+                sunLight.shadow.camera.left = -100;
+                sunLight.shadow.camera.right = 100;
+                sunLight.shadow.camera.top = 100;
+                sunLight.shadow.camera.bottom = -100;
+            }
+            this.scene.add(sunLight);
+            
+            // Sun visual (sphere in sky)
+            const sunGeom = new THREE.SphereGeometry(sunConfig.size, 32, 32);
+            const sunMat = new THREE.MeshBasicMaterial({
+                color: sunConfig.color
+            });
+            const sunMesh = new THREE.Mesh(sunGeom, sunMat);
+            sunMesh.position.set(...sunConfig.position);
+            this.scene.add(sunMesh);
+            
+            // Add glow to sun
+            const sunGlow = new THREE.PointLight(sunConfig.color, 2, 200);
+            sunGlow.position.copy(sunMesh.position);
+            this.scene.add(sunGlow);
+        }
+        
+        // Create moons based on planet data
+        this.setupMoons();
+    }
+    
+    setupMoons() {
+        const moonCount = this.planet.moonCount || 0;
+        const moonColors = [0xe5e7eb, 0xfcd34d, 0xc084fc, 0xef4444, 0x34d399, 0xf472b6, 0xfb923c, 0x67e8f9, 0xfde047, 0xa78bfa];
+        
+        this.moons = [];
+        
+        for (let i = 0; i < Math.min(moonCount, 10); i++) {
+            const moonSize = 1.5 + Math.random() * 2;
+            const moonGeom = new THREE.SphereGeometry(moonSize, 24, 24);
+            const moonColor = new THREE.Color(moonColors[i % moonColors.length]);
+            const moonMat = new THREE.MeshStandardMaterial({
+                color: moonColor,
+                roughness: 0.8,
+                metalness: 0.1,
+                emissive: moonColor,
+                emissiveIntensity: 0.1
+            });
+            
+            const moon = new THREE.Mesh(moonGeom, moonMat);
+            
+            // Position moons in the sky at different angles
+            const angle = (i / moonCount) * Math.PI * 2;
+            const distance = 120 + (i * 20);
+            const height = 60 + Math.random() * 40;
+            
+            moon.position.set(
+                Math.cos(angle) * distance,
+                height,
+                Math.sin(angle) * distance
+            );
+            
+            moon.userData = {
+                orbitAngle: angle,
+                orbitSpeed: 0.02 + Math.random() * 0.03,
+                orbitDistance: distance,
+                orbitHeight: height
+            };
+            
+            this.moons.push(moon);
+            this.scene.add(moon);
+        }
     }
     
     setupSky() {
         const config = this.terrainConfigs[this.planet.terrain] || this.terrainConfigs.earth;
         
+        // Override sky colors based on planet's chosen skyColor
+        const skyColorOverrides = {
+            blue: { top: 0x87CEEB, bottom: 0xE0F6FF },
+            purple: { top: 0x581c87, bottom: 0xa855f7 },
+            pink: { top: 0xbe185d, bottom: 0xfda4af },
+            orange: { top: 0xc2410c, bottom: 0xfed7aa },
+            green: { top: 0x166534, bottom: 0xbbf7d0 },
+            none: { top: 0x0f172a, bottom: 0x1e293b } // Dark space-like
+        };
+        
+        const skyChoice = this.planet.skyColor || 'blue';
+        const skyOverride = skyColorOverrides[skyChoice];
+        
+        const skyTop = skyOverride ? skyOverride.top : config.skyTop;
+        const skyBottom = skyOverride ? skyOverride.bottom : config.skyBottom;
+        
+        // Update scene background and fog to match
+        this.scene.background = new THREE.Color(skyBottom);
+        this.scene.fog = new THREE.FogExp2(skyBottom, config.fogDensity);
+        
         // Sky dome
         const skyGeom = new THREE.SphereGeometry(400, 32, 32);
         const skyMat = new THREE.ShaderMaterial({
             uniforms: {
-                topColor: { value: new THREE.Color(config.skyTop) },
-                bottomColor: { value: new THREE.Color(config.skyBottom) },
+                topColor: { value: new THREE.Color(skyTop) },
+                bottomColor: { value: new THREE.Color(skyBottom) },
                 offset: { value: 20 },
                 exponent: { value: 0.6 }
             },
@@ -281,6 +375,95 @@ class PlanetExplore {
         
         this.sky = new THREE.Mesh(skyGeom, skyMat);
         this.scene.add(this.sky);
+        
+        // Add aurora if the planet has it in extras
+        if (this.planet.extras && this.planet.extras.includes('aurora')) {
+            this.setupAurora();
+        }
+        
+        // Add clouds if enabled
+        if (this.planet.clouds !== false) {
+            this.setupClouds();
+        }
+    }
+    
+    setupAurora() {
+        // Create aurora curtains in the sky
+        const auroraColors = [0x22c55e, 0x3b82f6, 0xa855f7, 0x22d3ee];
+        
+        for (let i = 0; i < 3; i++) {
+            const aurGeom = new THREE.PlaneGeometry(200, 50, 32, 8);
+            
+            // Wavy deformation
+            const vertices = aurGeom.attributes.position.array;
+            for (let j = 0; j < vertices.length; j += 3) {
+                const x = vertices[j];
+                const y = vertices[j + 1];
+                vertices[j + 2] = Math.sin(x * 0.05 + i) * 5 + Math.cos(y * 0.1) * 3;
+            }
+            aurGeom.computeVertexNormals();
+            
+            const aurMat = new THREE.MeshBasicMaterial({
+                color: auroraColors[i % auroraColors.length],
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide
+            });
+            
+            const aurora = new THREE.Mesh(aurGeom, aurMat);
+            aurora.position.set(
+                (Math.random() - 0.5) * 100,
+                80 + i * 15,
+                -50 - i * 30
+            );
+            aurora.rotation.x = -0.3;
+            
+            aurora.userData.phase = i;
+            this.scene.add(aurora);
+        }
+    }
+    
+    setupClouds() {
+        const cloudDensity = (this.planet.cloudDensity || 50) / 100;
+        const cloudCount = Math.floor(20 * cloudDensity);
+        
+        for (let i = 0; i < cloudCount; i++) {
+            const cloud = new THREE.Group();
+            
+            // Cloud puffs
+            const puffCount = 3 + Math.floor(Math.random() * 4);
+            const cloudMat = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.6 + Math.random() * 0.3
+            });
+            
+            for (let j = 0; j < puffCount; j++) {
+                const puffSize = 3 + Math.random() * 4;
+                const puffGeom = new THREE.SphereGeometry(puffSize, 8, 8);
+                const puff = new THREE.Mesh(puffGeom, cloudMat);
+                puff.position.set(
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 3,
+                    (Math.random() - 0.5) * 10
+                );
+                cloud.add(puff);
+            }
+            
+            // Position cloud in sky
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 40 + Math.random() * 80;
+            cloud.position.set(
+                Math.cos(angle) * distance,
+                30 + Math.random() * 40,
+                Math.sin(angle) * distance
+            );
+            
+            cloud.userData.driftSpeed = 0.5 + Math.random() * 1;
+            cloud.userData.driftAngle = angle;
+            
+            this.scene.add(cloud);
+        }
     }
     
     setupTerrain() {
@@ -326,6 +509,31 @@ class PlanetExplore {
         
         // Add distant mountains
         this.addMountains(config);
+        
+        // Add planetary ring structure if planet has rings
+        if (this.planet.extras && this.planet.extras.includes('ring')) {
+            this.setupPlanetaryRing(config);
+        }
+    }
+    
+    setupPlanetaryRing(config) {
+        // Create giant ring structure visible in the sky (like if you were on Saturn)
+        const innerRadius = 300;
+        const outerRadius = 400;
+        
+        const ringGeom = new THREE.RingGeometry(innerRadius, outerRadius, 64);
+        const ringMat = new THREE.MeshBasicMaterial({
+            color: config.groundColor,
+            transparent: true,
+            opacity: 0.2,
+            side: THREE.DoubleSide
+        });
+        
+        const ring = new THREE.Mesh(ringGeom, ringMat);
+        ring.rotation.x = Math.PI * 0.4; // Tilt the ring
+        ring.position.y = 100;
+        
+        this.scene.add(ring);
     }
     
     addMountains(config) {
@@ -456,6 +664,8 @@ class PlanetExplore {
         const terrain = this.planet.terrain || 'earth';
         const lifeforms = this.planet.lifeforms || ['trees'];
         
+        console.log('🌱 Setting up lifeforms:', lifeforms);
+        
         // Trees
         if (lifeforms.includes('trees')) {
             this.addTrees(50, terrain);
@@ -471,8 +681,169 @@ class PlanetExplore {
             this.addMushrooms(30, terrain);
         }
         
+        // Birds (flying)
+        if (lifeforms.includes('birds')) {
+            this.addBirds(15, terrain);
+        }
+        
+        // Ocean life (for ocean terrain or fish selection)
+        if (lifeforms.includes('fish') || terrain === 'ocean') {
+            this.addFish(20, terrain);
+        }
+        
+        // Creatures (ambient critters)
+        if (lifeforms.includes('creatures')) {
+            this.addAmbientCreatures(10, terrain);
+        }
+        
         // Rocks (always add some)
         this.addRocks(30, terrain);
+    }
+    
+    addBirds(count, terrain) {
+        const birdColors = {
+            earth: [0x4a5568, 0x2d3748, 0xf472b6],
+            desert: [0xf59e0b, 0x78350f, 0xfbbf24],
+            ice: [0xbfdbfe, 0xffffff, 0x93c5fd],
+            volcanic: [0xef4444, 0x7f1d1d, 0xfbbf24],
+            crystal: [0xc084fc, 0xa855f7, 0xf0abfc],
+            ocean: [0xffffff, 0x93c5fd, 0x6366f1]
+        };
+        
+        const colors = birdColors[terrain] || birdColors.earth;
+        this.birds = [];
+        
+        for (let i = 0; i < count; i++) {
+            const bird = new THREE.Group();
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Body
+            const bodyGeom = new THREE.ConeGeometry(0.15, 0.5, 8);
+            bodyGeom.rotateX(Math.PI / 2);
+            const bodyMat = new THREE.MeshStandardMaterial({ color });
+            const body = new THREE.Mesh(bodyGeom, bodyMat);
+            bird.add(body);
+            
+            // Wings
+            const wingGeom = new THREE.BoxGeometry(0.8, 0.02, 0.3);
+            const wing = new THREE.Mesh(wingGeom, bodyMat);
+            wing.name = 'wings';
+            bird.add(wing);
+            
+            // Position in sky
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 20 + Math.random() * 50;
+            bird.position.set(
+                Math.cos(angle) * distance,
+                15 + Math.random() * 30,
+                Math.sin(angle) * distance
+            );
+            
+            bird.userData = {
+                flyAngle: angle,
+                flySpeed: 3 + Math.random() * 4,
+                height: bird.position.y,
+                wingPhase: Math.random() * Math.PI * 2
+            };
+            
+            this.birds.push(bird);
+            this.scene.add(bird);
+        }
+    }
+    
+    addFish(count, terrain) {
+        // Fish swim above ground if ocean, or in ponds if other terrain
+        const isOcean = terrain === 'ocean';
+        const baseHeight = isOcean ? 0.5 : 0.2;
+        
+        for (let i = 0; i < count; i++) {
+            const fish = new THREE.Group();
+            
+            // Body
+            const bodyGeom = new THREE.SphereGeometry(0.2, 8, 8);
+            bodyGeom.scale(1.5, 0.6, 0.6);
+            const fishColor = [0x22d3ee, 0xf472b6, 0xfbbf24, 0xa855f7, 0x4ade80][Math.floor(Math.random() * 5)];
+            const bodyMat = new THREE.MeshStandardMaterial({
+                color: fishColor,
+                metalness: 0.3,
+                roughness: 0.5
+            });
+            const body = new THREE.Mesh(bodyGeom, bodyMat);
+            fish.add(body);
+            
+            // Tail
+            const tailGeom = new THREE.ConeGeometry(0.1, 0.25, 4);
+            tailGeom.rotateZ(Math.PI / 2);
+            const tail = new THREE.Mesh(tailGeom, bodyMat);
+            tail.position.x = -0.25;
+            fish.add(tail);
+            
+            // Position
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 10 + Math.random() * 40;
+            fish.position.set(
+                Math.cos(angle) * distance,
+                baseHeight + Math.random() * 2,
+                Math.sin(angle) * distance
+            );
+            
+            fish.userData = {
+                swimAngle: angle,
+                swimSpeed: 1 + Math.random() * 2,
+                baseY: fish.position.y
+            };
+            
+            this.lifeObjects.push(fish);
+            this.scene.add(fish);
+        }
+    }
+    
+    addAmbientCreatures(count, terrain) {
+        const colors = [0x4ade80, 0xf472b6, 0xfbbf24, 0x22d3ee, 0xa855f7];
+        
+        for (let i = 0; i < count; i++) {
+            const creature = new THREE.Group();
+            
+            // Simple blob body
+            const size = 0.3 + Math.random() * 0.3;
+            const bodyGeom = new THREE.SphereGeometry(size, 16, 16);
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const bodyMat = new THREE.MeshStandardMaterial({
+                color,
+                emissive: color,
+                emissiveIntensity: 0.2
+            });
+            const body = new THREE.Mesh(bodyGeom, bodyMat);
+            creature.add(body);
+            
+            // Eyes
+            const eyeGeom = new THREE.SphereGeometry(size * 0.25, 8, 8);
+            const eyeMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            [-0.15, 0.15].forEach(x => {
+                const eye = new THREE.Mesh(eyeGeom, eyeMat);
+                eye.position.set(x * size * 2, size * 0.3, size * 0.8);
+                creature.add(eye);
+            });
+            
+            // Position on ground
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 15 + Math.random() * 40;
+            creature.position.set(
+                Math.cos(angle) * distance,
+                size,
+                Math.sin(angle) * distance
+            );
+            
+            creature.userData = {
+                wanderAngle: angle,
+                wanderSpeed: 0.5 + Math.random() * 1,
+                baseY: size,
+                phase: Math.random() * Math.PI * 2
+            };
+            
+            this.lifeObjects.push(creature);
+            this.scene.add(creature);
+        }
     }
     
     addTrees(count, terrain) {
@@ -1029,6 +1400,7 @@ class PlanetExplore {
             
             this.updatePlayer(delta);
             this.updateCreatures(delta, time);
+            this.updateMoons(delta, time);
             
             // Rotate sky slowly
             if (this.sky) {
@@ -1036,6 +1408,54 @@ class PlanetExplore {
             }
             
             this.renderer.render(this.scene, this.camera);
+        });
+    }
+    
+    updateMoons(delta, time) {
+        if (!this.moons || this.moons.length === 0) return;
+        
+        this.moons.forEach((moon, index) => {
+            const data = moon.userData;
+            
+            // Orbit around the world
+            data.orbitAngle += data.orbitSpeed * delta;
+            
+            moon.position.x = Math.cos(data.orbitAngle) * data.orbitDistance;
+            moon.position.z = Math.sin(data.orbitAngle) * data.orbitDistance;
+            
+            // Gentle bobbing
+            moon.position.y = data.orbitHeight + Math.sin(time * 0.5 + index) * 5;
+            
+            // Slow rotation
+            moon.rotation.y += delta * 0.2;
+        });
+        
+        // Update birds
+        this.updateBirds(delta, time);
+    }
+    
+    updateBirds(delta, time) {
+        if (!this.birds || this.birds.length === 0) return;
+        
+        this.birds.forEach((bird) => {
+            const data = bird.userData;
+            
+            // Fly in circles
+            data.flyAngle += data.flySpeed * delta * 0.05;
+            const distance = 20 + Math.sin(time + data.wingPhase) * 10;
+            
+            bird.position.x = Math.cos(data.flyAngle) * distance;
+            bird.position.z = Math.sin(data.flyAngle) * distance;
+            bird.position.y = data.height + Math.sin(time * 2 + data.wingPhase) * 3;
+            
+            // Face direction of movement
+            bird.rotation.y = data.flyAngle + Math.PI / 2;
+            
+            // Wing flapping
+            const wings = bird.getObjectByName('wings');
+            if (wings) {
+                wings.rotation.z = Math.sin(time * 15 + data.wingPhase) * 0.5;
+            }
         });
     }
 }

@@ -480,6 +480,11 @@ class WorldBuilder {
             this.enterPlanet();
         });
         
+        // Explore 3D (First Person View)
+        document.getElementById('explore-3d-btn').addEventListener('click', () => {
+            this.explore3D();
+        });
+        
         // Rename
         document.getElementById('rename-btn').addEventListener('click', () => {
             this.nameInput.value = this.worldName === 'Unnamed World' ? '' : this.worldName;
@@ -723,11 +728,51 @@ class WorldBuilder {
     
     enterPlanet() {
         // Save current world first
-        this.saveWorld();
+        this.saveWorldForExplore();
         
         // Navigate to planet surface with world name
         this.vibrate([30, 50, 30]);
         window.location.href = `../planet-surface/index.html?planet=${encodeURIComponent(this.worldName)}`;
+    }
+    
+    explore3D() {
+        // Save current world first
+        this.saveWorldForExplore();
+        
+        // Navigate to 3D planet exploration
+        this.vibrate([30, 50, 30]);
+        window.location.href = `../planet-explore/index.html?planet=${encodeURIComponent(this.worldName)}`;
+    }
+    
+    saveWorldForExplore() {
+        // Save complete world data for exploration modes
+        const worldData = {
+            name: this.worldName,
+            terrain: this.terrain,
+            skyColor: this.skyColor,
+            size: this.planetSize,
+            clouds: this.cloudsEnabled,
+            cloudDensity: this.cloudDensity,
+            glowIntensity: this.glowIntensity,
+            rotationSpeed: this.rotationSpeed,
+            lifeforms: this.lifeforms,
+            extras: this.extras,
+            sunCount: this.sunCount,
+            moonCount: this.moonCount,
+            savedAt: new Date().toISOString()
+        };
+        
+        // Save to localStorage (update if exists, add if new)
+        let worlds = JSON.parse(localStorage.getItem('pneuoma-worlds') || '[]');
+        const existingIndex = worlds.findIndex(w => w.name === this.worldName);
+        
+        if (existingIndex >= 0) {
+            worlds[existingIndex] = worldData;
+        } else {
+            worlds.push(worldData);
+        }
+        
+        localStorage.setItem('pneuoma-worlds', JSON.stringify(worlds));
     }
     
     vibrate(pattern) {
