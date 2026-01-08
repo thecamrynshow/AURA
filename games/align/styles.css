@@ -1099,6 +1099,17 @@ body {
     color: var(--accent-calm);
 }
 
+.breath-circle.breathing-in {
+    transform: scale(1.4) !important;
+    background: rgba(123, 104, 238, 0.4);
+    border-color: #a78bfa;
+}
+
+.breath-circle {
+    transition: transform 0.3s ease, background 0.3s ease;
+    cursor: pointer;
+}
+
 /* ==================== VICTORY SCREEN ==================== */
 
 #victory-screen {

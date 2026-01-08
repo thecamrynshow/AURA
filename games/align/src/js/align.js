@@ -147,7 +147,30 @@ class AlignGame {
         document.getElementById('creature-dismiss')?.addEventListener('click', () => this.closeCreatureModal());
         
         // Victory
-        document.getElementById('victory-continue')?.addEventListener('click', () => this.showScreen('world'));
+        document.getElementById('victory-continue')?.addEventListener('click', () => {
+            this.showScreen('world');
+            // Reset nav
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.nav-btn[data-screen="world"]')?.classList.add('active');
+        });
+        
+        // Boss battle trigger
+        document.getElementById('battle-nav-btn')?.addEventListener('click', () => {
+            if (this.state.energy >= 20) {
+                this.startBossBattle();
+                this.vibrate([30, 20, 50]);
+            } else {
+                alert('You need at least 20 energy to face a boss. Touch the orb to restore energy!');
+                this.vibrate([50, 50, 50]);
+            }
+        });
+        
+        // Double tap orb also triggers battle
+        document.getElementById('alignment-orb')?.addEventListener('dblclick', () => {
+            if (this.state.energy >= 20) {
+                this.startBossBattle();
+            }
+        });
         
         // Touch effects on start screen
         document.getElementById('start-screen')?.addEventListener('touchstart', (e) => {
@@ -595,6 +618,345 @@ class AlignGame {
         }
         
         this.animationId = requestAnimationFrame(this.animate);
+    }
+    
+    // ==================== BOSS BATTLE ====================
+    
+    bosses = [
+        { 
+            id: 'anxiety', 
+            name: 'The Anxiety Storm', 
+            emoji: '⛈️',
+            description: 'Racing thoughts and worried feelings',
+            difficulty: 1,
+            reward: { energy: 30, creature: 'flow' }
+        },
+        { 
+            id: 'doubt', 
+            name: 'The Shadow of Doubt', 
+            emoji: '👤',
+            description: 'That voice that says you\'re not enough',
+            difficulty: 2,
+            reward: { energy: 40, creature: 'owl' }
+        },
+        { 
+            id: 'overwhelm', 
+            name: 'The Crushing Wave', 
+            emoji: '🌊',
+            description: 'Too much, all at once',
+            difficulty: 2,
+            reward: { energy: 50, creature: 'turtle' }
+        },
+        { 
+            id: 'anger', 
+            name: 'The Inner Volcano', 
+            emoji: '🌋',
+            description: 'Heat that wants to explode',
+            difficulty: 3,
+            reward: { energy: 60, creature: 'ember' }
+        }
+    ];
+    
+    startBossBattle() {
+        // Pick a random boss based on current state
+        const availableBosses = this.bosses.filter(b => b.difficulty <= Math.ceil(this.state.energy / 30));
+        const boss = availableBosses[Math.floor(Math.random() * availableBosses.length)] || this.bosses[0];
+        
+        this.currentBoss = boss;
+        this.battleState = {
+            bossHealth: 100,
+            playerCalm: 100,
+            breathCount: 0,
+            calmBreaths: 0,
+            startTime: Date.now(),
+            isActive: true
+        };
+        
+        // Update UI
+        document.getElementById('boss-name').textContent = boss.name;
+        document.querySelector('.storm-cloud').textContent = boss.emoji;
+        document.getElementById('boss-health').style.width = '100%';
+        document.getElementById('player-calm').style.width = '100%';
+        
+        // Show boss screen
+        this.showScreen('boss');
+        this.vibrate([50, 30, 50, 30, 100]);
+        
+        // Start breath detection
+        this.initBreathDetection();
+        
+        // Start battle loop
+        this.battleLoop();
+        
+        console.log('⚔️ Boss battle started:', boss.name);
+    }
+    
+    async initBreathDetection() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                audio: { 
+                    echoCancellation: true,
+                    noiseSuppression: false,
+                    autoGainControl: true
+                } 
+            });
+            
+            if (!this.audioContext) {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            const analyser = this.audioContext.createAnalyser();
+            analyser.fftSize = 512;
+            analyser.smoothingTimeConstant = 0.3;
+            
+            const mic = this.audioContext.createMediaStreamSource(stream);
+            mic.connect(analyser);
+            
+            this.breathDetector = {
+                analyser,
+                dataArray: new Uint8Array(analyser.frequencyBinCount),
+                stream,
+                noiseFloor: 0.03,
+                threshold: 0.08,
+                volume: 0,
+                smoothedVolume: 0,
+                isBreathing: false,
+                lastBreathTime: 0
+            };
+            
+            // Calibrate after 1 second
+            setTimeout(() => {
+                if (this.breathDetector) {
+                    this.breathDetector.noiseFloor = this.breathDetector.smoothedVolume * 1.5;
+                    this.breathDetector.threshold = this.breathDetector.noiseFloor + 0.04;
+                }
+            }, 1000);
+            
+            console.log('🎤 Breath detection ready for battle');
+        } catch (err) {
+            console.warn('Microphone not available, using touch fallback');
+            this.setupTouchBreathFallback();
+        }
+    }
+    
+    setupTouchBreathFallback() {
+        // If no mic, use touch as breath input
+        const bossScreen = document.getElementById('boss-screen');
+        const breathCircle = document.querySelector('.breath-circle');
+        
+        if (breathCircle) {
+            breathCircle.addEventListener('touchstart', () => this.onBreathStart());
+            breathCircle.addEventListener('touchend', () => this.onBreathEnd());
+            breathCircle.addEventListener('mousedown', () => this.onBreathStart());
+            breathCircle.addEventListener('mouseup', () => this.onBreathEnd());
+            
+            // Update instruction
+            document.querySelector('.boss-instructions').innerHTML = `
+                <p>Hold the circle as you breathe in.</p>
+                <p>Release as you breathe out.</p>
+            `;
+        }
+    }
+    
+    onBreathStart() {
+        if (!this.battleState?.isActive) return;
+        this.breathDetector = this.breathDetector || {};
+        this.breathDetector.isBreathing = true;
+        
+        const breathCircle = document.querySelector('.breath-circle');
+        breathCircle?.classList.add('breathing-in');
+        
+        this.vibrate([20]);
+    }
+    
+    onBreathEnd() {
+        if (!this.battleState?.isActive) return;
+        if (this.breathDetector) {
+            this.breathDetector.isBreathing = false;
+        }
+        
+        const breathCircle = document.querySelector('.breath-circle');
+        breathCircle?.classList.remove('breathing-in');
+        
+        // Count as a breath cycle
+        this.onBreathCycle();
+    }
+    
+    updateBreathDetection() {
+        if (!this.breathDetector?.analyser) return;
+        
+        const { analyser, dataArray } = this.breathDetector;
+        analyser.getByteFrequencyData(dataArray);
+        
+        // Calculate volume
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+            const n = dataArray[i] / 255;
+            sum += n * n;
+        }
+        this.breathDetector.volume = Math.sqrt(sum / dataArray.length) * 2;
+        
+        // Smooth
+        this.breathDetector.smoothedVolume = this.breathDetector.smoothedVolume * 0.8 + 
+                                              this.breathDetector.volume * 0.2;
+        
+        // Detect breath
+        const now = performance.now();
+        const adjusted = this.breathDetector.smoothedVolume - this.breathDetector.noiseFloor;
+        const wasBreathing = this.breathDetector.isBreathing;
+        
+        this.breathDetector.isBreathing = adjusted > this.breathDetector.threshold;
+        
+        // Detect breath cycle completion (was breathing, now not)
+        if (wasBreathing && !this.breathDetector.isBreathing && 
+            now - this.breathDetector.lastBreathTime > 1500) {
+            this.onBreathCycle();
+            this.breathDetector.lastBreathTime = now;
+        }
+        
+        // Update breath circle visual
+        const breathCircle = document.querySelector('.breath-circle');
+        if (breathCircle) {
+            const scale = 1 + (this.breathDetector.isBreathing ? 0.3 : 0);
+            breathCircle.style.transform = `scale(${scale})`;
+        }
+    }
+    
+    onBreathCycle() {
+        if (!this.battleState?.isActive) return;
+        
+        this.battleState.breathCount++;
+        
+        // Check if it was a calm breath (smooth, not panicked)
+        // For simplicity, every breath after the first 2 counts as "calm"
+        if (this.battleState.breathCount > 2) {
+            this.battleState.calmBreaths++;
+            
+            // Damage the boss!
+            const damage = 8 + Math.floor(Math.random() * 5);
+            this.battleState.bossHealth = Math.max(0, this.battleState.bossHealth - damage);
+            
+            // Visual feedback
+            this.vibrate([30, 20, 30]);
+            document.querySelector('.storm-cloud')?.classList.add('haptic-flash');
+            setTimeout(() => {
+                document.querySelector('.storm-cloud')?.classList.remove('haptic-flash');
+            }, 150);
+            
+            // Update UI
+            document.getElementById('boss-health').style.width = `${this.battleState.bossHealth}%`;
+            
+            // Restore some calm
+            this.battleState.playerCalm = Math.min(100, this.battleState.playerCalm + 3);
+            document.getElementById('player-calm').style.width = `${this.battleState.playerCalm}%`;
+        }
+        
+        console.log(`🫁 Breath ${this.battleState.breathCount}, Boss: ${this.battleState.bossHealth}%`);
+    }
+    
+    battleLoop() {
+        if (!this.battleState?.isActive) return;
+        
+        // Update breath detection
+        this.updateBreathDetection();
+        
+        // Boss attacks (drains player calm over time)
+        const timeSinceStart = (Date.now() - this.battleState.startTime) / 1000;
+        const attackRate = 0.3 + (this.currentBoss?.difficulty || 1) * 0.1;
+        
+        // Reduce calm if not breathing
+        if (!this.breathDetector?.isBreathing) {
+            this.battleState.playerCalm = Math.max(0, this.battleState.playerCalm - attackRate);
+            document.getElementById('player-calm').style.width = `${this.battleState.playerCalm}%`;
+        }
+        
+        // Check win/lose conditions
+        if (this.battleState.bossHealth <= 0) {
+            this.winBattle();
+            return;
+        }
+        
+        if (this.battleState.playerCalm <= 0) {
+            this.loseBattle();
+            return;
+        }
+        
+        // Update breath guide animation
+        const breathPhase = (Date.now() / 3000) % 1;
+        const guideScale = 1 + Math.sin(breathPhase * Math.PI * 2) * 0.3;
+        const breathText = document.querySelector('.breath-text');
+        if (breathText) {
+            breathText.textContent = breathPhase < 0.5 ? 'Breathe In...' : 'Breathe Out...';
+        }
+        
+        // Storm visual intensity based on boss health
+        const stormIntensity = this.battleState.bossHealth / 100;
+        const stormCloud = document.querySelector('.storm-cloud');
+        if (stormCloud) {
+            stormCloud.style.filter = `brightness(${0.5 + stormIntensity * 0.5})`;
+            stormCloud.style.animation = `stormShake ${0.3 + (1 - stormIntensity) * 0.5}s ease-in-out infinite`;
+        }
+        
+        requestAnimationFrame(() => this.battleLoop());
+    }
+    
+    winBattle() {
+        this.battleState.isActive = false;
+        this.stopBreathDetection();
+        
+        // Celebration!
+        this.vibrate([100, 50, 100, 50, 200, 100, 300]);
+        
+        // Add rewards
+        const reward = this.currentBoss?.reward || { energy: 30 };
+        this.addEnergy(reward.energy);
+        
+        // Unlock creature if applicable
+        if (reward.creature && !this.state.creatures.includes(reward.creature)) {
+            setTimeout(() => {
+                this.unlockCreature(reward.creature);
+            }, 1500);
+        }
+        
+        // Update victory screen
+        document.querySelector('.victory-message').textContent = 
+            `You remained calm through ${this.currentBoss?.name || 'the storm'}.`;
+        document.querySelector('.victory-rewards').innerHTML = `
+            <div class="victory-reward">⚡ +${reward.energy} Energy</div>
+            ${reward.creature ? `<div class="victory-reward">🎉 New creature awaits!</div>` : ''}
+        `;
+        
+        this.showScreen('victory');
+        
+        console.log('🏆 Battle won!');
+    }
+    
+    loseBattle() {
+        this.battleState.isActive = false;
+        this.stopBreathDetection();
+        
+        // Gentle feedback - no punishment
+        this.vibrate([50, 100, 50]);
+        
+        // Small energy loss
+        this.removeEnergy(10);
+        
+        // Show encouragement, return to world
+        alert('The storm was strong today. Rest, and try again when you\'re ready. 💜');
+        this.showScreen('world');
+        
+        // Reset nav
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.nav-btn[data-screen="world"]')?.classList.add('active');
+        
+        console.log('😤 Battle lost, but you\'ll be back stronger');
+    }
+    
+    stopBreathDetection() {
+        if (this.breathDetector?.stream) {
+            this.breathDetector.stream.getTracks().forEach(track => track.stop());
+        }
+        this.breathDetector = null;
     }
     
     // ==================== SAVE/LOAD ====================
