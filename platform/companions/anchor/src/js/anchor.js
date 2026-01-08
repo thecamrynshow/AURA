@@ -13,6 +13,8 @@ class Anchor {
         this.isTyping = false;
         this.todayIntention = localStorage.getItem('anchor-intention') || '';
         this.sobrietyDate = localStorage.getItem('anchor-sobriety-date') || null;
+        this.apiUrl = this.detectApiUrl();
+        this.useApi = true;
         
         // Supportive responses
         this.responses = {
@@ -284,10 +286,28 @@ class Anchor {
         this.init();
     }
     
+    detectApiUrl() {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3001';
+        }
+        return 'https://pneuoma-server.onrender.com';
+    }
+    
     init() {
         this.cacheElements();
         this.setupEventListeners();
         this.loadHistory();
+        this.checkApiHealth();
+    }
+    
+    async checkApiHealth() {
+        try {
+            const response = await fetch(`${this.apiUrl}/health`, { method: 'GET' });
+            this.useApi = response.ok;
+            console.log(`🌱 API ${this.useApi ? 'connected' : 'unavailable'}`);
+        } catch (e) {
+            this.useApi = false;
+        }
     }
     
     cacheElements() {
@@ -417,16 +437,72 @@ class Anchor {
         setTimeout(() => this.generateResponse(text), 500);
     }
     
-    generateResponse(userMessage) {
+    async generateResponse(userMessage) {
+        if (this.useApi) {
+            try {
+                const aiResponse = await this.callApi(userMessage);
+                if (aiResponse) {
+                    this.showAiResponse(aiResponse);
+                    return;
+                }
+            } catch (e) {
+                console.log('API call failed, using local fallback');
+            }
+        }
+        this.generateLocalResponse(userMessage);
+    }
+    
+    async callApi(message) {
+        try {
+            const response = await fetch(`${this.apiUrl}/api/companion/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    companion: 'anchor',
+                    message: message,
+                    history: this.conversationHistory.slice(-10)
+                })
+            });
+            if (!response.ok) throw new Error('API error');
+            const data = await response.json();
+            return data.response;
+        } catch (e) {
+            return null;
+        }
+    }
+    
+    showAiResponse(text) {
+        this.isTyping = true;
+        this.showTypingIndicator();
+        
+        const messages = text.split('\n\n').filter(m => m.trim());
+        let delay = 1000;
+        
+        messages.forEach((msg, index) => {
+            setTimeout(() => {
+                this.hideTypingIndicator();
+                this.addMessage(msg.trim(), 'companion');
+                if (index < messages.length - 1) {
+                    setTimeout(() => this.showTypingIndicator(), 300);
+                } else {
+                    this.isTyping = false;
+                }
+            }, delay);
+            delay += 1000 + (msg.length * 15);
+        });
+        
+        this.conversationHistory.push({ role: 'companion', content: text });
+        this.saveHistory();
+    }
+    
+    generateLocalResponse(userMessage) {
         const lowerMessage = userMessage.toLowerCase();
         
-        // Crisis check first
         if (this.matchesKeywords(lowerMessage, this.keywords.crisis)) {
             this.showResponse(this.responses.crisis[0]);
             return;
         }
         
-        // Check other keywords
         let responseCategory = 'default';
         
         for (const [category, keywords] of Object.entries(this.keywords)) {

@@ -674,6 +674,182 @@ io.on('connection', (socket) => {
     });
 });
 
+// ==================== PNEUMA AI COMPANIONS ====================
+
+// AI Configuration (use environment variables in production)
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+
+// System prompts for each companion
+const COMPANION_PROMPTS = {
+    'bully-buddy': `You are Bully Buddy, a supportive AI companion for kids and teens experiencing bullying. 
+
+Your personality:
+- Warm, supportive, and age-appropriate (8-18 year olds)
+- Never preachy or condescending
+- Uses emojis sparingly (💙 is your signature)
+- Acknowledges feelings first, then offers tools
+- Always reminds them it's NOT their fault
+
+Your capabilities:
+- Help them process bullying experiences
+- Teach what to say when bullied
+- Build confidence and resilience
+- Help create safety plans
+- Recognize when to involve adults
+
+Critical rules:
+- NEVER give false hope or toxic positivity
+- If they mention self-harm, suicide, or being in danger, immediately provide crisis resources (988, Crisis Text Line 741741) and urge them to tell a trusted adult
+- Keep responses concise (2-4 short messages max)
+- Don't lecture - be a friend`,
+
+    'valor': `You are Valor, a supportive AI companion for military veterans dealing with PTSD and reintegration challenges.
+
+Your personality:
+- Respectful of their service
+- Understands military culture and terminology
+- Direct but compassionate
+- Uses 🎖️ as your signature
+- Never dismissive of their experiences
+
+Your capabilities:
+- Grounding techniques for flashbacks (5-4-3-2-1)
+- Sleep and nightmare coping strategies
+- Hypervigilance and anger management
+- Civilian reintegration support
+- Survivor's guilt processing
+- VA resource connections
+
+Critical rules:
+- If they mention suicide, self-harm, or crisis, immediately provide Veterans Crisis Line (1-800-273-8255 Press 1, or text 838255)
+- Never say "I understand what you went through" - you don't
+- Always validate their service and sacrifice
+- Keep responses concise and actionable`,
+
+    'anchor': `You are Anchor, a supportive AI companion for people in addiction recovery.
+
+Your personality:
+- Like a sponsor in their pocket
+- Uses recovery language appropriately
+- Non-judgmental about slips or relapses  
+- Uses 🌱 as your signature
+- Emphasizes "one day at a time"
+
+Your capabilities:
+- Craving management (HALT, riding the wave, playing the tape forward)
+- Relapse prevention strategies
+- Processing shame vs guilt
+- Daily check-ins and intentions
+- Relationship repair guidance
+- Morning/evening reflections
+
+Critical rules:
+- If they mention overdose, suicide, or crisis, immediately provide SAMHSA (1-800-662-4357) and 988
+- A slip doesn't erase progress - be compassionate
+- Never shame them for struggling
+- Keep responses warm but practical`
+};
+
+// Chat with AI companion
+app.post('/api/companion/chat', async (req, res) => {
+    const { companion, message, history } = req.body;
+    
+    if (!companion || !message) {
+        return res.status(400).json({ error: 'Companion and message required' });
+    }
+    
+    const systemPrompt = COMPANION_PROMPTS[companion];
+    if (!systemPrompt) {
+        return res.status(400).json({ error: 'Unknown companion' });
+    }
+    
+    // If no API key, use fallback responses
+    if (!ANTHROPIC_API_KEY) {
+        console.log(`💬 Companion chat (no API key): ${companion}`);
+        return res.json({
+            response: getFallbackResponse(companion, message),
+            fallback: true
+        });
+    }
+    
+    try {
+        // Build messages array
+        const messages = [];
+        
+        // Add history if provided
+        if (history && Array.isArray(history)) {
+            for (const msg of history.slice(-10)) { // Last 10 messages for context
+                messages.push({
+                    role: msg.role === 'companion' ? 'assistant' : 'user',
+                    content: msg.content
+                });
+            }
+        }
+        
+        // Add current message
+        messages.push({ role: 'user', content: message });
+        
+        // Call Claude API
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01'
+            },
+            body: JSON.stringify({
+                model: 'claude-3-haiku-20240307', // Fast and cost-effective
+                max_tokens: 500,
+                system: systemPrompt,
+                messages: messages
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const aiResponse = data.content[0].text;
+        
+        console.log(`💬 Companion chat: ${companion} - "${message.substring(0, 50)}..."`);
+        
+        res.json({ response: aiResponse });
+        
+    } catch (error) {
+        console.error('Companion AI error:', error);
+        res.json({
+            response: getFallbackResponse(companion, message),
+            fallback: true
+        });
+    }
+});
+
+// Fallback responses when API is unavailable
+function getFallbackResponse(companion, message) {
+    const lower = message.toLowerCase();
+    
+    // Crisis detection - always handle this
+    if (lower.includes('kill myself') || lower.includes('suicide') || lower.includes('want to die') || lower.includes('end it')) {
+        if (companion === 'valor') {
+            return "I hear you, and I'm glad you're talking to me. Please call the Veterans Crisis Line right now: 1-800-273-8255 (Press 1) or text 838255. You served your country - now let them serve you. 🎖️";
+        } else if (companion === 'anchor') {
+            return "I'm really glad you told me. Please call 988 or SAMHSA at 1-800-662-4357 right now. You matter. Your recovery matters. Please reach out. 🌱";
+        } else {
+            return "I'm really glad you told me. Please talk to a trusted adult right now, or call 988. You matter, and there are people who want to help. 💙";
+        }
+    }
+    
+    // Generic supportive response
+    const responses = {
+        'bully-buddy': "I hear you, and I'm here for you. Being bullied is really hard, but remember: it's not your fault. Can you tell me more about what's happening? 💙",
+        'valor': "I'm here with you. Thank you for sharing that. Your feelings are valid, and you're not alone in this. What would help most right now? 🎖️",
+        'anchor': "I hear you. One day at a time - that's all we can do. I'm here to support you through this. What's on your heart today? 🌱"
+    };
+    
+    return responses[companion] || "I'm here to listen. Tell me more.";
+}
+
 // ==================== START SERVER ====================
 
 const PORT = process.env.PORT || 3001;
