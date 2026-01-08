@@ -288,3 +288,92 @@
     color: rgba(255, 255, 255, 0.6);
 }
 
+/* Status badges */
+.status-badge.live {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Universe Visual */
+.universe-bg {
+    background: radial-gradient(ellipse at center, #1a0a2e 0%, #050510 100%);
+}
+
+.universe-preview {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.uni-sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 30% 30%, #fff9c4 0%, #fbbf24 50%, #f59e0b 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(251, 191, 36, 0.6), 0 0 80px rgba(251, 191, 36, 0.3);
+    animation: sunGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes sunGlow {
+    0% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.6), 0 0 80px rgba(251, 191, 36, 0.3); }
+    100% { box-shadow: 0 0 50px rgba(251, 191, 36, 0.8), 0 0 100px rgba(251, 191, 36, 0.4); }
+}
+
+.uni-orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.uni-orbit.o1 { width: 80px; height: 80px; margin: -40px 0 0 -40px; animation: orbitAnim 6s linear infinite; }
+.uni-orbit.o2 { width: 130px; height: 130px; margin: -65px 0 0 -65px; animation: orbitAnim 10s linear infinite reverse; }
+.uni-orbit.o3 { width: 180px; height: 180px; margin: -90px 0 0 -90px; animation: orbitAnim 15s linear infinite; }
+
+@keyframes orbitAnim {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.uni-planet {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.uni-planet.p1 {
+    width: 14px;
+    height: 14px;
+    top: -7px;
+    left: 50%;
+    margin-left: -7px;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.uni-planet.p2 {
+    width: 18px;
+    height: 18px;
+    top: 50%;
+    right: -9px;
+    margin-top: -9px;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+}
+
+.uni-planet.p3 {
+    width: 12px;
+    height: 12px;
+    bottom: -6px;
+    left: 50%;
+    margin-left: -6px;
+    background: linear-gradient(135deg, #f472b6, #ec4899);
+}
+

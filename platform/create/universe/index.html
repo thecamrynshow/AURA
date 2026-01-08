@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#050510">
+    <title>Universe | PNEUOMA Create</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Stars Background -->
+        <canvas id="stars-canvas"></canvas>
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <div class="universe-preview">
+                    <div class="preview-sun"></div>
+                    <div class="preview-orbit orbit-1"><div class="preview-planet p1"></div></div>
+                    <div class="preview-orbit orbit-2"><div class="preview-planet p2"></div></div>
+                    <div class="preview-orbit orbit-3"><div class="preview-planet p3"></div></div>
+                </div>
+                <h1 class="title">Universe</h1>
+                <p class="subtitle">Build Together. Create Forever.</p>
+                <p class="tagline">Host a universe, invite friends, add planets, watch your solar system come alive.</p>
+                
+                <div class="start-actions">
+                    <button id="create-universe-btn" class="primary-btn">
+                        <span>🌌 Create Universe</span>
+                    </button>
+                    <button id="join-universe-btn" class="secondary-btn">
+                        <span>🔗 Join Universe</span>
+                    </button>
+                </div>
+                
+                <div class="my-universes" id="my-universes">
+                    <h3>Your Universes</h3>
+                    <div class="universe-list" id="universe-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Universe View Screen -->
+        <div id="universe-screen" class="screen">
+            <!-- Top Bar -->
+            <div class="universe-header">
+                <button id="back-btn" class="icon-btn">←</button>
+                <div class="universe-info">
+                    <h2 id="universe-name">My Universe</h2>
+                    <div class="universe-code">
+                        <span>Code:</span>
+                        <code id="universe-code">XXXX-XXXX</code>
+                        <button id="copy-code-btn" class="copy-btn">📋</button>
+                    </div>
+                </div>
+                <button id="music-toggle" class="icon-btn music-btn">🔇</button>
+            </div>
+            
+            <!-- Solar System View -->
+            <div class="solar-system-viewport">
+                <div class="solar-system" id="solar-system">
+                    <!-- Central Sun -->
+                    <div class="sun" id="universe-sun">
+                        <div class="sun-glow"></div>
+                        <div class="sun-core"></div>
+                    </div>
+                    
+                    <!-- Orbital Rings (visual guides) -->
+                    <div class="orbital-ring ring-1"></div>
+                    <div class="orbital-ring ring-2"></div>
+                    <div class="orbital-ring ring-3"></div>
+                    <div class="orbital-ring ring-4"></div>
+                    <div class="orbital-ring ring-5"></div>
+                    <div class="orbital-ring ring-6"></div>
+                    
+                    <!-- Planets Container -->
+                    <div class="planets-container" id="planets-container">
+                        <!-- Planets will be added here -->
+                    </div>
+                </div>
+                
+                <!-- Planet Info Panel (when selected) -->
+                <div class="planet-info-panel hidden" id="planet-info-panel">
+                    <button class="close-panel-btn" id="close-planet-info">✕</button>
+                    <div class="planet-info-header">
+                        <div class="planet-info-preview" id="planet-info-preview"></div>
+                        <div class="planet-info-text">
+                            <h3 id="planet-info-name">Planet Name</h3>
+                            <p id="planet-info-creator">Created by You</p>
+                        </div>
+                    </div>
+                    <div class="planet-info-details">
+                        <div class="info-row">
+                            <span class="info-label">Terrain</span>
+                            <span class="info-value" id="planet-info-terrain">Earth-like</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Life Forms</span>
+                            <span class="info-value" id="planet-info-life">None</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Creatures</span>
+                            <span class="info-value" id="planet-info-creatures">0</span>
+                        </div>
+                    </div>
+                    <div class="planet-info-actions">
+                        <button class="action-btn" id="visit-planet-btn">🚀 Visit Planet</button>
+                        <button class="action-btn" id="add-creature-btn">🧬 Add Creature</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Actions -->
+            <div class="universe-actions">
+                <button class="action-pill" id="add-planet-btn">
+                    <span class="pill-icon">🌍</span>
+                    <span>Add Planet</span>
+                </button>
+                <button class="action-pill" id="invite-btn">
+                    <span class="pill-icon">👥</span>
+                    <span>Invite</span>
+                </button>
+                <button class="action-pill" id="view-creatures-btn">
+                    <span class="pill-icon">🧬</span>
+                    <span>Creatures</span>
+                </button>
+            </div>
+            
+            <!-- Members Panel -->
+            <div class="members-panel hidden" id="members-panel">
+                <div class="members-header">
+                    <h3>Universe Members</h3>
+                    <button class="close-panel-btn" id="close-members">✕</button>
+                </div>
+                <div class="members-list" id="members-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Create Universe Modal -->
+        <div id="create-modal" class="modal">
+            <div class="modal-content">
+                <h3>Create Your Universe</h3>
+                <p class="modal-desc">Name your universe and customize its sun.</p>
+                <input type="text" id="new-universe-name" placeholder="Universe name..." maxlength="30">
+                
+                <div class="sun-options">
+                    <label>Sun Type</label>
+                    <div class="sun-grid">
+                        <button class="sun-btn active" data-sun="yellow">
+                            <div class="sun-preview yellow"></div>
+                            <span>Yellow</span>
+                        </button>
+                        <button class="sun-btn" data-sun="orange">
+                            <div class="sun-preview orange"></div>
+                            <span>Orange</span>
+                        </button>
+                        <button class="sun-btn" data-sun="red">
+                            <div class="sun-preview red"></div>
+                            <span>Red</span>
+                        </button>
+                        <button class="sun-btn" data-sun="blue">
+                            <div class="sun-preview blue"></div>
+                            <span>Blue</span>
+                        </button>
+                        <button class="sun-btn" data-sun="white">
+                            <div class="sun-preview white"></div>
+                            <span>White</span>
+                        </button>
+                        <button class="sun-btn" data-sun="purple">
+                            <div class="sun-preview purple"></div>
+                            <span>Purple</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" id="create-cancel">Cancel</button>
+                    <button class="modal-btn primary" id="create-confirm">Create Universe</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Join Universe Modal -->
+        <div id="join-modal" class="modal">
+            <div class="modal-content">
+                <h3>Join a Universe</h3>
+                <p class="modal-desc">Enter the invite code to join someone's universe.</p>
+                <input type="text" id="join-code" placeholder="XXXX-XXXX" maxlength="9" class="code-input">
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" id="join-cancel">Cancel</button>
+                    <button class="modal-btn primary" id="join-confirm">Join</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Planet Modal -->
+        <div id="add-planet-modal" class="modal">
+            <div class="modal-content">
+                <h3>Add a Planet</h3>
+                <p class="modal-desc">Choose from your saved planets or create a new one.</p>
+                
+                <div class="saved-planets" id="saved-planets">
+                    <!-- Populated dynamically -->
+                </div>
+                
+                <div class="modal-divider">or</div>
+                
+                <a href="../world-builder/index.html" class="create-new-btn">
+                    🌍 Create New Planet
+                </a>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" id="add-planet-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Creature Modal -->
+        <div id="add-creature-modal" class="modal">
+            <div class="modal-content">
+                <h3>Add a Creature</h3>
+                <p class="modal-desc">Choose a creature to add to this planet.</p>
+                
+                <div class="saved-creatures" id="saved-creatures">
+                    <!-- Populated dynamically -->
+                </div>
+                
+                <div class="modal-divider">or</div>
+                
+                <a href="../creature-lab/index.html" class="create-new-btn">
+                    🧬 Create New Creature
+                </a>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" id="add-creature-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Invite Modal -->
+        <div id="invite-modal" class="modal">
+            <div class="modal-content">
+                <h3>Invite Friends</h3>
+                <p class="modal-desc">Share this code with friends to join your universe!</p>
+                
+                <div class="invite-code-display">
+                    <code id="invite-code-large">XXXX-XXXX</code>
+                </div>
+                
+                <div class="invite-actions">
+                    <button class="action-btn" id="copy-invite">📋 Copy Code</button>
+                    <button class="action-btn" id="share-invite">📤 Share</button>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" id="invite-close">Close</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toast Notification -->
+        <div class="toast hidden" id="toast">
+            <span id="toast-message">Code copied!</span>
+        </div>
+    </div>
+    
+    <script src="src/js/universe.js"></script>
+</body>
+</html>
+
