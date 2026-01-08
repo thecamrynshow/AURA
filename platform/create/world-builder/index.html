@@ -39,6 +39,15 @@
             <!-- Planet Display -->
             <div class="planet-viewport">
                 <canvas id="planet-canvas"></canvas>
+                
+                <!-- Suns Container -->
+                <div id="suns-container"></div>
+                
+                <!-- Music Toggle -->
+                <button id="music-toggle" class="music-btn" aria-label="Toggle music">
+                    <span class="music-icon">🔇</span>
+                </button>
+                
                 <div id="planet-container">
                     <div id="planet">
                         <div class="planet-surface"></div>
@@ -173,15 +182,21 @@
                 <!-- Extras Panel -->
                 <div class="panel-content" id="extras-panel">
                     <div class="control-group">
+                        <label>Suns <span id="suns-count" class="control-value">0</span></label>
+                        <input type="range" id="suns-slider" min="0" max="2" value="0" class="slider">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Moons <span id="moons-count" class="control-value">0</span></label>
+                        <input type="range" id="moons-slider" min="0" max="10" value="0" class="slider">
+                    </div>
+                    
+                    <div class="control-group">
                         <label>Planetary Features</label>
                         <div class="option-grid">
                             <button class="extra-btn" data-extra="ring">
                                 <span class="option-icon">💫</span>
                                 <span class="option-label">Rings</span>
-                            </button>
-                            <button class="extra-btn" data-extra="moon">
-                                <span class="option-icon">🌙</span>
-                                <span class="option-label">Moon</span>
                             </button>
                             <button class="extra-btn" data-extra="aurora">
                                 <span class="option-icon">🌌</span>

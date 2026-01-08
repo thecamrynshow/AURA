@@ -15,6 +15,13 @@ class WorldBuilder {
         this.rotationSpeed = 30;
         this.lifeforms = [];
         this.extras = [];
+        this.sunCount = 0;
+        this.moonCount = 0;
+        
+        // Audio system
+        this.audioContext = null;
+        this.musicPlaying = false;
+        this.musicNodes = [];
         
         this.terrainStyles = {
             earth: {
@@ -70,6 +77,205 @@ class WorldBuilder {
         this.setupEventListeners();
         this.applyPlanetStyles();
     }
+    
+    // ==================== AUDIO SYSTEM ====================
+    
+    initAudio() {
+        if (this.audioContext) return;
+        
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.masterGain = this.audioContext.createGain();
+        this.masterGain.gain.value = 0.3;
+        this.masterGain.connect(this.audioContext.destination);
+    }
+    
+    startSpaceMusic() {
+        if (!this.audioContext) this.initAudio();
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+        
+        this.musicPlaying = true;
+        document.getElementById('music-toggle').classList.add('playing');
+        document.querySelector('.music-icon').textContent = '🔊';
+        
+        // Create ambient space drone layers
+        this.createDroneLayer(55, 0.15);    // Deep bass drone
+        this.createDroneLayer(110, 0.08);   // Low harmonic
+        this.createDroneLayer(165, 0.05);   // Fifth
+        this.createDroneLayer(220, 0.03);   // Octave shimmer
+        
+        // Create evolving pad
+        this.createEvolvingPad();
+        
+        // Create occasional sparkles
+        this.sparkleInterval = setInterval(() => {
+            if (this.musicPlaying) this.createSparkle();
+        }, 3000 + Math.random() * 4000);
+    }
+    
+    createDroneLayer(freq, volume) {
+        const osc = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        const filter = this.audioContext.createBiquadFilter();
+        
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        
+        // Slow frequency modulation for movement
+        const lfo = this.audioContext.createOscillator();
+        const lfoGain = this.audioContext.createGain();
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.05 + Math.random() * 0.1;
+        lfoGain.gain.value = freq * 0.02;
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        lfo.start();
+        
+        filter.type = 'lowpass';
+        filter.frequency.value = 800;
+        filter.Q.value = 1;
+        
+        gain.gain.value = 0;
+        gain.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 3);
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.masterGain);
+        
+        osc.start();
+        
+        this.musicNodes.push({ osc, gain, lfo });
+    }
+    
+    createEvolvingPad() {
+        // Create a slowly evolving pad sound
+        const padFreqs = [82.41, 123.47, 164.81, 246.94]; // E2, B2, E3, B3
+        
+        padFreqs.forEach((freq, i) => {
+            const osc = this.audioContext.createOscillator();
+            const gain = this.audioContext.createGain();
+            
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            
+            // Volume envelope that evolves
+            gain.gain.value = 0;
+            this.schedulePadEnvelope(gain, i * 2);
+            
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start();
+            
+            this.musicNodes.push({ osc, gain });
+        });
+    }
+    
+    schedulePadEnvelope(gain, delay) {
+        const now = this.audioContext.currentTime;
+        const cycle = 12; // 12 second cycle
+        
+        const scheduleNext = () => {
+            if (!this.musicPlaying) return;
+            
+            const t = this.audioContext.currentTime;
+            gain.gain.cancelScheduledValues(t);
+            gain.gain.setValueAtTime(0, t);
+            gain.gain.linearRampToValueAtTime(0.04, t + 4);
+            gain.gain.linearRampToValueAtTime(0.02, t + 8);
+            gain.gain.linearRampToValueAtTime(0, t + 12);
+            
+            setTimeout(scheduleNext, cycle * 1000);
+        };
+        
+        setTimeout(scheduleNext, delay * 1000);
+    }
+    
+    createSparkle() {
+        if (!this.musicPlaying) return;
+        
+        const freq = 800 + Math.random() * 2000;
+        const osc = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.5, this.audioContext.currentTime + 2);
+        
+        gain.gain.value = 0.02;
+        gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 2);
+        
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+        
+        osc.start();
+        osc.stop(this.audioContext.currentTime + 2);
+    }
+    
+    stopSpaceMusic() {
+        this.musicPlaying = false;
+        document.getElementById('music-toggle').classList.remove('playing');
+        document.querySelector('.music-icon').textContent = '🔇';
+        
+        if (this.sparkleInterval) {
+            clearInterval(this.sparkleInterval);
+        }
+        
+        // Fade out all nodes
+        this.musicNodes.forEach(node => {
+            if (node.gain) {
+                node.gain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 1);
+            }
+            setTimeout(() => {
+                if (node.osc) node.osc.stop();
+                if (node.lfo) node.lfo.stop();
+            }, 1100);
+        });
+        
+        this.musicNodes = [];
+    }
+    
+    toggleMusic() {
+        if (this.musicPlaying) {
+            this.stopSpaceMusic();
+        } else {
+            this.startSpaceMusic();
+        }
+        this.vibrate([15]);
+    }
+    
+    // ==================== SUNS & MOONS ====================
+    
+    updateSuns(count) {
+        this.sunCount = count;
+        const container = document.getElementById('suns-container');
+        container.innerHTML = '';
+        
+        for (let i = 0; i < count; i++) {
+            const sun = document.createElement('div');
+            sun.className = `sun sun-${i}`;
+            container.appendChild(sun);
+        }
+        
+        document.getElementById('suns-count').textContent = count;
+        this.vibrate([20]);
+    }
+    
+    updateMoons(count) {
+        this.moonCount = count;
+        this.orbitalObjects.innerHTML = '';
+        
+        for (let i = 0; i < count; i++) {
+            const moon = document.createElement('div');
+            moon.className = `moon moon-${i}`;
+            this.orbitalObjects.appendChild(moon);
+        }
+        
+        document.getElementById('moons-count').textContent = count;
+        this.vibrate([15]);
+    }
+    
+    // ==================== CORE METHODS ====================
     
     cacheElements() {
         // Screens
@@ -145,6 +351,11 @@ class WorldBuilder {
             this.showBuilder();
         });
         
+        // Music toggle
+        document.getElementById('music-toggle').addEventListener('click', () => {
+            this.toggleMusic();
+        });
+        
         // Panel tabs
         document.querySelectorAll('.panel-tab').forEach(tab => {
             tab.addEventListener('click', () => this.switchPanel(tab));
@@ -212,6 +423,16 @@ class WorldBuilder {
                 this.updateLifeInventory();
                 this.vibrate([25]);
             });
+        });
+        
+        // Suns slider
+        document.getElementById('suns-slider').addEventListener('input', (e) => {
+            this.updateSuns(parseInt(e.target.value));
+        });
+        
+        // Moons slider
+        document.getElementById('moons-slider').addEventListener('input', (e) => {
+            this.updateMoons(parseInt(e.target.value));
         });
         
         // Extra buttons
@@ -352,12 +573,6 @@ class WorldBuilder {
             case 'ring':
                 this.planetRing.classList.add('visible');
                 break;
-            case 'moon':
-                const moon = document.createElement('div');
-                moon.className = 'moon';
-                moon.id = 'moon-object';
-                this.orbitalObjects.appendChild(moon);
-                break;
             case 'aurora':
                 let aurora = document.querySelector('.aurora');
                 if (!aurora) {
@@ -377,10 +592,6 @@ class WorldBuilder {
         switch (extra) {
             case 'ring':
                 this.planetRing.classList.remove('visible');
-                break;
-            case 'moon':
-                const moon = document.getElementById('moon-object');
-                if (moon) moon.remove();
                 break;
             case 'aurora':
                 const aurora = document.querySelector('.aurora');
@@ -410,6 +621,16 @@ class WorldBuilder {
             btn.classList.toggle('active', btn.dataset.color === this.skyColor);
         });
         
+        // Random suns (0-2)
+        const randomSuns = Math.floor(Math.random() * 3);
+        document.getElementById('suns-slider').value = randomSuns;
+        this.updateSuns(randomSuns);
+        
+        // Random moons (0-10)
+        const randomMoons = Math.floor(Math.random() * 11);
+        document.getElementById('moons-slider').value = randomMoons;
+        this.updateMoons(randomMoons);
+        
         // Random extras
         this.extras = [];
         document.querySelectorAll('.extra-btn').forEach(btn => {
@@ -417,7 +638,7 @@ class WorldBuilder {
             this.removeExtra(btn.dataset.extra);
         });
         
-        const allExtras = ['ring', 'moon', 'aurora'];
+        const allExtras = ['ring', 'aurora'];
         allExtras.forEach(extra => {
             if (Math.random() > 0.5) {
                 this.extras.push(extra);
@@ -443,8 +664,8 @@ class WorldBuilder {
         this.vibrate([50, 30, 50, 30, 50]);
         
         // Generate random name
-        const prefixes = ['Nova', 'Astra', 'Celestia', 'Nebula', 'Zephyr', 'Aurora', 'Lumina', 'Cosmos'];
-        const suffixes = ['Prime', 'Minor', 'Major', 'X', 'VII', 'Alpha', 'Omega', 'Zero'];
+        const prefixes = ['Nova', 'Astra', 'Celestia', 'Nebula', 'Zephyr', 'Aurora', 'Lumina', 'Cosmos', 'Orion', 'Lyra', 'Vega', 'Sirius'];
+        const suffixes = ['Prime', 'Minor', 'Major', 'X', 'VII', 'Alpha', 'Omega', 'Zero', 'IX', 'III', 'Proxima', 'Ultima'];
         this.worldName = `${prefixes[Math.floor(Math.random() * prefixes.length)]} ${suffixes[Math.floor(Math.random() * suffixes.length)]}`;
         this.worldNameDisplay.textContent = this.worldName;
     }
@@ -461,6 +682,8 @@ class WorldBuilder {
             rotationSpeed: this.rotationSpeed,
             lifeforms: this.lifeforms,
             extras: this.extras,
+            sunCount: this.sunCount,
+            moonCount: this.moonCount,
             savedAt: new Date().toISOString()
         };
         
@@ -504,4 +727,3 @@ class WorldBuilder {
 document.addEventListener('DOMContentLoaded', () => {
     window.worldBuilder = new WorldBuilder();
 });
-
