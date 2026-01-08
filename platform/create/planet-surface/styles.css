@@ -586,6 +586,16 @@ body {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
+.action-btn.explore-3d {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.7) 0%, rgba(168, 85, 247, 0.7) 100%);
+    border-color: rgba(168, 85, 247, 0.5);
+}
+
+.action-btn.explore-3d:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.9) 0%, rgba(168, 85, 247, 0.9) 100%);
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+}
+
 .btn-icon {
     font-size: 1.1rem;
 }

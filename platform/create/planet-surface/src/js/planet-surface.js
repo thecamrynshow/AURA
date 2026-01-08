@@ -113,6 +113,12 @@ class PlanetSurface {
         document.getElementById('add-life-btn').addEventListener('click', () => this.openLifeModal());
         document.getElementById('weather-btn').addEventListener('click', () => this.openWeatherModal());
         
+        // 3D Explore button
+        document.getElementById('explore-3d-btn').addEventListener('click', () => {
+            this.vibrate([30, 50, 30]);
+            window.location.href = `../planet-explore/index.html?planet=${encodeURIComponent(this.planet.name)}`;
+        });
+        
         // Modal closes
         document.getElementById('add-modal-close').addEventListener('click', () => this.closeModal(this.addModal));
         document.getElementById('life-modal-close').addEventListener('click', () => this.closeModal(this.lifeModal));
