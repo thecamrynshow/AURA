@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0d1b2a">
+    <title>Bully Buddy | PNEUMA Companion</title>
+    <meta name="description" content="Bully Buddy - AI support for kids experiencing bullying. Learn what to say, how to respond, and know you're not alone. Free, private, always here.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="chat-header">
+            <button class="back-btn" id="back-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <div class="companion-info">
+                <div class="avatar-small">🛡️</div>
+                <div>
+                    <h1>Bully Buddy</h1>
+                    <p class="status">Here for you</p>
+                </div>
+            </div>
+            <button class="menu-btn" id="menu-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Chat Container -->
+        <main class="chat-container" id="chat-container">
+            <!-- Welcome Message -->
+            <div class="message-group companion">
+                <div class="message-avatar">🛡️</div>
+                <div class="message-content">
+                    <div class="message">
+                        <p>Hey there 💙</p>
+                    </div>
+                    <div class="message">
+                        <p>I'm Bully Buddy — your friend who gets it. Being bullied is really hard, and I want you to know: <strong>it's not your fault</strong>.</p>
+                    </div>
+                    <div class="message">
+                        <p>I'm here to listen, help you figure out what to do, and remind you that you're stronger than you think.</p>
+                    </div>
+                    <div class="message">
+                        <p>What's going on? You can tell me anything — I won't judge. 💙</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Options -->
+            <div class="quick-options" id="quick-options">
+                <button class="quick-btn" data-message="Someone is bullying me at school">
+                    😢 Someone is bullying me
+                </button>
+                <button class="quick-btn" data-message="I don't know what to say when it happens">
+                    💬 I don't know what to say
+                </button>
+                <button class="quick-btn" data-message="I feel really bad about myself">
+                    💔 I feel bad about myself
+                </button>
+                <button class="quick-btn" data-message="I'm scared to go to school">
+                    😰 I'm scared to go back
+                </button>
+                <button class="quick-btn" data-message="I want to know how to be stronger">
+                    💪 Help me be stronger
+                </button>
+                <button class="quick-btn" data-message="I just need someone to talk to">
+                    🤗 I just need to talk
+                </button>
+            </div>
+        </main>
+
+        <!-- Input Area -->
+        <footer class="input-area">
+            <div class="input-container">
+                <button class="voice-btn" id="voice-btn" title="Use voice">
+                    🎤
+                </button>
+                <input type="text" 
+                       id="message-input" 
+                       placeholder="Type how you're feeling..." 
+                       autocomplete="off">
+                <button class="send-btn" id="send-btn" disabled>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="safety-note">
+                If you're in danger, tell a trusted adult right now. 
+                <a href="tel:988">Call 988</a> for help.
+            </p>
+        </footer>
+
+        <!-- Menu Modal -->
+        <div class="modal hidden" id="menu-modal">
+            <div class="modal-content">
+                <h3>Options</h3>
+                <button class="menu-option" id="clear-chat">🗑️ Start Over</button>
+                <button class="menu-option" id="get-help">🆘 Get Real Help</button>
+                <button class="menu-option" id="resources">📚 Helpful Resources</button>
+                <button class="menu-option close" id="close-menu">Close</button>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal hidden" id="help-modal">
+            <div class="modal-content help-content">
+                <h3>🆘 Get Real Help</h3>
+                <p>If you're being hurt or feel unsafe, please talk to a trusted adult or call one of these numbers:</p>
+                <div class="help-links">
+                    <a href="tel:988" class="help-link">
+                        <strong>988</strong>
+                        <span>Crisis Lifeline</span>
+                    </a>
+                    <a href="sms:741741" class="help-link">
+                        <strong>Text HOME to 741741</strong>
+                        <span>Crisis Text Line</span>
+                    </a>
+                    <a href="https://www.stopbullying.gov" target="_blank" class="help-link">
+                        <strong>StopBullying.gov</strong>
+                        <span>Official Resources</span>
+                    </a>
+                </div>
+                <button class="menu-option close" id="close-help">Got It</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/bully-buddy.js"></script>
+</body>
+</html>
+

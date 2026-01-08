@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNEUMA Companions | AI Support for Life's Hardest Moments</title>
+    <meta name="description" content="PNEUMA AI Companions - Therapeutic AI support for bullying recovery, veteran PTSD, and addiction recovery. A friend when you need one most. Free, private, always available.">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="companions.css">
+</head>
+<body>
+    <div class="background companions-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <canvas id="particles"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="../../index.html" class="nav-logo">
+            <span class="logo-icon">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </a>
+        <div class="nav-links">
+            <a href="../games/">Games</a>
+            <a href="../apps/">Apps</a>
+            <a href="../rituals/">Rituals</a>
+            <a href="../create/">Create</a>
+            <a href="../companions/" class="active">Companions</a>
+            <a href="../../index.html#partner" class="nav-cta">Partner</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="page-hero companions-hero">
+        <div class="section-container">
+            <div class="pneuma-symbol">
+                <div class="pneuma-glow"></div>
+                <div class="pneuma-core">πνεῦμα</div>
+            </div>
+            <p class="hero-eyebrow">PNEUMA AI</p>
+            <h1 class="page-title">Companions</h1>
+            <p class="page-subtitle">
+                AI companions for life's hardest moments.<br>
+                A friend when you need one. Always here. Never judging.
+            </p>
+        </div>
+    </section>
+
+    <!-- Crisis Banner -->
+    <div class="crisis-banner">
+        <div class="section-container">
+            <p>
+                <strong>In crisis?</strong> These companions are not replacements for professional help. 
+                <a href="tel:988">Call 988</a> (Suicide & Crisis Lifeline) or 
+                <a href="tel:741741">Text HOME to 741741</a> (Crisis Text Line)
+            </p>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section class="companions-about">
+        <div class="section-container">
+            <div class="about-content">
+                <h2>What is PNEUMA?</h2>
+                <p>
+                    PNEUMA (πνεῦμα - Greek for "breath/spirit") is an AI companion designed for 
+                    <strong>emotional support, not replacement of human connection</strong>. 
+                    It's trained to listen without judgment, offer evidence-based coping tools, 
+                    and be present when you need someone.
+                </p>
+                <div class="about-features">
+                    <div class="about-feature">
+                        <span class="feature-icon">🔒</span>
+                        <span>Private & Secure</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="feature-icon">💚</span>
+                        <span>Trauma-Informed</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="feature-icon">🕐</span>
+                        <span>Always Available</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="feature-icon">🤝</span>
+                        <span>No Judgment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Companions Grid -->
+    <section class="companions-section">
+        <div class="section-container">
+            <div class="companions-grid">
+                
+                <!-- Bully Buddy -->
+                <article class="companion-card" id="bully-buddy">
+                    <div class="companion-visual bully-buddy-bg">
+                        <div class="companion-avatar">
+                            <div class="avatar-glow"></div>
+                            <div class="avatar-icon">🛡️</div>
+                        </div>
+                    </div>
+                    <div class="companion-content">
+                        <div class="companion-badge">For Kids & Teens</div>
+                        <h2 class="companion-name">Bully Buddy</h2>
+                        <p class="companion-tagline">Your shield. Your friend. Your guide.</p>
+                        <p class="companion-desc">
+                            Being bullied is hard. Bully Buddy helps kids and teens feel safe, 
+                            process what happened, and build resilience. Learn what to say, 
+                            how to respond, and most importantly — know you're not alone.
+                        </p>
+                        <div class="companion-helps">
+                            <h4>Helps with:</h4>
+                            <ul>
+                                <li>Processing bullying experiences</li>
+                                <li>What to say when it happens</li>
+                                <li>Recovering emotionally after</li>
+                                <li>Building confidence & resilience</li>
+                                <li>Knowing when to get adult help</li>
+                                <li>Understanding it's not your fault</li>
+                            </ul>
+                        </div>
+                        <a href="bully-buddy/index.html" class="companion-btn">
+                            <span>Talk to Bully Buddy</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Veteran Companion -->
+                <article class="companion-card" id="veteran-companion">
+                    <div class="companion-visual veteran-bg">
+                        <div class="companion-avatar">
+                            <div class="avatar-glow"></div>
+                            <div class="avatar-icon">🎖️</div>
+                        </div>
+                    </div>
+                    <div class="companion-content">
+                        <div class="companion-badge">For Veterans</div>
+                        <h2 class="companion-name">Valor</h2>
+                        <p class="companion-tagline">You served. Now let us serve you.</p>
+                        <p class="companion-desc">
+                            For those who've served and carry invisible wounds. Valor understands 
+                            the weight of service, the memories that won't fade, and the strength 
+                            it takes to ask for support. A companion trained to help veterans 
+                            navigate PTSD, reintegration, and finding peace.
+                        </p>
+                        <div class="companion-helps">
+                            <h4>Helps with:</h4>
+                            <ul>
+                                <li>PTSD symptoms & flashbacks</li>
+                                <li>Grounding during difficult moments</li>
+                                <li>Sleep struggles & nightmares</li>
+                                <li>Reintegration into civilian life</li>
+                                <li>Connecting to VA resources</li>
+                                <li>Finding community & purpose</li>
+                            </ul>
+                        </div>
+                        <a href="valor/index.html" class="companion-btn veteran-btn">
+                            <span>Talk to Valor</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Recovery Companion -->
+                <article class="companion-card" id="recovery-companion">
+                    <div class="companion-visual recovery-bg">
+                        <div class="companion-avatar">
+                            <div class="avatar-glow"></div>
+                            <div class="avatar-icon">🌱</div>
+                        </div>
+                    </div>
+                    <div class="companion-content">
+                        <div class="companion-badge">For Recovery</div>
+                        <h2 class="companion-name">Anchor</h2>
+                        <p class="companion-tagline">One day at a time. One breath at a time.</p>
+                        <p class="companion-desc">
+                            Recovery isn't a straight line. Anchor is here for the 3am cravings, 
+                            the tough days, the fear of relapse, and the small victories. 
+                            Like having a sponsor in your pocket — judgment-free support whenever 
+                            you need it, helping you stay grounded in your recovery journey.
+                        </p>
+                        <div class="companion-helps">
+                            <h4>Helps with:</h4>
+                            <ul>
+                                <li>Cravings & urges</li>
+                                <li>Relapse prevention tools</li>
+                                <li>Daily check-ins & accountability</li>
+                                <li>Processing shame & guilt</li>
+                                <li>Rebuilding relationships</li>
+                                <li>Finding meaning in sobriety</li>
+                            </ul>
+                        </div>
+                        <a href="anchor/index.html" class="companion-btn recovery-btn">
+                            <span>Talk to Anchor</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="section-container">
+            <h2>How PNEUMA Companions Work</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Choose Your Companion</h3>
+                    <p>Each companion is trained for specific experiences. Pick the one that fits your situation.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Talk or Type</h3>
+                    <p>Use voice or text — whatever feels comfortable. PNEUMA listens without judgment.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Support</h3>
+                    <p>Receive empathetic responses, coping tools, and guidance tailored to your needs.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Build Resilience</h3>
+                    <p>Over time, develop skills and confidence to face challenges with strength.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Important Notice -->
+    <section class="notice-section">
+        <div class="section-container">
+            <div class="notice-card">
+                <h3>⚠️ Important</h3>
+                <p>
+                    PNEUMA Companions are <strong>supportive tools, not replacements</strong> for professional 
+                    mental health care, therapy, or medical treatment. They are designed to complement — not replace — 
+                    human support systems.
+                </p>
+                <p>
+                    If you're in crisis, please reach out to a professional:
+                </p>
+                <div class="crisis-resources">
+                    <a href="tel:988" class="crisis-link">
+                        <strong>988</strong>
+                        <span>Suicide & Crisis Lifeline</span>
+                    </a>
+                    <a href="tel:18002738255" class="crisis-link">
+                        <strong>1-800-273-8255</strong>
+                        <span>Veterans Crisis Line</span>
+                    </a>
+                    <a href="tel:18006624357" class="crisis-link">
+                        <strong>1-800-662-4357</strong>
+                        <span>SAMHSA Helpline</span>
+                    </a>
+                    <a href="sms:741741" class="crisis-link">
+                        <strong>Text HOME to 741741</strong>
+                        <span>Crisis Text Line</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-simple">
+                <a href="../../index.html" class="footer-logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">PNEUOMA</span>
+                </a>
+                <p>© 2026 PNEUOMA. The operating system for human regulation.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../main.js"></script>
+</body>
+</html>
+
