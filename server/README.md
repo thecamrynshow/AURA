@@ -1,12 +1,31 @@
 # PNEUOMA Server
 
-Real-time multiplayer sync server + authentication + payments for the PNEUOMA platform.
+Real-time multiplayer sync + AI companions + authentication + payments for the PNEUOMA platform.
 
-[![Deployed](https://img.shields.io/badge/Deployed-Render-06b6d4)](https://pneuoma.onrender.com)
+[![Deployed](https://img.shields.io/badge/Deployed-Render-06b6d4)](https://pneuoma-server.onrender.com)
 [![Node](https://img.shields.io/badge/Node-18%2B-green)]()
 [![Socket.io](https://img.shields.io/badge/Socket.io-4.7-blue)]()
+[![Claude](https://img.shields.io/badge/AI-Claude_3.5-a855f7)]()
 
 ## Features
+
+### 🤖 AI Companions (NEW!)
+
+Four therapeutic AI companions powered by Claude 3.5 Sonnet:
+
+| Companion | Endpoint | For |
+|-----------|----------|-----|
+| 🛡️ **Bully Buddy** | `bully-buddy` | Kids/teens experiencing bullying |
+| 🎖️ **Valor** | `valor` | Veterans with PTSD |
+| 🌱 **Anchor** | `anchor` | Addiction recovery |
+| 🕊️ **Haven** | `haven` | Trauma survivors |
+
+**Features:**
+- Context-aware conversations (tracks history)
+- Anti-repetition system (never asks same question twice)
+- Crisis detection with automatic hotline resources
+- Fallback responses when API unavailable
+- Stage-based responses (initial → continued → tools)
 
 ### 🔗 Real-time Multiplayer
 - WebSocket connections via Socket.io
@@ -64,19 +83,60 @@ npm start
 | `/api/sessions` | GET | List active multiplayer sessions |
 | `/api/sessions/:code` | GET | Get specific session details |
 
+### AI Companions
+
+| Endpoint | Method | Body | Description |
+|----------|--------|------|-------------|
+| `/api/companion/chat` | POST | `{ companion, message, history }` | Chat with AI companion |
+
+**Example Request:**
+```javascript
+const response = await fetch('https://pneuoma-server.onrender.com/api/companion/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        companion: 'bully-buddy', // or 'valor', 'anchor', 'haven'
+        message: "I'm being bullied at school",
+        history: [
+            { role: 'user', content: 'hi' },
+            { role: 'companion', content: 'Hey there! 💙' }
+        ]
+    })
+});
+const { response: aiResponse, fallback } = await response.json();
+```
+
+**Companion IDs:**
+- `bully-buddy` — Kids/teens anti-bullying
+- `valor` — Veterans PTSD support
+- `anchor` — Addiction recovery
+- `haven` — Trauma survivors
+
+**Response:**
+```json
+{
+    "response": "That sounds really hard. What happened? 💙",
+    "fallback": false
+}
+```
+
+If `fallback: true`, the response came from local fallback (API unavailable).
+
 ### Authentication
 
 | Endpoint | Method | Body | Description |
 |----------|--------|------|-------------|
-| `/api/auth/signup` | POST | `{ email, password }` | Create new account |
+| `/api/auth/signup` | POST | `{ email, password, firstName, lastName }` | Create new account |
 | `/api/auth/login` | POST | `{ email, password }` | Login, returns JWT |
-| `/api/auth/subscription` | GET | Header: `Authorization: Bearer <token>` | Get subscription status |
+| `/api/auth/me` | GET | Header: `Authorization: Bearer <token>` | Get current user |
+| `/api/auth/subscription` | POST | `{ subscription }` | Update subscription |
+| `/api/auth/forgot-password` | POST | `{ email }` | Request password reset |
 
 ### Stripe Payments
 
 | Endpoint | Method | Body | Description |
 |----------|--------|------|-------------|
-| `/api/stripe/create-checkout` | POST | `{ priceId, email }` | Create Stripe checkout session |
+| `/api/stripe/create-checkout` | POST | `{ priceId, plan }` | Create Stripe checkout session |
 | `/api/stripe/subscription` | GET | Header: `Authorization: Bearer <token>` | Get subscription details |
 | `/api/stripe/webhook` | POST | Stripe signature | Handle Stripe webhooks |
 
@@ -100,8 +160,6 @@ npm start
 
 | Event | Data | Description |
 |-------|------|-------------|
-| `session_created` | `{ code, sessionId }` | Session created successfully |
-| `session_joined` | `{ sessionId, participants }` | Joined session |
 | `session_update` | `{ participants, state }` | Session state changed |
 | `participant_joined` | `{ id, name, participants }` | Someone joined |
 | `participant_left` | `{ id, participants }` | Someone left |
@@ -109,7 +167,6 @@ npm start
 | `exercise_stop` | `{}` | Exercise stopped |
 | `breath_sync` | `{ phase, instruction }` | Breath phase update |
 | `session_ended` | `{ message }` | Session ended by host |
-| `error` | `{ message }` | Error occurred |
 
 ---
 
@@ -124,17 +181,59 @@ PORT=3001
 # Authentication
 JWT_SECRET=your-super-secret-jwt-key-change-this
 
-# Master Account (full access)
-MASTER_EMAIL=camrynjackson@pneuoma.com
+# AI Companions (Required for full functionality)
+ANTHROPIC_API_KEY=sk-ant-api03-xxx
 
 # Stripe (Live keys)
 STRIPE_SECRET_KEY=sk_live_xxx
 STRIPE_WEBHOOK_SECRET=whsec_xxx
 
 # Stripe Price IDs
-STRIPE_PREMIUM_PRICE=price_1SlVBM2MMMhk8Zv1PhNtRqdJ
-STRIPE_FAMILY_PRICE=price_1SlVC22MMMhk8Zv1PRzVTRkw
+STRIPE_PREMIUM_PRICE=price_xxx
+STRIPE_FAMILY_PRICE=price_xxx
 ```
+
+**Note:** If `ANTHROPIC_API_KEY` is not set, AI companions will use intelligent fallback responses.
+
+---
+
+## AI Companion System
+
+### System Prompts
+
+Each companion has a detailed system prompt that includes:
+- Personality traits
+- Capabilities and tools
+- Critical safety rules
+- Crisis detection keywords
+- **CONVERSATION_RULES** — Anti-repetition directives
+
+### Anti-Repetition System
+
+The server tracks conversation history and:
+1. Identifies questions already asked
+2. Identifies topics already covered
+3. Sends this context to Claude with explicit "DO NOT REPEAT" instructions
+4. Uses temperature=0.8 for response variety
+
+### Crisis Detection
+
+All companions detect crisis keywords and respond with appropriate hotlines:
+
+| Companion | Crisis Hotlines |
+|-----------|----------------|
+| Bully Buddy | 988, Crisis Text Line 741741 |
+| Valor | Veterans Crisis Line 1-800-273-8255 (Press 1) |
+| Anchor | SAMHSA 1-800-662-4357, 988 |
+| Haven | 988, Domestic Violence 1-800-799-7233, RAINN 1-800-656-4673 |
+
+### Fallback Responses
+
+When API is unavailable, companions use:
+- Stage-based responses (initial, continued, tools)
+- Multiple response options per stage
+- History-aware selection (won't repeat last response)
+- Companion-specific voice and tools
 
 ---
 
@@ -149,29 +248,18 @@ STRIPE_FAMILY_PRICE=price_1SlVC22MMMhk8Zv1PRzVTRkw
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
    - **Node Version**: 18+
-4. Add environment variables
+4. Add environment variables (including `ANTHROPIC_API_KEY`)
 5. Deploy
 
-Live URL: `https://pneuoma.onrender.com`
+Live URL: `https://pneuoma-server.onrender.com`
 
 ### Railway
 
 ```bash
-# Install Railway CLI
 npm install -g @railway/cli
-
-# Login and deploy
 railway login
 railway init
 railway up
-```
-
-### Heroku
-
-```bash
-cd server
-heroku create pneuoma-server
-git subtree push --prefix server heroku main
 ```
 
 ### DigitalOcean App Platform
@@ -185,110 +273,60 @@ git subtree push --prefix server heroku main
 
 ## Frontend Integration
 
-### Add Socket.io Client
-
-```html
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-```
-
-### Connect and Use
+### AI Companion Integration
 
 ```javascript
-// Connect to server
-const socket = io('https://pneuoma.onrender.com');
+// Chat with a companion
+async function chat(companion, message, history) {
+    const response = await fetch('https://pneuoma-server.onrender.com/api/companion/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ companion, message, history })
+    });
+    return await response.json();
+}
 
-// Create session (host/teacher)
+// Example usage
+const history = [];
+
+// User sends message
+history.push({ role: 'user', content: "I'm being bullied at school" });
+const { response } = await chat('bully-buddy', "I'm being bullied at school", history);
+history.push({ role: 'companion', content: response });
+
+// Continue conversation
+history.push({ role: 'user', content: "They posted about me on Snapchat" });
+const { response: response2 } = await chat('bully-buddy', "They posted about me on Snapchat", history);
+// AI will acknowledge the specific Snapchat mention and not repeat previous questions
+```
+
+### Socket.io Integration
+
+```javascript
+const socket = io('https://pneuoma-server.onrender.com');
+
+// Create session (host)
 socket.emit('create_session', { 
     type: 'classroom', 
     name: 'Ms. Johnson',
     prefix: 'CALM'
 }, (response) => {
-    if (response.success) {
-        console.log('Session code:', response.code); // e.g., CALM-1234
-    }
+    console.log('Session code:', response.code);
 });
 
-// Join session (student/participant)
+// Join session (participant)
 socket.emit('join_session', { 
     code: 'CALM-1234', 
-    name: 'Alex',
-    role: 'student'
+    name: 'Alex'
 }, (response) => {
-    if (response.success) {
-        console.log('Joined session!');
-    } else {
-        console.error(response.message);
-    }
-});
-
-// Listen for exercises
-socket.on('exercise_start', (data) => {
-    console.log('Starting:', data.exercise);
-    startBreathingExercise(data.exerciseData);
+    if (response.success) console.log('Joined!');
 });
 
 // Listen for breath sync
-socket.on('breath_sync', (data) => {
-    updateBreathUI(data.phase, data.instruction);
-});
-
-// Listen for participants
-socket.on('participant_joined', (data) => {
-    console.log(`${data.name} joined! Total: ${data.participants.length}`);
+socket.on('breath_sync', ({ phase, instruction }) => {
+    updateUI(phase, instruction);
 });
 ```
-
-### Authentication Example
-
-```javascript
-// Signup
-const response = await fetch('https://pneuoma.onrender.com/api/auth/signup', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'user@example.com', password: 'secure123' })
-});
-const { token, user } = await response.json();
-localStorage.setItem('pneuoma_token', token);
-
-// Check subscription
-const subResponse = await fetch('https://pneuoma.onrender.com/api/auth/subscription', {
-    headers: { 'Authorization': `Bearer ${token}` }
-});
-const { subscription, isPremium } = await subResponse.json();
-```
-
----
-
-## Session Management
-
-Sessions are automatically cleaned up:
-- Empty sessions removed after 5 minutes
-- Inactive sessions removed after 2 hours
-- When host disconnects, session ends
-
-Session codes are 4-digit numbers with optional prefix:
-- Default: `SESS-1234`
-- Classroom: `CALM-5678`
-- Family: `FAM-9012`
-
----
-
-## Error Handling
-
-All errors return consistent format:
-
-```json
-{
-    "success": false,
-    "message": "Session not found"
-}
-```
-
-Common errors:
-- `Session not found` — Invalid or expired code
-- `Session is full` — Max participants reached
-- `Not authorized` — Invalid or missing JWT
-- `Invalid credentials` — Wrong email/password
 
 ---
 
@@ -301,8 +339,10 @@ npm run dev
 # Test health endpoint
 curl http://localhost:3001/health
 
-# Test WebSocket (use browser console or wscat)
-wscat -c ws://localhost:3001
+# Test AI companion
+curl -X POST http://localhost:3001/api/companion/chat \
+  -H "Content-Type: application/json" \
+  -d '{"companion":"bully-buddy","message":"hi","history":[]}'
 ```
 
 ---

@@ -1,15 +1,16 @@
-# PNEUOMA — The #1 Nervous System Regulation Games Platform
+# PNEUOMA — The #1 Nervous System Regulation Platform
 
 [![Live Site](https://img.shields.io/badge/🌐_Live-pneuoma.com-06b6d4?style=for-the-badge)](https://pneuoma.com)
 [![Games](https://img.shields.io/badge/🎮_Games-30+_Live-8b5cf6?style=for-the-badge)](https://pneuoma.com/platform/games/)
-[![Create](https://img.shields.io/badge/🌌_Create-VR_Ready-f472b6?style=for-the-badge)](https://pneuoma.com/platform/create/)
-[![Schools](https://img.shields.io/badge/🏫_Schools-Pilot_Program-22c55e?style=for-the-badge)](https://pneuoma.com/platform/schools/)
+[![Companions](https://img.shields.io/badge/🤖_Companions-4_AI_Buddies-f472b6?style=for-the-badge)](https://pneuoma.com/platform/companions/)
+[![Create](https://img.shields.io/badge/🌌_Create-VR_Ready-22c55e?style=for-the-badge)](https://pneuoma.com/platform/create/)
+[![Schools](https://img.shields.io/badge/🏫_Schools-Pilot_Program-fbbf24?style=for-the-badge)](https://pneuoma.com/platform/schools/)
 
-> **Free nervous system regulation games for kids, teens, and adults. Calm anxiety, improve focus, and build emotional resilience through breath-controlled gameplay.**
+> **Free nervous system regulation games, AI companions, and creative tools for kids, teens, and adults. Calm anxiety, improve focus, and build emotional resilience through breath-controlled gameplay and therapeutic AI.**
 
-PNEUOMA (πνεῦμα - Greek for "breath/spirit") is the leading platform for **nervous system wellness games**. We provide biofeedback games, daily rituals, multiplayer co-regulation, and creative experiences that train regulation through breath, voice, and presence.
+PNEUOMA (πνεῦμα - Greek for "breath/spirit") is the leading platform for **nervous system wellness**. We provide biofeedback games, AI therapeutic companions, daily rituals, multiplayer co-regulation, and creative VR experiences.
 
-**🔍 Search:** nervous system regulation games | breathing games for kids | calm down games | ADHD games | anxiety games for children
+**🔍 Search:** nervous system regulation games | breathing games for kids | calm down games | ADHD games | anxiety games for children | AI therapy companion
 
 ---
 
@@ -19,15 +20,38 @@ PNEUOMA (πνεῦμα - Greek for "breath/spirit") is the leading platform for 
 |---------|------------------|
 | Kids can't calm down | Breath-controlled games make regulation fun |
 | ADHD/Autism dysregulation | Sensory games with haptic feedback |
+| Bullying trauma | AI companion (Bully Buddy) for kids |
+| Veterans with PTSD | AI companion (Valor) with grounding tools |
+| Addiction recovery | AI companion (Anchor) like a sponsor |
+| Trauma survivors | AI companion (Haven) - gentle support |
 | Classroom disruptions | Classroom Sync for whole-class regulation |
 | Screen time guilt | Games that actually help, not harm |
-| Therapy homework is boring | Gamified breathing exercises |
 
 ---
 
-## 🎮 What We Offer
+## 🤖 AI Companions (NEW!)
 
-### Nervous System Regulation Games (30+ Live)
+**Therapeutic AI support available 24/7:**
+
+| Companion | For | What It Does |
+|-----------|-----|--------------|
+| 🛡️ **Bully Buddy** | Kids & teens | Anti-bullying support, confidence building, safety plans |
+| 🎖️ **Valor** | Veterans | PTSD support, grounding, VA resources, military-aware |
+| 🌱 **Anchor** | Recovery | Addiction support, craving management, sponsor-like |
+| 🕊️ **Haven** | Trauma survivors | Abuse recovery, grief, gentle trauma-informed care |
+
+**Features:**
+- Real-time AI conversations (Claude 3.5 Sonnet)
+- Context-aware - remembers what you've shared
+- Never repeats itself - natural conversation flow
+- Crisis detection with hotline resources
+- Voice input support
+- Grounding & breathing exercises built-in
+- 100% private - no data stored
+
+---
+
+## 🎮 Games (30+ Live)
 
 Breath-controlled, voice-activated games designed by a music therapist:
 
@@ -40,19 +64,31 @@ Breath-controlled, voice-activated games designed by a music therapist:
 
 **✅ 15 games FREE** — No account required. No download needed.
 
-### 🌌 Create Section (NEW!)
+---
+
+## 🌌 Create Section
 
 Build your own worlds with VR-ready creative tools:
 
 | Experience | Description | Features |
 |------------|-------------|----------|
 | **Universe Hub** | Host your own solar system | Invite friends, add planets, multiplayer |
-| **World Builder** | Design custom planets | Terrain, atmosphere, suns, moons, life |
-| **Creature Lab** | Create fantastical creatures | Body parts, colors, personalities |
-| **Planet Surface** | Walk on your planet (2D) | Time of day, weather, creatures |
-| **Planet Explore** | First-person 3D exploration | WebXR/VR ready, Apple Vision Pro |
+| **World Builder** | Design custom planets | Terrain, atmosphere, up to 2 suns, 10 moons, life |
+| **Creature Lab** | Create fantastical creatures | Body parts, colors, personalities, animations |
+| **Planet Surface** | Walk on your planet (2D) | Time of day, weather, your creatures |
+| **Planet Explore** | First-person 3D exploration | WebXR/VR ready, Apple Vision Pro compatible |
 
-### 🧘 Daily Rituals (8 Live)
+**World Builder → 3D Explore Connection:**
+Everything you build in 2D carries over to 3D:
+- Terrain type (earth, ocean, desert, ice, volcanic, crystal)
+- Sky color (blue, purple, pink, orange, green, space)
+- Multiple suns and moons (orbiting!)
+- Aurora, rings, clouds
+- Trees, flowers, mushrooms, birds, fish, creatures
+
+---
+
+## 🧘 Daily Rituals (8 Live)
 
 Guided breathing experiences for specific moments:
 
@@ -65,7 +101,9 @@ Guided breathing experiences for specific moments:
 - 🧘 **Deep Recovery** — Nervous system restoration
 - ✨ **Before** — Pre-event preparation
 
-### 👥 Multiplayer Co-Regulation (6 Modes)
+---
+
+## 👥 Multiplayer Co-Regulation (6 Modes)
 
 Breathe together in real-time:
 
@@ -104,7 +142,7 @@ Breathe together in real-time:
 
 | Plan | Price | What's Included |
 |------|-------|-----------------|
-| **Free** | $0 forever | 15 games, 3 rituals, 3 multiplayer modes, all Create tools |
+| **Free** | $0 forever | 15 games, 3 rituals, 3 multiplayer modes, all Create tools, all AI Companions |
 | **Premium** | $9.99/mo | All 30+ games, 8 rituals, 6 multiplayer modes, priority features |
 | **Family** | $14.99/mo | Premium + up to 10 family profiles |
 | **Schools** | Custom | Site license, admin dashboard, progress reports |
@@ -117,11 +155,12 @@ All paid plans include a **7-day free trial**.
 
 ### Frontend
 - **Three.js** — 3D rendering (Planet Explore VR)
-- **WebXR API** — VR/AR headset support
+- **WebXR API** — VR/AR headset support (Apple Vision Pro, Meta Quest)
 - **HTML5 Canvas** — 2D game rendering
 - **Web Audio API** — Dynamic soundscapes & biofeedback
 - **MediaDevices API** — Microphone breath/voice detection
 - **Vibration API** — Haptic feedback for calming
+- **Web Speech API** — Voice input for companions
 - **CSS3** — Animations, gradients, responsive design
 - **Vanilla JavaScript** — No frameworks, fast loading
 
@@ -131,10 +170,11 @@ All paid plans include a **7-day free trial**.
 - **Express** — API endpoints
 - **JWT** — Authentication tokens
 - **Stripe** — Subscription payments
+- **Anthropic Claude** — AI companion conversations
 
 ### Hosting
 - **GitHub Pages** — Frontend (static site)
-- **Render** — Backend server (WebSocket + API)
+- **Render** — Backend server (WebSocket + API + AI)
 
 ---
 
@@ -142,11 +182,11 @@ All paid plans include a **7-day free trial**.
 
 ```
 AURA/
-├── index.html              # Homepage
+├── index.html              # Homepage (SEO optimized)
 ├── styles.css              # Global styles
 ├── main.js                 # Global JavaScript
 ├── robots.txt              # SEO crawl rules
-├── sitemap.xml             # SEO sitemap (70+ URLs)
+├── sitemap.xml             # SEO sitemap (80+ URLs)
 │
 ├── games/                  # All 30+ games
 │   ├── aura/               # Project AURA (flagship)
@@ -160,7 +200,12 @@ AURA/
 │   ├── rituals/            # 8 daily rituals
 │   ├── multiplayer/        # 6 multiplayer modes
 │   ├── schools/            # For Schools landing
-│   └── create/             # NEW: Creative tools
+│   ├── companions/         # NEW: AI Companions
+│   │   ├── bully-buddy/    # Anti-bullying companion
+│   │   ├── valor/          # Veterans PTSD support
+│   │   ├── anchor/         # Addiction recovery
+│   │   └── haven/          # Trauma survivors
+│   └── create/             # Creative tools
 │       ├── universe/       # Universe Hub
 │       ├── world-builder/  # Planet creation
 │       ├── creature-lab/   # Creature design
@@ -169,7 +214,7 @@ AURA/
 │
 ├── auth/                   # Authentication
 ├── server/                 # Backend server
-└── pitch-deck/             # Investor deck
+└── docs/                   # Documentation
 ```
 
 ---
@@ -177,7 +222,7 @@ AURA/
 ## 🚀 Getting Started
 
 ### Play Now (No Setup)
-Visit [pneuoma.com](https://pneuoma.com) and click any game!
+Visit [pneuoma.com](https://pneuoma.com) and click any game or companion!
 
 ### Local Development
 
@@ -194,7 +239,7 @@ npx serve -p 3000
 # Open http://localhost:3000
 ```
 
-### Backend Server (for multiplayer)
+### Backend Server (for multiplayer + AI companions)
 
 ```bash
 cd server
@@ -213,33 +258,8 @@ PORT=3001
 JWT_SECRET=your-jwt-secret
 STRIPE_SECRET_KEY=sk_live_xxx
 STRIPE_WEBHOOK_SECRET=whsec_xxx
+ANTHROPIC_API_KEY=sk-ant-xxx   # For AI Companions
 ```
-
----
-
-## 📊 SEO Keywords
-
-PNEUOMA is optimized to rank for:
-
-**Primary:**
-- nervous system regulation games
-- breathing games for kids
-- calm down games for children
-
-**Secondary:**
-- ADHD games for kids
-- autism calming games
-- anxiety games for children
-- SEL games for classroom
-- self-regulation activities
-- emotional regulation games
-- biofeedback games
-
-**Long-tail:**
-- free breathing games for kids with anxiety
-- classroom calm down activities
-- polyvagal games for therapy
-- co-regulation games for parents
 
 ---
 
@@ -250,6 +270,13 @@ PNEUOMA is optimized to rank for:
 - **Voice/Pitch Detection** — Sing, hum, or whistle to interact
 - **Haptic Feedback** — Vibration patterns for tactile regulation
 - **Audio-Based Haptics** — Sub-bass frequencies on iOS
+
+### AI Companion Intelligence
+- **Claude 3.5 Sonnet** — Advanced conversation model
+- **Context Tracking** — Remembers conversation history
+- **Anti-Repetition** — Never asks same question twice
+- **Crisis Detection** — Provides hotlines when needed
+- **Voice Input** — Web Speech API support
 
 ### Therapeutic Design
 - No enemies, timers, or competitive scores
@@ -272,12 +299,43 @@ PNEUOMA is optimized to rank for:
 
 ---
 
+## 📊 SEO Keywords
+
+PNEUOMA is optimized to rank for:
+
+**Primary:**
+- nervous system regulation games
+- breathing games for kids
+- calm down games for children
+- AI therapy companion
+
+**Secondary:**
+- ADHD games for kids
+- autism calming games
+- anxiety games for children
+- SEL games for classroom
+- self-regulation activities
+- emotional regulation games
+- biofeedback games
+- veteran PTSD support
+- addiction recovery app
+
+**Long-tail:**
+- free breathing games for kids with anxiety
+- classroom calm down activities
+- polyvagal games for therapy
+- co-regulation games for parents
+- AI companion for bullying
+- PTSD support app for veterans
+
+---
+
 ## 📈 Traction & Impact
 
 - **500+ schools** interested in pilot program
 - **10,000+ sessions** played
 - **4.8/5 rating** from therapists
-- **Published research** on breath-based games
+- **4 AI companions** live with crisis support
 
 ---
 
@@ -286,9 +344,11 @@ PNEUOMA is optimized to rank for:
 Ideal partners include:
 - School districts (K-12)
 - Children's hospitals
+- VA hospitals & veteran services
 - Therapy practices (OT, PT, SLP, Mental Health)
 - Corporate wellness programs
 - Pediatric clinics
+- Addiction treatment centers
 
 ---
 
@@ -299,7 +359,6 @@ Ideal partners include:
 - 🌐 [pneuoma.com](https://pneuoma.com)
 - 📧 camrynjackson@pneuoma.com
 - 📅 [Schedule a demo](https://calendly.com/camrynjackson-pneuoma/30min)
-- 🐦 [@pneuoma](https://twitter.com/pneuoma)
 
 ---
 
@@ -313,5 +372,5 @@ For educational or therapeutic licensing, contact camrynjackson@pneuoma.com.
 
 <p align="center">
   <strong>πνεῦμα</strong><br>
-  <em>"Breathe. Play. Regulate."</em>
+  <em>"Breathe. Play. Regulate. Heal."</em>
 </p>
