@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a12">
+    <title>ALIGN - The Game of Life | PNEUMA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Particle Background -->
+        <canvas id="particle-canvas"></canvas>
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <div class="logo-container">
+                    <div class="orb-preview">
+                        <div class="orb-glow"></div>
+                        <div class="orb-core"></div>
+                    </div>
+                </div>
+                <h1 class="game-title">ALIGN</h1>
+                <p class="game-subtitle">The Game of Life</p>
+                <p class="game-tagline">Become who you really are</p>
+                
+                <button id="begin-btn" class="primary-btn">
+                    <span>Begin Your Journey</span>
+                    <div class="btn-glow"></div>
+                </button>
+                
+                <p class="hint-text">Touch anywhere to feel the energy</p>
+            </div>
+        </div>
+        
+        <!-- World Screen (Main Game) -->
+        <div id="world-screen" class="screen">
+            <header class="game-header">
+                <div class="energy-display">
+                    <span class="energy-icon">⚡</span>
+                    <div class="energy-bar">
+                        <div class="energy-fill" id="energy-fill"></div>
+                    </div>
+                    <span class="energy-text" id="energy-text">75%</span>
+                </div>
+                <div class="alignment-display">
+                    <span class="alignment-label">Alignment</span>
+                    <div class="alignment-indicator" id="alignment-indicator"></div>
+                </div>
+            </header>
+            
+            <div class="world-container">
+                <canvas id="world-canvas"></canvas>
+                
+                <!-- The Alignment Orb -->
+                <div id="alignment-orb" class="orb-interactive">
+                    <div class="orb-outer-glow"></div>
+                    <div class="orb-inner-glow"></div>
+                    <div class="orb-body">
+                        <div class="orb-highlight"></div>
+                    </div>
+                    <div class="orb-particles"></div>
+                </div>
+                
+                <!-- Floating UI Elements -->
+                <div class="world-ui">
+                    <div class="creature-count" id="creature-count">
+                        <span class="creature-icon">🦋</span>
+                        <span class="creature-num">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="bottom-nav">
+                <button class="nav-btn active" data-screen="world">
+                    <span class="nav-icon">🌍</span>
+                    <span class="nav-label">World</span>
+                </button>
+                <button class="nav-btn" data-screen="quest">
+                    <span class="nav-icon">🗺️</span>
+                    <span class="nav-label">Quest</span>
+                </button>
+                <button class="nav-btn" data-screen="release">
+                    <span class="nav-icon">🌬️</span>
+                    <span class="nav-label">Release</span>
+                </button>
+                <button class="nav-btn" data-screen="creatures">
+                    <span class="nav-icon">✨</span>
+                    <span class="nav-label">Creatures</span>
+                </button>
+            </nav>
+        </div>
+        
+        <!-- Quest Screen -->
+        <div id="quest-screen" class="screen">
+            <header class="screen-header">
+                <button class="back-btn" data-back="world">←</button>
+                <h2>Today's Quest</h2>
+                <div class="header-spacer"></div>
+            </header>
+            
+            <div class="quest-container">
+                <div class="quest-card" id="quest-card">
+                    <div class="quest-badge">🗺️ COURAGE QUEST</div>
+                    <h3 class="quest-title">The Truth Bridge</h3>
+                    <p class="quest-description">
+                        Speak one truth you've been avoiding today. 
+                        Not to hurt — to align.
+                    </p>
+                    <div class="quest-rewards">
+                        <div class="reward">
+                            <span class="reward-icon">⚡</span>
+                            <span class="reward-text">+25 Energy</span>
+                        </div>
+                        <div class="reward">
+                            <span class="reward-icon">🦉</span>
+                            <span class="reward-text">Unlock OWL of Clarity</span>
+                        </div>
+                    </div>
+                    <button class="quest-btn" id="accept-quest">Accept Quest</button>
+                    <button class="quest-alt-btn" id="easier-quest">Something Easier Today</button>
+                </div>
+                
+                <div class="quest-complete" id="quest-complete" style="display: none;">
+                    <div class="complete-animation">
+                        <div class="complete-burst"></div>
+                        <span class="complete-icon">✨</span>
+                    </div>
+                    <h3>Quest Complete!</h3>
+                    <p>You spoke your truth. Energy restored.</p>
+                    <div class="rewards-earned">
+                        <div class="reward-item">⚡ +25 Energy</div>
+                    </div>
+                    <button class="primary-btn" id="claim-rewards">Claim Rewards</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Release Chamber -->
+        <div id="release-screen" class="screen">
+            <header class="screen-header">
+                <button class="back-btn" data-back="world">←</button>
+                <h2>Letting Go Chamber</h2>
+                <div class="header-spacer"></div>
+            </header>
+            
+            <div class="release-container">
+                <div class="release-prompt">
+                    <p class="release-question">What are you holding onto?</p>
+                    <div class="release-options">
+                        <button class="release-option" data-type="outcome">An outcome I need</button>
+                        <button class="release-option" data-type="fear">A fear I can't shake</button>
+                        <button class="release-option" data-type="self">An old version of myself</button>
+                        <button class="release-option" data-type="expectation">Someone's expectation</button>
+                    </div>
+                </div>
+                
+                <div class="release-input" id="release-input" style="display: none;">
+                    <p class="release-instruction">Write it down. Then let it go.</p>
+                    <textarea id="release-text" placeholder="I'm holding onto..."></textarea>
+                    <button class="release-btn" id="release-btn">
+                        <span>Release</span>
+                        <span class="release-icon">🌬️</span>
+                    </button>
+                </div>
+                
+                <div class="release-animation" id="release-animation" style="display: none;">
+                    <div class="butterflies-container" id="butterflies"></div>
+                    <p class="release-message">Released into the wind...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Creatures Collection -->
+        <div id="creatures-screen" class="screen">
+            <header class="screen-header">
+                <button class="back-btn" data-back="world">←</button>
+                <h2>Your Creatures</h2>
+                <div class="header-spacer"></div>
+            </header>
+            
+            <div class="creatures-container">
+                <div class="creatures-grid" id="creatures-grid">
+                    <!-- Creatures will be populated by JS -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Creature Discovery Modal -->
+        <div id="creature-modal" class="modal">
+            <div class="modal-content creature-discovery">
+                <div class="discovery-burst"></div>
+                <p class="discovery-label">NEW CREATURE DISCOVERED!</p>
+                <div class="creature-reveal" id="creature-reveal">
+                    <span class="creature-emoji">🦉</span>
+                </div>
+                <h3 class="creature-name" id="creature-name">OWL of Clarity</h3>
+                <p class="creature-wisdom" id="creature-wisdom">"The truth is simple. We make it complex."</p>
+                <p class="creature-unlock" id="creature-unlock">Unlocked by: Speaking your truth</p>
+                <button class="primary-btn" id="creature-dismiss">Welcome to My World</button>
+            </div>
+        </div>
+        
+        <!-- Boss Battle Screen -->
+        <div id="boss-screen" class="screen">
+            <div class="boss-container">
+                <div class="boss-header">
+                    <span class="boss-label">⚔️ BOSS BATTLE</span>
+                    <h2 class="boss-name" id="boss-name">The Anxiety Storm</h2>
+                </div>
+                
+                <div class="boss-arena">
+                    <div class="boss-visual" id="boss-visual">
+                        <div class="storm-cloud">⛈️</div>
+                        <div class="storm-effects"></div>
+                    </div>
+                    
+                    <div class="battle-bars">
+                        <div class="bar-container">
+                            <span class="bar-label">CHAOS</span>
+                            <div class="boss-health-bar">
+                                <div class="boss-health-fill" id="boss-health"></div>
+                            </div>
+                        </div>
+                        <div class="bar-container">
+                            <span class="bar-label">YOUR CALM</span>
+                            <div class="player-calm-bar">
+                                <div class="player-calm-fill" id="player-calm"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="boss-instructions">
+                    <p>Breathe slowly and steadily.</p>
+                    <p>Stay calm longer than the storm.</p>
+                </div>
+                
+                <div class="breath-guide" id="breath-guide">
+                    <div class="breath-circle">
+                        <span class="breath-text">Breathe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Victory Screen -->
+        <div id="victory-screen" class="screen">
+            <div class="victory-container">
+                <div class="victory-burst"></div>
+                <h2 class="victory-title">Victory!</h2>
+                <p class="victory-message">You remained calm through the storm.</p>
+                <div class="victory-rewards">
+                    <div class="victory-reward">⚡ +50 Energy</div>
+                    <div class="victory-reward">🌊 FLOW unlocked!</div>
+                </div>
+                <button class="primary-btn" id="victory-continue">Return to World</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="src/js/align.js"></script>
+</body>
+</html>
+
