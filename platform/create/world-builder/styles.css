@@ -740,6 +740,19 @@ body {
     border-color: var(--accent-cosmic);
 }
 
+.action-btn.primary {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    color: #0a0a1f;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+}
+
+.action-btn.primary:hover {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    box-shadow: 0 6px 30px rgba(74, 222, 128, 0.5);
+}
+
 /* ==================== MODALS ==================== */
 
 .modal {

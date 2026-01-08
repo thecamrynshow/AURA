@@ -1,0 +1,830 @@
+/* Planet Surface - PNEUOMA Create */
+
+:root {
+    --sky-top: #87CEEB;
+    --sky-bottom: #E0F6FF;
+    --ground-color: #4ade80;
+    --ground-dark: #22c55e;
+    --sun-color: #fbbf24;
+    --text-primary: #ffffff;
+    --text-dark: #1a1a2e;
+    --safe-top: env(safe-area-inset-top, 20px);
+    --safe-bottom: env(safe-area-inset-bottom, 20px);
+    --font-display: 'Fredoka', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--sky-bottom);
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ==================== SKY ==================== */
+
+.sky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+    transition: background 1s ease;
+    z-index: 1;
+}
+
+/* Time of day variants */
+.sky.dawn {
+    --sky-top: #ff9a9e;
+    --sky-bottom: #ffecd2;
+}
+
+.sky.day {
+    --sky-top: #87CEEB;
+    --sky-bottom: #E0F6FF;
+}
+
+.sky.dusk {
+    --sky-top: #a18cd1;
+    --sky-bottom: #fbc2eb;
+}
+
+.sky.night {
+    --sky-top: #0a0a1f;
+    --sky-bottom: #1a1a3e;
+}
+
+/* Terrain-based sky colors */
+.sky.terrain-earth { --sky-top: #87CEEB; --sky-bottom: #E0F6FF; }
+.sky.terrain-ocean { --sky-top: #0077b6; --sky-bottom: #90e0ef; }
+.sky.terrain-desert { --sky-top: #f4a460; --sky-bottom: #ffe4b5; }
+.sky.terrain-ice { --sky-top: #b8d4e3; --sky-bottom: #e8f4f8; }
+.sky.terrain-volcanic { --sky-top: #4a0000; --sky-bottom: #8b0000; }
+.sky.terrain-crystal { --sky-top: #7b2cbf; --sky-bottom: #c77dff; }
+
+/* Suns */
+.sun {
+    position: absolute;
+    border-radius: 50%;
+    transition: all 1s ease;
+}
+
+.sun-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    right: 15%;
+    background: radial-gradient(circle at 30% 30%, #fff9c4 0%, var(--sun-color) 50%, #f59e0b 100%);
+    box-shadow: 0 0 60px rgba(251, 191, 36, 0.6), 0 0 120px rgba(251, 191, 36, 0.3);
+    animation: sunPulse 4s ease-in-out infinite;
+}
+
+.sun-2 {
+    width: 50px;
+    height: 50px;
+    top: 20%;
+    left: 20%;
+    background: radial-gradient(circle at 30% 30%, #e0f2fe 0%, #60a5fa 50%, #3b82f6 100%);
+    box-shadow: 0 0 40px rgba(96, 165, 250, 0.6), 0 0 80px rgba(96, 165, 250, 0.3);
+    animation: sunPulse 5s ease-in-out infinite 1s;
+}
+
+.sun.hidden {
+    display: none;
+}
+
+@keyframes sunPulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.05); filter: brightness(1.1); }
+}
+
+/* Night mode suns */
+.sky.night .sun-1 {
+    background: radial-gradient(circle at 30% 30%, #fff 0%, #e5e7eb 50%, #d1d5db 100%);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.4), 0 0 80px rgba(255, 255, 255, 0.2);
+    width: 60px;
+    height: 60px;
+}
+
+/* Clouds */
+.clouds {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    animation: cloudFloat linear infinite;
+}
+
+@keyframes cloudFloat {
+    from { transform: translateX(-150px); }
+    to { transform: translateX(calc(100vw + 150px)); }
+}
+
+/* Aurora */
+.aurora {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(180deg,
+        rgba(52, 211, 153, 0.3) 0%,
+        rgba(167, 139, 250, 0.2) 30%,
+        rgba(244, 114, 182, 0.2) 60%,
+        transparent 100%);
+    animation: auroraWave 8s ease-in-out infinite;
+}
+
+.aurora.hidden {
+    display: none;
+}
+
+@keyframes auroraWave {
+    0%, 100% { opacity: 0.5; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(10px); }
+}
+
+/* Stars Canvas */
+#stars-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    opacity: 0;
+    transition: opacity 1s ease;
+    z-index: 0;
+}
+
+.sky.night + #stars-canvas,
+.sky.dusk + #stars-canvas {
+    opacity: 1;
+}
+
+/* ==================== LANDSCAPE ==================== */
+
+.landscape {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 2;
+}
+
+/* Distant Layer (mountains, etc.) */
+.distant-layer {
+    position: absolute;
+    bottom: 40%;
+    left: 0;
+    width: 100%;
+    height: 30%;
+}
+
+.mountain {
+    position: absolute;
+    bottom: 0;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* Mid Layer */
+.mid-layer {
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    width: 100%;
+    height: 25%;
+}
+
+.hill {
+    position: absolute;
+    bottom: 0;
+    border-radius: 50% 50% 0 0;
+}
+
+/* Ground */
+.ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(180deg, var(--ground-color) 0%, var(--ground-dark) 100%);
+}
+
+/* Terrain ground colors */
+.ground.terrain-earth { --ground-color: #4ade80; --ground-dark: #16a34a; }
+.ground.terrain-ocean { --ground-color: #0ea5e9; --ground-dark: #0369a1; }
+.ground.terrain-desert { --ground-color: #fcd34d; --ground-dark: #d97706; }
+.ground.terrain-ice { --ground-color: #e0f2fe; --ground-dark: #bae6fd; }
+.ground.terrain-volcanic { --ground-color: #7f1d1d; --ground-dark: #450a0a; }
+.ground.terrain-crystal { --ground-color: #c084fc; --ground-dark: #7c3aed; }
+
+/* Life Layer */
+.life-layer {
+    position: absolute;
+    bottom: 35%;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    pointer-events: none;
+}
+
+.life-item {
+    position: absolute;
+    bottom: 0;
+    font-size: 2rem;
+    transform-origin: bottom center;
+    animation: gentleSway 3s ease-in-out infinite;
+}
+
+@keyframes gentleSway {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+}
+
+/* ==================== CREATURES ==================== */
+
+.creatures-layer {
+    position: absolute;
+    bottom: 35%;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    z-index: 10;
+}
+
+.surface-creature {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    animation: creatureWalk 8s linear infinite;
+}
+
+.surface-creature:hover {
+    transform: scale(1.1);
+}
+
+.surface-creature:active {
+    transform: scale(0.95);
+}
+
+.creature-body {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.creature-body::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.creature-eyes {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.creature-eye {
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+}
+
+.creature-eye::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 4px;
+    height: 4px;
+    background: #1a1a2e;
+    border-radius: 50%;
+}
+
+.creature-mouth {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 8px;
+    border-radius: 0 0 10px 10px;
+    background: #1a1a2e;
+}
+
+.creature-name-tag {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.surface-creature:hover .creature-name-tag {
+    opacity: 1;
+}
+
+@keyframes creatureWalk {
+    0% { left: -60px; }
+    100% { left: calc(100% + 60px); }
+}
+
+.creature-bounce {
+    animation: creatureBounce 0.5s ease;
+}
+
+@keyframes creatureBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    25% { transform: translateY(-20px) scale(1.1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+    75% { transform: translateY(-15px) scale(1.1); }
+}
+
+/* ==================== WEATHER ==================== */
+
+.weather-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15;
+}
+
+#weather-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Fog overlay */
+.weather-fog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4);
+    animation: fogDrift 10s ease-in-out infinite;
+}
+
+@keyframes fogDrift {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.5; }
+}
+
+/* ==================== UI ==================== */
+
+.surface-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.surface-ui > * {
+    pointer-events: auto;
+}
+
+/* Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: calc(var(--safe-top) + 10px) 15px 10px;
+}
+
+.ui-btn {
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ui-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.ui-btn.icon-only {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    border-radius: 50%;
+}
+
+.planet-title {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+.planet-title h1 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 2px;
+}
+
+.planet-title p {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Creature Counter */
+.creature-counter {
+    position: absolute;
+    top: 100px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+}
+
+.counter-icon {
+    font-size: 1.2rem;
+}
+
+.counter-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+}
+
+.counter-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Time Control */
+.time-control {
+    position: absolute;
+    top: 100px;
+    left: 15px;
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+}
+
+.time-btn {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.time-btn.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Bottom Bar */
+.bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 20px calc(var(--safe-bottom) + 15px);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-icon {
+    font-size: 1.1rem;
+}
+
+/* ==================== MODALS ==================== */
+
+.modal, .creature-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    padding: 20px;
+}
+
+.modal.hidden, .creature-modal.hidden {
+    display: none;
+}
+
+.modal-content, .creature-modal-content {
+    background: #1a1a2e;
+    border-radius: 24px;
+    padding: 25px;
+    max-width: 350px;
+    width: 100%;
+    text-align: center;
+}
+
+.modal-content h3, .creature-modal-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.saved-creatures {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.saved-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.saved-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.saved-item-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.saved-item-name {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.modal-divider {
+    color: rgba(255, 255, 255, 0.4);
+    margin: 15px 0;
+}
+
+.create-link {
+    display: block;
+    padding: 14px;
+    background: rgba(74, 222, 128, 0.15);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 12px;
+    color: #4ade80;
+    text-decoration: none;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.create-link:hover {
+    background: rgba(74, 222, 128, 0.25);
+}
+
+.modal-close {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Life/Weather Grid */
+.life-grid, .weather-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.life-btn, .weather-btn {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.life-btn:hover, .weather-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.weather-btn.active {
+    border-color: #60a5fa;
+    background: rgba(96, 165, 250, 0.2);
+}
+
+/* Creature Modal */
+.creature-modal-content {
+    max-width: 300px;
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.creature-display {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.creature-traits {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.creature-trait {
+    padding: 5px 12px;
+    background: rgba(74, 222, 128, 0.2);
+    border-radius: 15px;
+    font-size: 0.75rem;
+    color: #4ade80;
+}
+
+.creature-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Touch Ripple */
+.touch-ripple {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    z-index: 25;
+}
+
+.touch-ripple.active {
+    animation: rippleExpand 0.6s ease-out;
+}
+
+@keyframes rippleExpand {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+.touch-ripple.hidden {
+    display: none;
+}
+
+/* Empty state */
+.empty-state {
+    color: rgba(255, 255, 255, 0.5);
+    padding: 20px;
+    font-size: 0.9rem;
+}
+

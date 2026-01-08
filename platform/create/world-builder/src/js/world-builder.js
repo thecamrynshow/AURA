@@ -475,6 +475,11 @@ class WorldBuilder {
             this.shareWorld();
         });
         
+        // Enter Planet (Surface View)
+        document.getElementById('enter-planet-btn').addEventListener('click', () => {
+            this.enterPlanet();
+        });
+        
         // Rename
         document.getElementById('rename-btn').addEventListener('click', () => {
             this.nameInput.value = this.worldName === 'Unnamed World' ? '' : this.worldName;
@@ -714,6 +719,15 @@ class WorldBuilder {
         }
         
         this.vibrate([20, 20]);
+    }
+    
+    enterPlanet() {
+        // Save current world first
+        this.saveWorld();
+        
+        // Navigate to planet surface with world name
+        this.vibrate([30, 50, 30]);
+        window.location.href = `../planet-surface/index.html?planet=${encodeURIComponent(this.worldName)}`;
     }
     
     vibrate(pattern) {

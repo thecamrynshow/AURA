@@ -322,7 +322,8 @@ class UniverseApp {
         
         document.getElementById('visit-planet-btn').addEventListener('click', () => {
             if (this.selectedPlanet) {
-                window.location.href = '../world-builder/index.html';
+                // Navigate to planet surface with planet data
+                window.location.href = `../planet-surface/index.html?planet=${encodeURIComponent(this.selectedPlanet.name)}`;
             }
         });
         

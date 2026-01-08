@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Planet Surface | PNEUOMA Create</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Sky Layer -->
+        <div class="sky" id="sky">
+            <div class="sun sun-1" id="sun-1"></div>
+            <div class="sun sun-2 hidden" id="sun-2"></div>
+            <div class="clouds" id="clouds"></div>
+            <div class="aurora hidden" id="aurora"></div>
+        </div>
+        
+        <!-- Stars (for night/space views) -->
+        <canvas id="stars-canvas"></canvas>
+        
+        <!-- Landscape Layer -->
+        <div class="landscape" id="landscape">
+            <!-- Distant Mountains/Features -->
+            <div class="distant-layer" id="distant-layer"></div>
+            
+            <!-- Mid Ground -->
+            <div class="mid-layer" id="mid-layer"></div>
+            
+            <!-- Ground -->
+            <div class="ground" id="ground"></div>
+            
+            <!-- Life Forms (trees, plants, etc.) -->
+            <div class="life-layer" id="life-layer"></div>
+            
+            <!-- Creatures Layer -->
+            <div class="creatures-layer" id="creatures-layer"></div>
+        </div>
+        
+        <!-- UI Overlay -->
+        <div class="surface-ui">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button id="back-btn" class="ui-btn">
+                    <span>← Leave Planet</span>
+                </button>
+                <div class="planet-title">
+                    <h1 id="planet-name">Unknown Planet</h1>
+                    <p id="planet-terrain">Earth-like</p>
+                </div>
+                <button id="music-toggle" class="ui-btn icon-only">🔇</button>
+            </div>
+            
+            <!-- Creature Counter -->
+            <div class="creature-counter" id="creature-counter">
+                <span class="counter-icon">🧬</span>
+                <span class="counter-value" id="creature-count">0</span>
+                <span class="counter-label">Creatures</span>
+            </div>
+            
+            <!-- Time of Day -->
+            <div class="time-control">
+                <button class="time-btn" data-time="dawn">🌅</button>
+                <button class="time-btn active" data-time="day">☀️</button>
+                <button class="time-btn" data-time="dusk">🌆</button>
+                <button class="time-btn" data-time="night">🌙</button>
+            </div>
+            
+            <!-- Bottom Actions -->
+            <div class="bottom-bar">
+                <button class="action-btn" id="add-creature-btn">
+                    <span class="btn-icon">🧬</span>
+                    <span>Add Creature</span>
+                </button>
+                <button class="action-btn" id="add-life-btn">
+                    <span class="btn-icon">🌳</span>
+                    <span>Add Life</span>
+                </button>
+                <button class="action-btn" id="weather-btn">
+                    <span class="btn-icon">🌤️</span>
+                    <span>Weather</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Creature Info Modal -->
+        <div class="creature-modal hidden" id="creature-modal">
+            <div class="creature-modal-content">
+                <button class="close-modal" id="close-creature-modal">✕</button>
+                <div class="creature-display" id="creature-display"></div>
+                <h3 id="creature-modal-name">Creature Name</h3>
+                <div class="creature-traits" id="creature-traits"></div>
+                <div class="creature-actions">
+                    <button class="modal-btn" id="pet-creature">💕 Pet</button>
+                    <button class="modal-btn" id="feed-creature">🍎 Feed</button>
+                    <button class="modal-btn" id="play-creature">🎾 Play</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Creature Modal -->
+        <div class="modal hidden" id="add-modal">
+            <div class="modal-content">
+                <h3>Add a Creature</h3>
+                <div class="saved-creatures" id="saved-creatures"></div>
+                <div class="modal-divider">or</div>
+                <a href="../creature-lab/index.html" class="create-link">🧬 Create New Creature</a>
+                <button class="modal-close" id="add-modal-close">Cancel</button>
+            </div>
+        </div>
+        
+        <!-- Add Life Modal -->
+        <div class="modal hidden" id="life-modal">
+            <div class="modal-content">
+                <h3>Add Life Forms</h3>
+                <div class="life-grid">
+                    <button class="life-btn" data-life="tree">🌳 Trees</button>
+                    <button class="life-btn" data-life="flower">🌸 Flowers</button>
+                    <button class="life-btn" data-life="mushroom">🍄 Mushrooms</button>
+                    <button class="life-btn" data-life="crystal">💎 Crystals</button>
+                    <button class="life-btn" data-life="rock">🪨 Rocks</button>
+                    <button class="life-btn" data-life="grass">🌿 Grass</button>
+                </div>
+                <button class="modal-close" id="life-modal-close">Done</button>
+            </div>
+        </div>
+        
+        <!-- Weather Modal -->
+        <div class="modal hidden" id="weather-modal">
+            <div class="modal-content">
+                <h3>Weather</h3>
+                <div class="weather-grid">
+                    <button class="weather-btn active" data-weather="clear">☀️ Clear</button>
+                    <button class="weather-btn" data-weather="cloudy">☁️ Cloudy</button>
+                    <button class="weather-btn" data-weather="rain">🌧️ Rain</button>
+                    <button class="weather-btn" data-weather="snow">❄️ Snow</button>
+                    <button class="weather-btn" data-weather="storm">⛈️ Storm</button>
+                    <button class="weather-btn" data-weather="fog">🌫️ Fog</button>
+                </div>
+                <button class="modal-close" id="weather-modal-close">Done</button>
+            </div>
+        </div>
+        
+        <!-- Weather Effects -->
+        <div class="weather-layer" id="weather-layer">
+            <canvas id="weather-canvas"></canvas>
+        </div>
+        
+        <!-- Touch Ripple Effect -->
+        <div class="touch-ripple hidden" id="touch-ripple"></div>
+    </div>
+    
+    <script src="src/js/planet-surface.js"></script>
+</body>
+</html>
+
