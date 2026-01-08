@@ -1,329 +1,418 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- Homepage -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+    
+    <!-- ============================================ -->
+    <!-- PNEUOMA - Nervous System Regulation Games   -->
+    <!-- The #1 Platform for Breathing Games         -->
+    <!-- https://pneuoma.com                         -->
+    <!-- ============================================ -->
+    
+    <!-- Homepage - Priority 1.0 -->
     <url>
         <loc>https://pneuoma.com/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>weekly</changefreq>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     
-    <!-- Platform Pages -->
+    <!-- ============================================ -->
+    <!-- PLATFORM PAGES                              -->
+    <!-- ============================================ -->
+    
     <url>
         <loc>https://pneuoma.com/platform/games/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
+        <priority>0.95</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/apps/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/multiplayer/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/schools/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
     </url>
     
-    <!-- Games -->
+    <!-- ============================================ -->
+    <!-- CREATE SECTION - NEW!                       -->
+    <!-- ============================================ -->
+    
     <url>
-        <loc>https://pneuoma.com/games/aura/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
+        <loc>https://pneuoma.com/platform/create/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/create/universe/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/create/world-builder/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/create/creature-lab/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/create/planet-surface/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://pneuoma.com/games/echogarden/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <loc>https://pneuoma.com/platform/create/planet-explore/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    
+    <!-- ============================================ -->
+    <!-- KIDS GAMES (Ages 4-8)                       -->
+    <!-- ============================================ -->
+    
+    <url>
+        <loc>https://pneuoma.com/games/cloudkeeper/</loc>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/tidepool/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/echogarden/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/rainbow/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    
+    <!-- ============================================ -->
+    <!-- KIDS GAMES (Ages 8-13)                      -->
+    <!-- ============================================ -->
+    
+    <url>
+        <loc>https://pneuoma.com/games/aura/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/pulse/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/dragon/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/starcatcher/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/games/rhythm/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/games/zone/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/games/deep/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/games/cloudkeeper/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/games/threshold/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/games/before/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/songbird/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/solfege/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/ember/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/align/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
     </url>
     
-    <!-- Teen Games -->
+    <!-- ============================================ -->
+    <!-- TEEN GAMES (Ages 13-18)                     -->
+    <!-- ============================================ -->
+    
+    <url>
+        <loc>https://pneuoma.com/games/deep/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/rhythm/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/zone/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
     <url>
         <loc>https://pneuoma.com/games/chill/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/focus/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/bounce/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/pause/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/vibecheck/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.85</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/squad/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    
+    <!-- ============================================ -->
+    <!-- ADULT GAMES (Ages 18+)                      -->
+    <!-- ============================================ -->
+    
+    <url>
+        <loc>https://pneuoma.com/games/drift/</loc>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
-    
-    <!-- Adult Games -->
-    <url>
-        <loc>https://pneuoma.com/games/drift/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
     <url>
         <loc>https://pneuoma.com/games/reset/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/anchor/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/sync/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/forge/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/decompress/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/games/rise/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/threshold/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/games/before/</loc>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     
-    <!-- Rituals -->
+    <!-- ============================================ -->
+    <!-- RITUALS                                     -->
+    <!-- ============================================ -->
+    
     <url>
         <loc>https://pneuoma.com/platform/rituals/morning-rise/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/transition-reset/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/deep-focus/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/before/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/decompress/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/sleep-descent/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/emergency-reset/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/platform/rituals/deep-recovery/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.75</priority>
     </url>
     
-    <!-- Multiplayer -->
+    <!-- ============================================ -->
+    <!-- MULTIPLAYER MODES                           -->
+    <!-- ============================================ -->
+    
     <url>
         <loc>https://pneuoma.com/platform/multiplayer/classroom-sync/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/platform/multiplayer/parent-child/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/platform/multiplayer/partners/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/platform/multiplayer/therapy-circle/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/platform/multiplayer/family-circle/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://pneuoma.com/platform/multiplayer/remote-sync/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- For Schools -->
-    <url>
-        <loc>https://pneuoma.com/platform/schools/</loc>
-        <lastmod>2026-01-03</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
-    <!-- Auth Pages -->
-    <url>
-        <loc>https://pneuoma.com/auth/login.html</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://pneuoma.com/platform/multiplayer/parent-child/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/multiplayer/partners/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/multiplayer/therapy-circle/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/multiplayer/family-circle/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+    </url>
+    <url>
+        <loc>https://pneuoma.com/platform/multiplayer/remote-sync/</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.75</priority>
+    </url>
+    
+    <!-- ============================================ -->
+    <!-- AUTH & UTILITY PAGES                        -->
+    <!-- ============================================ -->
+    
+    <url>
+        <loc>https://pneuoma.com/auth/login.html</loc>
+        <lastmod>2026-01-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
         <loc>https://pneuoma.com/auth/signup.html</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://pneuoma.com/auth/subscribe.html</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+        <priority>0.7</priority>
     </url>
-    
-    <!-- Pitch Deck -->
     <url>
         <loc>https://pneuoma.com/pitch-deck/</loc>
-        <lastmod>2026-01-03</lastmod>
+        <lastmod>2026-01-08</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 </urlset>
-
