@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1625">
+    <title>Haven | PNEUMA Companion for Trauma</title>
+    <meta name="description" content="Haven - A gentle AI companion for trauma survivors. Support for abuse recovery, grief, loss, and healing. Safe, private, and always here when you need comfort.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="chat-header">
+            <button class="back-btn" id="back-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <div class="companion-info">
+                <div class="avatar-small">🕊️</div>
+                <div>
+                    <h1>Haven</h1>
+                    <p class="status">A safe place</p>
+                </div>
+            </div>
+            <button class="menu-btn" id="menu-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Chat Container -->
+        <main class="chat-container" id="chat-container">
+            <!-- Welcome Message -->
+            <div class="message-group companion">
+                <div class="message-avatar">🕊️</div>
+                <div class="message-content">
+                    <div class="message">
+                        <p>Hello. I'm Haven. 🕊️</p>
+                    </div>
+                    <div class="message">
+                        <p>This is a safe space. Whatever you've been through — abuse, loss, tragedy, pain you can't name — you don't have to carry it alone.</p>
+                    </div>
+                    <div class="message">
+                        <p>You don't have to share anything you're not ready to share. We can just sit here together, or we can talk. There's no pressure.</p>
+                    </div>
+                    <div class="message">
+                        <p>What brings you here today?</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Options -->
+            <div class="quick-options" id="quick-options">
+                <button class="quick-btn" data-message="I've experienced abuse and I'm struggling">
+                    💔 Surviving abuse
+                </button>
+                <button class="quick-btn" data-message="I lost someone I love and it hurts so much">
+                    🕯️ Grieving a loss
+                </button>
+                <button class="quick-btn" data-message="Something traumatic happened to me">
+                    🌧️ Processing trauma
+                </button>
+                <button class="quick-btn" data-message="I don't feel safe in my body">
+                    🫂 Feeling unsafe
+                </button>
+                <button class="quick-btn" data-message="I need help coping right now">
+                    🌿 Need coping tools
+                </button>
+                <button class="quick-btn" data-message="I just need someone to be here with me">
+                    🤍 Just be with me
+                </button>
+            </div>
+        </main>
+
+        <!-- Input Area -->
+        <footer class="input-area">
+            <div class="input-container">
+                <button class="voice-btn" id="voice-btn" title="Use voice">
+                    🎤
+                </button>
+                <input type="text" 
+                       id="message-input" 
+                       placeholder="Share only what feels safe..." 
+                       autocomplete="off">
+                <button class="send-btn" id="send-btn" disabled>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="safety-note">
+                In crisis? <a href="tel:988">Call 988</a> · <a href="sms:741741">Text HOME to 741741</a> · <a href="tel:18007997233">RAINN: 1-800-799-7233</a>
+            </p>
+        </footer>
+
+        <!-- Menu Modal -->
+        <div class="modal hidden" id="menu-modal">
+            <div class="modal-content">
+                <h3>Options</h3>
+                <button class="menu-option" id="grounding">🌿 Grounding Exercise</button>
+                <button class="menu-option" id="breathing">🌬️ Breathing Exercise</button>
+                <button class="menu-option" id="clear-chat">🗑️ Start Over</button>
+                <button class="menu-option" id="get-help">🆘 Get Real Help</button>
+                <button class="menu-option" id="resources">📚 Resources</button>
+                <button class="menu-option close" id="close-menu">Close</button>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal hidden" id="help-modal">
+            <div class="modal-content help-content">
+                <h3>🆘 Get Real Help</h3>
+                <p>You deserve support from people who can truly be there. These resources are free and confidential:</p>
+                <div class="help-links">
+                    <a href="tel:988" class="help-link">
+                        <strong>988</strong>
+                        <span>Suicide & Crisis Lifeline - 24/7</span>
+                    </a>
+                    <a href="tel:18007997233" class="help-link">
+                        <strong>1-800-799-7233</strong>
+                        <span>National Domestic Violence Hotline</span>
+                    </a>
+                    <a href="tel:18006564673" class="help-link">
+                        <strong>1-800-656-4673</strong>
+                        <span>RAINN - Sexual Assault Hotline</span>
+                    </a>
+                    <a href="sms:741741" class="help-link">
+                        <strong>Text HOME to 741741</strong>
+                        <span>Crisis Text Line</span>
+                    </a>
+                    <a href="https://www.psychologytoday.com/us/therapists" target="_blank" class="help-link">
+                        <strong>Find a Therapist</strong>
+                        <span>Psychology Today Directory</span>
+                    </a>
+                </div>
+                <button class="menu-option close" id="close-help">Got It</button>
+            </div>
+        </div>
+
+        <!-- Grounding Modal -->
+        <div class="modal hidden" id="grounding-modal">
+            <div class="modal-content grounding-content">
+                <h3>🌿 Grounding Exercise</h3>
+                <p>When trauma feels overwhelming, grounding brings you back to the present moment. You are safe here.</p>
+                <div class="grounding-steps">
+                    <div class="grounding-step">
+                        <strong>5</strong> things you can <span>SEE</span>
+                    </div>
+                    <div class="grounding-step">
+                        <strong>4</strong> things you can <span>TOUCH</span>
+                    </div>
+                    <div class="grounding-step">
+                        <strong>3</strong> things you can <span>HEAR</span>
+                    </div>
+                    <div class="grounding-step">
+                        <strong>2</strong> things you can <span>SMELL</span>
+                    </div>
+                    <div class="grounding-step">
+                        <strong>1</strong> thing you can <span>TASTE</span>
+                    </div>
+                </div>
+                <p class="grounding-reminder">The past is not happening now. You are here. You are safe.</p>
+                <button class="menu-option close" id="close-grounding">I'm Present</button>
+            </div>
+        </div>
+
+        <!-- Breathing Modal -->
+        <div class="modal hidden" id="breathing-modal">
+            <div class="modal-content breathing-content">
+                <h3>🌬️ Calming Breath</h3>
+                <p>Let's slow down together. Follow along:</p>
+                <div class="breath-circle" id="breath-circle">
+                    <span id="breath-text">Breathe In</span>
+                </div>
+                <div class="breath-controls">
+                    <button class="breath-btn" id="start-breath">Start</button>
+                </div>
+                <button class="menu-option close" id="close-breathing">Done</button>
+            </div>
+        </div>
+
+        <!-- Safe Container Visualization -->
+        <div class="modal hidden" id="container-modal">
+            <div class="modal-content container-content">
+                <h3>🫙 Container Exercise</h3>
+                <p>Sometimes we need to put painful memories away for now. Imagine a container — a box, a vault, a chest. It can hold anything.</p>
+                <div class="container-visual">
+                    <div class="container-box" id="container-box">
+                        <span>🫙</span>
+                    </div>
+                </div>
+                <p class="container-instruction">Picture putting the painful thoughts in this container. Close the lid. They're safe there — you can come back to them when you're ready, with support.</p>
+                <button class="menu-option primary" id="close-container">It's Contained</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="src/js/haven.js"></script>
+</body>
+</html>
+
