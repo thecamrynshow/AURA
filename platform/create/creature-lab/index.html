@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a0a2e">
+    <title>Creature Lab | PNEUOMA Create</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Ambient Background -->
+        <div class="lab-background">
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+            <div class="bubble bubble-4"></div>
+            <div class="bubble bubble-5"></div>
+        </div>
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <div class="dna-preview">
+                    <div class="dna-strand">
+                        <span>🧬</span>
+                    </div>
+                </div>
+                <h1 class="title">Creature Lab</h1>
+                <p class="subtitle">Design Life Forms</p>
+                <p class="tagline">Combine parts, choose traits, and bring your creature to life!</p>
+                <button id="begin-btn" class="primary-btn">
+                    <span>Enter the Lab</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Lab Screen -->
+        <div id="lab-screen" class="screen">
+            <!-- Creature Display -->
+            <div class="creature-viewport">
+                <!-- Music Toggle -->
+                <button id="music-toggle" class="music-btn" aria-label="Toggle music">
+                    <span class="music-icon">🔇</span>
+                </button>
+                
+                <div class="creature-stage">
+                    <div id="creature-container">
+                        <!-- Creature parts will be assembled here -->
+                        <div class="creature" id="creature">
+                            <div class="creature-part wing wing-left" id="wing-left"></div>
+                            <div class="creature-part wing wing-right" id="wing-right"></div>
+                            <div class="creature-part tail" id="tail"></div>
+                            <div class="creature-part body" id="body"></div>
+                            <div class="creature-part legs" id="legs"></div>
+                            <div class="creature-part head" id="head">
+                                <div class="eyes" id="eyes"></div>
+                                <div class="mouth" id="mouth"></div>
+                                <div class="extras" id="head-extras"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stage-glow"></div>
+                </div>
+                
+                <div class="creature-name-display">
+                    <span id="creature-name">New Creature</span>
+                    <button id="rename-btn" class="icon-btn">✏️</button>
+                </div>
+                
+                <!-- Personality Display -->
+                <div class="personality-display" id="personality-display">
+                    <span class="trait" id="trait-1">Curious</span>
+                    <span class="trait" id="trait-2">Friendly</span>
+                </div>
+            </div>
+            
+            <!-- Control Panel -->
+            <div class="control-panel" id="control-panel">
+                <div class="panel-header">
+                    <button class="panel-tab active" data-panel="body">🫀 Body</button>
+                    <button class="panel-tab" data-panel="head">👀 Head</button>
+                    <button class="panel-tab" data-panel="limbs">🦵 Limbs</button>
+                    <button class="panel-tab" data-panel="style">🎨 Style</button>
+                    <button class="panel-tab" data-panel="personality">💫 Soul</button>
+                </div>
+                
+                <!-- Body Panel -->
+                <div class="panel-content active" id="body-panel">
+                    <div class="control-group">
+                        <label>Body Shape</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-body="round">
+                                <div class="part-preview body-round"></div>
+                                <span>Round</span>
+                            </button>
+                            <button class="part-btn" data-body="oval">
+                                <div class="part-preview body-oval"></div>
+                                <span>Oval</span>
+                            </button>
+                            <button class="part-btn" data-body="blob">
+                                <div class="part-preview body-blob"></div>
+                                <span>Blob</span>
+                            </button>
+                            <button class="part-btn" data-body="fluffy">
+                                <div class="part-preview body-fluffy"></div>
+                                <span>Fluffy</span>
+                            </button>
+                            <button class="part-btn" data-body="spiky">
+                                <div class="part-preview body-spiky"></div>
+                                <span>Spiky</span>
+                            </button>
+                            <button class="part-btn" data-body="long">
+                                <div class="part-preview body-long"></div>
+                                <span>Long</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Size</label>
+                        <input type="range" id="body-size" min="60" max="140" value="100" class="slider">
+                    </div>
+                </div>
+                
+                <!-- Head Panel -->
+                <div class="panel-content" id="head-panel">
+                    <div class="control-group">
+                        <label>Head Shape</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-head="round">
+                                <div class="part-preview head-round"></div>
+                                <span>Round</span>
+                            </button>
+                            <button class="part-btn" data-head="triangle">
+                                <div class="part-preview head-triangle"></div>
+                                <span>Triangle</span>
+                            </button>
+                            <button class="part-btn" data-head="square">
+                                <div class="part-preview head-square"></div>
+                                <span>Square</span>
+                            </button>
+                            <button class="part-btn" data-head="star">
+                                <div class="part-preview head-star"></div>
+                                <span>Star</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Eyes</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-eyes="normal">
+                                <span class="eye-preview">👀</span>
+                                <span>Normal</span>
+                            </button>
+                            <button class="part-btn" data-eyes="big">
+                                <span class="eye-preview">🥺</span>
+                                <span>Big</span>
+                            </button>
+                            <button class="part-btn" data-eyes="sleepy">
+                                <span class="eye-preview">😌</span>
+                                <span>Sleepy</span>
+                            </button>
+                            <button class="part-btn" data-eyes="alien">
+                                <span class="eye-preview">👽</span>
+                                <span>Alien</span>
+                            </button>
+                            <button class="part-btn" data-eyes="cyclops">
+                                <span class="eye-preview">🔮</span>
+                                <span>Cyclops</span>
+                            </button>
+                            <button class="part-btn" data-eyes="many">
+                                <span class="eye-preview">🕷️</span>
+                                <span>Many</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Mouth</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-mouth="smile">
+                                <span class="mouth-preview">😊</span>
+                                <span>Smile</span>
+                            </button>
+                            <button class="part-btn" data-mouth="open">
+                                <span class="mouth-preview">😮</span>
+                                <span>Open</span>
+                            </button>
+                            <button class="part-btn" data-mouth="teeth">
+                                <span class="mouth-preview">😬</span>
+                                <span>Teeth</span>
+                            </button>
+                            <button class="part-btn" data-mouth="beak">
+                                <span class="mouth-preview">🐦</span>
+                                <span>Beak</span>
+                            </button>
+                            <button class="part-btn" data-mouth="none">
+                                <span class="mouth-preview">😶</span>
+                                <span>None</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Extras</label>
+                        <div class="part-grid">
+                            <button class="part-btn toggle" data-extra="horns">
+                                <span class="extra-preview">🦌</span>
+                                <span>Horns</span>
+                            </button>
+                            <button class="part-btn toggle" data-extra="ears">
+                                <span class="extra-preview">🐰</span>
+                                <span>Ears</span>
+                            </button>
+                            <button class="part-btn toggle" data-extra="antenna">
+                                <span class="extra-preview">🐛</span>
+                                <span>Antenna</span>
+                            </button>
+                            <button class="part-btn toggle" data-extra="crown">
+                                <span class="extra-preview">👑</span>
+                                <span>Crown</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Limbs Panel -->
+                <div class="panel-content" id="limbs-panel">
+                    <div class="control-group">
+                        <label>Legs</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-legs="none">
+                                <span class="leg-preview">❌</span>
+                                <span>None</span>
+                            </button>
+                            <button class="part-btn" data-legs="two">
+                                <span class="leg-preview">🦵🦵</span>
+                                <span>Two</span>
+                            </button>
+                            <button class="part-btn" data-legs="four">
+                                <span class="leg-preview">🐾</span>
+                                <span>Four</span>
+                            </button>
+                            <button class="part-btn" data-legs="many">
+                                <span class="leg-preview">🐙</span>
+                                <span>Many</span>
+                            </button>
+                            <button class="part-btn" data-legs="tentacles">
+                                <span class="leg-preview">🦑</span>
+                                <span>Tentacles</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Wings</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-wings="none">
+                                <span class="wing-preview">❌</span>
+                                <span>None</span>
+                            </button>
+                            <button class="part-btn" data-wings="butterfly">
+                                <span class="wing-preview">🦋</span>
+                                <span>Butterfly</span>
+                            </button>
+                            <button class="part-btn" data-wings="bat">
+                                <span class="wing-preview">🦇</span>
+                                <span>Bat</span>
+                            </button>
+                            <button class="part-btn" data-wings="angel">
+                                <span class="wing-preview">👼</span>
+                                <span>Angel</span>
+                            </button>
+                            <button class="part-btn" data-wings="dragon">
+                                <span class="wing-preview">🐉</span>
+                                <span>Dragon</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Tail</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-tail="none">
+                                <span class="tail-preview">❌</span>
+                                <span>None</span>
+                            </button>
+                            <button class="part-btn" data-tail="fluffy">
+                                <span class="tail-preview">🦊</span>
+                                <span>Fluffy</span>
+                            </button>
+                            <button class="part-btn" data-tail="long">
+                                <span class="tail-preview">🦎</span>
+                                <span>Long</span>
+                            </button>
+                            <button class="part-btn" data-tail="fish">
+                                <span class="tail-preview">🐟</span>
+                                <span>Fish</span>
+                            </button>
+                            <button class="part-btn" data-tail="devil">
+                                <span class="tail-preview">😈</span>
+                                <span>Devil</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Style Panel -->
+                <div class="panel-content" id="style-panel">
+                    <div class="control-group">
+                        <label>Primary Color</label>
+                        <div class="color-grid">
+                            <button class="color-btn active" data-color="pink" style="background: linear-gradient(135deg, #f472b6, #ec4899);"></button>
+                            <button class="color-btn" data-color="purple" style="background: linear-gradient(135deg, #a78bfa, #8b5cf6);"></button>
+                            <button class="color-btn" data-color="blue" style="background: linear-gradient(135deg, #60a5fa, #3b82f6);"></button>
+                            <button class="color-btn" data-color="cyan" style="background: linear-gradient(135deg, #22d3ee, #06b6d4);"></button>
+                            <button class="color-btn" data-color="green" style="background: linear-gradient(135deg, #4ade80, #22c55e);"></button>
+                            <button class="color-btn" data-color="yellow" style="background: linear-gradient(135deg, #facc15, #eab308);"></button>
+                            <button class="color-btn" data-color="orange" style="background: linear-gradient(135deg, #fb923c, #f97316);"></button>
+                            <button class="color-btn" data-color="red" style="background: linear-gradient(135deg, #f87171, #ef4444);"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Pattern</label>
+                        <div class="part-grid">
+                            <button class="part-btn active" data-pattern="solid">
+                                <div class="pattern-preview solid"></div>
+                                <span>Solid</span>
+                            </button>
+                            <button class="part-btn" data-pattern="spots">
+                                <div class="pattern-preview spots"></div>
+                                <span>Spots</span>
+                            </button>
+                            <button class="part-btn" data-pattern="stripes">
+                                <div class="pattern-preview stripes"></div>
+                                <span>Stripes</span>
+                            </button>
+                            <button class="part-btn" data-pattern="gradient">
+                                <div class="pattern-preview gradient"></div>
+                                <span>Gradient</span>
+                            </button>
+                            <button class="part-btn" data-pattern="sparkle">
+                                <div class="pattern-preview sparkle"></div>
+                                <span>Sparkle</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Glow</label>
+                        <input type="range" id="glow-intensity" min="0" max="100" value="30" class="slider">
+                    </div>
+                </div>
+                
+                <!-- Personality Panel -->
+                <div class="panel-content" id="personality-panel">
+                    <div class="control-group">
+                        <label>Choose 2 Traits</label>
+                        <div class="trait-grid">
+                            <button class="trait-btn active" data-trait="Curious">🔍 Curious</button>
+                            <button class="trait-btn active" data-trait="Friendly">💕 Friendly</button>
+                            <button class="trait-btn" data-trait="Brave">⚔️ Brave</button>
+                            <button class="trait-btn" data-trait="Shy">🙈 Shy</button>
+                            <button class="trait-btn" data-trait="Playful">🎾 Playful</button>
+                            <button class="trait-btn" data-trait="Wise">🦉 Wise</button>
+                            <button class="trait-btn" data-trait="Mischievous">😈 Mischievous</button>
+                            <button class="trait-btn" data-trait="Gentle">🌸 Gentle</button>
+                            <button class="trait-btn" data-trait="Energetic">⚡ Energetic</button>
+                            <button class="trait-btn" data-trait="Dreamy">💭 Dreamy</button>
+                            <button class="trait-btn" data-trait="Protective">🛡️ Protective</button>
+                            <button class="trait-btn" data-trait="Musical">🎵 Musical</button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Actions</label>
+                        <div class="action-buttons">
+                            <button class="action-btn" id="randomize-btn">🎲 Randomize</button>
+                            <button class="action-btn" id="animate-btn">✨ Animate</button>
+                            <button class="action-btn" id="save-btn">💾 Save Creature</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Name Modal -->
+        <div id="name-modal" class="modal">
+            <div class="modal-content">
+                <h3>Name Your Creature</h3>
+                <input type="text" id="name-input" placeholder="Enter a name..." maxlength="20">
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" id="name-cancel">Cancel</button>
+                    <button class="modal-btn primary" id="name-save">Save</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Save Modal -->
+        <div id="save-modal" class="modal">
+            <div class="modal-content">
+                <div class="save-success">
+                    <span class="save-icon">🧬</span>
+                    <h3>Creature Saved!</h3>
+                    <p id="save-message">Your creature has been added to your collection.</p>
+                </div>
+                <button class="modal-btn primary" id="save-close">Continue Creating</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="src/js/creature-lab.js"></script>
+</body>
+</html>
+

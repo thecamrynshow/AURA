@@ -1,0 +1,1210 @@
+/* Creature Lab - PNEUOMA Create */
+
+:root {
+    --bg-lab: #1a0a2e;
+    --bg-deep: #0d0518;
+    --accent-bio: #22d3ee;
+    --accent-life: #4ade80;
+    --accent-magic: #a78bfa;
+    --accent-love: #f472b6;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --safe-top: env(safe-area-inset-top, 20px);
+    --safe-bottom: env(safe-area-inset-bottom, 20px);
+    --font-display: 'Fredoka', sans-serif;
+    --font-body: 'Nunito', sans-serif;
+    
+    /* Creature colors */
+    --creature-color: #f472b6;
+    --creature-color-light: #f9a8d4;
+    --creature-color-dark: #db2777;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--bg-lab);
+    color: var(--text-primary);
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ==================== LAB BACKGROUND ==================== */
+
+.lab-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+                var(--bg-lab);
+    z-index: 0;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 70%);
+    animation: bubbleFloat 8s ease-in-out infinite;
+}
+
+.bubble-1 { width: 60px; height: 60px; left: 10%; top: 20%; animation-delay: 0s; }
+.bubble-2 { width: 40px; height: 40px; right: 15%; top: 30%; animation-delay: 1s; }
+.bubble-3 { width: 80px; height: 80px; left: 20%; bottom: 30%; animation-delay: 2s; }
+.bubble-4 { width: 30px; height: 30px; right: 25%; bottom: 40%; animation-delay: 3s; }
+.bubble-5 { width: 50px; height: 50px; left: 50%; top: 15%; animation-delay: 4s; }
+
+@keyframes bubbleFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+    50% { transform: translateY(-20px) scale(1.1); opacity: 0.5; }
+}
+
+/* ==================== SCREENS ==================== */
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ==================== START SCREEN ==================== */
+
+#start-screen {
+    justify-content: center;
+    align-items: center;
+}
+
+.start-content {
+    text-align: center;
+    padding: 2rem;
+    animation: fadeInUp 1s ease;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dna-preview {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dna-strand {
+    font-size: 4rem;
+    animation: dnaRotate 3s ease-in-out infinite;
+}
+
+@keyframes dnaRotate {
+    0%, 100% { transform: rotate(-10deg) scale(1); }
+    50% { transform: rotate(10deg) scale(1.1); }
+}
+
+.title {
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-life) 0%, var(--accent-bio) 50%, var(--accent-magic) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--accent-bio);
+    margin-bottom: 0.5rem;
+}
+
+.tagline {
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.primary-btn {
+    padding: 1rem 2.5rem;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--bg-lab);
+    background: linear-gradient(135deg, var(--accent-life) 0%, var(--accent-bio) 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.primary-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 40px rgba(34, 211, 238, 0.4);
+}
+
+/* ==================== LAB SCREEN ==================== */
+
+#lab-screen {
+    flex-direction: column;
+}
+
+.creature-viewport {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--safe-top);
+    min-height: 45%;
+}
+
+/* Music Button */
+.music-btn {
+    position: absolute;
+    top: calc(var(--safe-top) + 15px);
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.music-btn:hover {
+    border-color: var(--accent-bio);
+}
+
+.music-btn.playing {
+    border-color: var(--accent-bio);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+}
+
+.music-icon {
+    font-size: 1.5rem;
+}
+
+/* Creature Stage */
+.creature-stage {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stage-glow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 40px;
+    background: radial-gradient(ellipse, rgba(34, 211, 238, 0.3) 0%, transparent 70%);
+    filter: blur(10px);
+}
+
+#creature-container {
+    position: relative;
+    z-index: 2;
+}
+
+/* ==================== CREATURE PARTS ==================== */
+
+.creature {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    animation: creatureIdle 3s ease-in-out infinite;
+}
+
+@keyframes creatureIdle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.creature.animate {
+    animation: creatureJump 0.6s ease-in-out;
+}
+
+@keyframes creatureJump {
+    0%, 100% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-40px) scale(1.1); }
+    50% { transform: translateY(-50px) scale(1.05) rotate(10deg); }
+    70% { transform: translateY(-30px) scale(1.1) rotate(-5deg); }
+}
+
+.creature-part {
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+/* Body */
+.body {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--creature-color) 0%, var(--creature-color-dark) 100%);
+    box-shadow: inset -10px -10px 30px rgba(0, 0, 0, 0.3),
+                inset 5px 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+.body.oval {
+    border-radius: 40% 40% 50% 50%;
+    height: 130%;
+    top: -15%;
+}
+
+.body.blob {
+    border-radius: 60% 40% 50% 70% / 50% 60% 40% 50%;
+}
+
+.body.fluffy {
+    border-radius: 50%;
+    box-shadow: 
+        inset -10px -10px 30px rgba(0, 0, 0, 0.3),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.2),
+        -5px 0 0 var(--creature-color-light),
+        5px 0 0 var(--creature-color-light),
+        0 -5px 0 var(--creature-color-light),
+        0 5px 0 var(--creature-color-light);
+}
+
+.body.spiky {
+    clip-path: polygon(50% 0%, 65% 25%, 100% 25%, 75% 50%, 100% 75%, 65% 75%, 50% 100%, 35% 75%, 0% 75%, 25% 50%, 0% 25%, 35% 25%);
+}
+
+.body.long {
+    width: 70%;
+    height: 140%;
+    left: 15%;
+    top: -20%;
+    border-radius: 50% 50% 40% 40%;
+}
+
+/* Head */
+.head {
+    width: 70%;
+    height: 70%;
+    top: -40%;
+    left: 15%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--creature-color-light) 0%, var(--creature-color) 100%);
+    box-shadow: inset -5px -5px 15px rgba(0, 0, 0, 0.2),
+                inset 3px 3px 10px rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+.head.triangle {
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    border-radius: 0;
+}
+
+.head.square {
+    border-radius: 20%;
+}
+
+.head.star {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    border-radius: 0;
+}
+
+/* Eyes */
+.eyes {
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    top: 30%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.eyes::before,
+.eyes::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: inset 5px 0 0 #1a1a2e;
+    animation: eyeBlink 4s infinite;
+}
+
+@keyframes eyeBlink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+}
+
+.eyes.big::before,
+.eyes.big::after {
+    width: 28px;
+    height: 28px;
+}
+
+.eyes.sleepy::before,
+.eyes.sleepy::after {
+    height: 8px;
+    border-radius: 20px 20px 0 0;
+    box-shadow: none;
+}
+
+.eyes.alien::before,
+.eyes.alien::after {
+    width: 25px;
+    height: 30px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: linear-gradient(180deg, #000 0%, #333 100%);
+    box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.3);
+}
+
+.eyes.cyclops::before {
+    width: 35px;
+    height: 35px;
+}
+
+.eyes.cyclops::after {
+    display: none;
+}
+
+.eyes.many {
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 0 10px;
+}
+
+.eyes.many::before,
+.eyes.many::after {
+    width: 12px;
+    height: 12px;
+}
+
+/* Mouth */
+.mouth {
+    position: absolute;
+    width: 30px;
+    height: 15px;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a2e;
+    border-radius: 0 0 50% 50%;
+}
+
+.mouth.smile {
+    height: 8px;
+    border-radius: 0 0 50% 50%;
+    background: transparent;
+    border-bottom: 3px solid #1a1a2e;
+}
+
+.mouth.open {
+    height: 20px;
+    width: 25px;
+    border-radius: 50%;
+    background: #1a1a2e;
+}
+
+.mouth.teeth {
+    height: 12px;
+    background: white;
+    border: 2px solid #1a1a2e;
+}
+
+.mouth.beak {
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 20px solid #f59e0b;
+    background: transparent;
+    border-radius: 0;
+}
+
+.mouth.none {
+    display: none;
+}
+
+/* Head Extras */
+.extras {
+    position: absolute;
+    width: 100%;
+    top: -20px;
+    display: flex;
+    justify-content: center;
+}
+
+.extras.horns::before,
+.extras.horns::after {
+    content: '';
+    width: 12px;
+    height: 30px;
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-radius: 50% 50% 20% 20%;
+    transform: rotate(-20deg);
+    margin: 0 15px;
+}
+
+.extras.horns::after {
+    transform: rotate(20deg);
+}
+
+.extras.ears::before,
+.extras.ears::after {
+    content: '';
+    width: 25px;
+    height: 40px;
+    background: linear-gradient(180deg, var(--creature-color-light) 0%, var(--creature-color) 100%);
+    border-radius: 50% 50% 30% 30%;
+    margin: 0 20px;
+}
+
+.extras.antenna::before,
+.extras.antenna::after {
+    content: '';
+    width: 4px;
+    height: 35px;
+    background: var(--creature-color-dark);
+    border-radius: 10px;
+    margin: 0 10px;
+    position: relative;
+}
+
+.extras.antenna::before {
+    transform: rotate(-15deg);
+}
+
+.extras.antenna::after {
+    transform: rotate(15deg);
+}
+
+.extras.crown::before {
+    content: '👑';
+    font-size: 30px;
+}
+
+/* Legs */
+.legs {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    bottom: -25px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.legs.none {
+    display: none;
+}
+
+.legs.two::before,
+.legs.two::after {
+    content: '';
+    width: 20px;
+    height: 40px;
+    background: linear-gradient(180deg, var(--creature-color) 0%, var(--creature-color-dark) 100%);
+    border-radius: 30% 30% 50% 50%;
+}
+
+.legs.four {
+    gap: 8px;
+}
+
+.legs.four::before {
+    content: '';
+    width: 60px;
+    height: 30px;
+    background: 
+        radial-gradient(circle at 15% 100%, var(--creature-color-dark) 15px, transparent 15px),
+        radial-gradient(circle at 38% 100%, var(--creature-color-dark) 15px, transparent 15px),
+        radial-gradient(circle at 62% 100%, var(--creature-color-dark) 15px, transparent 15px),
+        radial-gradient(circle at 85% 100%, var(--creature-color-dark) 15px, transparent 15px);
+}
+
+.legs.four::after {
+    display: none;
+}
+
+.legs.many {
+    gap: 3px;
+}
+
+.legs.many::before {
+    content: '';
+    width: 80px;
+    height: 25px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--creature-color-dark) 0px,
+        var(--creature-color-dark) 6px,
+        transparent 6px,
+        transparent 10px
+    );
+}
+
+.legs.many::after {
+    display: none;
+}
+
+.legs.tentacles::before {
+    content: '';
+    width: 80px;
+    height: 40px;
+    background: 
+        radial-gradient(ellipse 8px 40px at 10% 0%, var(--creature-color-dark) 100%, transparent 100%),
+        radial-gradient(ellipse 8px 35px at 30% 0%, var(--creature-color-dark) 100%, transparent 100%),
+        radial-gradient(ellipse 8px 45px at 50% 0%, var(--creature-color-dark) 100%, transparent 100%),
+        radial-gradient(ellipse 8px 35px at 70% 0%, var(--creature-color-dark) 100%, transparent 100%),
+        radial-gradient(ellipse 8px 40px at 90% 0%, var(--creature-color-dark) 100%, transparent 100%);
+}
+
+.legs.tentacles::after {
+    display: none;
+}
+
+/* Wings */
+.wing {
+    position: absolute;
+    width: 50px;
+    height: 70px;
+    top: 10%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.wing.visible {
+    opacity: 1;
+}
+
+.wing-left {
+    right: 85%;
+    transform: scaleX(-1);
+}
+
+.wing-right {
+    left: 85%;
+}
+
+.wing.butterfly {
+    background: linear-gradient(135deg, 
+        rgba(167, 139, 250, 0.8) 0%, 
+        rgba(244, 114, 182, 0.8) 50%,
+        rgba(251, 191, 36, 0.8) 100%);
+    border-radius: 50% 50% 20% 50%;
+    animation: wingFlap 0.3s ease-in-out infinite;
+}
+
+.wing.bat {
+    background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+    clip-path: polygon(0% 0%, 100% 30%, 80% 60%, 100% 100%, 60% 80%, 30% 100%, 0% 60%);
+    animation: wingFlap 0.2s ease-in-out infinite;
+}
+
+.wing.angel {
+    background: linear-gradient(180deg, #ffffff 0%, #e5e7eb 100%);
+    border-radius: 50% 50% 30% 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    animation: wingFlap 0.5s ease-in-out infinite;
+}
+
+.wing.dragon {
+    background: linear-gradient(180deg, #7c3aed 0%, #4c1d95 100%);
+    clip-path: polygon(0% 20%, 50% 0%, 100% 20%, 100% 100%, 70% 80%, 40% 100%, 0% 80%);
+    animation: wingFlap 0.25s ease-in-out infinite;
+}
+
+@keyframes wingFlap {
+    0%, 100% { transform: scaleX(-1) rotateY(0deg); }
+    50% { transform: scaleX(-1) rotateY(30deg); }
+}
+
+.wing-right.butterfly,
+.wing-right.bat,
+.wing-right.angel,
+.wing-right.dragon {
+    animation-name: wingFlapRight;
+}
+
+@keyframes wingFlapRight {
+    0%, 100% { transform: rotateY(0deg); }
+    50% { transform: rotateY(-30deg); }
+}
+
+/* Tail */
+.tail {
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    bottom: 20%;
+    right: -30px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tail.visible {
+    opacity: 1;
+}
+
+.tail.fluffy {
+    width: 50px;
+    height: 40px;
+    background: radial-gradient(circle, var(--creature-color-light) 0%, var(--creature-color) 100%);
+    border-radius: 50%;
+    animation: tailWag 0.5s ease-in-out infinite;
+}
+
+.tail.long {
+    width: 60px;
+    height: 12px;
+    background: linear-gradient(90deg, var(--creature-color) 0%, var(--creature-color-dark) 100%);
+    border-radius: 10px 50% 50% 10px;
+    animation: tailWag 0.8s ease-in-out infinite;
+}
+
+.tail.fish {
+    width: 40px;
+    height: 50px;
+    background: linear-gradient(180deg, var(--creature-color) 0%, var(--creature-color-dark) 100%);
+    clip-path: polygon(0% 50%, 100% 0%, 70% 50%, 100% 100%);
+    animation: tailWag 0.4s ease-in-out infinite;
+}
+
+.tail.devil {
+    width: 50px;
+    height: 8px;
+    background: var(--creature-color-dark);
+    border-radius: 5px;
+    position: relative;
+}
+
+.tail.devil::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: -8px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid var(--creature-color-dark);
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+}
+
+@keyframes tailWag {
+    0%, 100% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+}
+
+/* Patterns */
+.creature.spots .body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 30% 30%, var(--creature-color-dark) 8px, transparent 8px),
+        radial-gradient(circle at 70% 40%, var(--creature-color-dark) 6px, transparent 6px),
+        radial-gradient(circle at 50% 70%, var(--creature-color-dark) 10px, transparent 10px),
+        radial-gradient(circle at 25% 60%, var(--creature-color-dark) 5px, transparent 5px);
+    border-radius: inherit;
+}
+
+.creature.stripes .body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent 0px,
+        transparent 10px,
+        var(--creature-color-dark) 10px,
+        var(--creature-color-dark) 15px
+    );
+    border-radius: inherit;
+    opacity: 0.5;
+}
+
+.creature.sparkle .body::after {
+    content: '✨';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    animation: sparkleFloat 2s ease-in-out infinite;
+}
+
+@keyframes sparkleFloat {
+    0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 0.5; transform: translateX(-50%) translateY(-10px); }
+}
+
+/* Creature Name Display */
+.creature-name-display {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+}
+
+#creature-name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.icon-btn:hover {
+    opacity: 1;
+}
+
+/* Personality Display */
+.personality-display {
+    position: absolute;
+    top: calc(var(--safe-top) + 15px);
+    left: 15px;
+    display: flex;
+    gap: 8px;
+}
+
+.trait {
+    padding: 6px 12px;
+    background: rgba(74, 222, 128, 0.2);
+    border: 1px solid rgba(74, 222, 128, 0.4);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--accent-life);
+}
+
+/* ==================== CONTROL PANEL ==================== */
+
+.control-panel {
+    background: rgba(13, 5, 24, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px 30px 0 0;
+    overflow: hidden;
+    max-height: 55%;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    display: flex;
+    padding: 12px 8px;
+    gap: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.panel-header::-webkit-scrollbar {
+    display: none;
+}
+
+.panel-tab {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.panel-tab.active {
+    background: linear-gradient(135deg, var(--accent-life), var(--accent-bio));
+    color: var(--bg-lab);
+    font-weight: 600;
+}
+
+.panel-content {
+    display: none;
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.panel-content.active {
+    display: block;
+}
+
+.control-group {
+    margin-bottom: 20px;
+}
+
+.control-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+}
+
+/* Part Grid */
+.part-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.part-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.part-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.part-btn.active {
+    border-color: var(--accent-bio);
+    background: rgba(34, 211, 238, 0.15);
+}
+
+.part-btn.toggle.active {
+    border-color: var(--accent-life);
+    background: rgba(74, 222, 128, 0.15);
+}
+
+.part-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-love), var(--accent-magic));
+}
+
+.body-oval { border-radius: 40%; }
+.body-blob { border-radius: 60% 40% 50% 70%; }
+.body-fluffy { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); }
+.body-spiky { clip-path: polygon(50% 0%, 70% 30%, 100% 30%, 80% 50%, 100% 70%, 70% 70%, 50% 100%, 30% 70%, 0% 70%, 20% 50%, 0% 30%, 30% 30%); }
+.body-long { border-radius: 40% 40% 50% 50%; height: 40px; width: 25px; }
+
+.head-round { width: 25px; height: 25px; }
+.head-triangle { clip-path: polygon(50% 0%, 100% 100%, 0% 100%); border-radius: 0; }
+.head-square { border-radius: 20%; }
+.head-star { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+
+.eye-preview, .mouth-preview, .leg-preview, .wing-preview, .tail-preview, .extra-preview {
+    font-size: 1.2rem;
+}
+
+.pattern-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-love), var(--accent-magic));
+}
+
+.pattern-preview.spots {
+    background: 
+        radial-gradient(circle at 30% 30%, var(--bg-lab) 4px, transparent 4px),
+        radial-gradient(circle at 70% 60%, var(--bg-lab) 3px, transparent 3px),
+        linear-gradient(135deg, var(--accent-love), var(--accent-magic));
+}
+
+.pattern-preview.stripes {
+    background: repeating-linear-gradient(
+        45deg,
+        var(--accent-love) 0px,
+        var(--accent-love) 4px,
+        var(--accent-magic) 4px,
+        var(--accent-magic) 8px
+    );
+}
+
+.pattern-preview.gradient {
+    background: linear-gradient(180deg, var(--accent-love) 0%, var(--accent-bio) 100%);
+}
+
+.pattern-preview.sparkle {
+    position: relative;
+}
+
+.pattern-preview.sparkle::after {
+    content: '✨';
+    position: absolute;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Color Grid */
+.color-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.color-btn.active {
+    border-color: white;
+    transform: scale(1.1);
+}
+
+/* Trait Grid */
+.trait-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.trait-btn {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.trait-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.trait-btn.active {
+    border-color: var(--accent-life);
+    background: rgba(74, 222, 128, 0.15);
+}
+
+/* Slider */
+.slider {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--accent-life), var(--accent-bio));
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(34, 211, 238, 0.4);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-bio);
+}
+
+/* ==================== MODALS ==================== */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-lab);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 30px;
+    max-width: 90%;
+    width: 350px;
+    text-align: center;
+}
+
+.modal-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.modal-content input:focus {
+    outline: none;
+    border-color: var(--accent-bio);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn.primary {
+    background: linear-gradient(135deg, var(--accent-life), var(--accent-bio));
+    color: var(--bg-lab);
+    font-weight: 600;
+}
+
+.modal-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.save-success {
+    margin-bottom: 20px;
+}
+
+.save-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.save-success p {
+    color: var(--text-secondary);
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (min-width: 768px) {
+    .control-panel {
+        max-height: 45%;
+    }
+    
+    .part-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .trait-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
