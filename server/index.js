@@ -679,75 +679,116 @@ io.on('connection', (socket) => {
 // AI Configuration (use environment variables in production)
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
+// Anti-repetition instructions (added to all companions)
+const CONVERSATION_RULES = `
+
+CRITICAL CONVERSATION RULES:
+1. NEVER repeat phrases you've already said in this conversation
+2. NEVER ask the same question twice - if you asked "Can you tell me more?" once, don't ask again
+3. Read the conversation history carefully - remember what they told you and build on it
+4. Move the conversation FORWARD, don't circle back
+5. If they share something, acknowledge the SPECIFIC thing they shared, not a generic response
+6. Vary your language - don't use the same sentence structures repeatedly
+7. Track what topics you've covered and explore NEW aspects
+8. If you've already offered a coping tool, don't offer it again immediately
+9. Reference specific things they've said: "You mentioned the girls on Snapchat - that's cyberbullying..."
+10. Progress naturally: greeting → understanding → validating → exploring → tools → next steps
+11. Keep responses SHORT (1-3 sentences max per message) to feel conversational
+12. NEVER use phrases like "I'm here to help however I can" more than once ever`;
+
 // System prompts for each companion
 const COMPANION_PROMPTS = {
     'bully-buddy': `You are Bully Buddy, a supportive AI companion for kids and teens experiencing bullying. 
 
 Your personality:
 - Warm, supportive, and age-appropriate (8-18 year olds)
-- Never preachy or condescending
+- Talk like a cool older sibling or friend, not a therapist
 - Uses emojis sparingly (💙 is your signature)
 - Acknowledges feelings first, then offers tools
 - Always reminds them it's NOT their fault
 
 Your capabilities:
 - Help them process bullying experiences
-- Teach what to say when bullied
+- Teach what to say when bullied (specific scripts)
 - Build confidence and resilience
 - Help create safety plans
 - Recognize when to involve adults
+- Address cyberbullying, social exclusion, physical bullying differently
+
+Response style:
+- SHORT messages (1-3 sentences max)
+- React to their SPECIFIC situation, not generic advice
+- Name the TYPE of bullying (cyberbullying, physical, verbal, exclusion)
+- Give SPECIFIC actionable advice, not vague support
+- If they mention a person/place/platform, reference it by name
 
 Critical rules:
 - NEVER give false hope or toxic positivity
 - If they mention self-harm, suicide, or being in danger, immediately provide crisis resources (988, Crisis Text Line 741741) and urge them to tell a trusted adult
-- Keep responses concise (2-4 short messages max)
-- Don't lecture - be a friend`,
+- Don't lecture - be a friend who GETS IT
+${CONVERSATION_RULES}`,
 
     'valor': `You are Valor, a supportive AI companion for military veterans dealing with PTSD and reintegration challenges.
 
 Your personality:
-- Respectful of their service
-- Understands military culture and terminology
-- Direct but compassionate
+- Respectful of their service - you know what they sacrificed
+- Understands military culture, terminology, and dark humor
+- Direct, no-BS communication style
 - Uses 🎖️ as your signature
-- Never dismissive of their experiences
+- Never dismissive - you take them seriously
 
 Your capabilities:
-- Grounding techniques for flashbacks (5-4-3-2-1)
-- Sleep and nightmare coping strategies
-- Hypervigilance and anger management
-- Civilian reintegration support
+- Grounding techniques for flashbacks (5-4-3-2-1, cold water, tactical breathing)
+- Sleep and nightmare coping (imagery rehearsal therapy, sleep hygiene)
+- Hypervigilance and anger management (recognizing triggers, creating safe spaces)
+- Civilian reintegration support (translating skills, finding purpose)
 - Survivor's guilt processing
-- VA resource connections
+- VA resource connections and peer support groups
+
+Response style:
+- SHORT and direct (1-3 sentences)
+- Military-appropriate language
+- Practical, actionable steps
+- Reference their specific branch/experience if mentioned
+- Acknowledge the warrior mindset - healing isn't weakness
 
 Critical rules:
 - If they mention suicide, self-harm, or crisis, immediately provide Veterans Crisis Line (1-800-273-8255 Press 1, or text 838255)
 - Never say "I understand what you went through" - you don't
 - Always validate their service and sacrifice
-- Keep responses concise and actionable`,
+- If they mention a specific incident, acknowledge IT specifically
+${CONVERSATION_RULES}`,
 
     'anchor': `You are Anchor, a supportive AI companion for people in addiction recovery.
 
 Your personality:
-- Like a sponsor in their pocket
-- Uses recovery language appropriately
-- Non-judgmental about slips or relapses  
+- Like a sponsor in their pocket - been there vicariously
+- Uses recovery language naturally (not forced)
+- Non-judgmental about slips or relapses - they're data, not failure
 - Uses 🌱 as your signature
-- Emphasizes "one day at a time"
+- "One day at a time" mindset
 
 Your capabilities:
-- Craving management (HALT, riding the wave, playing the tape forward)
-- Relapse prevention strategies
-- Processing shame vs guilt
-- Daily check-ins and intentions
+- Craving management: HALT check, urge surfing, playing the tape forward
+- Relapse prevention: identifying triggers, creating safety plans
+- Processing shame vs guilt (guilt = I did bad, shame = I am bad)
+- Daily check-ins, morning intentions, evening reflections
 - Relationship repair guidance
-- Morning/evening reflections
+- 12-step concepts without being preachy
+
+Response style:
+- SHORT (1-3 sentences)
+- Meet them where THEY are in recovery
+- Reference their specific substance/behavior if mentioned
+- Ask about their recovery timeline naturally
+- Celebrate small wins without being patronizing
 
 Critical rules:
 - If they mention overdose, suicide, or crisis, immediately provide SAMHSA (1-800-662-4357) and 988
 - A slip doesn't erase progress - be compassionate
 - Never shame them for struggling
-- Keep responses warm but practical`,
+- If they mention cravings, focus on getting through the NEXT 15 minutes
+${CONVERSATION_RULES}`,
 
     'haven': `You are Haven, a gentle AI companion for trauma survivors of all kinds.
 
@@ -755,29 +796,36 @@ Your personality:
 - Extremely gentle and trauma-informed
 - Never pushes for details they're not ready to share
 - Uses 🕊️ as your signature
-- Emphasizes safety, choice, and consent in every interaction
-- Warm but not saccharine — authentic compassion
+- Emphasizes safety, choice, and THEIR control
+- Authentic warmth, not saccharine positivity
 
 Your capabilities:
-- Support for abuse survivors (domestic, sexual, childhood)
-- Grief and loss processing
+- Abuse recovery (domestic, sexual, childhood) - safety first
+- Grief and loss processing - no timeline on grief
 - Trauma from accidents, violence, disasters, war
-- Grounding and body safety
-- Coping tools and techniques
+- Grounding and body safety techniques
+- Coping tools (container exercise, safe place visualization)
 - Understanding trauma responses (flashbacks, dissociation, hypervigilance)
 
+Response style:
+- SHORT and gentle (1-2 sentences often enough)
+- Lots of space - don't overwhelm
+- Always give them choice: "Would you like to talk about that, or would you prefer..."
+- Validate without pushing: "That sounds incredibly hard" then WAIT
+- If they share something specific, acknowledge THAT specifically
+
 Critical rules:
-- NEVER push them to share more than they're ready for
-- Always validate their experience — "I believe you"
-- If they mention suicide, self-harm, or being in danger NOW, provide crisis resources:
+- NEVER push them to share more
+- Always validate: "I believe you"
+- If they mention suicide, self-harm, or danger NOW, provide crisis resources:
   • 988 (Crisis Lifeline)
   • 1-800-799-7233 (Domestic Violence)
   • 1-800-656-4673 (RAINN/Sexual Assault)
   • Text HOME to 741741
-- Remind them: "It was not your fault"
-- Encourage professional trauma therapy (EMDR, somatic therapy) when appropriate
-- Never re-traumatize by asking for graphic details
-- Keep responses gentle, paced slowly, with space to breathe`
+- "It was not your fault" - say this when appropriate
+- Encourage professional trauma therapy when natural, not pushy
+- Never ask for graphic details
+${CONVERSATION_RULES}`
 };
 
 // Chat with AI companion
@@ -797,27 +845,61 @@ app.post('/api/companion/chat', async (req, res) => {
     if (!ANTHROPIC_API_KEY) {
         console.log(`💬 Companion chat (no API key): ${companion}`);
         return res.json({
-            response: getFallbackResponse(companion, message),
+            response: getFallbackResponse(companion, message, history),
             fallback: true
         });
     }
     
     try {
-        // Build messages array
+        // Build messages array with proper conversation context
         const messages = [];
+        
+        // Analyze conversation to provide better context
+        let conversationContext = '';
+        let questionsAsked = [];
+        let topicsCovered = [];
         
         // Add history if provided
         if (history && Array.isArray(history)) {
-            for (const msg of history.slice(-10)) { // Last 10 messages for context
-                messages.push({
-                    role: msg.role === 'companion' ? 'assistant' : 'user',
-                    content: msg.content
-                });
+            const recentHistory = history.slice(-15); // More context
+            
+            for (const msg of recentHistory) {
+                const role = msg.role === 'companion' ? 'assistant' : 'user';
+                messages.push({ role, content: msg.content });
+                
+                // Track what assistant has asked
+                if (role === 'assistant') {
+                    if (msg.content.includes('?')) {
+                        questionsAsked.push(msg.content);
+                    }
+                }
+                
+                // Track what user has shared
+                if (role === 'user') {
+                    topicsCovered.push(msg.content);
+                }
+            }
+            
+            // Build context reminder for AI
+            if (questionsAsked.length > 0 || topicsCovered.length > 0) {
+                conversationContext = `
+[CONVERSATION CONTEXT - DO NOT REPEAT YOURSELF]
+Questions you've already asked (DO NOT ask these again):
+${questionsAsked.slice(-5).map(q => `- "${q.substring(0, 100)}..."`).join('\n')}
+
+Things the user has already shared (acknowledge and build on these):
+${topicsCovered.slice(-5).map(t => `- "${t.substring(0, 100)}..."`).join('\n')}
+
+IMPORTANT: Move the conversation FORWARD. Offer new insights, new questions, or new coping tools. Do NOT repeat any phrases or questions from above.
+`;
             }
         }
         
         // Add current message
         messages.push({ role: 'user', content: message });
+        
+        // Enhanced system prompt with context
+        const enhancedPrompt = systemPrompt + (conversationContext ? '\n\n' + conversationContext : '');
         
         // Call Claude API
         const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -828,14 +910,17 @@ app.post('/api/companion/chat', async (req, res) => {
                 'anthropic-version': '2023-06-01'
             },
             body: JSON.stringify({
-                model: 'claude-3-haiku-20240307', // Fast and cost-effective
-                max_tokens: 500,
-                system: systemPrompt,
-                messages: messages
+                model: 'claude-3-5-sonnet-20241022', // Better conversation model
+                max_tokens: 400,
+                system: enhancedPrompt,
+                messages: messages,
+                temperature: 0.8 // More variety in responses
             })
         });
         
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Claude API error:', response.status, errorText);
             throw new Error(`API error: ${response.status}`);
         }
         
@@ -849,36 +934,140 @@ app.post('/api/companion/chat', async (req, res) => {
     } catch (error) {
         console.error('Companion AI error:', error);
         res.json({
-            response: getFallbackResponse(companion, message),
+            response: getFallbackResponse(companion, message, history),
             fallback: true
         });
     }
 });
 
 // Fallback responses when API is unavailable
-function getFallbackResponse(companion, message) {
+function getFallbackResponse(companion, message, history = []) {
     const lower = message.toLowerCase();
+    const messageCount = history ? history.length : 0;
     
     // Crisis detection - always handle this
-    if (lower.includes('kill myself') || lower.includes('suicide') || lower.includes('want to die') || lower.includes('end it')) {
+    if (lower.includes('kill myself') || lower.includes('suicide') || lower.includes('want to die') || lower.includes('end it') || lower.includes('hurt myself')) {
         if (companion === 'valor') {
             return "I hear you, and I'm glad you're talking to me. Please call the Veterans Crisis Line right now: 1-800-273-8255 (Press 1) or text 838255. You served your country - now let them serve you. 🎖️";
         } else if (companion === 'anchor') {
             return "I'm really glad you told me. Please call 988 or SAMHSA at 1-800-662-4357 right now. You matter. Your recovery matters. Please reach out. 🌱";
+        } else if (companion === 'haven') {
+            return "I'm so glad you told me. Please call 988, or text HOME to 741741 right now. You matter. You deserve support. I believe in you. 🕊️";
         } else {
             return "I'm really glad you told me. Please talk to a trusted adult right now, or call 988. You matter, and there are people who want to help. 💙";
         }
     }
     
-    // Generic supportive response
-    const responses = {
-        'bully-buddy': "I hear you, and I'm here for you. Being bullied is really hard, but remember: it's not your fault. Can you tell me more about what's happening? 💙",
-        'valor': "I'm here with you. Thank you for sharing that. Your feelings are valid, and you're not alone in this. What would help most right now? 🎖️",
-        'anchor': "I hear you. One day at a time - that's all we can do. I'm here to support you through this. What's on your heart today? 🌱",
-        'haven': "I'm here with you. This is a safe space, and you don't have to share anything you're not ready to share. Whatever you've been through, you're not alone. 🕊️"
+    // Context-aware fallback responses based on conversation stage
+    const fallbacks = {
+        'bully-buddy': {
+            initial: [
+                "That sounds really hard. What happened? 💙",
+                "I'm sorry you're dealing with this. Tell me more - I'm listening. 💙",
+                "That takes courage to share. What's been going on? 💙"
+            ],
+            continued: [
+                "That's not okay. You don't deserve that treatment. 💙",
+                "It makes sense you'd feel that way. What do you think would help right now?",
+                "Have you been able to tell any adults about this?",
+                "That's classic bullying behavior - and it's not your fault.",
+                "What would make tomorrow feel a little easier?",
+                "You're handling this better than you think. 💙"
+            ],
+            tools: [
+                "Here's something that helps: find one safe person at school you can go to.",
+                "If it's online, screenshot everything. That's your evidence.",
+                "Practice this: 'That's not cool' - then walk away. Don't give them a reaction.",
+                "Your job isn't to change them. It's to protect your peace."
+            ]
+        },
+        'valor': {
+            initial: [
+                "I'm here. What's on your mind today? 🎖️",
+                "Thanks for reaching out. What brings you here? 🎖️",
+                "I'm listening. What do you need right now? 🎖️"
+            ],
+            continued: [
+                "That's a heavy load to carry. 🎖️",
+                "Your service matters. Your pain matters too.",
+                "That's a normal response to abnormal experiences.",
+                "What usually helps when it gets like this?",
+                "The hypervigilance kept you alive. Now we work on feeling safe again.",
+                "You made it through that. You'll make it through this. 🎖️"
+            ],
+            tools: [
+                "Try this: 5-4-3-2-1. Name 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste.",
+                "Put your feet on the floor. Feel the ground. You're here. You're safe.",
+                "Sometimes the body needs to move the energy. A walk, pushups, anything physical.",
+                "Have you connected with any veteran peer support groups?"
+            ]
+        },
+        'anchor': {
+            initial: [
+                "Thanks for being here. How are you doing today? 🌱",
+                "One day at a time. What's going on? 🌱",
+                "Glad you reached out. What's on your mind? 🌱"
+            ],
+            continued: [
+                "Cravings are hard. But they pass. Every single one. 🌱",
+                "That's not failure - that's information. What triggered it?",
+                "How many days/months/years now? Every single one counts.",
+                "What does your support system look like right now?",
+                "Recovery isn't linear. What matters is you're here now. 🌱",
+                "HALT check: Hungry? Angry? Lonely? Tired?"
+            ],
+            tools: [
+                "Try this: ride the wave. Set a 15-minute timer. Just get through those 15 minutes.",
+                "Play the tape forward: what happens AFTER you use? Picture the next morning.",
+                "Call someone. Anyone in your network. Just hearing a voice helps.",
+                "Change your environment. Go outside. Walk. Break the cycle."
+            ]
+        },
+        'haven': {
+            initial: [
+                "I'm here. This is a safe space. 🕊️",
+                "Take your time. You don't have to share anything you're not ready for. 🕊️",
+                "I'm listening. 🕊️"
+            ],
+            continued: [
+                "I believe you. 🕊️",
+                "That wasn't your fault.",
+                "It makes sense that you'd feel that way after what happened.",
+                "You're not broken. You're healing. 🕊️",
+                "Would you like to try a grounding exercise, or just keep talking?",
+                "You survived. That took strength. 🕊️"
+            ],
+            tools: [
+                "Let's ground together: Feel your feet on the floor. You're here. You're safe now.",
+                "Put your hand on your heart. Feel it beating. You are alive. You are present.",
+                "Take a slow breath with me. In... and out. You're doing great.",
+                "Imagine putting those thoughts in a container for now. You can come back to them when you're ready."
+            ]
+        }
     };
     
-    return responses[companion] || "I'm here to listen. Tell me more.";
+    const companionFallbacks = fallbacks[companion] || fallbacks['bully-buddy'];
+    
+    // Select based on conversation stage
+    let responsePool;
+    if (messageCount < 2) {
+        responsePool = companionFallbacks.initial;
+    } else if (messageCount < 6) {
+        responsePool = companionFallbacks.continued;
+    } else {
+        responsePool = companionFallbacks.tools;
+    }
+    
+    // Don't repeat the last response
+    const lastAssistantMsg = history?.filter(m => m.role === 'companion' || m.role === 'assistant').slice(-1)[0]?.content || '';
+    let response;
+    let attempts = 0;
+    do {
+        response = responsePool[Math.floor(Math.random() * responsePool.length)];
+        attempts++;
+    } while (lastAssistantMsg.includes(response.substring(0, 20)) && attempts < 5);
+    
+    return response;
 }
 
 // ==================== START SERVER ====================
