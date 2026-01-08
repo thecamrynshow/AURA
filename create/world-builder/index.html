@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a1f">
+    <title>World Builder | PNEUOMA Create</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Stars Background -->
+        <canvas id="stars-canvas"></canvas>
+        
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <div class="cosmos-preview">
+                    <div class="preview-planet"></div>
+                    <div class="preview-ring"></div>
+                </div>
+                <h1 class="title">World Builder</h1>
+                <p class="subtitle">Create your own planet</p>
+                <p class="tagline">Design terrain, atmosphere, and life. Watch your world come alive.</p>
+                <button id="begin-btn" class="primary-btn">
+                    <span>Begin Creation</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Builder Screen -->
+        <div id="builder-screen" class="screen">
+            <!-- Planet Display -->
+            <div class="planet-viewport">
+                <canvas id="planet-canvas"></canvas>
+                <div id="planet-container">
+                    <div id="planet">
+                        <div class="planet-surface"></div>
+                        <div class="planet-atmosphere"></div>
+                        <div class="planet-clouds"></div>
+                        <div class="planet-ring" id="planet-ring"></div>
+                        <div class="planet-highlight"></div>
+                    </div>
+                    <div id="orbital-objects"></div>
+                </div>
+                <div class="planet-name-display">
+                    <span id="world-name">Unnamed World</span>
+                    <button id="rename-btn" class="icon-btn">✏️</button>
+                </div>
+            </div>
+            
+            <!-- Control Panel -->
+            <div class="control-panel" id="control-panel">
+                <div class="panel-header">
+                    <button class="panel-tab active" data-panel="terrain">🌍 Terrain</button>
+                    <button class="panel-tab" data-panel="atmosphere">☁️ Sky</button>
+                    <button class="panel-tab" data-panel="life">🌱 Life</button>
+                    <button class="panel-tab" data-panel="extras">✨ Extras</button>
+                </div>
+                
+                <!-- Terrain Panel -->
+                <div class="panel-content active" id="terrain-panel">
+                    <div class="control-group">
+                        <label>Surface Type</label>
+                        <div class="option-grid">
+                            <button class="option-btn active" data-terrain="earth">
+                                <span class="option-icon">🌍</span>
+                                <span class="option-label">Earth-like</span>
+                            </button>
+                            <button class="option-btn" data-terrain="ocean">
+                                <span class="option-icon">🌊</span>
+                                <span class="option-label">Ocean</span>
+                            </button>
+                            <button class="option-btn" data-terrain="desert">
+                                <span class="option-icon">🏜️</span>
+                                <span class="option-label">Desert</span>
+                            </button>
+                            <button class="option-btn" data-terrain="ice">
+                                <span class="option-icon">🧊</span>
+                                <span class="option-label">Ice</span>
+                            </button>
+                            <button class="option-btn" data-terrain="volcanic">
+                                <span class="option-icon">🌋</span>
+                                <span class="option-label">Volcanic</span>
+                            </button>
+                            <button class="option-btn" data-terrain="crystal">
+                                <span class="option-icon">💎</span>
+                                <span class="option-label">Crystal</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Planet Size</label>
+                        <input type="range" id="planet-size" min="60" max="200" value="120" class="slider">
+                    </div>
+                </div>
+                
+                <!-- Atmosphere Panel -->
+                <div class="panel-content" id="atmosphere-panel">
+                    <div class="control-group">
+                        <label>Sky Color</label>
+                        <div class="color-options">
+                            <button class="color-btn active" data-color="blue" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></button>
+                            <button class="color-btn" data-color="purple" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);"></button>
+                            <button class="color-btn" data-color="pink" style="background: linear-gradient(135deg, #ec4899, #f472b6);"></button>
+                            <button class="color-btn" data-color="orange" style="background: linear-gradient(135deg, #f97316, #fb923c);"></button>
+                            <button class="color-btn" data-color="green" style="background: linear-gradient(135deg, #10b981, #34d399);"></button>
+                            <button class="color-btn" data-color="none" style="background: rgba(255,255,255,0.1);"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Clouds</label>
+                        <div class="toggle-row">
+                            <span>Show Clouds</span>
+                            <button class="toggle-btn active" id="clouds-toggle">
+                                <span class="toggle-knob"></span>
+                            </button>
+                        </div>
+                        <input type="range" id="cloud-density" min="0" max="100" value="50" class="slider">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Glow Intensity</label>
+                        <input type="range" id="glow-intensity" min="0" max="100" value="50" class="slider">
+                    </div>
+                </div>
+                
+                <!-- Life Panel -->
+                <div class="panel-content" id="life-panel">
+                    <div class="control-group">
+                        <label>Add Life</label>
+                        <div class="option-grid">
+                            <button class="life-btn" data-life="trees">
+                                <span class="option-icon">🌳</span>
+                                <span class="option-label">Forests</span>
+                            </button>
+                            <button class="life-btn" data-life="flowers">
+                                <span class="option-icon">🌸</span>
+                                <span class="option-label">Flowers</span>
+                            </button>
+                            <button class="life-btn" data-life="creatures">
+                                <span class="option-icon">🦋</span>
+                                <span class="option-label">Creatures</span>
+                            </button>
+                            <button class="life-btn" data-life="fish">
+                                <span class="option-icon">🐠</span>
+                                <span class="option-label">Ocean Life</span>
+                            </button>
+                            <button class="life-btn" data-life="birds">
+                                <span class="option-icon">🕊️</span>
+                                <span class="option-label">Birds</span>
+                            </button>
+                            <button class="life-btn" data-life="mushrooms">
+                                <span class="option-icon">🍄</span>
+                                <span class="option-label">Fungi</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="life-inventory" id="life-inventory">
+                        <p class="inventory-empty">Tap icons above to add life to your world</p>
+                    </div>
+                </div>
+                
+                <!-- Extras Panel -->
+                <div class="panel-content" id="extras-panel">
+                    <div class="control-group">
+                        <label>Planetary Features</label>
+                        <div class="option-grid">
+                            <button class="extra-btn" data-extra="ring">
+                                <span class="option-icon">💫</span>
+                                <span class="option-label">Rings</span>
+                            </button>
+                            <button class="extra-btn" data-extra="moon">
+                                <span class="option-icon">🌙</span>
+                                <span class="option-label">Moon</span>
+                            </button>
+                            <button class="extra-btn" data-extra="aurora">
+                                <span class="option-icon">🌌</span>
+                                <span class="option-label">Aurora</span>
+                            </button>
+                            <button class="extra-btn" data-extra="stars">
+                                <span class="option-icon">⭐</span>
+                                <span class="option-label">Star Field</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Rotation Speed</label>
+                        <input type="range" id="rotation-speed" min="0" max="100" value="30" class="slider">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Actions</label>
+                        <div class="action-buttons">
+                            <button class="action-btn" id="randomize-btn">🎲 Randomize</button>
+                            <button class="action-btn" id="save-btn">💾 Save World</button>
+                            <button class="action-btn" id="share-btn">📤 Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Name Modal -->
+        <div id="name-modal" class="modal">
+            <div class="modal-content">
+                <h3>Name Your World</h3>
+                <input type="text" id="name-input" placeholder="Enter a name..." maxlength="30">
+                <div class="modal-actions">
+                    <button class="modal-btn secondary" id="name-cancel">Cancel</button>
+                    <button class="modal-btn primary" id="name-save">Save</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Save Modal -->
+        <div id="save-modal" class="modal">
+            <div class="modal-content">
+                <div class="save-success">
+                    <span class="save-icon">✨</span>
+                    <h3>World Saved!</h3>
+                    <p id="save-message">Your world has been saved to your collection.</p>
+                </div>
+                <button class="modal-btn primary" id="save-close">Continue Creating</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="src/js/world-builder.js"></script>
+</body>
+</html>
+

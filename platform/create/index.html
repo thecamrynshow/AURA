@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create | PNEUOMA - Build Your Own Worlds</title>
+    <meta name="description" content="Creative experiences that spark imagination. Build planets, design worlds, and express yourself through play.">
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="create.css">
+</head>
+<body>
+    <div class="background">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <canvas id="particles"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="../../index.html" class="nav-logo">
+            <span class="logo-icon">πνεῦμα</span>
+            <span class="logo-text">PNEUOMA</span>
+        </a>
+        <div class="nav-links">
+            <a href="../games/">Games</a>
+            <a href="../apps/">Apps</a>
+            <a href="../rituals/">Rituals</a>
+            <a href="../create/" class="active">Create</a>
+            <a href="../multiplayer/">Multiplayer</a>
+            <a href="../../index.html#partner" class="nav-cta">Partner</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="page-hero">
+        <div class="section-container">
+            <p class="hero-eyebrow">Platform / Create</p>
+            <h1 class="page-title">Create</h1>
+            <p class="page-subtitle">
+                Experiences that spark creativity and imagination.<br>
+                Build worlds, design universes, express yourself through play.
+            </p>
+        </div>
+    </section>
+
+    <!-- Create Grid -->
+    <section class="create-section">
+        <div class="section-container">
+            <div class="create-intro">
+                <h2>Creativity is Regulation</h2>
+                <p>When we create, we enter flow states. We process emotions through expression. We find calm in the act of making something new.</p>
+            </div>
+            
+            <div class="create-grid">
+                <!-- World Builder -->
+                <article class="create-card featured">
+                    <div class="create-status">
+                        <span class="status-badge new">✨ NEW</span>
+                    </div>
+                    <div class="create-visual world-builder-bg">
+                        <div class="planet-preview">
+                            <div class="planet-core"></div>
+                            <div class="planet-ring"></div>
+                            <div class="planet-glow"></div>
+                        </div>
+                        <div class="stars-preview">
+                            <span class="star">✦</span>
+                            <span class="star">✧</span>
+                            <span class="star">✦</span>
+                        </div>
+                    </div>
+                    <div class="create-info">
+                        <h2 class="create-name">World Builder</h2>
+                        <p class="create-tagline">Create Your Own Planet</p>
+                        <p class="create-desc">
+                            Design a world from scratch. Choose terrain, atmosphere, life forms, 
+                            and watch your creation come alive. A meditative sandbox for imagination.
+                        </p>
+                        <div class="create-tags">
+                            <span class="tag">All Ages</span>
+                            <span class="tag">Endless</span>
+                            <span class="tag">Touch</span>
+                        </div>
+                        <a href="../../create/world-builder/index.html" class="btn btn-primary">
+                            <span>Start Creating</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Coming Soon Cards -->
+                <article class="create-card coming-soon">
+                    <div class="create-status">
+                        <span class="status-badge coming">Coming Soon</span>
+                    </div>
+                    <div class="create-visual sound-garden-bg">
+                        <div class="sound-waves">
+                            <span class="wave">♪</span>
+                            <span class="wave">♫</span>
+                            <span class="wave">♪</span>
+                        </div>
+                    </div>
+                    <div class="create-info">
+                        <h2 class="create-name">Sound Garden</h2>
+                        <p class="create-tagline">Compose with Nature</p>
+                        <p class="create-desc">
+                            Plant musical seeds that grow into instruments. Compose ambient 
+                            soundscapes by designing a garden of sound.
+                        </p>
+                        <button class="btn btn-secondary" disabled>Coming Q2 2026</button>
+                    </div>
+                </article>
+
+                <article class="create-card coming-soon">
+                    <div class="create-status">
+                        <span class="status-badge coming">Coming Soon</span>
+                    </div>
+                    <div class="create-visual creature-lab-bg">
+                        <div class="creature-preview">
+                            <span>🧬</span>
+                        </div>
+                    </div>
+                    <div class="create-info">
+                        <h2 class="create-name">Creature Lab</h2>
+                        <p class="create-tagline">Design Life Forms</p>
+                        <p class="create-desc">
+                            Create fantastical creatures from parts. Give them personalities, 
+                            watch them interact, and build an ecosystem.
+                        </p>
+                        <button class="btn btn-secondary" disabled>Coming Q3 2026</button>
+                    </div>
+                </article>
+
+                <article class="create-card coming-soon">
+                    <div class="create-status">
+                        <span class="status-badge coming">Coming Soon</span>
+                    </div>
+                    <div class="create-visual story-weaver-bg">
+                        <div class="story-preview">
+                            <span>📖</span>
+                        </div>
+                    </div>
+                    <div class="create-info">
+                        <h2 class="create-name">Story Weaver</h2>
+                        <p class="create-tagline">Write Interactive Tales</p>
+                        <p class="create-desc">
+                            Create branching stories with choices. Build characters, 
+                            design scenes, and share your narrative worlds.
+                        </p>
+                        <button class="btn btn-secondary" disabled>Coming Q3 2026</button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-simple">
+                <a href="../../index.html" class="footer-logo">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">PNEUOMA</span>
+                </a>
+                <p>© 2026 PNEUOMA. The operating system for human regulation.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../main.js"></script>
+</body>
+</html>
+

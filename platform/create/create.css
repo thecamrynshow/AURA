@@ -1,0 +1,290 @@
+/* Create Section Styles */
+
+.create-section {
+    padding: 4rem 0 8rem;
+}
+
+.create-intro {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 4rem;
+}
+
+.create-intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.create-intro p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+}
+
+.create-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .create-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.create-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.create-card:hover {
+    border-color: rgba(167, 139, 250, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.create-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .create-card.featured {
+        grid-template-columns: 1.2fr 1fr;
+    }
+}
+
+.create-card.coming-soon {
+    opacity: 0.7;
+}
+
+.create-card.coming-soon:hover {
+    opacity: 0.85;
+}
+
+.create-status {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+}
+
+.status-badge.new {
+    background: linear-gradient(135deg, #a78bfa, #f472b6);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.coming {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+
+.create-visual {
+    position: relative;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.create-card.featured .create-visual {
+    height: 350px;
+}
+
+/* World Builder Visual */
+.world-builder-bg {
+    background: radial-gradient(ellipse at center, #1a1a3e 0%, #0a0a1f 100%);
+}
+
+.planet-preview {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.planet-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at 30% 30%, 
+        #6ee7b7 0%, 
+        #34d399 30%, 
+        #10b981 60%, 
+        #059669 100%);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 60px rgba(52, 211, 153, 0.4),
+        inset -20px -20px 40px rgba(0, 0, 0, 0.3),
+        inset 10px 10px 20px rgba(255, 255, 255, 0.2);
+    animation: planetRotate 20s linear infinite;
+}
+
+@keyframes planetRotate {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.planet-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(70deg);
+    width: 180px;
+    height: 180px;
+    border: 3px solid rgba(167, 139, 250, 0.4);
+    border-radius: 50%;
+    animation: ringPulse 4s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) rotateX(70deg) scale(1); }
+    50% { opacity: 0.7; transform: translate(-50%, -50%) rotateX(70deg) scale(1.05); }
+}
+
+.planet-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.stars-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.stars-preview .star {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6);
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+.stars-preview .star:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+.stars-preview .star:nth-child(2) { top: 60%; right: 20%; animation-delay: 0.5s; }
+.stars-preview .star:nth-child(3) { bottom: 25%; left: 25%; animation-delay: 1s; }
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Sound Garden Visual */
+.sound-garden-bg {
+    background: linear-gradient(180deg, #1a2a1a 0%, #0a150a 100%);
+}
+
+.sound-waves {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 2rem;
+}
+
+.sound-waves .wave {
+    color: rgba(134, 239, 172, 0.6);
+    animation: waveFloat 2s ease-in-out infinite;
+}
+
+.sound-waves .wave:nth-child(2) { animation-delay: 0.3s; }
+.sound-waves .wave:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes waveFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Creature Lab Visual */
+.creature-lab-bg {
+    background: linear-gradient(180deg, #2a1a2a 0%, #150a15 100%);
+}
+
+.creature-preview span {
+    font-size: 4rem;
+    animation: creaturePulse 3s ease-in-out infinite;
+}
+
+@keyframes creaturePulse {
+    0%, 100% { transform: scale(1); filter: hue-rotate(0deg); }
+    50% { transform: scale(1.1); filter: hue-rotate(30deg); }
+}
+
+/* Story Weaver Visual */
+.story-weaver-bg {
+    background: linear-gradient(180deg, #2a2a1a 0%, #15150a 100%);
+}
+
+.story-preview span {
+    font-size: 4rem;
+    animation: bookFloat 3s ease-in-out infinite;
+}
+
+@keyframes bookFloat {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Create Info */
+.create-info {
+    padding: 2rem;
+}
+
+.create-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.create-tagline {
+    color: rgba(167, 139, 250, 0.8);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.create-desc {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.create-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.create-tags .tag {
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
