@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNEUOMA Wellness Survey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --accent: #00fff2;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .survey-container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .survey-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: var(--muted);
+            font-size: 1rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--purple), var(--accent));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .survey-section {
+            display: none;
+        }
+        
+        .survey-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question {
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .question-number {
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .likert-scale {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .likert-option {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .likert-option input {
+            display: none;
+        }
+        
+        .likert-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .likert-option input:checked + label {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: var(--purple);
+        }
+        
+        .likert-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .likert-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+        
+        .emoji-scale {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .emoji-option input {
+            display: none;
+        }
+        
+        .emoji-option label {
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            opacity: 0.6;
+        }
+        
+        .emoji-option input:checked + label {
+            transform: scale(1.3);
+            opacity: 1;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: var(--purple);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-back {
+            background: rgba(255,255,255,0.05);
+            color: var(--muted);
+        }
+        
+        .btn-next {
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            color: white;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent), #0ea5e9);
+            color: #0a0a0f;
+        }
+        
+        /* Completion Screen */
+        .completion {
+            text-align: center;
+            padding: 60px 30px;
+        }
+        
+        .completion-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .completion h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .completion p {
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+        
+        .score-display {
+            background: var(--surface);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .score-label {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .score-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .play-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+        }
+        
+        @media (max-width: 600px) {
+            .likert-scale {
+                flex-wrap: wrap;
+            }
+            .likert-option {
+                flex: 0 0 calc(20% - 8px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <div class="survey-header">
+            <div class="logo">πνεῦμα PNEUOMA</div>
+            <h1 id="survey-title">Quick Wellness Check</h1>
+            <p class="subtitle" id="survey-subtitle">Let's see how you're feeling (takes 1-2 minutes)</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        
+        <form id="survey-form">
+            <!-- Section 1: Mood -->
+            <div class="survey-section active" data-section="1">
+                <div class="question">
+                    <span class="question-number">Question 1 of 7</span>
+                    <p class="question-text">How are you feeling right now?</p>
+                    <div class="emoji-scale">
+                        <div class="emoji-option">
+                            <input type="radio" name="mood" id="mood-1" value="1" required>
+                            <label for="mood-1">😢</label>
+                        </div>
+                        <div class="emoji-option">
+                            <input type="radio" name="mood" id="mood-2" value="2">
+                            <label for="mood-2">😕</label>
+                        </div>
+                        <div class="emoji-option">
+                            <input type="radio" name="mood" id="mood-3" value="3">
+                            <label for="mood-3">😐</label>
+                        </div>
+                        <div class="emoji-option">
+                            <input type="radio" name="mood" id="mood-4" value="4">
+                            <label for="mood-4">🙂</label>
+                        </div>
+                        <div class="emoji-option">
+                            <input type="radio" name="mood" id="mood-5" value="5">
+                            <label for="mood-5">😊</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 2: Anxiety -->
+            <div class="survey-section" data-section="2">
+                <div class="question">
+                    <span class="question-number">Question 2 of 7</span>
+                    <p class="question-text">How anxious or worried do you feel?</p>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="anxiety" id="anxiety-1" value="1" required>
+                            <label for="anxiety-1">
+                                <span class="likert-number">1</span>
+                                <span class="likert-label">Not at all</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="anxiety" id="anxiety-2" value="2">
+                            <label for="anxiety-2">
+                                <span class="likert-number">2</span>
+                                <span class="likert-label">A little</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="anxiety" id="anxiety-3" value="3">
+                            <label for="anxiety-3">
+                                <span class="likert-number">3</span>
+                                <span class="likert-label">Somewhat</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="anxiety" id="anxiety-4" value="4">
+                            <label for="anxiety-4">
+                                <span class="likert-number">4</span>
+                                <span class="likert-label">Quite</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="anxiety" id="anxiety-5" value="5">
+                            <label for="anxiety-5">
+                                <span class="likert-number">5</span>
+                                <span class="likert-label">Extremely</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 3: Stress -->
+            <div class="survey-section" data-section="3">
+                <div class="question">
+                    <span class="question-number">Question 3 of 7</span>
+                    <p class="question-text">How stressed do you feel?</p>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="stress" id="stress-1" value="1" required>
+                            <label for="stress-1">
+                                <span class="likert-number">1</span>
+                                <span class="likert-label">Not at all</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="stress" id="stress-2" value="2">
+                            <label for="stress-2">
+                                <span class="likert-number">2</span>
+                                <span class="likert-label">A little</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="stress" id="stress-3" value="3">
+                            <label for="stress-3">
+                                <span class="likert-number">3</span>
+                                <span class="likert-label">Somewhat</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="stress" id="stress-4" value="4">
+                            <label for="stress-4">
+                                <span class="likert-number">4</span>
+                                <span class="likert-label">Quite</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="stress" id="stress-5" value="5">
+                            <label for="stress-5">
+                                <span class="likert-number">5</span>
+                                <span class="likert-label">Extremely</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 4: Calm -->
+            <div class="survey-section" data-section="4">
+                <div class="question">
+                    <span class="question-number">Question 4 of 7</span>
+                    <p class="question-text">How calm do you feel?</p>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="calm" id="calm-1" value="1" required>
+                            <label for="calm-1">
+                                <span class="likert-number">1</span>
+                                <span class="likert-label">Not at all</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="calm" id="calm-2" value="2">
+                            <label for="calm-2">
+                                <span class="likert-number">2</span>
+                                <span class="likert-label">A little</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="calm" id="calm-3" value="3">
+                            <label for="calm-3">
+                                <span class="likert-number">3</span>
+                                <span class="likert-label">Somewhat</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="calm" id="calm-4" value="4">
+                            <label for="calm-4">
+                                <span class="likert-number">4</span>
+                                <span class="likert-label">Quite</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="calm" id="calm-5" value="5">
+                            <label for="calm-5">
+                                <span class="likert-number">5</span>
+                                <span class="likert-label">Extremely</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 5: Focus -->
+            <div class="survey-section" data-section="5">
+                <div class="question">
+                    <span class="question-number">Question 5 of 7</span>
+                    <p class="question-text">How focused/clear-headed do you feel?</p>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus-1" value="1" required>
+                            <label for="focus-1">
+                                <span class="likert-number">1</span>
+                                <span class="likert-label">Not at all</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus-2" value="2">
+                            <label for="focus-2">
+                                <span class="likert-number">2</span>
+                                <span class="likert-label">A little</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus-3" value="3">
+                            <label for="focus-3">
+                                <span class="likert-number">3</span>
+                                <span class="likert-label">Somewhat</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus-4" value="4">
+                            <label for="focus-4">
+                                <span class="likert-number">4</span>
+                                <span class="likert-label">Quite</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="focus" id="focus-5" value="5">
+                            <label for="focus-5">
+                                <span class="likert-number">5</span>
+                                <span class="likert-label">Extremely</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 6: Energy -->
+            <div class="survey-section" data-section="6">
+                <div class="question">
+                    <span class="question-number">Question 6 of 7</span>
+                    <p class="question-text">How's your energy level?</p>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="energy" id="energy-1" value="1" required>
+                            <label for="energy-1">
+                                <span class="likert-number">1</span>
+                                <span class="likert-label">Very low</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="energy" id="energy-2" value="2">
+                            <label for="energy-2">
+                                <span class="likert-number">2</span>
+                                <span class="likert-label">Low</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="energy" id="energy-3" value="3">
+                            <label for="energy-3">
+                                <span class="likert-number">3</span>
+                                <span class="likert-label">Medium</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="energy" id="energy-4" value="4">
+                            <label for="energy-4">
+                                <span class="likert-number">4</span>
+                                <span class="likert-label">High</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="energy" id="energy-5" value="5">
+                            <label for="energy-5">
+                                <span class="likert-number">5</span>
+                                <span class="likert-label">Very high</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 7: Body -->
+            <div class="survey-section" data-section="7">
+                <div class="question">
+                    <span class="question-number">Question 7 of 7</span>
+                    <p class="question-text">How does your body feel physically?</p>
+                    <div class="likert-scale">
+                        <div class="likert-option">
+                            <input type="radio" name="body" id="body-1" value="1" required>
+                            <label for="body-1">
+                                <span class="likert-number">1</span>
+                                <span class="likert-label">Very tense</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="body" id="body-2" value="2">
+                            <label for="body-2">
+                                <span class="likert-number">2</span>
+                                <span class="likert-label">Tense</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="body" id="body-3" value="3">
+                            <label for="body-3">
+                                <span class="likert-number">3</span>
+                                <span class="likert-label">Neutral</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="body" id="body-4" value="4">
+                            <label for="body-4">
+                                <span class="likert-number">4</span>
+                                <span class="likert-label">Relaxed</span>
+                            </label>
+                        </div>
+                        <div class="likert-option">
+                            <input type="radio" name="body" id="body-5" value="5">
+                            <label for="body-5">
+                                <span class="likert-number">5</span>
+                                <span class="likert-label">Very relaxed</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Completion -->
+            <div class="survey-section" data-section="complete">
+                <div class="completion">
+                    <div class="completion-icon">✨</div>
+                    <h2>Survey Complete!</h2>
+                    <p>Thank you for sharing how you're feeling.</p>
+                    
+                    <div class="score-display">
+                        <div class="score-label">Your Wellness Score</div>
+                        <div class="score-value" id="wellness-score">--</div>
+                    </div>
+                    
+                    <p>Ready to feel even better? Try one of our regulation games.</p>
+                    <a href="../games/" class="play-btn">Play Now →</a>
+                </div>
+            </div>
+        </form>
+        
+        <div class="nav-buttons" id="nav-buttons">
+            <button type="button" class="nav-btn btn-back" id="btn-back" style="display: none;">Back</button>
+            <button type="button" class="nav-btn btn-next" id="btn-next">Next</button>
+        </div>
+    </div>
+    
+    <script>
+        class Survey {
+            constructor() {
+                this.currentSection = 1;
+                this.totalSections = 7;
+                this.responses = {};
+                this.surveyType = new URLSearchParams(window.location.search).get('type') || 'pre';
+                this.sessionId = new URLSearchParams(window.location.search).get('session') || this.generateId();
+                
+                this.init();
+            }
+            
+            generateId() {
+                return 'survey-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            init() {
+                // Update title based on type
+                if (this.surveyType === 'post') {
+                    document.getElementById('survey-title').textContent = 'How Do You Feel Now?';
+                    document.getElementById('survey-subtitle').textContent = 'Quick check-in after your session';
+                }
+                
+                // Event listeners
+                document.getElementById('btn-next').addEventListener('click', () => this.next());
+                document.getElementById('btn-back').addEventListener('click', () => this.back());
+                
+                // Radio change listeners
+                document.querySelectorAll('input[type="radio"]').forEach(input => {
+                    input.addEventListener('change', () => this.onAnswer());
+                });
+                
+                this.updateProgress();
+            }
+            
+            onAnswer() {
+                const section = document.querySelector(`.survey-section[data-section="${this.currentSection}"]`);
+                const input = section.querySelector('input:checked');
+                if (input) {
+                    this.responses[input.name] = parseInt(input.value);
+                }
+            }
+            
+            next() {
+                // Validate current section
+                const section = document.querySelector(`.survey-section[data-section="${this.currentSection}"]`);
+                const input = section.querySelector('input:checked');
+                
+                if (!input && this.currentSection <= this.totalSections) {
+                    section.querySelector('.question').style.border = '1px solid #ef4444';
+                    setTimeout(() => {
+                        section.querySelector('.question').style.border = '';
+                    }, 1000);
+                    return;
+                }
+                
+                if (this.currentSection < this.totalSections) {
+                    this.currentSection++;
+                    this.showSection(this.currentSection);
+                } else {
+                    this.complete();
+                }
+                
+                this.updateProgress();
+            }
+            
+            back() {
+                if (this.currentSection > 1) {
+                    this.currentSection--;
+                    this.showSection(this.currentSection);
+                    this.updateProgress();
+                }
+            }
+            
+            showSection(num) {
+                document.querySelectorAll('.survey-section').forEach(s => s.classList.remove('active'));
+                document.querySelector(`.survey-section[data-section="${num}"]`).classList.add('active');
+                
+                // Update nav buttons
+                document.getElementById('btn-back').style.display = num > 1 ? 'block' : 'none';
+                document.getElementById('btn-next').textContent = num === this.totalSections ? 'Submit' : 'Next';
+                
+                if (num === this.totalSections) {
+                    document.getElementById('btn-next').className = 'nav-btn btn-submit';
+                } else {
+                    document.getElementById('btn-next').className = 'nav-btn btn-next';
+                }
+            }
+            
+            updateProgress() {
+                const progress = (this.currentSection / this.totalSections) * 100;
+                document.getElementById('progress-fill').style.width = `${progress}%`;
+            }
+            
+            calculateScore() {
+                // Wellness score: Higher = better
+                // Mood, Calm, Focus, Energy, Body are positive (1=bad, 5=good)
+                // Anxiety, Stress are negative (1=good, 5=bad) - invert these
+                
+                const positive = ['mood', 'calm', 'focus', 'energy', 'body'];
+                const negative = ['anxiety', 'stress'];
+                
+                let score = 0;
+                let count = 0;
+                
+                positive.forEach(key => {
+                    if (this.responses[key]) {
+                        score += this.responses[key];
+                        count++;
+                    }
+                });
+                
+                negative.forEach(key => {
+                    if (this.responses[key]) {
+                        score += (6 - this.responses[key]); // Invert: 5 becomes 1, 1 becomes 5
+                        count++;
+                    }
+                });
+                
+                // Convert to 0-100 scale
+                const rawScore = score / count; // 1-5 scale
+                const percentScore = Math.round(((rawScore - 1) / 4) * 100);
+                
+                return percentScore;
+            }
+            
+            complete() {
+                // Show completion screen
+                document.querySelectorAll('.survey-section').forEach(s => s.classList.remove('active'));
+                document.querySelector('.survey-section[data-section="complete"]').classList.add('active');
+                document.getElementById('nav-buttons').style.display = 'none';
+                document.getElementById('progress-fill').style.width = '100%';
+                
+                // Calculate and display score
+                const score = this.calculateScore();
+                document.getElementById('wellness-score').textContent = score + '/100';
+                
+                // Save data
+                this.saveData(score);
+            }
+            
+            saveData(score) {
+                const surveyData = {
+                    id: this.sessionId,
+                    type: this.surveyType,
+                    timestamp: new Date().toISOString(),
+                    responses: this.responses,
+                    wellnessScore: score
+                };
+                
+                // Store locally
+                const surveys = JSON.parse(localStorage.getItem('pneuoma-surveys') || '[]');
+                surveys.push(surveyData);
+                localStorage.setItem('pneuoma-surveys', JSON.stringify(surveys));
+                
+                // Store session-specific for pre/post comparison
+                if (this.surveyType === 'pre') {
+                    localStorage.setItem('pneuoma-pre-survey-' + this.sessionId, JSON.stringify(surveyData));
+                } else if (this.surveyType === 'post') {
+                    const preSurvey = JSON.parse(localStorage.getItem('pneuoma-pre-survey-' + this.sessionId) || 'null');
+                    if (preSurvey) {
+                        const change = score - preSurvey.wellnessScore;
+                        console.log(`Wellness change: ${change > 0 ? '+' : ''}${change}%`);
+                        
+                        // Store comparison
+                        const comparison = {
+                            sessionId: this.sessionId,
+                            pre: preSurvey,
+                            post: surveyData,
+                            change: change
+                        };
+                        localStorage.setItem('pneuoma-comparison-' + this.sessionId, JSON.stringify(comparison));
+                    }
+                }
+                
+                console.log('Survey saved:', surveyData);
+            }
+        }
+        
+        // Initialize
+        new Survey();
+    </script>
+</body>
+</html>
+
