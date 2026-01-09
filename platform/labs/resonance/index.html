@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f0d24">
+    
+    <title>Resonance Lab | PNEUOMA Labs</title>
+    <meta name="description" content="Explore multi-dimensional wave visualization. Interactive resonance patterns from 1D standing waves to 4D hyperspheres.">
+    
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Three.js for 3D visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <link rel="stylesheet" href="resonance.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="lab-header">
+            <a href="../" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>Labs</span>
+            </a>
+            <div class="lab-title">
+                <span class="lab-badge">Preview</span>
+                <h1>Resonance Lab</h1>
+            </div>
+            <button id="info-btn" class="info-btn" aria-label="Info">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4M12 8h.01"/>
+                </svg>
+            </button>
+        </header>
+        
+        <!-- Main Layout -->
+        <main class="lab-main">
+            <!-- Visualization Canvas -->
+            <section class="viz-section">
+                <canvas id="viz-canvas"></canvas>
+                <div id="three-container"></div>
+                
+                <!-- Metrics Display -->
+                <div class="metrics-bar">
+                    <div class="metric">
+                        <span class="metric-label">Wavelength</span>
+                        <span class="metric-value" id="wavelength-value">3.36 m</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Wave Speed</span>
+                        <span class="metric-value" id="speed-value">1481 m/s</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Period</span>
+                        <span class="metric-value" id="period-value">2.27 ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Phase</span>
+                        <span class="metric-value" id="phase-value">0°</span>
+                    </div>
+                </div>
+                
+                <!-- Geometry Selector -->
+                <div class="geometry-selector">
+                    <button class="geo-btn active" data-geo="1d" title="1D Standing Wave">
+                        <span class="geo-icon">―</span>
+                        <span class="geo-label">1D</span>
+                    </button>
+                    <button class="geo-btn" data-geo="2d" title="2D Chladni Pattern">
+                        <span class="geo-icon">◯</span>
+                        <span class="geo-label">2D</span>
+                    </button>
+                    <button class="geo-btn" data-geo="3d" title="3D Spherical Harmonics">
+                        <span class="geo-icon">◉</span>
+                        <span class="geo-label">3D</span>
+                    </button>
+                    <button class="geo-btn" data-geo="4d" title="4D Hypersphere">
+                        <span class="geo-icon">✧</span>
+                        <span class="geo-label">4D</span>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Controls Panel -->
+            <aside class="controls-panel">
+                <div class="panel-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20V10M18 20V4M6 20v-4"/>
+                    </svg>
+                    <span>Controls</span>
+                </div>
+                
+                <!-- Frequency -->
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Frequency</label>
+                        <span class="control-value" id="freq-display">440 Hz</span>
+                    </div>
+                    <input type="range" id="frequency" min="20" max="2000" value="440" class="slider">
+                    <div class="control-hints">
+                        <span>20 Hz</span>
+                        <span>2000 Hz</span>
+                    </div>
+                </div>
+                
+                <!-- Amplitude -->
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Amplitude</label>
+                        <span class="control-value" id="amp-display">80%</span>
+                    </div>
+                    <input type="range" id="amplitude" min="10" max="100" value="80" class="slider">
+                </div>
+                
+                <!-- Waveform -->
+                <div class="control-group">
+                    <label>Waveform</label>
+                    <div class="waveform-grid">
+                        <button class="wave-btn active" data-wave="sine" title="Sine - Pure tone">
+                            <span class="wave-icon">∿</span>
+                            <span>Sine</span>
+                        </button>
+                        <button class="wave-btn" data-wave="square" title="Square - Odd harmonics">
+                            <span class="wave-icon">⊓</span>
+                            <span>Square</span>
+                        </button>
+                        <button class="wave-btn" data-wave="triangle" title="Triangle - Soft harmonics">
+                            <span class="wave-icon">△</span>
+                            <span>Triangle</span>
+                        </button>
+                        <button class="wave-btn" data-wave="sawtooth" title="Sawtooth - All harmonics">
+                            <span class="wave-icon">⩘</span>
+                            <span>Saw</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Medium -->
+                <div class="control-group">
+                    <label>Medium</label>
+                    <div class="medium-grid">
+                        <button class="medium-btn active" data-medium="water" style="--medium-color: #0ea5e9">
+                            <span>Water</span>
+                            <span class="medium-speed">1481 m/s</span>
+                        </button>
+                        <button class="medium-btn" data-medium="tissue" style="--medium-color: #f97316">
+                            <span>Tissue</span>
+                            <span class="medium-speed">1540 m/s</span>
+                        </button>
+                        <button class="medium-btn" data-medium="air" style="--medium-color: #a855f7">
+                            <span>Air</span>
+                            <span class="medium-speed">343 m/s</span>
+                        </button>
+                        <button class="medium-btn" data-medium="bone" style="--medium-color: #64748b">
+                            <span>Bone</span>
+                            <span class="medium-speed">3500 m/s</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Damping -->
+                <div class="control-group">
+                    <div class="control-header">
+                        <label>Damping</label>
+                        <span class="control-value" id="damp-display">30%</span>
+                    </div>
+                    <input type="range" id="damping" min="0" max="100" value="30" class="slider slider-purple">
+                </div>
+                
+                <!-- Phase (Advanced) -->
+                <div class="control-group advanced">
+                    <div class="control-header">
+                        <label>Phase Offset</label>
+                        <span class="control-value" id="phase-display">0°</span>
+                    </div>
+                    <input type="range" id="phase" min="0" max="360" value="0" class="slider slider-pink">
+                </div>
+                
+                <!-- Waveform Info -->
+                <div class="waveform-info" id="waveform-info">
+                    <p><strong>Sine waves</strong> contain only the fundamental frequency—no harmonics. They represent the simplest form of oscillation.</p>
+                </div>
+            </aside>
+        </main>
+        
+        <!-- Info Modal -->
+        <div id="info-modal" class="modal hidden">
+            <div class="modal-content">
+                <button class="modal-close" id="modal-close">&times;</button>
+                <h2>Resonance Lab</h2>
+                <p>Explore standing waves across multiple dimensions. Adjust frequency, amplitude, waveform, and medium to see how resonance patterns form.</p>
+                
+                <h3>Visualizations</h3>
+                <ul>
+                    <li><strong>1D Tube:</strong> Standing waves with nodes & antinodes</li>
+                    <li><strong>2D Plate:</strong> Chladni patterns (vibrating plate)</li>
+                    <li><strong>3D Sphere:</strong> Spherical harmonics (electron orbitals)</li>
+                    <li><strong>4D Hyper:</strong> Hypersphere rotating through 4th dimension</li>
+                </ul>
+                
+                <h3>Waveforms</h3>
+                <ul>
+                    <li><strong>Sine:</strong> Pure tone, fundamental only</li>
+                    <li><strong>Square:</strong> Rich in odd harmonics (1, 3, 5...)</li>
+                    <li><strong>Triangle:</strong> Softer odd harmonics</li>
+                    <li><strong>Sawtooth:</strong> All harmonics present</li>
+                </ul>
+                
+                <h3>The Science</h3>
+                <p>When waves reflect and interfere, they create standing patterns with fixed nodes (no motion) and antinodes (maximum motion). The patterns you see in 3D mode are spherical harmonics—the same mathematics that describes electron orbitals, gravitational fields, and cosmic microwave background fluctuations.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="resonance.js"></script>
+</body>
+</html>
+

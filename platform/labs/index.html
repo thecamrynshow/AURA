@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a1f">
+    
+    <title>Labs | PNEUOMA - Research & Experimentation</title>
+    <meta name="description" content="PNEUOMA Labs - Cutting-edge research platforms exploring sound, light, and healing. Sonoluminescence, tissue optics, acoustic resonance, and vibrational therapy.">
+    
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="labs.css">
+</head>
+<body>
+    <div id="app">
+        <canvas id="background-canvas"></canvas>
+        
+        <!-- Header -->
+        <header class="labs-header">
+            <a href="../../" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>PNEUOMA</span>
+            </a>
+            <nav class="labs-nav">
+                <a href="../games/">Games</a>
+                <a href="../create/">Create</a>
+                <a href="../companions/">Companions</a>
+            </nav>
+        </header>
+        
+        <!-- Hero Section -->
+        <section class="labs-hero">
+            <div class="hero-badge">🔬 Research Platform</div>
+            <h1 class="labs-title">
+                <span class="title-line">PNEUOMA</span>
+                <span class="title-accent">Labs</span>
+            </h1>
+            <p class="labs-subtitle">
+                Exploring the frontiers of sound, light, and healing.<br>
+                Where science meets the mysteries of vibration.
+            </p>
+            
+            <!-- Animated visual -->
+            <div class="hero-visual">
+                <div class="resonance-ring ring-1"></div>
+                <div class="resonance-ring ring-2"></div>
+                <div class="resonance-ring ring-3"></div>
+                <div class="resonance-core">
+                    <div class="core-glow"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Vision Statement -->
+        <section class="vision-section">
+            <blockquote class="vision-quote">
+                "In the beginning was the Word..."
+            </blockquote>
+            <p class="vision-text">
+                Sound creates light. Light heals tissue. Vibration shapes matter.<br>
+                These labs explore the deep connections between frequency and form.
+            </p>
+        </section>
+        
+        <!-- Labs Grid -->
+        <section class="labs-grid-section">
+            <div class="section-header">
+                <h2>Research Modules</h2>
+                <p>Interactive platforms for exploring acoustic and optical phenomena</p>
+            </div>
+            
+            <div class="labs-grid">
+                <!-- Resonance Lab - Featured -->
+                <article class="lab-card featured">
+                    <div class="lab-status">
+                        <span class="status-badge featured">🌟 Featured</span>
+                    </div>
+                    <div class="lab-visual resonance-bg">
+                        <div class="visual-preview">
+                            <div class="wave-viz">
+                                <div class="wave-line"></div>
+                                <div class="wave-line"></div>
+                                <div class="wave-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lab-info">
+                        <h3 class="lab-name">Resonance Lab</h3>
+                        <p class="lab-tagline">Multi-Dimensional Wave Visualization</p>
+                        <p class="lab-desc">
+                            Explore standing waves across 1D, 2D, 3D, and 4D geometries. 
+                            Visualize Chladni patterns, spherical harmonics, and hypersphere projections.
+                            Control frequency, amplitude, waveform, and medium in real-time.
+                        </p>
+                        <div class="lab-features">
+                            <span class="feature">1D-4D Modes</span>
+                            <span class="feature">WebGL/Three.js</span>
+                            <span class="feature">Real-time</span>
+                        </div>
+                        <a href="resonance/" class="btn btn-primary">
+                            <span>Enter Lab</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+                
+                <!-- Sonoluminescence -->
+                <article class="lab-card">
+                    <div class="lab-status">
+                        <span class="status-badge new">✨ NEW</span>
+                    </div>
+                    <div class="lab-visual sono-bg">
+                        <div class="visual-preview">
+                            <div class="bubble-viz">
+                                <div class="bubble"></div>
+                                <div class="bubble-glow"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lab-info">
+                        <h3 class="lab-name">Sonoluminescence</h3>
+                        <p class="lab-tagline">Light from Sound</p>
+                        <p class="lab-desc">
+                            Simulate bubble dynamics and light emission from acoustic cavitation.
+                            Watch bubbles collapse at 15,000K and emit light from pure sound waves.
+                        </p>
+                        <div class="lab-features">
+                            <span class="feature">Rayleigh-Plesset</span>
+                            <span class="feature">Blackbody Spectrum</span>
+                        </div>
+                        <a href="resonance/sonoluminescence/" class="btn btn-primary">
+                            <span>Explore</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+                
+                <!-- Tissue Optics -->
+                <article class="lab-card">
+                    <div class="lab-status">
+                        <span class="status-badge new">✨ NEW</span>
+                    </div>
+                    <div class="lab-visual tissue-bg">
+                        <div class="visual-preview">
+                            <div class="photon-viz">
+                                <div class="photon"></div>
+                                <div class="tissue-layer"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lab-info">
+                        <h3 class="lab-name">Tissue Optics</h3>
+                        <p class="lab-tagline">Light Through Biology</p>
+                        <p class="lab-desc">
+                            Monte Carlo simulation of light transport for photobiomodulation.
+                            Explore how different wavelengths penetrate and heal tissue.
+                        </p>
+                        <div class="lab-features">
+                            <span class="feature">Monte Carlo</span>
+                            <span class="feature">Dose Mapping</span>
+                        </div>
+                        <a href="resonance/tissue-optics/" class="btn btn-primary">
+                            <span>Explore</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+                
+                <!-- Acoustics Lab -->
+                <article class="lab-card">
+                    <div class="lab-status">
+                        <span class="status-badge new">✨ NEW</span>
+                    </div>
+                    <div class="lab-visual acoustics-bg">
+                        <div class="visual-preview">
+                            <div class="speaker-viz">
+                                <div class="speaker-cone"></div>
+                                <div class="sound-wave"></div>
+                                <div class="sound-wave"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lab-info">
+                        <h3 class="lab-name">Acoustics Lab</h3>
+                        <p class="lab-tagline">Sound Field Design</p>
+                        <p class="lab-desc">
+                            Generate and visualize acoustic fields, standing waves, and waveforms.
+                            Design multi-transducer configurations and analyze cavitation thresholds.
+                        </p>
+                        <div class="lab-features">
+                            <span class="feature">Standing Waves</span>
+                            <span class="feature">Cavitation</span>
+                        </div>
+                        <a href="resonance/acoustics/" class="btn btn-primary">
+                            <span>Explore</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+                
+                <!-- Somatics -->
+                <article class="lab-card">
+                    <div class="lab-status">
+                        <span class="status-badge new">✨ NEW</span>
+                    </div>
+                    <div class="lab-visual somatics-bg">
+                        <div class="visual-preview">
+                            <div class="freq-viz">
+                                <div class="freq-bar"></div>
+                                <div class="freq-bar"></div>
+                                <div class="freq-bar"></div>
+                                <div class="freq-bar"></div>
+                                <div class="freq-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lab-info">
+                        <h3 class="lab-name">Somatics</h3>
+                        <p class="lab-tagline">Vibrational Healing</p>
+                        <p class="lab-desc">
+                            Explore Solfeggio frequencies, brainwave entrainment, and binaural beats.
+                            Connect with the Schumann resonance—Earth's electromagnetic heartbeat.
+                        </p>
+                        <div class="lab-features">
+                            <span class="feature">Solfeggio</span>
+                            <span class="feature">Binaural Beats</span>
+                            <span class="feature">7.83 Hz</span>
+                        </div>
+                        <a href="resonance/somatics/" class="btn btn-primary">
+                            <span>Explore</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+        
+        <!-- Science Section -->
+        <section class="science-section">
+            <div class="section-header">
+                <h2>The Science</h2>
+                <p>Understanding the physics of resonance and healing</p>
+            </div>
+            
+            <div class="science-grid">
+                <div class="science-card">
+                    <div class="science-icon">⚡</div>
+                    <h4>Sound Creates Light</h4>
+                    <p>Sonoluminescence demonstrates that acoustic energy can produce photons—sound literally becoming light through bubble collapse at 15,000K.</p>
+                </div>
+                <div class="science-card">
+                    <div class="science-icon">❤️</div>
+                    <h4>Light Heals Tissue</h4>
+                    <p>Photobiomodulation uses specific wavelengths (630-850nm) to enhance cellular function, reduce inflammation, and accelerate healing.</p>
+                </div>
+                <div class="science-card">
+                    <div class="science-icon">🌍</div>
+                    <h4>Vibration as Creation</h4>
+                    <p>From ancient traditions to modern physics, vibration and frequency are fundamental to structure formation in the universe.</p>
+                </div>
+            </div>
+            
+            <div class="equation-display">
+                <p class="equation-label">Rayleigh-Plesset Equation (Bubble Dynamics)</p>
+                <div class="equation">
+                    R R̈ + (3/2) Ṙ² = (1/ρ)[P<sub>g</sub> - P<sub>0</sub> - P(t) - 4μṘ/R - 2σ/R]
+                </div>
+            </div>
+        </section>
+        
+        <!-- Frequency Reference -->
+        <section class="frequency-section">
+            <div class="section-header">
+                <h2>Frequency Reference</h2>
+                <p>Key frequencies in healing and consciousness</p>
+            </div>
+            
+            <div class="freq-grid">
+                <div class="freq-card">
+                    <span class="freq-value">7.83 Hz</span>
+                    <span class="freq-name">Schumann Resonance</span>
+                    <span class="freq-desc">Earth's electromagnetic heartbeat</span>
+                </div>
+                <div class="freq-card">
+                    <span class="freq-value">40 Hz</span>
+                    <span class="freq-name">Gamma Waves</span>
+                    <span class="freq-desc">Cognitive enhancement, memory</span>
+                </div>
+                <div class="freq-card">
+                    <span class="freq-value">174 Hz</span>
+                    <span class="freq-name">Solfeggio Foundation</span>
+                    <span class="freq-desc">Pain relief, security</span>
+                </div>
+                <div class="freq-card">
+                    <span class="freq-value">528 Hz</span>
+                    <span class="freq-name">DNA Repair</span>
+                    <span class="freq-desc">Transformation, miracles</span>
+                </div>
+                <div class="freq-card">
+                    <span class="freq-value">630-700 nm</span>
+                    <span class="freq-name">Red Light</span>
+                    <span class="freq-desc">Skin healing, collagen</span>
+                </div>
+                <div class="freq-card">
+                    <span class="freq-value">810-850 nm</span>
+                    <span class="freq-name">Near-Infrared</span>
+                    <span class="freq-desc">Deep tissue penetration</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="labs-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">πνεῦμα</span>
+                    <span class="logo-text">PNEUOMA Labs</span>
+                </div>
+                <p class="footer-tagline">
+                    "In the beginning was the Word, and the Word was with God, and the Word was God."<br>
+                    <span class="citation">— John 1:1</span>
+                </p>
+                <div class="footer-links">
+                    <a href="../../">Home</a>
+                    <a href="../games/">Games</a>
+                    <a href="../create/">Create</a>
+                    <a href="../companions/">Companions</a>
+                </div>
+                <p class="copyright">© 2026 PNEUOMA. A research project exploring sound, light, and healing.</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="labs.js"></script>
+</body>
+</html>
+
