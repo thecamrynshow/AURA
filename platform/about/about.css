@@ -299,6 +299,16 @@ section h2 {
     color: white;
 }
 
+.founder-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 3px solid rgba(168, 85, 247, 0.5);
+    box-shadow: 0 10px 40px rgba(168, 85, 247, 0.3);
+}
+
 .founder-info h3 {
     font-size: 1.8rem;
     margin-bottom: 5px;
