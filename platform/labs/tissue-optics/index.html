@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a1f">
+    <title>Tissue Optics | PNEUOMA Labs</title>
+    <meta name="description" content="Monte Carlo simulation of light transport through tissue for photobiomodulation.">
+    
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="tissue-optics.css">
+</head>
+<body>
+    <div id="app">
+        <header class="lab-header">
+            <a href="../" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>Labs</span>
+            </a>
+            <div class="lab-title">
+                <h1>Tissue Optics</h1>
+                <span class="lab-tagline">Light Through Biology</span>
+            </div>
+        </header>
+        
+        <main class="lab-main">
+            <section class="viz-section">
+                <canvas id="tissue-canvas"></canvas>
+                
+                <!-- Depth Marker -->
+                <div class="depth-scale">
+                    <div class="depth-marker" id="depth-marker">
+                        <span class="depth-value" id="depth-value">0 mm</span>
+                    </div>
+                    <div class="depth-labels">
+                        <span>0</span>
+                        <span>5mm</span>
+                        <span>10mm</span>
+                        <span>15mm</span>
+                        <span>20mm</span>
+                    </div>
+                </div>
+                
+                <!-- Stats Panel -->
+                <div class="stats-panel">
+                    <div class="stat">
+                        <span class="stat-label">Penetration Depth</span>
+                        <span class="stat-value" id="penetration-value">5.2 mm</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Absorbed</span>
+                        <span class="stat-value" id="absorbed-value">45%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Scattered</span>
+                        <span class="stat-value" id="scattered-value">35%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Transmitted</span>
+                        <span class="stat-value" id="transmitted-value">20%</span>
+                    </div>
+                </div>
+            </section>
+            
+            <aside class="controls-panel">
+                <div class="panel-section">
+                    <h3>Light Source</h3>
+                    
+                    <div class="control-group">
+                        <label>Wavelength</label>
+                        <input type="range" id="wavelength" min="400" max="1100" value="660" class="slider">
+                        <div class="wavelength-display">
+                            <span class="wavelength-value" id="wavelength-value">660 nm</span>
+                            <div class="wavelength-color" id="wavelength-color"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Intensity</label>
+                        <input type="range" id="intensity" min="1" max="100" value="50" class="slider">
+                        <span class="control-value" id="intensity-value">50 mW/cm²</span>
+                    </div>
+                    
+                    <div class="preset-group">
+                        <label>Presets</label>
+                        <div class="preset-grid">
+                            <button class="preset-btn active" data-wavelength="660">Red (660nm)</button>
+                            <button class="preset-btn" data-wavelength="850">NIR (850nm)</button>
+                            <button class="preset-btn" data-wavelength="532">Green (532nm)</button>
+                            <button class="preset-btn" data-wavelength="450">Blue (450nm)</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>Tissue Type</h3>
+                    <div class="tissue-grid">
+                        <button class="tissue-btn active" data-tissue="skin">
+                            <span class="tissue-icon">🫱</span>
+                            <span>Skin</span>
+                        </button>
+                        <button class="tissue-btn" data-tissue="muscle">
+                            <span class="tissue-icon">💪</span>
+                            <span>Muscle</span>
+                        </button>
+                        <button class="tissue-btn" data-tissue="fat">
+                            <span class="tissue-icon">🧈</span>
+                            <span>Fat</span>
+                        </button>
+                        <button class="tissue-btn" data-tissue="bone">
+                            <span class="tissue-icon">🦴</span>
+                            <span>Bone</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>Simulation</h3>
+                    <div class="control-group">
+                        <label>Photon Count</label>
+                        <input type="range" id="photons" min="100" max="2000" value="500" class="slider slider-cyan">
+                        <span class="control-value" id="photons-value">500 photons</span>
+                    </div>
+                    
+                    <button class="action-btn" id="simulate-btn">▶ Run Simulation</button>
+                </div>
+                
+                <!-- Info Panel -->
+                <div class="info-panel">
+                    <h4>Photobiomodulation</h4>
+                    <p><strong>Red light (630-700nm)</strong> penetrates shallow tissue for skin healing and collagen production.</p>
+                    <p><strong>Near-infrared (780-1100nm)</strong> penetrates deeper for muscle recovery and pain relief.</p>
+                </div>
+            </aside>
+        </main>
+    </div>
+    
+    <script src="tissue-optics.js"></script>
+</body>
+</html>
+

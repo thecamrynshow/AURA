@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a1f">
+    <title>Sonoluminescence | PNEUOMA Labs</title>
+    <meta name="description" content="Simulate bubble dynamics and light emission from acoustic cavitation. Watch sound create light.">
+    
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="sonoluminescence.css">
+</head>
+<body>
+    <div id="app">
+        <canvas id="background-canvas"></canvas>
+        
+        <!-- Header -->
+        <header class="lab-header">
+            <a href="../" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>Labs</span>
+            </a>
+            <div class="lab-title">
+                <h1>Sonoluminescence</h1>
+                <span class="lab-tagline">Light from Sound</span>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="lab-main">
+            <!-- Visualization -->
+            <section class="viz-section">
+                <canvas id="bubble-canvas"></canvas>
+                
+                <!-- Bubble Display -->
+                <div class="bubble-container">
+                    <div class="bubble" id="bubble">
+                        <div class="bubble-surface"></div>
+                        <div class="bubble-highlight"></div>
+                        <div class="bubble-glow" id="bubble-glow"></div>
+                    </div>
+                    <div class="flash" id="flash"></div>
+                </div>
+                
+                <!-- Status Display -->
+                <div class="status-panel">
+                    <div class="status-item">
+                        <span class="status-label">Radius</span>
+                        <span class="status-value" id="radius-value">50 μm</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Temperature</span>
+                        <span class="status-value" id="temp-value">300 K</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Pressure</span>
+                        <span class="status-value" id="pressure-value">1 atm</span>
+                    </div>
+                    <div class="status-item highlight">
+                        <span class="status-label">Light Output</span>
+                        <span class="status-value" id="light-value">0%</span>
+                    </div>
+                </div>
+                
+                <!-- Phase Indicator -->
+                <div class="phase-indicator">
+                    <div class="phase-bar">
+                        <div class="phase-fill" id="phase-fill"></div>
+                        <div class="phase-marker" id="phase-marker"></div>
+                    </div>
+                    <div class="phase-labels">
+                        <span>Expansion</span>
+                        <span>Collapse</span>
+                        <span>Flash</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Controls -->
+            <aside class="controls-panel">
+                <div class="panel-section">
+                    <h3>Acoustic Drive</h3>
+                    
+                    <div class="control-group">
+                        <label>Frequency</label>
+                        <input type="range" id="frequency" min="20000" max="40000" value="25000" class="slider">
+                        <span class="control-value" id="freq-display">25 kHz</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Amplitude</label>
+                        <input type="range" id="amplitude" min="1" max="2" step="0.01" value="1.3" class="slider">
+                        <span class="control-value" id="amp-display">1.3 atm</span>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>Bubble Properties</h3>
+                    
+                    <div class="control-group">
+                        <label>Initial Radius</label>
+                        <input type="range" id="radius" min="1" max="100" value="50" class="slider slider-cyan">
+                        <span class="control-value" id="radius-display">50 μm</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Gas Type</label>
+                        <div class="gas-grid">
+                            <button class="gas-btn active" data-gas="air">Air</button>
+                            <button class="gas-btn" data-gas="argon">Argon</button>
+                            <button class="gas-btn" data-gas="xenon">Xenon</button>
+                            <button class="gas-btn" data-gas="helium">Helium</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>Simulation</h3>
+                    
+                    <div class="control-group">
+                        <label>Speed</label>
+                        <input type="range" id="speed" min="0.1" max="2" step="0.1" value="1" class="slider slider-purple">
+                        <span class="control-value" id="speed-display">1x</span>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="action-btn" id="play-btn">
+                            <span id="play-icon">▶</span> Play
+                        </button>
+                        <button class="action-btn" id="reset-btn">↺ Reset</button>
+                    </div>
+                </div>
+                
+                <!-- Info Panel -->
+                <div class="info-panel">
+                    <h4>The Science</h4>
+                    <p>When acoustic waves drive a bubble to collapse, compression can reach <strong>15,000K</strong>—hotter than the sun's surface. This extreme compression causes light emission from the vacuum.</p>
+                    <p class="equation">R R̈ + (3/2) Ṙ² = (1/ρ)[P<sub>g</sub> - P<sub>0</sub> - P(t)]</p>
+                </div>
+            </aside>
+        </main>
+    </div>
+    
+    <script src="sonoluminescence.js"></script>
+</body>
+</html>
+

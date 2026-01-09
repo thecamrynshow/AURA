@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a1f">
+    <title>Somatics | PNEUOMA Labs</title>
+    <meta name="description" content="Explore healing frequencies, binaural beats, and brainwave entrainment. Solfeggio frequencies for wellness.">
+    
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="somatics.css">
+</head>
+<body>
+    <div id="app">
+        <canvas id="background-canvas"></canvas>
+        
+        <header class="lab-header">
+            <a href="../" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span>Labs</span>
+            </a>
+            <div class="lab-title">
+                <h1>Somatics</h1>
+                <span class="lab-tagline">Healing Frequencies</span>
+            </div>
+        </header>
+        
+        <main class="lab-main">
+            <section class="viz-section">
+                <canvas id="wave-canvas"></canvas>
+                
+                <!-- Center Display -->
+                <div class="frequency-display">
+                    <div class="freq-ring ring-1"></div>
+                    <div class="freq-ring ring-2"></div>
+                    <div class="freq-ring ring-3"></div>
+                    <div class="freq-core">
+                        <span class="freq-value" id="current-freq">432</span>
+                        <span class="freq-unit">Hz</span>
+                    </div>
+                </div>
+                
+                <!-- Mode Indicator -->
+                <div class="mode-indicator">
+                    <span class="mode-label" id="mode-label">Solfeggio</span>
+                    <span class="mode-name" id="mode-name">Universal Harmony</span>
+                </div>
+                
+                <!-- Brainwave State -->
+                <div class="brainwave-display">
+                    <div class="brainwave-bar">
+                        <div class="brainwave-section delta" style="width: 15%">δ</div>
+                        <div class="brainwave-section theta" style="width: 20%">θ</div>
+                        <div class="brainwave-section alpha" style="width: 25%">α</div>
+                        <div class="brainwave-section beta" style="width: 25%">β</div>
+                        <div class="brainwave-section gamma" style="width: 15%">γ</div>
+                    </div>
+                    <div class="brainwave-marker" id="brainwave-marker"></div>
+                    <div class="brainwave-labels">
+                        <span>Deep Sleep</span>
+                        <span>Meditation</span>
+                        <span>Relaxed</span>
+                        <span>Alert</span>
+                        <span>Peak</span>
+                    </div>
+                </div>
+            </section>
+            
+            <aside class="controls-panel">
+                <div class="panel-section">
+                    <h3>Solfeggio Frequencies</h3>
+                    <div class="solfeggio-grid">
+                        <button class="solfeggio-btn" data-freq="174" data-name="Pain Relief">
+                            <span class="sol-freq">174 Hz</span>
+                            <span class="sol-name">Pain Relief</span>
+                        </button>
+                        <button class="solfeggio-btn" data-freq="285" data-name="Tissue Healing">
+                            <span class="sol-freq">285 Hz</span>
+                            <span class="sol-name">Tissue Healing</span>
+                        </button>
+                        <button class="solfeggio-btn" data-freq="396" data-name="Liberation">
+                            <span class="sol-freq">396 Hz</span>
+                            <span class="sol-name">Liberation</span>
+                        </button>
+                        <button class="solfeggio-btn active" data-freq="432" data-name="Universal Harmony">
+                            <span class="sol-freq">432 Hz</span>
+                            <span class="sol-name">Harmony</span>
+                        </button>
+                        <button class="solfeggio-btn" data-freq="528" data-name="DNA Repair">
+                            <span class="sol-freq">528 Hz</span>
+                            <span class="sol-name">DNA Repair</span>
+                        </button>
+                        <button class="solfeggio-btn" data-freq="639" data-name="Connection">
+                            <span class="sol-freq">639 Hz</span>
+                            <span class="sol-name">Connection</span>
+                        </button>
+                        <button class="solfeggio-btn" data-freq="741" data-name="Intuition">
+                            <span class="sol-freq">741 Hz</span>
+                            <span class="sol-name">Intuition</span>
+                        </button>
+                        <button class="solfeggio-btn" data-freq="852" data-name="Spiritual Order">
+                            <span class="sol-freq">852 Hz</span>
+                            <span class="sol-name">Spiritual</span>
+                        </button>
+                        <button class="solfeggio-btn" data-freq="963" data-name="Divine Connection">
+                            <span class="sol-freq">963 Hz</span>
+                            <span class="sol-name">Divine</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>Binaural Beats</h3>
+                    <div class="control-group">
+                        <label>Target Brainwave</label>
+                        <div class="binaural-grid">
+                            <button class="binaural-btn" data-beat="2" data-state="Delta">
+                                <span class="bi-wave">δ</span>
+                                <span class="bi-name">Delta (2Hz)</span>
+                                <span class="bi-desc">Deep Sleep</span>
+                            </button>
+                            <button class="binaural-btn" data-beat="6" data-state="Theta">
+                                <span class="bi-wave">θ</span>
+                                <span class="bi-name">Theta (6Hz)</span>
+                                <span class="bi-desc">Meditation</span>
+                            </button>
+                            <button class="binaural-btn active" data-beat="10" data-state="Alpha">
+                                <span class="bi-wave">α</span>
+                                <span class="bi-name">Alpha (10Hz)</span>
+                                <span class="bi-desc">Relaxation</span>
+                            </button>
+                            <button class="binaural-btn" data-beat="20" data-state="Beta">
+                                <span class="bi-wave">β</span>
+                                <span class="bi-name">Beta (20Hz)</span>
+                                <span class="bi-desc">Focus</span>
+                            </button>
+                            <button class="binaural-btn" data-beat="40" data-state="Gamma">
+                                <span class="bi-wave">γ</span>
+                                <span class="bi-name">Gamma (40Hz)</span>
+                                <span class="bi-desc">Peak Cognition</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>Controls</h3>
+                    <div class="control-group">
+                        <label>Volume</label>
+                        <input type="range" id="volume" min="0" max="100" value="50" class="slider">
+                        <span class="control-value" id="volume-display">50%</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Binaural Mix</label>
+                        <input type="range" id="binaural-mix" min="0" max="100" value="30" class="slider slider-purple">
+                        <span class="control-value" id="mix-display">30%</span>
+                    </div>
+                    
+                    <button class="play-btn" id="play-btn">
+                        <span class="play-icon" id="play-icon">▶</span>
+                        <span id="play-text">Play</span>
+                    </button>
+                </div>
+                
+                <div class="info-panel">
+                    <h4>🧘 Healing Sound</h4>
+                    <p><strong>Solfeggio frequencies</strong> are ancient tones believed to promote healing and spiritual balance.</p>
+                    <p><strong>Binaural beats</strong> use slightly different frequencies in each ear to entrain brainwaves to a target state.</p>
+                    <p class="tip">🎧 Use headphones for binaural beats</p>
+                </div>
+            </aside>
+        </main>
+    </div>
+    
+    <script src="somatics.js"></script>
+</body>
+</html>
+
