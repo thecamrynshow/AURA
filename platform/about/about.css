@@ -306,12 +306,11 @@ section h2 {
 }
 
 .founder-photo {
-    width: 180px;
-    height: 180px;
-    min-width: 180px;
-    max-width: 180px;
-    min-height: 180px;
-    max-height: 180px;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 180px !important;
+    max-height: 180px !important;
+    display: block;
     border-radius: 50%;
     object-fit: cover;
     object-position: center 20%;
