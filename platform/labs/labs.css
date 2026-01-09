@@ -808,6 +808,10 @@ html, body {
         grid-template-columns: 1fr;
     }
     
+    .lab-card.featured .lab-visual {
+        min-height: 200px;
+    }
+    
     .labs-nav {
         display: none;
     }
@@ -816,6 +820,10 @@ html, body {
 @media (max-width: 600px) {
     .labs-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .labs-grid-section {
+        padding: 60px 15px;
     }
     
     .hero-visual {
@@ -829,6 +837,76 @@ html, body {
     
     .freq-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Fix badge overlap on mobile */
+    .lab-status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+        white-space: nowrap;
+    }
+    
+    .lab-card .lab-visual {
+        min-height: 150px;
+    }
+    
+    .lab-info {
+        padding: 20px;
+    }
+    
+    .lab-name {
+        font-size: 1.2rem;
+    }
+    
+    .lab-desc {
+        font-size: 0.9rem;
+    }
+    
+    .section-header {
+        margin-bottom: 30px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .section-header p {
+        font-size: 0.9rem;
+    }
+    
+    /* Featured card - stack badge better */
+    .lab-card.featured .lab-status {
+        position: relative;
+        top: auto;
+        left: auto;
+        padding: 15px 15px 0;
+    }
+    
+    .labs-hero {
+        min-height: 60vh;
+        padding-top: calc(var(--safe-top) + 80px);
+    }
+    
+    .labs-title {
+        font-size: 2rem;
+    }
+    
+    .labs-subtitle {
+        font-size: 1rem;
+    }
+    
+    .vision-section {
+        padding: 40px 15px;
+    }
+    
+    .vision-quote {
+        font-size: 1.3rem;
     }
 }
 
