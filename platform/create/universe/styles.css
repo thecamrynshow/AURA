@@ -1005,6 +1005,32 @@ body {
 
 /* ==================== RESPONSIVE ==================== */
 
+/* Mobile fixes - ensure save buttons are visible */
+@media (max-width: 767px) {
+    .planet-info-panel {
+        bottom: 80px;
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+    
+    .planet-info-actions {
+        position: sticky;
+        bottom: 0;
+        background: rgba(10, 10, 30, 0.98);
+        padding: 15px 0 0;
+        margin-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .universe-actions {
+        flex-wrap: wrap;
+    }
+    
+    .universe-actions .action-btn {
+        flex: 1 1 45%;
+    }
+}
+
 @media (min-width: 768px) {
     .sun-grid {
         grid-template-columns: repeat(6, 1fr);

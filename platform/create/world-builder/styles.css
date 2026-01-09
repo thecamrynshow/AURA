@@ -877,6 +877,27 @@ body {
 
 /* ==================== RESPONSIVE ==================== */
 
+/* Mobile fixes - ensure save buttons are visible */
+@media (max-width: 767px) {
+    .control-panel {
+        max-height: 55vh;
+        padding-bottom: calc(var(--safe-bottom) + 20px);
+    }
+    
+    .panel-content {
+        padding-bottom: 100px;
+    }
+    
+    .action-buttons {
+        position: sticky;
+        bottom: 0;
+        background: rgba(10, 10, 31, 0.98);
+        padding: 15px;
+        margin: -20px -20px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
 @media (min-width: 768px) {
     .control-panel {
         max-height: 40%;
