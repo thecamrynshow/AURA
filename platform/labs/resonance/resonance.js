@@ -15,6 +15,10 @@ class ResonanceLab {
         this.geometry = '1d';
         this.time = 0;
         
+        // Analytics
+        this.analytics = null;
+        this.dashboard = null;
+        
         // Medium properties
         this.media = {
             water: { c: 1481, rho: 998, color: '#0ea5e9', baseDamping: 0.002 },
@@ -52,9 +56,34 @@ class ResonanceLab {
         this.setupEventListeners();
         this.resize();
         this.updateMetrics();
+        this.initAnalytics();
         this.animate();
         
         window.addEventListener('resize', () => this.resize());
+    }
+    
+    initAnalytics() {
+        // Initialize analytics system
+        if (typeof LabsAnalytics !== 'undefined') {
+            this.analytics = new LabsAnalytics('resonance');
+            this.dashboard = new AnalyticsDashboard(this.analytics, 'analytics-container');
+            
+            // Track initial state
+            this.analytics.trackParameter('frequency', this.frequency);
+            this.analytics.trackParameter('amplitude', this.amplitude);
+            this.analytics.trackParameter('waveform', this.waveform);
+            this.analytics.trackParameter('medium', this.medium);
+            this.analytics.trackParameter('geometry', this.geometry);
+            
+            // Setup analytics toggle button
+            const toggleBtn = document.getElementById('analytics-toggle');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    this.dashboard.toggle();
+                    toggleBtn.classList.toggle('active', this.dashboard.isVisible);
+                });
+            }
+        }
     }
     
     cacheElements() {
@@ -89,22 +118,26 @@ class ResonanceLab {
             this.frequency = parseInt(e.target.value);
             this.freqDisplay.textContent = `${this.frequency} Hz`;
             this.updateMetrics();
+            if (this.analytics) this.analytics.trackParameter('frequency', this.frequency);
         });
         
         this.ampSlider.addEventListener('input', (e) => {
             this.amplitude = parseInt(e.target.value) / 100;
             this.ampDisplay.textContent = `${e.target.value}%`;
+            if (this.analytics) this.analytics.trackParameter('amplitude', this.amplitude);
         });
         
         this.dampSlider.addEventListener('input', (e) => {
             this.damping = parseInt(e.target.value) / 100;
             this.dampDisplay.textContent = `${e.target.value}%`;
+            if (this.analytics) this.analytics.trackParameter('damping', this.damping);
         });
         
         this.phaseSlider.addEventListener('input', (e) => {
             this.phase = parseInt(e.target.value);
             this.phaseDisplay.textContent = `${this.phase}°`;
             this.phaseValue.textContent = `${this.phase}°`;
+            if (this.analytics) this.analytics.trackParameter('phase', this.phase);
         });
         
         // Waveform buttons
@@ -114,6 +147,7 @@ class ResonanceLab {
                 btn.classList.add('active');
                 this.waveform = btn.dataset.wave;
                 this.waveformInfoEl.innerHTML = `<p>${this.waveformInfo[this.waveform]}</p>`;
+                if (this.analytics) this.analytics.trackParameter('waveform', this.waveform);
             });
         });
         
@@ -124,6 +158,7 @@ class ResonanceLab {
                 btn.classList.add('active');
                 this.medium = btn.dataset.medium;
                 this.updateMetrics();
+                if (this.analytics) this.analytics.trackParameter('medium', this.medium);
             });
         });
         
@@ -134,6 +169,7 @@ class ResonanceLab {
                 btn.classList.add('active');
                 this.geometry = btn.dataset.geo;
                 this.switchGeometry();
+                if (this.analytics) this.analytics.trackParameter('geometry', this.geometry);
             });
         });
         
