@@ -335,6 +335,23 @@ html, body {
     border: 1px solid rgba(0, 255, 242, 0.3);
 }
 
+.status-badge.soon {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-dim);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Coming Soon Cards */
+.lab-card.coming-soon {
+    opacity: 0.7;
+}
+
+.lab-card.coming-soon:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+}
+
 /* Lab Visual */
 .lab-visual {
     position: relative;
@@ -586,6 +603,18 @@ html, body {
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(0, 255, 242, 0.3);
+}
+
+.btn-disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-dim);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-disabled:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 /* Science Section */
