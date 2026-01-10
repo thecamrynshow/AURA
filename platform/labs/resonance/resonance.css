@@ -574,3 +574,96 @@ html, body {
     }
 }
 
+/* Info Icons & Tooltips */
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-left: 6px;
+    font-size: 12px;
+    font-style: normal;
+    color: var(--color-text-dim);
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    cursor: help;
+    transition: all 0.2s ease;
+    position: relative;
+    vertical-align: middle;
+}
+
+.info-icon:hover {
+    color: var(--color-plasma-cyan);
+    background: rgba(0, 255, 242, 0.15);
+    transform: scale(1.1);
+}
+
+/* Tooltip */
+.info-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    padding: 12px 14px;
+    background: rgba(15, 13, 36, 0.98);
+    border: 1px solid rgba(0, 255, 242, 0.3);
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text);
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Tooltip arrow */
+.info-icon::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 255, 242, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1001;
+}
+
+.info-icon:hover::after,
+.info-icon:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Adjust tooltip position on right side of screen */
+.control-header .info-icon::after {
+    left: auto;
+    right: -10px;
+    transform: none;
+}
+
+.control-header .info-icon::before {
+    left: auto;
+    right: 2px;
+    transform: none;
+}
+
+/* Mobile tooltip adjustments */
+@media (max-width: 768px) {
+    .info-icon::after {
+        width: 200px;
+        font-size: 0.75rem;
+        padding: 10px 12px;
+    }
+}
+
