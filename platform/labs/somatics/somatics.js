@@ -11,10 +11,13 @@ class SomaticsLab {
         this.bgCtx = this.bgCanvas.getContext('2d');
         
         // Parameters
-        this.baseFrequency = 432;
-        this.frequencyName = 'Universal Harmony';
-        this.binauralBeat = 10;
-        this.binauralState = 'Alpha';
+        this.baseFrequency = null; // No default selection
+        this.frequencyName = 'None';
+        this.frequencyCategory = null;
+        this.planetaryFrequency = null;
+        this.planetaryName = 'None';
+        this.binauralBeat = 0; // No default selection
+        this.binauralState = 'None';
         this.volume = 0.5;
         this.binauralMix = 0.3;
         
@@ -48,41 +51,63 @@ class SomaticsLab {
     }
     
     setupEventListeners() {
-        // Solfeggio buttons
+        // Solfeggio buttons - toggle behavior
         document.querySelectorAll('.solfeggio-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.planetary-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.baseFrequency = parseFloat(btn.dataset.freq);
-                this.frequencyName = btn.dataset.name;
-                this.frequencyCategory = 'Solfeggio';
+                if (btn.classList.contains('active')) {
+                    // Deselect - toggle off
+                    btn.classList.remove('active');
+                    this.baseFrequency = null;
+                    this.frequencyName = 'None';
+                    this.frequencyCategory = null;
+                } else {
+                    // Select - deselect others in same category only
+                    document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.baseFrequency = parseFloat(btn.dataset.freq);
+                    this.frequencyName = btn.dataset.name;
+                    this.frequencyCategory = 'Solfeggio';
+                }
                 this.updateDisplay();
                 if (this.isPlaying) this.updateAudio();
             });
         });
         
-        // Planetary buttons
+        // Planetary buttons - toggle behavior
         document.querySelectorAll('.planetary-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.planetary-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.baseFrequency = parseFloat(btn.dataset.freq);
-                this.frequencyName = btn.dataset.name;
-                this.frequencyCategory = 'Planetary';
+                if (btn.classList.contains('active')) {
+                    // Deselect - toggle off
+                    btn.classList.remove('active');
+                    this.planetaryFrequency = null;
+                    this.planetaryName = 'None';
+                } else {
+                    // Select - deselect others in same category only
+                    document.querySelectorAll('.planetary-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.planetaryFrequency = parseFloat(btn.dataset.freq);
+                    this.planetaryName = btn.dataset.name;
+                }
                 this.updateDisplay();
                 if (this.isPlaying) this.updateAudio();
             });
         });
         
-        // Binaural buttons
+        // Binaural buttons - toggle behavior
         document.querySelectorAll('.binaural-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.binaural-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.binauralBeat = parseInt(btn.dataset.beat);
-                this.binauralState = btn.dataset.state;
+                if (btn.classList.contains('active')) {
+                    // Deselect - toggle off
+                    btn.classList.remove('active');
+                    this.binauralBeat = 0;
+                    this.binauralState = 'None';
+                } else {
+                    // Select
+                    document.querySelectorAll('.binaural-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.binauralBeat = parseInt(btn.dataset.beat);
+                    this.binauralState = btn.dataset.state;
+                }
                 this.updateBrainwaveMarker();
                 if (this.isPlaying) this.updateAudio();
             });
@@ -108,8 +133,47 @@ class SomaticsLab {
     }
     
     updateDisplay() {
-        document.getElementById('current-freq').textContent = this.baseFrequency;
-        document.getElementById('mode-name').textContent = this.frequencyName;
+        // Determine what to show
+        let freqDisplay = '--';
+        let nameDisplay = 'Select a frequency';
+        let categoryDisplay = '';
+        
+        // Show base frequency if selected
+        if (this.baseFrequency) {
+            freqDisplay = this.baseFrequency;
+            nameDisplay = this.frequencyName;
+            categoryDisplay = 'Solfeggio';
+        }
+        // Show planetary if selected (overrides or shows alongside)
+        if (this.planetaryFrequency) {
+            if (this.baseFrequency) {
+                // Both selected - show combined
+                freqDisplay = `${this.baseFrequency} + ${this.planetaryFrequency}`;
+                nameDisplay = `${this.frequencyName} + ${this.planetaryName}`;
+                categoryDisplay = 'Solfeggio + Planetary';
+            } else {
+                freqDisplay = this.planetaryFrequency;
+                nameDisplay = this.planetaryName;
+                categoryDisplay = 'Planetary';
+            }
+        }
+        
+        // Add binaural info if active
+        if (this.binauralBeat > 0) {
+            if (categoryDisplay) {
+                categoryDisplay += ` + ${this.binauralState} (${this.binauralBeat}Hz)`;
+            } else {
+                categoryDisplay = `${this.binauralState} Brainwave (${this.binauralBeat}Hz)`;
+                if (!this.baseFrequency && !this.planetaryFrequency) {
+                    freqDisplay = this.binauralBeat;
+                    nameDisplay = `${this.binauralState} Entrainment`;
+                }
+            }
+        }
+        
+        document.getElementById('current-freq').textContent = freqDisplay;
+        document.getElementById('mode-name').textContent = nameDisplay;
+        document.getElementById('mode-label').textContent = categoryDisplay || 'Ready';
     }
     
     updateBrainwaveMarker() {
@@ -141,6 +205,12 @@ class SomaticsLab {
     }
     
     startAudio() {
+        // Check if anything is selected
+        if (!this.baseFrequency && !this.planetaryFrequency && this.binauralBeat === 0) {
+            alert('Please select at least one frequency or brainwave to play.');
+            return;
+        }
+        
         if (!this.audioContext) {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
@@ -149,44 +219,76 @@ class SomaticsLab {
             this.audioContext.resume();
         }
         
-        // Create nodes
+        // Create main gain node
         this.gainNode = this.audioContext.createGain();
         this.gainNode.gain.value = this.volume * 0.3;
         
-        // Create merger for stereo
+        // Create merger for stereo binaural
         const merger = this.audioContext.createChannelMerger(2);
         
-        // Left oscillator (base frequency)
-        this.oscLeft = this.audioContext.createOscillator();
-        this.oscLeft.type = 'sine';
-        this.oscLeft.frequency.value = this.baseFrequency;
+        // Track all oscillators for cleanup
+        this.oscillators = [];
         
-        // Right oscillator (base + binaural beat)
-        this.oscRight = this.audioContext.createOscillator();
-        this.oscRight.type = 'sine';
-        this.oscRight.frequency.value = this.baseFrequency + (this.binauralBeat * this.binauralMix);
+        // Determine primary frequency for binaural (use base, or planetary, or default 200Hz carrier)
+        let primaryFreq = this.baseFrequency || this.planetaryFrequency || 200;
         
-        // Create gains for each channel
-        const gainLeft = this.audioContext.createGain();
-        const gainRight = this.audioContext.createGain();
-        gainLeft.gain.value = 1;
-        gainRight.gain.value = 1;
+        // Create oscillators for base frequency (Solfeggio)
+        if (this.baseFrequency) {
+            const oscBase = this.audioContext.createOscillator();
+            oscBase.type = 'sine';
+            oscBase.frequency.value = this.baseFrequency;
+            const gainBase = this.audioContext.createGain();
+            gainBase.gain.value = 0.5;
+            oscBase.connect(gainBase);
+            gainBase.connect(this.gainNode);
+            oscBase.start();
+            this.oscillators.push(oscBase);
+        }
         
-        // Connect left channel
-        this.oscLeft.connect(gainLeft);
-        gainLeft.connect(merger, 0, 0);
+        // Create oscillators for planetary frequency
+        if (this.planetaryFrequency) {
+            const oscPlanetary = this.audioContext.createOscillator();
+            oscPlanetary.type = 'sine';
+            oscPlanetary.frequency.value = this.planetaryFrequency;
+            const gainPlanetary = this.audioContext.createGain();
+            gainPlanetary.gain.value = 0.4;
+            oscPlanetary.connect(gainPlanetary);
+            gainPlanetary.connect(this.gainNode);
+            oscPlanetary.start();
+            this.oscillators.push(oscPlanetary);
+        }
         
-        // Connect right channel
-        this.oscRight.connect(gainRight);
-        gainRight.connect(merger, 0, 1);
+        // Create binaural beat oscillators if active
+        if (this.binauralBeat > 0) {
+            const beatDiff = this.binauralBeat * this.binauralMix;
+            
+            // Left ear
+            this.oscLeft = this.audioContext.createOscillator();
+            this.oscLeft.type = 'sine';
+            this.oscLeft.frequency.value = primaryFreq;
+            const gainLeft = this.audioContext.createGain();
+            gainLeft.gain.value = 0.5;
+            this.oscLeft.connect(gainLeft);
+            gainLeft.connect(merger, 0, 0);
+            this.oscLeft.start();
+            this.oscillators.push(this.oscLeft);
+            
+            // Right ear (slightly different frequency for binaural)
+            this.oscRight = this.audioContext.createOscillator();
+            this.oscRight.type = 'sine';
+            this.oscRight.frequency.value = primaryFreq + beatDiff;
+            const gainRight = this.audioContext.createGain();
+            gainRight.gain.value = 0.5;
+            this.oscRight.connect(gainRight);
+            gainRight.connect(merger, 0, 1);
+            this.oscRight.start();
+            this.oscillators.push(this.oscRight);
+            
+            merger.connect(this.gainNode);
+        }
         
         // Connect to output
-        merger.connect(this.gainNode);
         this.gainNode.connect(this.audioContext.destination);
-        
-        // Start oscillators
-        this.oscLeft.start();
-        this.oscRight.start();
         
         this.isPlaying = true;
         
@@ -198,18 +300,20 @@ class SomaticsLab {
     }
     
     stopAudio() {
-        if (this.oscLeft) {
-            this.oscLeft.stop();
-            this.oscLeft.disconnect();
-        }
-        if (this.oscRight) {
-            this.oscRight.stop();
-            this.oscRight.disconnect();
+        // Stop all oscillators
+        if (this.oscillators) {
+            this.oscillators.forEach(osc => {
+                try {
+                    osc.stop();
+                    osc.disconnect();
+                } catch (e) {}
+            });
         }
         if (this.gainNode) {
             this.gainNode.disconnect();
         }
         
+        this.oscillators = [];
         this.oscLeft = null;
         this.oscRight = null;
         this.gainNode = null;
@@ -225,11 +329,9 @@ class SomaticsLab {
     updateAudio() {
         if (!this.isPlaying) return;
         
-        this.oscLeft.frequency.setValueAtTime(this.baseFrequency, this.audioContext.currentTime);
-        this.oscRight.frequency.setValueAtTime(
-            this.baseFrequency + (this.binauralBeat * this.binauralMix),
-            this.audioContext.currentTime
-        );
+        // Restart audio with new settings
+        this.stopAudio();
+        this.startAudio();
     }
     
     drawWaves() {
