@@ -247,15 +247,49 @@ class SomaticsLab {
         
         // Create oscillators for planetary frequency
         if (this.planetaryFrequency) {
-            const oscPlanetary = this.audioContext.createOscillator();
-            oscPlanetary.type = 'sine';
-            oscPlanetary.frequency.value = this.planetaryFrequency;
-            const gainPlanetary = this.audioContext.createGain();
-            gainPlanetary.gain.value = 0.4;
-            oscPlanetary.connect(gainPlanetary);
-            gainPlanetary.connect(this.gainNode);
-            oscPlanetary.start();
-            this.oscillators.push(oscPlanetary);
+            if (this.planetaryFrequency < 20) {
+                // Sub-audible frequency - use carrier tone with amplitude modulation
+                // This lets you "hear" the rhythm of infrasound like Schumann resonance
+                const carrierFreq = 200; // Audible carrier tone
+                
+                const oscCarrier = this.audioContext.createOscillator();
+                oscCarrier.type = 'sine';
+                oscCarrier.frequency.value = carrierFreq;
+                
+                // Create LFO (Low Frequency Oscillator) for amplitude modulation
+                const lfo = this.audioContext.createOscillator();
+                lfo.type = 'sine';
+                lfo.frequency.value = this.planetaryFrequency; // e.g., 7.83 Hz
+                
+                // Create gain nodes for modulation
+                const lfoGain = this.audioContext.createGain();
+                lfoGain.gain.value = 0.4; // Modulation depth
+                
+                const carrierGain = this.audioContext.createGain();
+                carrierGain.gain.value = 0.3;
+                
+                // Connect LFO to modulate carrier amplitude
+                lfo.connect(lfoGain);
+                lfoGain.connect(carrierGain.gain);
+                
+                oscCarrier.connect(carrierGain);
+                carrierGain.connect(this.gainNode);
+                
+                oscCarrier.start();
+                lfo.start();
+                this.oscillators.push(oscCarrier, lfo);
+            } else {
+                // Audible frequency - play directly
+                const oscPlanetary = this.audioContext.createOscillator();
+                oscPlanetary.type = 'sine';
+                oscPlanetary.frequency.value = this.planetaryFrequency;
+                const gainPlanetary = this.audioContext.createGain();
+                gainPlanetary.gain.value = 0.4;
+                oscPlanetary.connect(gainPlanetary);
+                gainPlanetary.connect(this.gainNode);
+                oscPlanetary.start();
+                this.oscillators.push(oscPlanetary);
+            }
         }
         
         // Create binaural beat oscillators if active
