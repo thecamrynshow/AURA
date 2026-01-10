@@ -83,6 +83,7 @@
                 
                 <!-- Geometry Selector -->
                 <div class="geometry-selector">
+                    <span class="geo-info-icon" data-tooltip="The dimensional space where resonance occurs. Higher dimensions reveal more complex standing wave patterns.">ⓘ</span>
                     <button class="geo-btn active" data-geo="1d" title="1D Standing Wave">
                         <span class="geo-icon">―</span>
                         <span class="geo-label">1D</span>
@@ -116,7 +117,7 @@
                     <div class="control-header">
                         <label>
                             Frequency
-                            <span class="info-icon" data-tooltip="How many wave cycles per second (measured in Hertz). Higher frequency = higher pitch. 440 Hz is concert A. Human hearing: 20-20,000 Hz.">ⓘ</span>
+                            <span class="info-icon" data-tooltip="How many wave cycles occur per second. Higher frequency = higher pitch. Measured in Hertz (Hz). Human hearing: 20-20,000 Hz.">ⓘ</span>
                         </label>
                         <span class="control-value" id="freq-display">440 Hz</span>
                     </div>
@@ -132,7 +133,7 @@
                     <div class="control-header">
                         <label>
                             Amplitude
-                            <span class="info-icon" data-tooltip="The height/intensity of the wave. Higher amplitude = louder sound, stronger vibration, more energy. Think of it as 'how big' the wave is.">ⓘ</span>
+                            <span class="info-icon" data-tooltip="The height or intensity of the wave. Higher amplitude = more energy = louder sound or brighter light.">ⓘ</span>
                         </label>
                         <span class="control-value" id="amp-display">80%</span>
                     </div>
@@ -143,7 +144,7 @@
                 <div class="control-group">
                     <label>
                         Waveform
-                        <span class="info-icon" data-tooltip="The shape of the wave. Sine = pure tone. Square/Saw = rich harmonics (overtones). Different waveforms create different timbres—why a violin sounds different from a flute at the same pitch.">ⓘ</span>
+                        <span class="info-icon" data-tooltip="The shape of the wave. Different shapes contain different combinations of harmonics, creating distinct sounds and patterns.">ⓘ</span>
                     </label>
                     <div class="waveform-grid">
                         <button class="wave-btn active" data-wave="sine" title="Sine - Pure tone">
@@ -169,7 +170,7 @@
                 <div class="control-group">
                     <label>
                         Medium
-                        <span class="info-icon" data-tooltip="The material the wave travels through. Sound travels at different speeds in different materials: Air (343 m/s), Water (1481 m/s), Tissue (1540 m/s), Bone (3500 m/s). This affects wavelength and resonance patterns.">ⓘ</span>
+                        <span class="info-icon" data-tooltip="The material the wave travels through. Each medium has different density and speed of sound, affecting wavelength.">ⓘ</span>
                     </label>
                     <div class="medium-grid">
                         <button class="medium-btn active" data-medium="water" style="--medium-color: #0ea5e9">
@@ -196,7 +197,7 @@
                     <div class="control-header">
                         <label>
                             Damping
-                            <span class="info-icon" data-tooltip="How quickly the wave loses energy over time. High damping = wave dies out fast (like hitting a pillow). Low damping = wave sustains longer (like a tuning fork). Affects how 'crisp' vs 'soft' patterns appear.">ⓘ</span>
+                            <span class="info-icon" data-tooltip="How quickly energy is absorbed by the medium. High damping = rapid energy loss. Biological tissues absorb more than water.">ⓘ</span>
                         </label>
                         <span class="control-value" id="damp-display">30%</span>
                     </div>
@@ -208,7 +209,7 @@
                     <div class="control-header">
                         <label>
                             Phase Offset
-                            <span class="info-icon" data-tooltip="Where in the wave cycle we start (0-360°). Like choosing where on a spinning wheel to begin. Changing phase shifts the entire wave pattern left/right without changing its shape.">ⓘ</span>
+                            <span class="info-icon" data-tooltip="(Advanced) The starting position in the wave cycle (0-360°). Shifting phase changes where nodes and antinodes appear.">ⓘ</span>
                         </label>
                         <span class="control-value" id="phase-display">0°</span>
                     </div>

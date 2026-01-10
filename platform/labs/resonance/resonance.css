@@ -658,12 +658,69 @@ html, body {
     transform: none;
 }
 
+/* Geometry info icon */
+.geo-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    font-style: normal;
+    color: var(--color-text-dim);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    cursor: help;
+    transition: all 0.2s ease;
+    position: relative;
+    margin-right: 8px;
+}
+
+.geo-info-icon:hover {
+    color: var(--color-plasma-cyan);
+    background: rgba(0, 255, 242, 0.2);
+}
+
+.geo-info-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 240px;
+    padding: 12px 14px;
+    background: rgba(15, 13, 36, 0.98);
+    border: 1px solid rgba(0, 255, 242, 0.3);
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text);
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.geo-info-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* Mobile tooltip adjustments */
 @media (max-width: 768px) {
     .info-icon::after {
         width: 200px;
         font-size: 0.75rem;
         padding: 10px 12px;
+    }
+    
+    .geo-info-icon::after {
+        width: 180px;
+        font-size: 0.75rem;
     }
 }
 
