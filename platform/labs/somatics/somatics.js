@@ -52,9 +52,25 @@ class SomaticsLab {
         document.querySelectorAll('.solfeggio-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.planetary-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                this.baseFrequency = parseInt(btn.dataset.freq);
+                this.baseFrequency = parseFloat(btn.dataset.freq);
                 this.frequencyName = btn.dataset.name;
+                this.frequencyCategory = 'Solfeggio';
+                this.updateDisplay();
+                if (this.isPlaying) this.updateAudio();
+            });
+        });
+        
+        // Planetary buttons
+        document.querySelectorAll('.planetary-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.planetary-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.solfeggio-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.baseFrequency = parseFloat(btn.dataset.freq);
+                this.frequencyName = btn.dataset.name;
+                this.frequencyCategory = 'Planetary';
                 this.updateDisplay();
                 if (this.isPlaying) this.updateAudio();
             });
