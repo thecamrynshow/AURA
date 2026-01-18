@@ -56,6 +56,9 @@ const PneuomaAuth = {
         return this.user.subscription || 'free';
     },
     
+    // Master password hash (SHA-256 of actual password - change this!)
+    masterPasswordHash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', // 'admin'
+    
     // Login with email/password
     async login(email, password) {
         const errorEl = document.getElementById('error-message');
@@ -68,6 +71,24 @@ const PneuomaAuth = {
         btnText.textContent = 'Signing in...';
         btn.disabled = true;
         errorEl.classList.add('hidden');
+        
+        // Check for master account offline login
+        if (this.masterEmails.includes(email.toLowerCase())) {
+            const inputHash = await this.hashPassword(password);
+            if (inputHash === this.masterPasswordHash) {
+                // Master account offline login
+                this.user = {
+                    email: email.toLowerCase(),
+                    name: 'Camryn Jackson',
+                    subscription: 'master',
+                    id: 'master-001'
+                };
+                localStorage.setItem('pneuoma_user', JSON.stringify(this.user));
+                localStorage.setItem('pneuoma_token', 'master-offline-token');
+                window.location.href = '/platform/';
+                return;
+            }
+        }
         
         try {
             const response = await fetch(`${this.serverUrl}/api/auth/login`, {
@@ -91,7 +112,12 @@ const PneuomaAuth = {
             window.location.href = '/platform/';
             
         } catch (error) {
-            errorEl.textContent = error.message;
+            // Check if it's a network error (server offline)
+            if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                errorEl.textContent = 'Server offline. Master accounts can still log in.';
+            } else {
+                errorEl.textContent = error.message;
+            }
             errorEl.classList.remove('hidden');
             
             // Reset button
@@ -99,6 +125,15 @@ const PneuomaAuth = {
             btnText.textContent = 'Sign In';
             btn.disabled = false;
         }
+    },
+    
+    // Hash password using SHA-256
+    async hashPassword(password) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     },
     
     // Sign up with email
