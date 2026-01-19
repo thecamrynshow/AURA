@@ -14,6 +14,8 @@ class SomaticsLab {
         this.baseFrequency = null; // No default selection
         this.frequencyName = 'None';
         this.frequencyCategory = null;
+        this.bodyFrequency = null;
+        this.bodyFreqName = 'None';
         this.planetaryFrequency = null;
         this.planetaryName = 'None';
         this.binauralBeat = 0; // No default selection
@@ -67,6 +69,26 @@ class SomaticsLab {
                     this.baseFrequency = parseFloat(btn.dataset.freq);
                     this.frequencyName = btn.dataset.name;
                     this.frequencyCategory = 'Solfeggio';
+                }
+                this.updateDisplay();
+                if (this.isPlaying) this.updateAudio();
+            });
+        });
+        
+        // Body Frequency buttons - toggle behavior
+        document.querySelectorAll('.body-freq-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.classList.contains('active')) {
+                    // Deselect - toggle off
+                    btn.classList.remove('active');
+                    this.bodyFrequency = null;
+                    this.bodyFreqName = 'None';
+                } else {
+                    // Select - deselect others in same category only
+                    document.querySelectorAll('.body-freq-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.bodyFrequency = parseFloat(btn.dataset.freq);
+                    this.bodyFreqName = btn.dataset.name;
                 }
                 this.updateDisplay();
                 if (this.isPlaying) this.updateAudio();
@@ -137,25 +159,36 @@ class SomaticsLab {
         let freqDisplay = '--';
         let nameDisplay = 'Select a frequency';
         let categoryDisplay = '';
+        let freqParts = [];
+        let nameParts = [];
+        let catParts = [];
         
-        // Show base frequency if selected
+        // Show base frequency if selected (Solfeggio)
         if (this.baseFrequency) {
-            freqDisplay = this.baseFrequency;
-            nameDisplay = this.frequencyName;
-            categoryDisplay = 'Solfeggio';
+            freqParts.push(this.baseFrequency);
+            nameParts.push(this.frequencyName);
+            catParts.push('Solfeggio');
         }
-        // Show planetary if selected (overrides or shows alongside)
+        
+        // Show body frequency if selected
+        if (this.bodyFrequency) {
+            freqParts.push(this.bodyFrequency);
+            nameParts.push(this.bodyFreqName);
+            catParts.push('Body');
+        }
+        
+        // Show planetary if selected
         if (this.planetaryFrequency) {
-            if (this.baseFrequency) {
-                // Both selected - show combined
-                freqDisplay = `${this.baseFrequency} + ${this.planetaryFrequency}`;
-                nameDisplay = `${this.frequencyName} + ${this.planetaryName}`;
-                categoryDisplay = 'Solfeggio + Planetary';
-            } else {
-                freqDisplay = this.planetaryFrequency;
-                nameDisplay = this.planetaryName;
-                categoryDisplay = 'Planetary';
-            }
+            freqParts.push(this.planetaryFrequency);
+            nameParts.push(this.planetaryName);
+            catParts.push('Planetary');
+        }
+        
+        // Build display strings
+        if (freqParts.length > 0) {
+            freqDisplay = freqParts.join(' + ');
+            nameDisplay = nameParts.join(' + ');
+            categoryDisplay = catParts.join(' + ');
         }
         
         // Add binaural info if active
@@ -164,10 +197,8 @@ class SomaticsLab {
                 categoryDisplay += ` + ${this.binauralState} (${this.binauralBeat}Hz)`;
             } else {
                 categoryDisplay = `${this.binauralState} Brainwave (${this.binauralBeat}Hz)`;
-                if (!this.baseFrequency && !this.planetaryFrequency) {
-                    freqDisplay = this.binauralBeat;
-                    nameDisplay = `${this.binauralState} Entrainment`;
-                }
+                freqDisplay = this.binauralBeat;
+                nameDisplay = `${this.binauralState} Entrainment`;
             }
         }
         
@@ -206,7 +237,7 @@ class SomaticsLab {
     
     startAudio() {
         // Check if anything is selected
-        if (!this.baseFrequency && !this.planetaryFrequency && this.binauralBeat === 0) {
+        if (!this.baseFrequency && !this.bodyFrequency && !this.planetaryFrequency && this.binauralBeat === 0) {
             alert('Please select at least one frequency or brainwave to play.');
             return;
         }
@@ -229,8 +260,8 @@ class SomaticsLab {
         // Track all oscillators for cleanup
         this.oscillators = [];
         
-        // Determine primary frequency for binaural (use base, or planetary, or default 200Hz carrier)
-        let primaryFreq = this.baseFrequency || this.planetaryFrequency || 200;
+        // Determine primary frequency for binaural (use base, body, or planetary, or default 200Hz carrier)
+        let primaryFreq = this.baseFrequency || this.bodyFrequency || this.planetaryFrequency || 200;
         
         // Create oscillators for base frequency (Solfeggio)
         if (this.baseFrequency) {
@@ -243,6 +274,19 @@ class SomaticsLab {
             gainBase.connect(this.gainNode);
             oscBase.start();
             this.oscillators.push(oscBase);
+        }
+        
+        // Create oscillators for body frequency
+        if (this.bodyFrequency) {
+            const oscBody = this.audioContext.createOscillator();
+            oscBody.type = 'sine';
+            oscBody.frequency.value = this.bodyFrequency;
+            const gainBody = this.audioContext.createGain();
+            gainBody.gain.value = 0.5;
+            oscBody.connect(gainBody);
+            gainBody.connect(this.gainNode);
+            oscBody.start();
+            this.oscillators.push(oscBody);
         }
         
         // Create oscillators for planetary frequency
