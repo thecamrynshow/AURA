@@ -5,7 +5,23 @@
 **PNEUOMA** develops therapeutic wellness technology that helps individuals and groups regulate their nervous systems through breathwork, AI companions, interactive games, and immersive experiences.
 
 **Website:** [pneuoma.com](https://pneuoma.com)  
-**Contact:** camrynjackson@pneuoma.com
+**Contact:** camrynjackson@pneuoma.com  
+**PNEU App:** [Download on App Store](https://apps.apple.com/us/app/pneu/id6757112120)
+
+---
+
+## 📱 Published Products
+
+### PNEU — iOS App (LIVE on App Store)
+- **[Download PNEU](https://apps.apple.com/us/app/pneu/id6757112120)**
+- Guided breathing synced to 65 BPM (healthy resting heart rate)
+- Voice guidance from Mr. Jackson
+- Family profiles (Adult, Teen, Child)
+- 20+ achievements and progress tracking
+- 12 languages supported
+- Haptic feedback integration
+- Privacy-first (data stays on device)
+- Crisis resources included
 
 ---
 
