@@ -139,7 +139,13 @@ html, body {
 .founder-line {
     font-size: 1.15rem;
     color: var(--text-secondary);
-    margin-bottom: 3rem;
+    margin-bottom: 0.75rem;
+}
+
+.support-line {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
 }
 
 .slide-footer {
@@ -209,6 +215,12 @@ html, body {
     color: var(--text-secondary);
     text-align: center;
     margin-top: 2rem;
+}
+
+.insight.insight-secondary {
+    font-size: 1rem;
+    margin-top: 1rem;
+    color: var(--text-muted);
 }
 
 .insight em {
@@ -556,6 +568,13 @@ html, body {
 .timeline-milestone {
     color: var(--text-secondary);
     font-size: 0.95rem;
+}
+
+.timeline-detail {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
 }
 
 /* Vision */

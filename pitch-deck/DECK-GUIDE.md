@@ -45,29 +45,31 @@ End: #06b6d4
 ### Slide 1: Title
 - Logo animation (breath rings)
 - **PNEUOMA**
-- "Nervous system regulation infrastructure for schools"
+- "Nervous System Regulation Infrastructure for Schools"
 - "Camryn Jackson · Founder"
-- pneuoma.com
+- "Built by a school leader. Designed for real classrooms."
+- pneuoma.com · 2026
 
 ### Slide 2: The Problem
 - **"Schools are facing a regulation crisis."**
-- "Dysregulation → escalation, burnout, lost learning."
-- Insight: "Existing tools are reactive or fragmented."
+- "Dysregulation → escalation → burnout → lost learning."
+- Insight: "Existing tools are reactive, fragmented, or optional."
 
 ### Slide 3: Why Current Solutions Fail
-- **"Why current solutions fail."**
+- **"Why current approaches fail"**
 - SEL = curriculum, not infrastructure
-- Behavior systems = symptom management
-- Wellness tools = add-ons, not integrated
-- Anchor: "Schools lack proactive nervous system infrastructure."
+- Behavior systems = symptom management after escalation
+- Wellness programs = add-ons, not embedded into the school day
+- Anchor: "Schools lack proactive nervous-system infrastructure."
 
 ### Slide 4: The Insight
 - **"Regulation must be built in, not added on."**
-- "The nervous system is foundational to learning & safety."
+- "The nervous system is foundational to: Learning, Safety, Behavior, Retention"
+- "Without regulation, every other intervention leaks."
 
 ### Slide 5: The Solution
 - **"Regulation through play, ritual, and breath."**
-- Designed for real school constraints: lightweight, implementable, repeatable
+- Designed for real school constraints: lightweight · implementable · repeatable
 - Pillars:
   - 🎮 Play
   - 🔁 Ritual
@@ -77,37 +79,47 @@ End: #06b6d4
 - Biofeedback-powered games
 - Daily regulation rituals
 - Tools for students + educators
-- Note: Initial deployment focused on K-12 school environments
+- Outcome line: "Designed to reduce escalation, recovery time, and educator burnout while increasing time-on-task."
+- Note: Initial deployment: K-12 school environments
 
 ### Slide 7: Traction / Validation
-- Pilot-stage validation
+- Traction
 - 9+ years practitioner-led development
-- Platform built and live
-- School pilots launching 2026
+- Live platform built and operational
+- 2026 school pilots launching
+- Current stage: Pilot validation
+- Optional: "Built from lived experience inside K-12 systems."
 
-### Slide 8: Market
-- Intersection of education + health + gaming
+### Slide 8: Market Focus
+- Built for the intersection of education, health, and gaming
 - Initial focus: U.S. K-12 schools
+- Expansion pathways validated through institutional adoption
 
 ### Slide 9: Business Model
 - School-first licensing
-- Primary: B2B schools (annual institutional licensing, low four figures per school, pilot-refined)
-- Secondary (future): healthcare, families
+- Primary: B2B schools (low four figures per school, annual institutional licensing, includes student + educator tools)
+- Future pathways (post-validation): healthcare, families
+- Pricing refined through pilots → conversion
 
 ### Slide 10: Roadmap
-- 2026: Pilot validation
-- 2027: First paid school partners
-- Repeatable deployment model
+- 2026: Pilot validation, outcome measurement, deployment refinement
+- 2027: First paid school partners, pilot → paid conversion, repeatable onboarding playbook
+- 2028: Scalable deployment model, district-level expansion
 
 ### Slide 11: Founder
 - Camryn Jackson, Founder
-- Education leadership background
-- Built from lived experience
+- Former school leader (Dean / Athletic Director)
+- Built from lived experience in high-needs school environments
 - University of Michigan alumnus
+- Founder-led insight + execution
 
 ### Slide 12: Why Desai
-- Partner during pilot → paid conversion
-- Mentorship, refinement, execution support
+- "Desai is the right partner for this stage."
+- Support during pilot → paid conversion
+- Mentorship from operators who understand scaling responsibly
+- Refinement of deployment, pricing, and institutional adoption
+- Execution support from validation to repeatable revenue
+- Goal: "Build regulation infrastructure that schools can actually sustain."
 
 ---
 
