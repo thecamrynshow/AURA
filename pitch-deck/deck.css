@@ -136,6 +136,12 @@ html, body {
     line-height: 1.6;
 }
 
+.founder-line {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+}
+
 .slide-footer {
     display: flex;
     justify-content: center;
@@ -192,6 +198,12 @@ html, body {
     line-height: 1.5;
 }
 
+.problem-chain {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin: 1rem 0 2.5rem;
+}
+
 .insight {
     font-size: 1.25rem;
     color: var(--text-secondary);
@@ -214,7 +226,7 @@ html, body {
 
 .pillars {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
 }
 
@@ -244,7 +256,7 @@ html, body {
 /* Platform Grid */
 .platform-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 2rem;
     margin-top: 3rem;
 }
@@ -344,6 +356,12 @@ html, body {
     padding: 0.75rem 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 1.1rem;
+}
+
+.founder-role {
+    color: var(--accent-primary);
+    font-weight: 600;
+    margin: -1rem 0 2rem;
 }
 
 .metric {

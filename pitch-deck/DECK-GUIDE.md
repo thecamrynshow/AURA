@@ -45,87 +45,69 @@ End: #06b6d4
 ### Slide 1: Title
 - Logo animation (breath rings)
 - **PNEUOMA**
-- "The Operating System for Human Regulation"
-- "Helping kids and adults calm their minds, focus better, and feel safe — every day, through play."
+- "Nervous system regulation infrastructure for schools"
+- "Camryn Jackson · Founder"
+- pneuoma.com
 
 ### Slide 2: The Problem
-- **"The nervous system crisis is here."**
-- Stats:
-  - 1 in 5 children have diagnosable mental health condition
-  - 70% of teachers report students can't regulate emotions
-  - $280B annual cost of anxiety & depression in US
-- Insight: "Traditional approaches address behavior *after* breakdown. We train the nervous system *before* it happens."
+- **"Schools are facing a regulation crisis."**
+- "Dysregulation → escalation, burnout, lost learning."
+- Insight: "Existing tools are reactive or fragmented."
 
-### Slide 3: The Solution
-- **"Regulation through play."**
-- 4 Pillars:
-  - 🌬️ Breath - Games controlled by breathing
-  - 🎵 Voice - Sound and humming interactions
-  - ✋ Touch - Gentle, rhythmic interactions
-  - 🧘 Presence - Stillness and body awareness
+### Slide 3: Why Current Solutions Fail
+- **"Why current solutions fail."**
+- SEL = curriculum, not infrastructure
+- Behavior systems = symptom management
+- Wellness tools = add-ons, not integrated
+- Anchor: "Schools lack proactive nervous system infrastructure."
 
-### Slide 4: Platform Overview
-- **"A complete regulation ecosystem."**
-- Grid:
-  - 25+ Games
-  - 8 Rituals
-  - 6 Multiplayer modes
-  - 4+ Age groups
+### Slide 4: The Insight
+- **"Regulation must be built in, not added on."**
+- "The nervous system is foundational to learning & safety."
 
-### Slide 5: Featured Games
-- **"Games that train regulation."**
-- 4 game cards with visuals:
-  - Project AURA
-  - Dragon's Breath
-  - Tidepool
-  - Echo Garden
+### Slide 5: The Solution
+- **"Regulation through play, ritual, and breath."**
+- Designed for real school constraints: lightweight, implementable, repeatable
+- Pillars:
+  - 🎮 Play
+  - 🔁 Ritual
+  - 🌬️ Breath
 
-### Slide 6: For Schools
-- **"Infrastructure for education."**
-- Two columns:
-  - What Schools Get (features list)
-  - Measured Impact (metrics)
-- CTA Banner: "Now accepting pilot districts — Fall 2026"
+### Slide 6: What the Product Does
+- Biofeedback-powered games
+- Daily regulation rituals
+- Tools for students + educators
+- Note: Initial deployment focused on K-12 school environments
 
-### Slide 7: Market Opportunity
-- **"A massive, growing opportunity."**
-- Visual:
-  - $500B+ Global Wellness (circle)
-  - $13.5B EdTech Mental Health
-  - $4.2B Digital Therapeutics
-  - $2.1B Kids Mental Wellness
+### Slide 7: Traction / Validation
+- Pilot-stage validation
+- 9+ years practitioner-led development
+- Platform built and live
+- School pilots launching 2026
 
-### Slide 8: Business Model
-- **"Multiple revenue streams."**
-- 3 cards:
-  - B2B Schools: $5-15/student/year
-  - B2B Healthcare: Per-seat licensing
-  - B2C Families: $9.99/mo premium
+### Slide 8: Market
+- Intersection of education + health + gaming
+- Initial focus: U.S. K-12 schools
 
-### Slide 9: Traction
-- **"Early momentum."**
-- Stats: 25+ games, 6 multiplayer, 8 rituals, Platform live
-- Timeline: 2025 (done) → 2026 (current) → 2027 (future)
+### Slide 9: Business Model
+- School-first licensing
+- Primary: B2B schools (annual institutional licensing, low four figures per school, pilot-refined)
+- Secondary (future): healthcare, families
 
-### Slide 10: Vision
-- Quote: "What if the most powerful technology in the world wasn't built to capture attention — but to regulate it?"
-- Statement: "PNEUOMA is building the nervous system layer of modern life."
+### Slide 10: Roadmap
+- 2026: Pilot validation
+- 2027: First paid school partners
+- Repeatable deployment model
 
-### Slide 11: The Ask
-- **"Partner with us."**
-- 3 cards:
-  - 🏫 Schools - Join pilot program
-  - 🏥 Healthcare - Integrate into practice
-  - 💰 Investors - Fund the future
+### Slide 11: Founder
+- Camryn Jackson, Founder
+- Education leadership background
+- Built from lived experience
+- University of Michigan alumnus
 
-### Slide 12: Contact
-- Logo
-- **PNEUOMA**
-- "Breathe. Play. Regulate."
-- Contact info:
-  - Camryn Jackson, Founder & Architect
-  - camrynjackson@pneuoma.com
-  - pneuoma.com
+### Slide 12: Why Desai
+- Partner during pilot → paid conversion
+- Mentorship, refinement, execution support
 
 ---
 
