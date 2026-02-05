@@ -66,45 +66,325 @@
         </div>
     </section>
 
-    <!-- The Regulation Loop - Featured Section -->
-    <section class="preview-section" style="padding: 64px 0; display: block !important; background: rgba(139, 92, 246, 0.05);">
+    <!-- The Regulation Loop - Featured Hero Section -->
+    <section class="regulation-loop-hero" style="padding: 80px 0; position: relative; overflow: hidden;">
+        <style>
+            .regulation-loop-hero {
+                background: linear-gradient(180deg, rgba(139, 92, 246, 0.08) 0%, transparent 100%);
+            }
+            .regulation-loop-hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);
+            }
+            .loop-showcase {
+                display: grid;
+                grid-template-columns: 1fr 1.2fr;
+                gap: 60px;
+                align-items: center;
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+            @media (max-width: 900px) {
+                .loop-showcase {
+                    grid-template-columns: 1fr;
+                    text-align: center;
+                }
+                .loop-visual {
+                    order: -1;
+                    margin-bottom: 20px;
+                }
+            }
+            .loop-visual {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 320px;
+            }
+            .loop-animation {
+                position: relative;
+                width: 280px;
+                height: 280px;
+            }
+            .loop-ring {
+                position: absolute;
+                border-radius: 50%;
+                border: 2px solid transparent;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            .loop-ring-1 {
+                width: 280px;
+                height: 280px;
+                border-color: rgba(139, 92, 246, 0.15);
+                animation: loopPulse 4s ease-in-out infinite;
+            }
+            .loop-ring-2 {
+                width: 220px;
+                height: 220px;
+                border-color: rgba(139, 92, 246, 0.25);
+                animation: loopPulse 4s ease-in-out infinite 0.5s;
+            }
+            .loop-ring-3 {
+                width: 160px;
+                height: 160px;
+                border-color: rgba(139, 92, 246, 0.4);
+                animation: loopPulse 4s ease-in-out infinite 1s;
+            }
+            .loop-core {
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(100, 255, 218, 0.2));
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 0 60px rgba(139, 92, 246, 0.4);
+            }
+            .loop-core svg {
+                color: #64ffda;
+                opacity: 0.9;
+            }
+            .loop-dots {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                animation: rotateDots 20s linear infinite;
+            }
+            .loop-dot {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background: rgba(139, 92, 246, 0.6);
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+            }
+            .loop-dot:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-140px); }
+            .loop-dot:nth-child(2) { transform: translate(-50%, -50%) rotate(60deg) translateY(-140px); }
+            .loop-dot:nth-child(3) { transform: translate(-50%, -50%) rotate(120deg) translateY(-140px); }
+            .loop-dot:nth-child(4) { transform: translate(-50%, -50%) rotate(180deg) translateY(-140px); }
+            .loop-dot:nth-child(5) { transform: translate(-50%, -50%) rotate(240deg) translateY(-140px); }
+            .loop-dot:nth-child(6) { transform: translate(-50%, -50%) rotate(300deg) translateY(-140px); }
+            @keyframes loopPulse {
+                0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.7; }
+            }
+            @keyframes rotateDots {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .loop-info {
+                padding: 20px 0;
+            }
+            .loop-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 16px;
+                background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.15));
+                border: 1px solid rgba(139, 92, 246, 0.3);
+                border-radius: 24px;
+                font-size: 0.85rem;
+                color: rgba(255, 255, 255, 0.9);
+                margin-bottom: 20px;
+            }
+            .loop-title {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 3rem;
+                font-weight: 400;
+                color: #fff;
+                margin-bottom: 8px;
+                letter-spacing: -0.02em;
+            }
+            .loop-tagline {
+                font-size: 1.1rem;
+                color: #64ffda;
+                margin-bottom: 20px;
+                font-weight: 500;
+            }
+            .loop-desc {
+                font-size: 1.05rem;
+                color: rgba(255, 255, 255, 0.75);
+                line-height: 1.7;
+                margin-bottom: 28px;
+                max-width: 500px;
+            }
+            .loop-features {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px 24px;
+                margin-bottom: 32px;
+            }
+            @media (max-width: 900px) {
+                .loop-features {
+                    max-width: 400px;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+                .loop-desc {
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+            }
+            .loop-feature {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 0.95rem;
+                color: rgba(255, 255, 255, 0.8);
+            }
+            .loop-feature-icon {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: rgba(139, 92, 246, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            .loop-feature-icon svg {
+                width: 12px;
+                height: 12px;
+                color: #8b5cf6;
+            }
+            .loop-actions {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            @media (max-width: 900px) {
+                .loop-actions {
+                    justify-content: center;
+                }
+            }
+            .loop-actions .btn-primary {
+                background: linear-gradient(135deg, #8b5cf6, #6366f1);
+                padding: 14px 28px;
+                font-size: 1rem;
+            }
+            .loop-actions .btn-primary:hover {
+                background: linear-gradient(135deg, #9d7afa, #7c7ff7);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+            }
+            .loop-status {
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.5);
+            }
+        </style>
         <div class="section-container">
-            <p class="section-eyebrow" style="display: block !important;">PNEUOMA Labs</p>
-            <h2 class="section-title" style="display: block !important; margin-bottom: 24px;">the Regulation Loop</h2>
-            
-            <div class="apps-preview-grid" style="grid-template-columns: 1fr; max-width: 900px; margin: 40px auto 0; display: grid !important;">
-                <div class="app-card featured" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
-                    <div class="app-icon" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 6v6l4 2"/>
-                            <path d="M8 12h8" stroke-dasharray="2 2"/>
-                        </svg>
+            <div class="loop-showcase">
+                <div class="loop-visual">
+                    <div class="loop-animation">
+                        <div class="loop-ring loop-ring-1"></div>
+                        <div class="loop-ring loop-ring-2"></div>
+                        <div class="loop-ring loop-ring-3"></div>
+                        <div class="loop-dots">
+                            <div class="loop-dot"></div>
+                            <div class="loop-dot"></div>
+                            <div class="loop-dot"></div>
+                            <div class="loop-dot"></div>
+                            <div class="loop-dot"></div>
+                            <div class="loop-dot"></div>
+                        </div>
+                        <div class="loop-core">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2v4"/>
+                                <path d="M12 18v4"/>
+                                <path d="M4.93 4.93l2.83 2.83"/>
+                                <path d="M16.24 16.24l2.83 2.83"/>
+                                <path d="M2 12h4"/>
+                                <path d="M18 12h4"/>
+                                <path d="M4.93 19.07l2.83-2.83"/>
+                                <path d="M16.24 7.76l2.83-2.83"/>
+                            </svg>
+                        </div>
                     </div>
-                    <h3>the Regulation Loop</h3>
-                    <p class="app-tagline">Invisible Infrastructure for Classrooms</p>
-                    <p class="app-desc">
+                </div>
+                <div class="loop-info">
+                    <div class="loop-badge">
+                        <span>🧪</span>
+                        <span>PNEUOMA Labs</span>
+                    </div>
+                    <h2 class="loop-title">the Regulation Loop</h2>
+                    <p class="loop-tagline">Invisible Infrastructure for Classrooms</p>
+                    <p class="loop-desc">
                         A closed-loop regulation system embedded into daily transitions. 
                         Automatic, brief, and attached to function — not emotion processing. 
                         Like traffic lights for the nervous system.
                     </p>
-                    <ul class="app-features">
-                        <li>Auto-start scheduled loops</li>
-                        <li>Bell/intercom integration</li>
-                        <li>3-minute regulation cycles</li>
-                        <li>Return-to-function cues</li>
-                        <li>Micro-feedback system</li>
-                        <li>Kiosk mode for classrooms</li>
-                    </ul>
-                    <div style="margin-top: 24px;">
-                        <a href="regulation-loop/" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                    <div class="loop-features">
+                        <div class="loop-feature">
+                            <span class="loop-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </span>
+                            <span>Auto-start scheduled loops</span>
+                        </div>
+                        <div class="loop-feature">
+                            <span class="loop-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </span>
+                            <span>Bell/intercom integration</span>
+                        </div>
+                        <div class="loop-feature">
+                            <span class="loop-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </span>
+                            <span>3-minute regulation cycles</span>
+                        </div>
+                        <div class="loop-feature">
+                            <span class="loop-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </span>
+                            <span>Return-to-function cues</span>
+                        </div>
+                        <div class="loop-feature">
+                            <span class="loop-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </span>
+                            <span>Micro-feedback system</span>
+                        </div>
+                        <div class="loop-feature">
+                            <span class="loop-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </span>
+                            <span>Kiosk mode for classrooms</span>
+                        </div>
+                    </div>
+                    <div class="loop-actions">
+                        <a href="regulation-loop/" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 10px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
                             </svg>
                             <span>Launch Regulation Loop</span>
                         </a>
+                        <span class="loop-status">✨ Available Now</span>
                     </div>
-                    <span class="app-status">✨ Available Now · PNEUOMA Labs</span>
                 </div>
             </div>
         </div>
