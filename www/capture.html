@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>PNEUOMA — Capture Incident</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#07080d">
@@ -48,7 +48,7 @@
             <div class="processing-state">
                 <div class="spinner"></div>
                 <div class="processing-label" id="processing-label">Transcribing audio...</div>
-                <div class="processing-sub">This usually takes a few seconds</div>
+                <div class="processing-sub" id="processing-sub">This usually takes a few seconds</div>
                 <div id="transcript-preview" class="hidden" style="margin-top:16px;max-width:320px">
                     <div class="transcript-banner">
                         <div class="label">Transcript</div>
@@ -61,6 +61,12 @@
         <!-- STATE: Form (review or manual) -->
         <div id="state-form" class="hidden">
             <div id="transcript-banner-form"></div>
+            <div id="refine-area" style="display:none">
+                <button type="button" class="btn btn-refine mb-16" onclick="openAIChat()">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    <div style="text-align:left"><div style="font-weight:700">Refine with AI Assistant</div><div style="font-size:11px;color:var(--text-muted);font-weight:400">Clarify details, manage student names, adjust report</div></div>
+                </button>
+            </div>
             <div id="alert-area"></div>
             <form id="incident-form" onsubmit="submitForm(event)">
                 <div class="form-row">
@@ -92,9 +98,14 @@
                 <div class="form-group">
                     <label class="form-label">Students Involved</label>
                     <div class="tag-list" id="tags-students"></div>
+                    <div id="student-editor"></div>
                     <div class="tag-input-wrap">
-                        <input type="text" class="form-input" id="input-students" placeholder="Student name...">
-                        <button type="button" class="tag-add-btn" onclick="addTag('students')">Add</button>
+                        <input type="text" class="form-input" id="input-students" placeholder="Student real name (stored privately)...">
+                        <button type="button" class="tag-add-btn" onclick="addStudent()">Add</button>
+                    </div>
+                    <div class="anonymize-notice" id="anon-notice" style="display:none">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        Names anonymized by default. Tap a student to change labeling.
                     </div>
                 </div>
                 <div class="form-group">
@@ -145,10 +156,30 @@
 
     <div id="bottom-nav"></div>
 
+    <!-- AI Refine Chat Panel -->
+    <div id="ai-chat-backdrop" class="ai-chat-backdrop hidden" onclick="closeAIChat()"></div>
+    <div id="ai-chat-panel" class="ai-chat-panel">
+        <div class="ai-chat-header">
+            <div>
+                <h3 style="font-size:14px;font-weight:700">AI Assistant</h3>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:2px">Clarify details, manage names, refine your report</p>
+            </div>
+            <button class="modal-close" onclick="closeAIChat()">&times;</button>
+        </div>
+        <div class="ai-chat-messages" id="ai-chat-messages"></div>
+        <div class="ai-chat-input">
+            <input type="text" class="form-input" id="ai-chat-input" placeholder="e.g. &quot;Keep Student B anonymous&quot;" onkeydown="if(event.key==='Enter')sendAIMessage()">
+            <button class="tag-add-btn" onclick="sendAIMessage()" style="padding:12px 16px">Send</button>
+        </div>
+    </div>
+
     <script src="app.js"></script>
     <script>
         document.getElementById('top-nav').innerHTML = topNav();
         document.getElementById('bottom-nav').innerHTML = bottomNav('capture');
+
+        // Wake up Render server on page load (free tier cold start takes ~30s)
+        fetch(API_BASE + '/health').catch(() => {});
 
         // ==================== STATE ====================
         let isRecording = false;
@@ -157,7 +188,10 @@
         let recordTimer = null;
         let duration = 0;
         let currentTranscript = '';
-        const tags = { students: [], staff: [], witnesses: [] };
+        const tags = { staff: [], witnesses: [] };
+        let studentEntries = [];
+        let editingStudentIdx = -1;
+        let aiChatHistory = [];
 
         // ==================== INIT FORM OPTIONS ====================
         const locSelect = document.getElementById('f-location');
@@ -204,9 +238,9 @@
         const savedReporter = localStorage.getItem('pneuoma_reporter');
         if (savedReporter) document.getElementById('f-reporter').value = savedReporter;
 
-        // ==================== TAG INPUT ====================
+        // ==================== TAG INPUT (staff/witnesses) ====================
         function addTag(type) {
-            const input = document.getElementById(`input-${type}`);
+            const input = document.getElementById('input-' + type);
             const val = input.value.trim();
             if (!val || tags[type].includes(val)) return;
             tags[type].push(val);
@@ -220,18 +254,106 @@
         }
 
         function renderTags(type) {
-            const el = document.getElementById(`tags-${type}`);
+            const el = document.getElementById('tags-' + type);
             el.innerHTML = tags[type].map((t, i) =>
-                `<span class="tag-item">${escapeHtml(t)}<button class="tag-remove" onclick="removeTag('${type}',${i})">&times;</button></span>`
+                '<span class="tag-item">' + escapeHtml(t) + '<button class="tag-remove" onclick="removeTag(\'' + type + '\',' + i + ')">&times;</button></span>'
             ).join('');
         }
 
-        // Enter key adds tag
-        ['students', 'staff', 'witnesses'].forEach(type => {
-            document.getElementById(`input-${type}`).addEventListener('keydown', e => {
+        ['staff', 'witnesses'].forEach(type => {
+            document.getElementById('input-' + type).addEventListener('keydown', e => {
                 if (e.key === 'Enter') { e.preventDefault(); addTag(type); }
             });
         });
+
+        document.getElementById('input-students').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); addStudent(); }
+        });
+
+        // ==================== STUDENT IDENTITY MANAGEMENT ====================
+        function addStudent() {
+            const input = document.getElementById('input-students');
+            const name = input.value.trim();
+            if (!name) return;
+            if (studentEntries.some(s => s.realName.toLowerCase() === name.toLowerCase())) return;
+            const idx = studentEntries.length;
+            studentEntries.push({ realName: name, displayLabel: generateAlias(idx), labelMode: 'alias' });
+            input.value = '';
+            editingStudentIdx = -1;
+            renderStudents();
+        }
+
+        function removeStudent(idx) {
+            studentEntries.splice(idx, 1);
+            studentEntries.forEach((s, i) => {
+                if (s.labelMode === 'alias') s.displayLabel = generateAlias(i);
+            });
+            if (editingStudentIdx === idx) editingStudentIdx = -1;
+            else if (editingStudentIdx > idx) editingStudentIdx--;
+            renderStudents();
+        }
+
+        function toggleStudentEditor(idx) {
+            editingStudentIdx = editingStudentIdx === idx ? -1 : idx;
+            renderStudents();
+        }
+
+        function setStudentLabelMode(idx, mode) {
+            const s = studentEntries[idx];
+            s.labelMode = mode;
+            if (mode === 'alias') s.displayLabel = generateAlias(idx);
+            else if (mode === 'real') s.displayLabel = s.realName;
+            else if (mode === 'initials') s.displayLabel = getInitials(s.realName);
+            else if (mode === 'custom') s.displayLabel = s.displayLabel || s.realName;
+            renderStudents();
+        }
+
+        function setCustomLabel(idx) {
+            const input = document.getElementById('custom-label-' + idx);
+            if (input) studentEntries[idx].displayLabel = input.value.trim() || generateAlias(idx);
+        }
+
+        function renderStudents() {
+            const el = document.getElementById('tags-students');
+            const notice = document.getElementById('anon-notice');
+            if (studentEntries.length === 0) {
+                el.innerHTML = '';
+                notice.style.display = 'none';
+                document.getElementById('student-editor').innerHTML = '';
+                return;
+            }
+            notice.style.display = 'flex';
+            el.innerHTML = studentEntries.map((s, i) => {
+                const display = studentDisplayLabel(s, i);
+                const mode = s.labelMode || 'alias';
+                const isEd = editingStudentIdx === i;
+                const icons = { alias: '🔒', real: '👤', initials: 'AB', custom: '✏️' };
+                return '<span class="student-tag' + (isEd ? ' editing' : '') + '" onclick="toggleStudentEditor(' + i + ')">' +
+                    '<span class="s-icon ' + mode + '">' + icons[mode] + '</span> ' +
+                    escapeHtml(display) +
+                    '<button class="tag-remove" onclick="event.stopPropagation();removeStudent(' + i + ')">&times;</button>' +
+                '</span>';
+            }).join('');
+
+            const editorEl = document.getElementById('student-editor');
+            if (editingStudentIdx >= 0 && editingStudentIdx < studentEntries.length) {
+                const s = studentEntries[editingStudentIdx];
+                const idx = editingStudentIdx;
+                editorEl.innerHTML = '<div class="student-editor">' +
+                    '<div class="editor-label">🔒 Private name: <strong>' + escapeHtml(s.realName) + '</strong></div>' +
+                    '<div class="editor-label">Displays as: <strong>' + escapeHtml(studentDisplayLabel(s, idx)) + '</strong></div>' +
+                    '<div class="editor-modes">' +
+                    LABEL_MODES.map(m =>
+                        '<button class="mode-btn' + (s.labelMode === m.key ? ' active' : '') + '" onclick="setStudentLabelMode(' + idx + ',\'' + m.key + '\')">' + m.label + '</button>'
+                    ).join('') +
+                    '</div>' +
+                    (s.labelMode === 'custom' ?
+                        '<input type="text" class="form-input" id="custom-label-' + idx + '" value="' + escapeHtml(s.displayLabel) + '" placeholder="Custom label..." oninput="setCustomLabel(' + idx + ')" style="font-size:13px;padding:8px 12px;margin-top:8px">' : '') +
+                '</div>';
+            } else {
+                editorEl.innerHTML = '';
+            }
+        }
 
         // ==================== VOICE RECORDING ====================
         function getSupportedMimeType() {
@@ -250,9 +372,9 @@
 
         async function startRecording() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 16000, channelCount: 1 } });
                 const mimeType = getSupportedMimeType();
-                mediaRecorder = new MediaRecorder(stream, { mimeType });
+                mediaRecorder = new MediaRecorder(stream, { mimeType, audioBitsPerSecond: 32000 });
                 audioChunks = [];
 
                 mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
@@ -295,24 +417,33 @@
 
         async function processRecording(blob) {
             showState('processing');
-            document.getElementById('processing-label').textContent = 'Transcribing audio...';
+            const sub = document.getElementById('processing-sub');
+            const label = document.getElementById('processing-label');
+            const sizeMB = (blob.size / 1024 / 1024).toFixed(1);
+
+            label.textContent = 'Uploading audio...';
+            sub.textContent = sizeMB + ' MB — waking server if needed';
 
             try {
                 const formData = new FormData();
                 formData.append('audio', blob);
+
+                label.textContent = 'Transcribing audio...';
+                sub.textContent = 'OpenAI Whisper is converting speech to text';
                 const { transcript } = await api.postForm('/api/incidents/transcribe', formData);
                 currentTranscript = transcript;
 
-                document.getElementById('transcript-text').textContent = `"${transcript}"`;
+                document.getElementById('transcript-text').textContent = '"' + transcript + '"';
                 document.getElementById('transcript-preview').classList.remove('hidden');
-                document.getElementById('processing-label').textContent = 'Extracting incident details...';
 
+                label.textContent = 'Extracting incident details...';
+                sub.textContent = 'GPT-4o is structuring and polishing your report';
                 const parsed = await api.post('/api/incidents/parse', { transcript });
 
                 populateForm(parsed, transcript);
                 showState('form');
             } catch (err) {
-                document.getElementById('alert-area').innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+                document.getElementById('alert-area').innerHTML = '<div class="alert alert-error">' + escapeHtml(err.message) + '</div>';
                 showState('form');
             }
         }
@@ -334,7 +465,7 @@
                     b.className = b.textContent === data.severity ? `severity-btn active-${data.severity.toLowerCase()}` : 'severity-btn';
                 });
             }
-            if (data.studentsInvolved) { tags.students = data.studentsInvolved; renderTags('students'); }
+            if (data.studentsInvolved) { studentEntries = normalizeStudents(data.studentsInvolved); editingStudentIdx = -1; renderStudents(); }
             if (data.staffInvolved) { tags.staff = data.staffInvolved; renderTags('staff'); }
             if (data.witnesses) { tags.witnesses = data.witnesses; renderTags('witnesses'); }
             if (data.description) document.getElementById('f-desc').value = data.description;
@@ -348,11 +479,9 @@
             }
 
             if (transcript) {
-                document.getElementById('transcript-banner-form').innerHTML = `
-                    <div class="transcript-banner">
-                        <div class="label">Voice Transcript</div>
-                        <div class="text">"${escapeHtml(transcript)}"</div>
-                    </div>`;
+                document.getElementById('transcript-banner-form').innerHTML =
+                    '<div class="transcript-banner"><div class="label">Voice Transcript</div><div class="text">"' + escapeHtml(transcript) + '"</div></div>';
+                document.getElementById('refine-area').style.display = 'block';
             }
         }
 
@@ -373,7 +502,7 @@
                     location: document.getElementById('f-location').value,
                     incidentType: document.getElementById('f-type').value,
                     severity: selectedSeverity,
-                    studentsInvolved: tags.students,
+                    studentsInvolved: studentEntries,
                     staffInvolved: tags.staff,
                     witnesses: tags.witnesses,
                     description: document.getElementById('f-desc').value,
@@ -417,14 +546,18 @@
 
         function resetCapture() {
             currentTranscript = '';
-            tags.students = []; tags.staff = []; tags.witnesses = [];
-            ['students', 'staff', 'witnesses'].forEach(renderTags);
+            studentEntries = []; editingStudentIdx = -1; aiChatHistory = [];
+            tags.staff = []; tags.witnesses = [];
+            renderStudents();
+            ['staff', 'witnesses'].forEach(renderTags);
             document.getElementById('incident-form').reset();
             document.getElementById('f-date').value = todayISO();
             document.getElementById('f-time').value = nowTime();
             document.getElementById('alert-area').innerHTML = '';
             document.getElementById('transcript-banner-form').innerHTML = '';
             document.getElementById('transcript-preview').classList.add('hidden');
+            document.getElementById('refine-area').style.display = 'none';
+            document.getElementById('ai-chat-messages').innerHTML = '';
             selectedSeverity = 'Medium';
             sevGrid.querySelectorAll('.severity-btn').forEach(b => {
                 b.className = b.textContent === 'Medium' ? 'severity-btn active-medium' : 'severity-btn';
@@ -439,6 +572,124 @@
             document.getElementById('hint').textContent = 'Tap to start recording';
 
             showState('ready');
+        }
+
+        // ==================== AI REFINE CHAT ====================
+        function openAIChat() {
+            document.getElementById('ai-chat-backdrop').classList.remove('hidden');
+            document.getElementById('ai-chat-panel').classList.add('open');
+            if (aiChatHistory.length === 0) {
+                const stuList = studentEntries.map((s, i) => studentDisplayLabel(s, i) + ' (' + s.realName + ')').join(', ');
+                addChatMessage('assistant',
+                    'I\'ve reviewed the incident details.' +
+                    (studentEntries.length ? ' Students: ' + stuList + '.' : '') +
+                    ' What would you like to clarify or change?\n\n' +
+                    '• Add or remove students/staff/witnesses\n' +
+                    '• Change how names are labeled (alias, real, initials, custom)\n' +
+                    '• Correct or add missing details\n' +
+                    '• Adjust description, actions, or follow-up');
+            }
+            setTimeout(() => document.getElementById('ai-chat-input').focus(), 300);
+        }
+
+        function closeAIChat() {
+            document.getElementById('ai-chat-backdrop').classList.add('hidden');
+            document.getElementById('ai-chat-panel').classList.remove('open');
+        }
+
+        function addChatMessage(role, content) {
+            const msgs = document.getElementById('ai-chat-messages');
+            const div = document.createElement('div');
+            div.className = 'chat-msg ' + role;
+            div.textContent = content;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function gatherFormData() {
+            return {
+                date: document.getElementById('f-date').value,
+                time: document.getElementById('f-time').value,
+                location: document.getElementById('f-location').value,
+                incidentType: document.getElementById('f-type').value,
+                severity: selectedSeverity,
+                studentsInvolved: studentEntries,
+                staffInvolved: tags.staff,
+                witnesses: tags.witnesses,
+                description: document.getElementById('f-desc').value,
+                immediateAction: document.getElementById('f-action').value,
+                followUpNeeded: document.getElementById('f-followup').value,
+                deescalationStrategy: Array.from(selectedDeesc),
+            };
+        }
+
+        function applyAIUpdates(updates) {
+            if (updates.studentsInvolved) {
+                studentEntries = normalizeStudents(updates.studentsInvolved);
+                editingStudentIdx = -1;
+                renderStudents();
+            }
+            if (updates.staffInvolved) { tags.staff = updates.staffInvolved; renderTags('staff'); }
+            if (updates.witnesses) { tags.witnesses = updates.witnesses; renderTags('witnesses'); }
+            if (updates.description) document.getElementById('f-desc').value = updates.description;
+            if (updates.immediateAction) document.getElementById('f-action').value = updates.immediateAction;
+            if (updates.followUpNeeded) document.getElementById('f-followup').value = updates.followUpNeeded;
+            if (updates.severity) {
+                selectedSeverity = updates.severity;
+                sevGrid.querySelectorAll('.severity-btn').forEach(b => {
+                    b.className = b.textContent === updates.severity ? 'severity-btn active-' + updates.severity.toLowerCase() : 'severity-btn';
+                });
+            }
+            if (updates.location) {
+                const loc = document.getElementById('f-location');
+                const match = Array.from(loc.options).find(o => o.value.toLowerCase().includes(updates.location.toLowerCase()));
+                if (match) loc.value = match.value;
+            }
+            if (updates.incidentType) document.getElementById('f-type').value = updates.incidentType;
+            if (updates.deescalationStrategy) {
+                selectedDeesc = new Set(updates.deescalationStrategy);
+                deescGrid.querySelectorAll('.severity-btn').forEach(btn => {
+                    btn.className = selectedDeesc.has(btn.textContent) ? 'severity-btn active-medium' : 'severity-btn';
+                });
+            }
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('ai-chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+
+            addChatMessage('user', msg);
+            aiChatHistory.push({ role: 'user', content: msg });
+
+            const typing = document.createElement('div');
+            typing.className = 'chat-msg assistant';
+            typing.id = 'ai-typing';
+            typing.textContent = 'Thinking...';
+            typing.style.opacity = '0.5';
+            document.getElementById('ai-chat-messages').appendChild(typing);
+            document.getElementById('ai-chat-messages').scrollTop = document.getElementById('ai-chat-messages').scrollHeight;
+
+            try {
+                const result = await api.post('/api/incidents/refine', {
+                    message: msg,
+                    currentData: gatherFormData(),
+                    history: aiChatHistory
+                });
+
+                typing.remove();
+                addChatMessage('assistant', result.reply);
+                aiChatHistory.push({ role: 'assistant', content: result.reply });
+
+                if (result.updates) {
+                    applyAIUpdates(result.updates);
+                    addChatMessage('system', 'Form updated with changes');
+                }
+            } catch (err) {
+                typing.remove();
+                addChatMessage('system', 'Error: ' + err.message);
+            }
         }
     </script>
 </body>

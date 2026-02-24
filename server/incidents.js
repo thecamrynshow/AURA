@@ -410,4 +410,77 @@ Return ONLY valid JSON:
     }
 });
 
+// ==================== AI: REFINE INCIDENT (CONVERSATIONAL) ====================
+
+router.post('/refine', async (req, res) => {
+    if (!openai) {
+        return res.status(503).json({ error: 'OpenAI API key not configured.' });
+    }
+
+    try {
+        const { message, currentData, history } = req.body;
+        if (!message) return res.status(400).json({ error: 'No message provided' });
+
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [
+                {
+                    role: 'system',
+                    content: `You are an AI assistant helping a K-12 school administrator refine an incident report through natural conversation. You have full context of the current incident data.
+
+Current incident data:
+${JSON.stringify(currentData, null, 2)}
+
+Your role:
+- Help clarify incident details, correct errors, add missing information
+- Handle student identity/anonymization requests — administrators often need to protect student names for legal reasons (FERPA)
+- When the user wants to update fields, respond conversationally AND include a JSON code block with the exact field updates
+- Fix grammar and ensure professional language in any text updates
+- Be concise and helpful — this person is busy
+
+Student identity system:
+Each student has: { "realName": "actual name", "displayLabel": "what shows in reports", "labelMode": "alias|real|initials|custom" }
+- "alias" = Student A, Student B, etc. (DEFAULT — protects identity)
+- "real" = shows actual name
+- "initials" = J.S., M.K., etc.
+- "custom" = any label the recorder chooses
+
+When suggesting updates, include a JSON block at the END of your response:
+\`\`\`json
+{"updates": {"fieldName": "value"}}
+\`\`\`
+
+Available fields: studentsInvolved (array of student objects), staffInvolved (string array), witnesses (string array), description, immediateAction, followUpNeeded, severity, location, incidentType, deescalationStrategy (string array).
+
+If no updates are needed (just answering a question), respond without a JSON block.`
+                },
+                ...(history || []).map(m => ({ role: m.role, content: m.content })),
+                { role: 'user', content: message }
+            ],
+            temperature: 0.3,
+        });
+
+        const reply = response.choices[0].message.content;
+
+        let updates = null;
+        const jsonMatch = reply.match(/```json\s*([\s\S]*?)\s*```/);
+        if (jsonMatch) {
+            try {
+                const parsed = JSON.parse(jsonMatch[1]);
+                updates = parsed.updates || parsed;
+            } catch (e) {
+                console.error('Failed to parse AI update JSON:', e.message);
+            }
+        }
+
+        const cleanReply = reply.replace(/```json[\s\S]*?```/, '').trim();
+
+        console.log(`💬 Refine chat: "${message.substring(0, 50)}..." → updates: ${updates ? 'yes' : 'no'}`);
+        res.json({ reply: cleanReply, updates });
+    } catch (error) {
+        console.error('Refine error:', error.message);
+        res.status(500).json({ error: 'AI refinement failed: ' + error.message });
+    }
+});
+
 module.exports = router;

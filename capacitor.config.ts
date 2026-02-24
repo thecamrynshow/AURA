@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
     appId: 'com.pneuoma.app',
-    appName: 'PNEUOMA',
+    appName: 'PNEUOMA Capture',
     webDir: 'www',
     server: {
         allowNavigation: [
@@ -11,10 +11,16 @@ const config: CapacitorConfig = {
     },
     ios: {
         scheme: 'PNEUOMA',
-        contentInset: 'automatic',
+        contentInset: 'always',
         preferredContentMode: 'mobile',
+        backgroundColor: '#07080d',
     },
-    plugins: {},
+    plugins: {
+        StatusBar: {
+            style: 'LIGHT',
+            overlaysWebView: true,
+        },
+    },
 };
 
 export default config;

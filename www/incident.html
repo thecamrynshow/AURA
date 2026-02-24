@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>PNEUOMA — Incident Detail</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#07080d">
@@ -67,9 +67,12 @@
             }
         }
 
+        let showRealNames = false;
+
         function renderDetail() {
             const inc = incident;
-            const students = inc.studentsInvolved || [];
+            const rawStudents = normalizeStudents(inc.studentsInvolved);
+            const studentLabels = rawStudents.map((s, i) => studentDisplayLabel(s, i));
             const staff = inc.staffInvolved || [];
             const witnesses = inc.witnesses || [];
 
@@ -90,7 +93,12 @@
                 <div class="detail-card mb-16">
                     <div class="detail-field"><div class="label">Location</div><div class="value">${escapeHtml(inc.location)}</div></div>
                     <div class="detail-field"><div class="label">Description</div><div class="value">${escapeHtml(inc.description)}</div></div>
-                    ${students.length ? `<div class="detail-field"><div class="label">Students Involved</div><div class="value">${students.map(s => `<span class="tag tag-student" style="margin-right:4px">${escapeHtml(s)}</span>`).join('')}</div></div>` : ''}
+                    ${rawStudents.length ? `<div class="detail-field"><div class="label" style="display:flex;align-items:center;justify-content:space-between">Students Involved <a href="#" onclick="event.preventDefault();showRealNames=!showRealNames;renderDetail()" style="font-size:10px;font-weight:600;color:var(--accent);text-transform:none;letter-spacing:0">${showRealNames ? 'Hide Names' : 'Reveal Names'}</a></div><div class="value">${rawStudents.map((s, i) => {
+                        const display = studentDisplayLabel(s, i);
+                        const real = typeof s === 'string' ? s : s.realName;
+                        const isAnon = display !== real;
+                        return '<span class="tag tag-student" style="margin-right:4px">' + escapeHtml(display) + (showRealNames && isAnon ? ' <span style="font-size:10px;opacity:0.5">(' + escapeHtml(real) + ')</span>' : '') + '</span>';
+                    }).join('')}</div></div>` : ''}
                     ${staff.length ? `<div class="detail-field"><div class="label">Staff Involved</div><div class="value">${staff.map(s => `<span class="tag tag-student" style="margin-right:4px">${escapeHtml(s)}</span>`).join('')}</div></div>` : ''}
                     ${witnesses.length ? `<div class="detail-field"><div class="label">Witnesses</div><div class="value">${witnesses.map(s => `<span class="tag tag-student" style="margin-right:4px">${escapeHtml(s)}</span>`).join('')}</div></div>` : ''}
                     ${inc.immediateAction ? `<div class="detail-field"><div class="label">Immediate Action</div><div class="value">${escapeHtml(inc.immediateAction)}</div></div>` : ''}
@@ -136,7 +144,8 @@
             document.getElementById('template-error').innerHTML = '';
 
             try {
-                templates = await api.post('/api/incidents/templates', incident);
+                const templateData = { ...incident, studentsInvolved: studentsForDisplay(incident.studentsInvolved) };
+                templates = await api.post('/api/incidents/templates', templateData);
                 activeTab = 'teacher';
                 showModal();
             } catch (err) {
@@ -273,7 +282,7 @@
                     doc.text(lines, 14, y); y += lines.length * 4 + 6;
                 };
 
-                if ((inc.studentsInvolved||[]).length) addSection('Students Involved', inc.studentsInvolved.join(', '));
+                if ((inc.studentsInvolved||[]).length) addSection('Students Involved', studentsForDisplay(inc.studentsInvolved).join(', '));
                 if ((inc.staffInvolved||[]).length) addSection('Staff Involved', inc.staffInvolved.join(', '));
                 if ((inc.witnesses||[]).length) addSection('Witnesses', inc.witnesses.join(', '));
                 addSection('Description', inc.description);

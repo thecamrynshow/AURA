@@ -5,7 +5,7 @@
 
 const API_BASE = window.location.hostname === 'localhost'
     ? 'http://localhost:3001'
-    : 'https://pneuoma-server.onrender.com';
+    : 'https://pneuoma.onrender.com';
 
 const INCIDENT_TYPES = [
     'Physical Altercation', 'Verbal Altercation', 'Disruption', 'Insubordination',
@@ -33,6 +33,49 @@ const LOCATIONS = [
     'Restroom', 'Library', 'Auditorium', 'Bus Loading Zone', 'Stairwell',
     'Entrance - Front', 'Entrance - Side', 'Athletic Field', 'Other'
 ];
+
+// ==================== STUDENT IDENTITY MANAGEMENT ====================
+
+const LABEL_MODES = [
+    { key: 'alias', label: 'Alias' },
+    { key: 'real', label: 'Real Name' },
+    { key: 'initials', label: 'Initials' },
+    { key: 'custom', label: 'Custom' }
+];
+
+function generateAlias(idx) {
+    return 'Student ' + String.fromCharCode(65 + (idx % 26));
+}
+
+function getInitials(name) {
+    return (name || '').split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + '.').join('');
+}
+
+function studentDisplayLabel(student, idx) {
+    if (typeof student === 'string') return student;
+    switch (student.labelMode) {
+        case 'real': return student.realName;
+        case 'initials': return getInitials(student.realName);
+        case 'custom': return student.displayLabel || generateAlias(idx);
+        case 'alias':
+        default: return generateAlias(idx);
+    }
+}
+
+function normalizeStudents(students) {
+    if (!Array.isArray(students)) return [];
+    return students.map((s, i) => {
+        if (typeof s === 'string') {
+            return { realName: s, displayLabel: generateAlias(i), labelMode: 'alias' };
+        }
+        s.displayLabel = studentDisplayLabel(s, i);
+        return s;
+    });
+}
+
+function studentsForDisplay(students) {
+    return normalizeStudents(students).map((s, i) => studentDisplayLabel(s, i));
+}
 
 // ==================== API CLIENT ====================
 
@@ -127,7 +170,7 @@ function generateClipboardText(inc) {
         `Severity: ${inc.severity}`,
         `Status: ${(inc.status || '').toUpperCase()}`,
         '',
-        `Students Involved: ${(inc.studentsInvolved || []).join(', ') || 'N/A'}`,
+        `Students Involved: ${studentsForDisplay(inc.studentsInvolved).join(', ') || 'N/A'}`,
         `Staff Involved: ${(inc.staffInvolved || []).join(', ') || 'N/A'}`,
         `Witnesses: ${(inc.witnesses || []).join(', ') || 'N/A'}`,
         '',
@@ -152,7 +195,8 @@ function generateClipboardText(inc) {
 // ==================== RENDER HELPERS ====================
 
 function renderIncidentCard(inc) {
-    const students = (inc.studentsInvolved || []).slice(0, 3);
+    const allLabels = studentsForDisplay(inc.studentsInvolved);
+    const students = allLabels.slice(0, 3);
     return `
         <a href="incident.html?id=${inc.id}" class="incident-card">
             <div class="incident-card-header">
@@ -169,7 +213,7 @@ function renderIncidentCard(inc) {
             <div class="incident-card-footer">
                 <div class="incident-tags">
                     ${students.map(s => `<span class="tag tag-student">${escapeHtml(s)}</span>`).join('')}
-                    ${(inc.studentsInvolved || []).length > 3 ? `<span class="tag tag-student">+${inc.studentsInvolved.length - 3}</span>` : ''}
+                    ${allLabels.length > 3 ? `<span class="tag tag-student">+${allLabels.length - 3}</span>` : ''}
                 </div>
                 <span style="font-size:11px;color:var(--text-muted)">${formatDate(inc.createdAt || inc.created_at)}</span>
             </div>

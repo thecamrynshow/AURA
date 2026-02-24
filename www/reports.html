@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>PNEUOMA — Reports</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#07080d">
@@ -181,7 +181,7 @@
             doc.autoTable({
                 startY: y,
                 head: [['#', 'Time', 'Type', 'Location', 'Severity', 'Students', 'Status']],
-                body: list.map((i, idx) => [String(idx + 1), i.time, i.incidentType, i.location, i.severity, (i.studentsInvolved || []).join(', '), i.status]),
+                body: list.map((i, idx) => [String(idx + 1), i.time, i.incidentType, i.location, i.severity, studentsForDisplay(i.studentsInvolved).join(', '), i.status]),
                 theme: 'striped',
                 headStyles: { fillColor: [15, 23, 42], fontSize: 8 },
                 styles: { fontSize: 7.5, cellPadding: 2 },
@@ -206,7 +206,7 @@
                 if ((inc.studentsInvolved || []).length) {
                     doc.setFont('helvetica', 'bold');
                     doc.setTextColor(60, 60, 60);
-                    doc.text('Students: ' + inc.studentsInvolved.join(', '), 14, y);
+                    doc.text('Students: ' + studentsForDisplay(inc.studentsInvolved).join(', '), 14, y);
                     y += 5;
                 }
                 doc.setTextColor(40, 40, 40);
@@ -278,7 +278,7 @@
                     const lines = doc.splitTextToSize(content, 182);
                     doc.text(lines, 14, y); y += lines.length * 4 + 6;
                 };
-                if ((inc.studentsInvolved||[]).length) addSec('Students', inc.studentsInvolved.join(', '));
+                if ((inc.studentsInvolved||[]).length) addSec('Students', studentsForDisplay(inc.studentsInvolved).join(', '));
                 addSec('Description', inc.description);
                 addSec('Action Taken', inc.immediateAction);
                 addSec('Follow-Up', inc.followUpNeeded);
