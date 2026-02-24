@@ -3,6 +3,8 @@
  * Real-time multiplayer sync + Authentication + Subscriptions
  */
 
+require('dotenv').config();
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -39,7 +41,11 @@ const io = new Server(server, {
 });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '25mb' }));
+
+// Incident Capture & Containment routes
+const incidentRoutes = require('./incidents');
+app.use('/api/incidents', incidentRoutes);
 
 // ==================== USER STORAGE ====================
 // In production, replace with database (PostgreSQL/MongoDB)

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>PNEUOMA — Capture Incident</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#07080d">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="top-nav"></div>
+
+    <div class="page" id="app">
+        <div class="page-header" id="header">
+            <h1>Capture Incident</h1>
+            <p>Speak naturally about the incident</p>
+        </div>
+
+        <!-- STATE: Ready (voice recorder) -->
+        <div id="state-ready">
+            <div class="recorder-section">
+                <button class="record-btn" id="record-btn" onclick="toggleRecording()">
+                    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                </button>
+                <div class="record-timer hidden" id="timer">0:00</div>
+                <div class="record-hint" id="hint">Tap to start recording</div>
+            </div>
+
+            <div class="divider"><span>or</span></div>
+
+            <button class="btn btn-dark" onclick="switchToManual()">Enter Manually</button>
+
+            <div class="tips-box">
+                <div class="tips-label">Tips for voice capture</div>
+                <ul>
+                    <li>Include the time and location</li>
+                    <li>Name the students and staff involved</li>
+                    <li>Describe what happened and what you did</li>
+                    <li>Mention any witnesses</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- STATE: Processing -->
+        <div id="state-processing" class="hidden">
+            <div class="processing-state">
+                <div class="spinner"></div>
+                <div class="processing-label" id="processing-label">Transcribing audio...</div>
+                <div class="processing-sub">This usually takes a few seconds</div>
+                <div id="transcript-preview" class="hidden" style="margin-top:16px;max-width:320px">
+                    <div class="transcript-banner">
+                        <div class="label">Transcript</div>
+                        <div class="text" id="transcript-text"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATE: Form (review or manual) -->
+        <div id="state-form" class="hidden">
+            <div id="transcript-banner-form"></div>
+            <div id="alert-area"></div>
+            <form id="incident-form" onsubmit="submitForm(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="f-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time</label>
+                        <input type="text" class="form-input" id="f-time" placeholder="8:42 AM" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <select class="form-select" id="f-location" required>
+                        <option value="">Select location...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Incident Type</label>
+                    <select class="form-select" id="f-type" required>
+                        <option value="">Select type...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Severity</label>
+                    <div class="severity-grid" id="severity-grid"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Students Involved</label>
+                    <div class="tag-list" id="tags-students"></div>
+                    <div class="tag-input-wrap">
+                        <input type="text" class="form-input" id="input-students" placeholder="Student name...">
+                        <button type="button" class="tag-add-btn" onclick="addTag('students')">Add</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Staff Involved</label>
+                    <div class="tag-list" id="tags-staff"></div>
+                    <div class="tag-input-wrap">
+                        <input type="text" class="form-input" id="input-staff" placeholder="Staff name...">
+                        <button type="button" class="tag-add-btn" onclick="addTag('staff')">Add</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Witnesses</label>
+                    <div class="tag-list" id="tags-witnesses"></div>
+                    <div class="tag-input-wrap">
+                        <input type="text" class="form-input" id="input-witnesses" placeholder="Witness name...">
+                        <button type="button" class="tag-add-btn" onclick="addTag('witnesses')">Add</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="f-desc" rows="4" placeholder="Describe what happened..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Immediate Action Taken</label>
+                    <textarea class="form-textarea" id="f-action" rows="2" placeholder="What was done on the spot..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Follow-Up Needed</label>
+                    <textarea class="form-textarea" id="f-followup" rows="2" placeholder="Next steps required..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">De-Escalation Strategy Used <span style="font-weight:400;text-transform:none;color:var(--text-muted)">(optional)</span></label>
+                    <div class="severity-grid" id="deesc-grid" style="grid-template-columns:1fr 1fr"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reported By</label>
+                    <input type="text" class="form-input" id="f-reporter" placeholder="Your name..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Additional Notes</label>
+                    <textarea class="form-textarea" id="f-notes" rows="2" placeholder="Any additional information..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="submit-btn">Save Incident</button>
+            </form>
+            <button class="btn btn-dark mt-16" onclick="resetCapture()">Start Over</button>
+        </div>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('top-nav').innerHTML = topNav();
+        document.getElementById('bottom-nav').innerHTML = bottomNav('capture');
+
+        // ==================== STATE ====================
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let recordTimer = null;
+        let duration = 0;
+        let currentTranscript = '';
+        const tags = { students: [], staff: [], witnesses: [] };
+
+        // ==================== INIT FORM OPTIONS ====================
+        const locSelect = document.getElementById('f-location');
+        LOCATIONS.forEach(l => { const o = document.createElement('option'); o.value = l; o.textContent = l; locSelect.appendChild(o); });
+
+        const typeSelect = document.getElementById('f-type');
+        INCIDENT_TYPES.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; typeSelect.appendChild(o); });
+
+        const sevGrid = document.getElementById('severity-grid');
+        let selectedSeverity = 'Medium';
+        SEVERITY_LEVELS.forEach(s => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'severity-btn' + (s === 'Medium' ? ` active-${s.toLowerCase()}` : '');
+            btn.textContent = s;
+            btn.onclick = () => {
+                selectedSeverity = s;
+                sevGrid.querySelectorAll('.severity-btn').forEach(b => b.className = 'severity-btn');
+                btn.className = `severity-btn active-${s.toLowerCase()}`;
+            };
+            sevGrid.appendChild(btn);
+        });
+
+        // De-escalation strategy multi-select
+        const deescGrid = document.getElementById('deesc-grid');
+        let selectedDeesc = new Set();
+        DEESCALATION_STRATEGIES.forEach(s => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'severity-btn';
+            btn.textContent = s;
+            btn.onclick = () => {
+                if (selectedDeesc.has(s)) { selectedDeesc.delete(s); btn.className = 'severity-btn'; }
+                else { selectedDeesc.add(s); btn.className = 'severity-btn active-medium'; }
+            };
+            deescGrid.appendChild(btn);
+        });
+
+        // Pre-fill date/time
+        document.getElementById('f-date').value = todayISO();
+        document.getElementById('f-time').value = nowTime();
+
+        // Restore reporter name from localStorage
+        const savedReporter = localStorage.getItem('pneuoma_reporter');
+        if (savedReporter) document.getElementById('f-reporter').value = savedReporter;
+
+        // ==================== TAG INPUT ====================
+        function addTag(type) {
+            const input = document.getElementById(`input-${type}`);
+            const val = input.value.trim();
+            if (!val || tags[type].includes(val)) return;
+            tags[type].push(val);
+            input.value = '';
+            renderTags(type);
+        }
+
+        function removeTag(type, idx) {
+            tags[type].splice(idx, 1);
+            renderTags(type);
+        }
+
+        function renderTags(type) {
+            const el = document.getElementById(`tags-${type}`);
+            el.innerHTML = tags[type].map((t, i) =>
+                `<span class="tag-item">${escapeHtml(t)}<button class="tag-remove" onclick="removeTag('${type}',${i})">&times;</button></span>`
+            ).join('');
+        }
+
+        // Enter key adds tag
+        ['students', 'staff', 'witnesses'].forEach(type => {
+            document.getElementById(`input-${type}`).addEventListener('keydown', e => {
+                if (e.key === 'Enter') { e.preventDefault(); addTag(type); }
+            });
+        });
+
+        // ==================== VOICE RECORDING ====================
+        function getSupportedMimeType() {
+            const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'];
+            for (const t of types) { if (MediaRecorder.isTypeSupported(t)) return t; }
+            return 'audio/webm';
+        }
+
+        async function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                await startRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+                const mimeType = getSupportedMimeType();
+                mediaRecorder = new MediaRecorder(stream, { mimeType });
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(audioChunks, { type: mimeType });
+                    stream.getTracks().forEach(t => t.stop());
+                    processRecording(blob);
+                };
+
+                mediaRecorder.start(500);
+                isRecording = true;
+                duration = 0;
+
+                const btn = document.getElementById('record-btn');
+                btn.classList.add('recording');
+                btn.innerHTML = ICONS.stop;
+
+                const timerEl = document.getElementById('timer');
+                timerEl.classList.remove('hidden');
+                document.getElementById('hint').textContent = 'Recording... Tap to stop';
+
+                recordTimer = setInterval(() => {
+                    duration++;
+                    const m = Math.floor(duration / 60);
+                    const s = duration % 60;
+                    timerEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+                }, 1000);
+            } catch {
+                alert('Microphone access denied. Please allow microphone access in your browser settings.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                clearInterval(recordTimer);
+            }
+        }
+
+        async function processRecording(blob) {
+            showState('processing');
+            document.getElementById('processing-label').textContent = 'Transcribing audio...';
+
+            try {
+                const formData = new FormData();
+                formData.append('audio', blob);
+                const { transcript } = await api.postForm('/api/incidents/transcribe', formData);
+                currentTranscript = transcript;
+
+                document.getElementById('transcript-text').textContent = `"${transcript}"`;
+                document.getElementById('transcript-preview').classList.remove('hidden');
+                document.getElementById('processing-label').textContent = 'Extracting incident details...';
+
+                const parsed = await api.post('/api/incidents/parse', { transcript });
+
+                populateForm(parsed, transcript);
+                showState('form');
+            } catch (err) {
+                document.getElementById('alert-area').innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+                showState('form');
+            }
+        }
+
+        // ==================== FORM POPULATION ====================
+        function populateForm(data, transcript) {
+            if (data.date) document.getElementById('f-date').value = data.date;
+            if (data.time) document.getElementById('f-time').value = data.time;
+            if (data.location) {
+                const loc = document.getElementById('f-location');
+                const match = Array.from(loc.options).find(o => o.value.toLowerCase().includes(data.location.toLowerCase()));
+                if (match) loc.value = match.value;
+                else { const o = document.createElement('option'); o.value = data.location; o.textContent = data.location; loc.appendChild(o); loc.value = data.location; }
+            }
+            if (data.incidentType) document.getElementById('f-type').value = data.incidentType;
+            if (data.severity) {
+                selectedSeverity = data.severity;
+                sevGrid.querySelectorAll('.severity-btn').forEach(b => {
+                    b.className = b.textContent === data.severity ? `severity-btn active-${data.severity.toLowerCase()}` : 'severity-btn';
+                });
+            }
+            if (data.studentsInvolved) { tags.students = data.studentsInvolved; renderTags('students'); }
+            if (data.staffInvolved) { tags.staff = data.staffInvolved; renderTags('staff'); }
+            if (data.witnesses) { tags.witnesses = data.witnesses; renderTags('witnesses'); }
+            if (data.description) document.getElementById('f-desc').value = data.description;
+            if (data.immediateAction) document.getElementById('f-action').value = data.immediateAction;
+            if (data.followUpNeeded) document.getElementById('f-followup').value = data.followUpNeeded;
+            if (data.deescalationStrategy && Array.isArray(data.deescalationStrategy)) {
+                selectedDeesc = new Set(data.deescalationStrategy);
+                deescGrid.querySelectorAll('.severity-btn').forEach(btn => {
+                    btn.className = selectedDeesc.has(btn.textContent) ? 'severity-btn active-medium' : 'severity-btn';
+                });
+            }
+
+            if (transcript) {
+                document.getElementById('transcript-banner-form').innerHTML = `
+                    <div class="transcript-banner">
+                        <div class="label">Voice Transcript</div>
+                        <div class="text">"${escapeHtml(transcript)}"</div>
+                    </div>`;
+            }
+        }
+
+        // ==================== SUBMIT ====================
+        async function submitForm(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const reporter = document.getElementById('f-reporter').value;
+            localStorage.setItem('pneuoma_reporter', reporter);
+
+            try {
+                const data = {
+                    date: document.getElementById('f-date').value,
+                    time: document.getElementById('f-time').value,
+                    location: document.getElementById('f-location').value,
+                    incidentType: document.getElementById('f-type').value,
+                    severity: selectedSeverity,
+                    studentsInvolved: tags.students,
+                    staffInvolved: tags.staff,
+                    witnesses: tags.witnesses,
+                    description: document.getElementById('f-desc').value,
+                    immediateAction: document.getElementById('f-action').value,
+                    followUpNeeded: document.getElementById('f-followup').value,
+                    deescalationStrategy: Array.from(selectedDeesc),
+                    reportedBy: reporter,
+                    notes: document.getElementById('f-notes').value,
+                    rawTranscript: currentTranscript || null,
+                };
+
+                const saved = await api.post('/api/incidents', data);
+                window.location.href = `incident.html?id=${saved.id}`;
+            } catch (err) {
+                document.getElementById('alert-area').innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+                btn.disabled = false;
+                btn.textContent = 'Save Incident';
+            }
+        }
+
+        // ==================== STATE MANAGEMENT ====================
+        function showState(state) {
+            document.getElementById('state-ready').classList.toggle('hidden', state !== 'ready');
+            document.getElementById('state-processing').classList.toggle('hidden', state !== 'processing');
+            document.getElementById('state-form').classList.toggle('hidden', state !== 'form');
+
+            const header = document.getElementById('header');
+            if (state === 'form') {
+                header.querySelector('h1').textContent = currentTranscript ? 'Review Incident' : 'Manual Entry';
+                header.querySelector('p').textContent = currentTranscript ? 'Review and edit the details below' : 'Fill in the incident details';
+            } else if (state === 'ready') {
+                header.querySelector('h1').textContent = 'Capture Incident';
+                header.querySelector('p').textContent = 'Speak naturally about the incident';
+            }
+        }
+
+        function switchToManual() {
+            currentTranscript = '';
+            showState('form');
+        }
+
+        function resetCapture() {
+            currentTranscript = '';
+            tags.students = []; tags.staff = []; tags.witnesses = [];
+            ['students', 'staff', 'witnesses'].forEach(renderTags);
+            document.getElementById('incident-form').reset();
+            document.getElementById('f-date').value = todayISO();
+            document.getElementById('f-time').value = nowTime();
+            document.getElementById('alert-area').innerHTML = '';
+            document.getElementById('transcript-banner-form').innerHTML = '';
+            document.getElementById('transcript-preview').classList.add('hidden');
+            selectedSeverity = 'Medium';
+            sevGrid.querySelectorAll('.severity-btn').forEach(b => {
+                b.className = b.textContent === 'Medium' ? 'severity-btn active-medium' : 'severity-btn';
+            });
+            selectedDeesc = new Set();
+            deescGrid.querySelectorAll('.severity-btn').forEach(b => b.className = 'severity-btn');
+
+            const btn = document.getElementById('record-btn');
+            btn.classList.remove('recording');
+            btn.innerHTML = ICONS.mic;
+            document.getElementById('timer').classList.add('hidden');
+            document.getElementById('hint').textContent = 'Tap to start recording';
+
+            showState('ready');
+        }
+    </script>
+</body>
+</html>

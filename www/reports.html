@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>PNEUOMA — Reports</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#07080d">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="styles.css">
+    <script src="jspdf.min.js"></script>
+    <script src="jspdf-autotable.min.js"></script>
+</head>
+<body>
+    <div id="top-nav"></div>
+
+    <div class="page">
+        <div class="page-header">
+            <h1>Reports</h1>
+            <p>Generate daily or individual incident reports</p>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Report Date</label>
+            <input type="date" class="form-input" id="report-date">
+        </div>
+
+        <div class="stats-grid hidden" id="stats">
+            <div class="stat-card"><div class="stat-value" id="r-selected">0</div><div class="stat-label">Selected</div></div>
+            <div class="stat-card"><div class="stat-value red" id="r-urgent">0</div><div class="stat-label">Urgent</div></div>
+            <div class="stat-card"><div class="stat-value blue" id="r-open">0</div><div class="stat-label">Open</div></div>
+            <div class="stat-card"><div class="stat-value" style="color:var(--accent-green)" id="r-resolved">0</div><div class="stat-label">Resolved</div></div>
+        </div>
+
+        <div id="select-header" class="section-header hidden">
+            <h3 id="date-label">Incidents</h3>
+            <a href="#" id="toggle-all" onclick="toggleAll(event)">Select All</a>
+        </div>
+
+        <div id="report-list" class="incident-list" style="gap:8px"></div>
+
+        <div id="actions" class="hidden mt-24" style="display:flex;flex-direction:column;gap:10px">
+            <button class="btn btn-primary" id="daily-btn" onclick="generateDailyPDF()">Generate Daily Report</button>
+            <button class="btn btn-dark" onclick="generateIndividualPDFs()">Download Individual Reports</button>
+        </div>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('top-nav').innerHTML = topNav();
+        document.getElementById('bottom-nav').innerHTML = bottomNav('reports');
+
+        const dateInput = document.getElementById('report-date');
+        dateInput.value = todayISO();
+
+        let incidents = [];
+        let selected = new Set();
+
+        dateInput.addEventListener('change', loadForDate);
+
+        async function loadForDate() {
+            const date = dateInput.value;
+            const listEl = document.getElementById('report-list');
+            listEl.innerHTML = renderSpinner();
+
+            try {
+                incidents = await api.get(`/api/incidents?date=${date}`);
+                if (!Array.isArray(incidents)) incidents = [];
+                selected = new Set(incidents.map(i => i.id));
+                renderList();
+            } catch (err) {
+                listEl.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        function renderList() {
+            const listEl = document.getElementById('report-list');
+
+            if (incidents.length === 0) {
+                listEl.innerHTML = renderEmpty('No incidents for this date', 'Select a different date or record an incident');
+                document.getElementById('stats').classList.add('hidden');
+                document.getElementById('select-header').classList.add('hidden');
+                document.getElementById('actions').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('stats').classList.remove('hidden');
+            document.getElementById('select-header').classList.remove('hidden');
+            document.getElementById('actions').classList.remove('hidden');
+            document.getElementById('actions').style.display = 'flex';
+            document.getElementById('date-label').textContent = `Incidents for ${formatDate(dateInput.value)}`;
+
+            updateStats();
+
+            listEl.innerHTML = incidents.map(inc => `
+                <div class="report-incident ${selected.has(inc.id) ? 'selected' : ''}" onclick="toggleSelect('${inc.id}')">
+                    <div class="report-checkbox">
+                        ${selected.has(inc.id) ? '<svg width="12" height="12" fill="#f59e0b" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' : ''}
+                    </div>
+                    <div class="report-info">
+                        <div style="display:flex;align-items:center;gap:6px">
+                            <span class="title">${escapeHtml(inc.incidentType)}</span>
+                            <span class="badge ${severityClass(inc.severity)}" style="font-size:8px">${escapeHtml(inc.severity)}</span>
+                        </div>
+                        <div class="meta">${escapeHtml(inc.time)} · ${escapeHtml(inc.location)}</div>
+                        <div class="desc">${escapeHtml(inc.description)}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('daily-btn').textContent = `Generate Daily Report (${selected.size} incidents)`;
+        }
+
+        function toggleSelect(id) {
+            if (selected.has(id)) selected.delete(id);
+            else selected.add(id);
+            renderList();
+        }
+
+        function toggleAll(e) {
+            e.preventDefault();
+            if (selected.size === incidents.length) selected.clear();
+            else incidents.forEach(i => selected.add(i.id));
+            renderList();
+        }
+
+        function updateStats() {
+            const sel = incidents.filter(i => selected.has(i.id));
+            document.getElementById('r-selected').textContent = sel.length;
+            document.getElementById('r-urgent').textContent = sel.filter(i => i.severity === 'Critical' || i.severity === 'High').length;
+            document.getElementById('r-open').textContent = sel.filter(i => i.status === 'open' || i.status === 'in-progress').length;
+            document.getElementById('r-resolved').textContent = sel.filter(i => i.status === 'resolved' || i.status === 'closed').length;
+            document.getElementById('toggle-all').textContent = selected.size === incidents.length ? 'Deselect All' : 'Select All';
+        }
+
+        // ==================== PDF GENERATION ====================
+        function generateDailyPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const list = incidents.filter(i => selected.has(i.id));
+            const date = dateInput.value;
+
+            doc.setFillColor(15, 23, 42);
+            doc.rect(0, 0, 210, 32, 'F');
+            doc.setFillColor(245, 158, 11);
+            doc.rect(0, 32, 210, 2, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(8);
+            doc.text('PNEUOMA INCIDENT CAPTURE & CONTAINMENT SYSTEM', 14, 10);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Daily Incident Report', 14, 22);
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text(formatDateLong(date), 14, 29);
+
+            doc.setTextColor(0, 0, 0);
+
+            const sevCounts = { Low: 0, Medium: 0, High: 0, Critical: 0 };
+            const statusCounts = { open: 0, 'in-progress': 0, resolved: 0, closed: 0 };
+            list.forEach(i => { sevCounts[i.severity] = (sevCounts[i.severity] || 0) + 1; statusCounts[i.status] = (statusCounts[i.status] || 0) + 1; });
+
+            doc.autoTable({
+                startY: 40,
+                head: [['Summary', '', '', '']],
+                body: [
+                    ['Total Incidents', String(list.length), 'Open', String(statusCounts.open || 0)],
+                    ['In Progress', String(statusCounts['in-progress'] || 0), 'Resolved', String((statusCounts.resolved || 0) + (statusCounts.closed || 0))],
+                    ['High/Critical', String((sevCounts.High || 0) + (sevCounts.Critical || 0)), 'Low/Medium', String((sevCounts.Low || 0) + (sevCounts.Medium || 0))],
+                ],
+                theme: 'grid',
+                headStyles: { fillColor: [15, 23, 42], fontSize: 10 },
+                styles: { fontSize: 9, cellPadding: 3 },
+                columnStyles: { 0: { fontStyle: 'bold' }, 2: { fontStyle: 'bold' } },
+            });
+
+            let y = doc.lastAutoTable.finalY + 8;
+
+            doc.autoTable({
+                startY: y,
+                head: [['#', 'Time', 'Type', 'Location', 'Severity', 'Students', 'Status']],
+                body: list.map((i, idx) => [String(idx + 1), i.time, i.incidentType, i.location, i.severity, (i.studentsInvolved || []).join(', '), i.status]),
+                theme: 'striped',
+                headStyles: { fillColor: [15, 23, 42], fontSize: 8 },
+                styles: { fontSize: 7.5, cellPadding: 2 },
+            });
+
+            y = doc.lastAutoTable.finalY + 12;
+
+            list.forEach((inc, i) => {
+                if (y > 245) { doc.addPage(); y = 20; }
+                doc.setFillColor(248, 250, 252);
+                doc.rect(14, y - 4, 182, 8, 'F');
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(15, 23, 42);
+                doc.text(`Incident ${i + 1}: ${inc.incidentType} — ${inc.severity}`, 16, y + 1);
+                y += 10;
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(100, 100, 100);
+                doc.text(`${inc.time} | ${inc.location} | Reported by: ${inc.reportedBy}`, 14, y);
+                y += 5;
+                if ((inc.studentsInvolved || []).length) {
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(60, 60, 60);
+                    doc.text('Students: ' + inc.studentsInvolved.join(', '), 14, y);
+                    y += 5;
+                }
+                doc.setTextColor(40, 40, 40);
+                doc.setFontSize(8.5);
+                doc.setFont('helvetica', 'normal');
+                const lines = doc.splitTextToSize(inc.description, 182);
+                doc.text(lines, 14, y);
+                y += lines.length * 3.5 + 3;
+                if (inc.immediateAction) {
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(8);
+                    doc.text('Action: ' + inc.immediateAction, 14, y);
+                    y += 5;
+                }
+                doc.setDrawColor(220, 220, 220);
+                doc.setLineWidth(0.3);
+                doc.line(14, y, 196, y);
+                y += 8;
+            });
+
+            const pageCount = doc.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(7);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`CONFIDENTIAL — Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
+            }
+
+            doc.save(`daily-report-${date}.pdf`);
+        }
+
+        function generateIndividualPDFs() {
+            const list = incidents.filter(i => selected.has(i.id));
+            list.forEach(inc => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.setFillColor(15, 23, 42);
+                doc.rect(0, 0, 210, 32, 'F');
+                doc.setFillColor(245, 158, 11);
+                doc.rect(0, 32, 210, 2, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(8);
+                doc.text('PNEUOMA INCIDENT CAPTURE & CONTAINMENT SYSTEM', 14, 10);
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Incident Report', 14, 22);
+                doc.setTextColor(0, 0, 0);
+                doc.autoTable({
+                    startY: 40,
+                    body: [
+                        ['Date', formatDate(inc.date), 'Time', inc.time],
+                        ['Location', inc.location, 'Type', inc.incidentType],
+                        ['Severity', inc.severity, 'Status', inc.status.toUpperCase()],
+                        ['Reported By', inc.reportedBy, '', ''],
+                    ],
+                    theme: 'plain',
+                    styles: { fontSize: 9, cellPadding: 3 },
+                    columnStyles: { 0: { fontStyle: 'bold', cellWidth: 30 }, 2: { fontStyle: 'bold', cellWidth: 30 } },
+                });
+                let y = doc.lastAutoTable.finalY + 10;
+                const addSec = (title, content) => {
+                    if (!content) return;
+                    if (y > 260) { doc.addPage(); y = 20; }
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(title, 14, y); y += 5;
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    const lines = doc.splitTextToSize(content, 182);
+                    doc.text(lines, 14, y); y += lines.length * 4 + 6;
+                };
+                if ((inc.studentsInvolved||[]).length) addSec('Students', inc.studentsInvolved.join(', '));
+                addSec('Description', inc.description);
+                addSec('Action Taken', inc.immediateAction);
+                addSec('Follow-Up', inc.followUpNeeded);
+                doc.save(`incident-${inc.id.slice(0,8)}.pdf`);
+            });
+        }
+
+        loadForDate();
+    </script>
+</body>
+</html>

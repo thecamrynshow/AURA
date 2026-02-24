@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>PNEUOMA — Incident Capture Dashboard</title>
+    <meta name="description" content="Real-time mobile incident documentation for K-12 admin teams.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#07080d">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="top-nav"></div>
+
+    <div class="page" id="app">
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <p>Today's incident overview</p>
+        </div>
+
+        <a href="capture.html" class="cta-card">
+            <div class="cta-icon">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+            <div class="cta-text">
+                <h2>Record New Incident</h2>
+                <p>Tap to start voice capture</p>
+            </div>
+            <div class="cta-arrow">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </div>
+        </a>
+
+        <div class="stats-grid" id="stats">
+            <div class="stat-card"><div class="stat-value" id="stat-total">-</div><div class="stat-label">Total</div></div>
+            <div class="stat-card"><div class="stat-value blue" id="stat-open">-</div><div class="stat-label">Open</div></div>
+            <div class="stat-card"><div class="stat-value purple" id="stat-active">-</div><div class="stat-label">Active</div></div>
+            <div class="stat-card"><div class="stat-value red" id="stat-urgent">-</div><div class="stat-label">Urgent</div></div>
+        </div>
+
+        <div class="section-header">
+            <h3>Today's Incidents</h3>
+            <a href="incidents.html">View All</a>
+        </div>
+
+        <div id="incident-list" class="incident-list"></div>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('top-nav').innerHTML = topNav();
+        document.getElementById('bottom-nav').innerHTML = bottomNav('dashboard');
+
+        async function loadDashboard() {
+            const listEl = document.getElementById('incident-list');
+            listEl.innerHTML = renderSpinner();
+
+            try {
+                const incidents = await api.get(`/api/incidents?date=${todayISO()}`);
+                const list = Array.isArray(incidents) ? incidents : [];
+
+                document.getElementById('stat-total').textContent = list.length;
+                document.getElementById('stat-open').textContent = list.filter(i => i.status === 'open').length;
+                document.getElementById('stat-active').textContent = list.filter(i => i.status === 'in-progress').length;
+                document.getElementById('stat-urgent').textContent = list.filter(i => i.severity === 'Critical' || i.severity === 'High').length;
+
+                if (list.length === 0) {
+                    listEl.innerHTML = renderEmpty('No incidents logged today', 'Tap the mic above to record your first incident');
+                } else {
+                    listEl.innerHTML = list.map(renderIncidentCard).join('');
+                }
+            } catch (err) {
+                listEl.innerHTML = `<div class="alert alert-error">Failed to load incidents: ${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        loadDashboard();
+    </script>
+</body>
+</html>

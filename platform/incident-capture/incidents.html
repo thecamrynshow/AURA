@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>PNEUOMA — All Incidents</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#07080d">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="top-nav"></div>
+
+    <div class="page">
+        <div class="page-header">
+            <h1>All Incidents</h1>
+            <p id="count-label">Loading...</p>
+        </div>
+
+        <div class="filter-bar">
+            <input type="text" class="form-input" id="search" placeholder="Search by name, location, type...">
+            <div class="filter-row">
+                <input type="date" class="form-input" id="date-filter" style="flex:1">
+                <select class="form-select" id="status-filter" style="width:auto">
+                    <option value="all">All Status</option>
+                    <option value="open">Open</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="incident-list" class="incident-list"></div>
+    </div>
+
+    <div id="bottom-nav"></div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('top-nav').innerHTML = topNav();
+        document.getElementById('bottom-nav').innerHTML = bottomNav('incidents');
+
+        let debounceTimer;
+
+        async function loadIncidents() {
+            const listEl = document.getElementById('incident-list');
+            listEl.innerHTML = renderSpinner();
+
+            const params = new URLSearchParams();
+            const date = document.getElementById('date-filter').value;
+            const status = document.getElementById('status-filter').value;
+            const search = document.getElementById('search').value;
+
+            if (date) params.set('date', date);
+            if (status !== 'all') params.set('status', status);
+            if (search) params.set('search', search);
+
+            try {
+                const incidents = await api.get(`/api/incidents?${params}`);
+                const list = Array.isArray(incidents) ? incidents : [];
+
+                document.getElementById('count-label').textContent = `${list.length} incident${list.length !== 1 ? 's' : ''} found`;
+
+                if (list.length === 0) {
+                    const hasFilters = date || status !== 'all' || search;
+                    listEl.innerHTML = renderEmpty(
+                        'No incidents found',
+                        hasFilters ? 'Try adjusting your filters' : 'Record your first incident to get started'
+                    );
+                } else {
+                    listEl.innerHTML = list.map(renderIncidentCard).join('');
+                }
+            } catch (err) {
+                listEl.innerHTML = `<div class="alert alert-error">${escapeHtml(err.message)}</div>`;
+            }
+        }
+
+        function debouncedLoad() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(loadIncidents, 300);
+        }
+
+        document.getElementById('search').addEventListener('input', debouncedLoad);
+        document.getElementById('date-filter').addEventListener('change', loadIncidents);
+        document.getElementById('status-filter').addEventListener('change', loadIncidents);
+
+        loadIncidents();
+    </script>
+</body>
+</html>
