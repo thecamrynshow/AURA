@@ -299,7 +299,7 @@
                     doc.text('CONFIDENTIAL — Page ' + i + ' of ' + pageCount, 105, 290, { align: 'center' });
                 }
 
-                doc.save('incident-' + inc.id.substring(0,8) + '.pdf');
+                savePDF(doc, 'incident-' + inc.id.substring(0,8) + '.pdf');
             } catch (err) {
                 console.error('PDF generation error:', err);
                 alert('PDF export failed: ' + err.message);

@@ -79,6 +79,24 @@ function studentsForDisplay(students) {
     return normalizeStudents(students).map((s, i) => studentDisplayLabel(s, i));
 }
 
+// ==================== PDF SAVE (iOS-compatible) ====================
+
+async function savePDF(doc, filename) {
+    const blob = doc.output('blob');
+    if (navigator.share) {
+        try {
+            const file = new File([blob], filename, { type: 'application/pdf' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({ files: [file], title: filename });
+                return;
+            }
+        } catch (e) {
+            if (e.name === 'AbortError') return;
+        }
+    }
+    doc.save(filename);
+}
+
 // ==================== API CLIENT ====================
 
 const api = {

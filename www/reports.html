@@ -235,7 +235,7 @@
                 doc.text(`CONFIDENTIAL — Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
             }
 
-            doc.save(`daily-report-${date}.pdf`);
+            savePDF(doc, `daily-report-${date}.pdf`);
         }
 
         function generateIndividualPDFs() {
@@ -282,7 +282,7 @@
                 addSec('Description', inc.description);
                 addSec('Action Taken', inc.immediateAction);
                 addSec('Follow-Up', inc.followUpNeeded);
-                doc.save(`incident-${inc.id.slice(0,8)}.pdf`);
+                savePDF(doc, `incident-${inc.id.slice(0,8)}.pdf`);
             });
         }
 
