@@ -49,6 +49,9 @@
 
     <script src="app.js"></script>
     <script>
+        const M = getModeOrRedirect();
+        if (!M) throw new Error('redirecting');
+
         document.getElementById('top-nav').innerHTML = topNav();
         document.getElementById('bottom-nav').innerHTML = bottomNav('reports');
 

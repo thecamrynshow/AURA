@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>PNEUOMA Capture</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#07080d">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .home-page { min-height: 100dvh; display: flex; flex-direction: column; padding: 0 20px; padding-top: env(safe-area-inset-top, 0px); }
+        .home-header { text-align: center; padding: 48px 0 12px; }
+        .home-logo { font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; }
+        .home-logo span { font-size: 10px; opacity: 0.5; margin-right: 6px; }
+        .home-title { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-top: 16px; }
+        .home-sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+        .mode-cards { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; max-width: 420px; width: 100%; align-self: center; }
+        .mode-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .mode-card:hover { border-color: var(--border-light); transform: translateY(-2px); }
+        .mode-card:hover::before { opacity: 1; }
+        .mode-card:active { transform: scale(0.98); }
+        .mode-card.edu::before { background: #f59e0b; }
+        .mode-card.corp::before { background: #3b82f6; }
+        .mode-card.ind::before { background: #8b5cf6; }
+        .mode-card:hover.edu { border-color: rgba(245,158,11,0.3); }
+        .mode-card:hover.corp { border-color: rgba(59,130,246,0.3); }
+        .mode-card:hover.ind { border-color: rgba(139,92,246,0.3); }
+        .mode-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .mode-icon svg { width: 24px; height: 24px; }
+        .mode-icon.edu { background: rgba(245,158,11,0.12); color: #f59e0b; }
+        .mode-icon.corp { background: rgba(59,130,246,0.12); color: #3b82f6; }
+        .mode-icon.ind { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+        .mode-info { flex: 1; }
+        .mode-name { font-size: 16px; font-weight: 700; }
+        .mode-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-weight: 600; }
+        .mode-desc { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; opacity: 0.8; }
+        .mode-arrow { color: var(--text-muted); align-self: center; }
+        .mode-arrow svg { width: 18px; height: 18px; }
+        .mode-card.current { border-color: var(--accent); background: var(--accent-dim); }
+        .mode-card.current::before { opacity: 1; background: var(--accent); }
+        .home-footer { margin-top: auto; text-align: center; padding: 24px 0; padding-bottom: max(24px, env(safe-area-inset-bottom, 0px)); }
+        .home-footer p { font-size: 11px; color: var(--text-muted); }
+        .home-footer a { color: var(--accent); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="home-page">
+        <div class="home-header">
+            <div class="home-logo"><span>πνεῦμα</span> PNEUOMA</div>
+            <h1 class="home-title">What do you capture?</h1>
+            <p class="home-sub">Choose your profession to customize your experience.<br>You can switch anytime.</p>
+        </div>
+
+        <div class="mode-cards" id="mode-cards"></div>
+
+        <div class="home-footer">
+            <p>PNEUOMA Capture — Voice-first documentation</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        const currentMode = localStorage.getItem('pneuoma_mode');
+        const container = document.getElementById('mode-cards');
+        const classes = { education: 'edu', corporate: 'corp', individual: 'ind' };
+
+        Object.values(MODES).forEach(m => {
+            const card = document.createElement('div');
+            const cls = classes[m.key];
+            card.className = 'mode-card ' + cls + (currentMode === m.key ? ' current' : '');
+            card.innerHTML =
+                '<div class="mode-icon ' + cls + '">' + m.icon + '</div>' +
+                '<div class="mode-info">' +
+                    '<div class="mode-name">' + m.name + '</div>' +
+                    '<div class="mode-subtitle">' + m.subtitle + '</div>' +
+                    '<div class="mode-desc">' + m.desc + '</div>' +
+                '</div>' +
+                '<div class="mode-arrow"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></div>';
+            card.onclick = () => {
+                localStorage.setItem('pneuoma_mode', m.key);
+                window.location.href = 'index.html';
+            };
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

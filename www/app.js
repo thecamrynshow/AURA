@@ -9,32 +9,179 @@ const API_BASE = isLocalDev
     ? 'http://localhost:3001'
     : 'https://pneuoma.onrender.com';
 
-const INCIDENT_TYPES = [
-    'Physical Altercation', 'Verbal Altercation', 'Disruption', 'Insubordination',
-    'Bullying', 'Vandalism', 'Theft', 'Drug/Alcohol', 'Weapons', 'Threat',
-    'Truancy', 'Dress Code', 'Technology Misuse', 'Other'
-];
+// ==================== MODE SYSTEM ====================
 
+const MODES = {
+    education: {
+        key: 'education',
+        name: 'Education',
+        subtitle: 'K-12 & Campus Admin',
+        desc: 'Incident documentation, parent communication, compliance reporting',
+        icon: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"/></svg>',
+        color: '#f59e0b',
+        badge: 'Education',
+        itemName: 'Incident',
+        itemNamePlural: 'Incidents',
+        captureTitle: 'Capture Incident',
+        captureHint: 'Speak naturally about the incident',
+        ctaLabel: 'Record New Incident',
+        ctaHint: 'Tap to start voice capture',
+        dashboardTitle: 'Dashboard',
+        dashboardSub: "Today's incident overview",
+        emptyTitle: 'No incidents logged today',
+        emptyHint: 'Tap the mic above to record your first incident',
+        primaryPeople: 'Students Involved',
+        primaryPlaceholder: 'Student real name (stored privately)...',
+        secondaryPeople: 'Staff Involved',
+        secondaryPlaceholder: 'Staff name...',
+        tertiaryPeople: 'Witnesses',
+        tertiaryPlaceholder: 'Witness name...',
+        aliasPrefix: 'Student',
+        anonymizeNotice: 'Names anonymized by default. Tap a student to change labeling.',
+        resolutionLabel: 'De-Escalation Strategy Used',
+        types: [
+            'Physical Altercation', 'Verbal Altercation', 'Disruption', 'Insubordination',
+            'Bullying', 'Vandalism', 'Theft', 'Drug/Alcohol', 'Weapons', 'Threat',
+            'Truancy', 'Dress Code', 'Technology Misuse', 'Other'
+        ],
+        locations: [
+            'Hallway - Main', 'Hallway - East Wing', 'Hallway - West Wing', 'Hallway - Near Gym',
+            'Cafeteria', 'Gymnasium', 'Playground', 'Parking Lot', 'Main Office', 'Classroom',
+            'Restroom', 'Library', 'Auditorium', 'Bus Loading Zone', 'Stairwell',
+            'Entrance - Front', 'Entrance - Side', 'Athletic Field', 'Other'
+        ],
+        strategies: [
+            'Verbal Separation', 'Physical Separation', 'Restorative Conversation Scheduled',
+            'Safety Escort', 'Cool-Down Period', 'Peer Mediation', 'Other'
+        ],
+        templateTabs: [
+            { key: 'teacher', label: 'Teacher', field: 'teacherEmail', notify: 'teacherNotified' },
+            { key: 'parent', label: 'Parent', field: 'parentEmail', notify: 'parentNotified' },
+            { key: 'counselor', label: 'Counselor', field: 'counselorReferral', notify: 'counselorNotified' },
+            { key: 'principal', label: 'Principal', field: 'principalBriefing', notify: 'principalNotified' },
+            { key: 'dean', label: 'Dean', field: 'deanNotification', notify: 'deanNotified' },
+            { key: 'support', label: 'Support Staff', field: 'supportStaffMemo', notify: 'supportStaffNotified' },
+        ],
+    },
+    corporate: {
+        key: 'corporate',
+        name: 'Corporate',
+        subtitle: 'Teams & Management',
+        desc: 'Workplace reports, HR documentation, stakeholder communication',
+        icon: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>',
+        color: '#3b82f6',
+        badge: 'Corporate',
+        itemName: 'Report',
+        itemNamePlural: 'Reports',
+        captureTitle: 'Capture Report',
+        captureHint: 'Describe the situation naturally',
+        ctaLabel: 'Record New Report',
+        ctaHint: 'Tap to start voice capture',
+        dashboardTitle: 'Dashboard',
+        dashboardSub: "Today's report overview",
+        emptyTitle: 'No reports logged today',
+        emptyHint: 'Tap the mic above to record your first report',
+        primaryPeople: 'Individuals Involved',
+        primaryPlaceholder: 'Person name (stored privately)...',
+        secondaryPeople: 'Team / Department',
+        secondaryPlaceholder: 'Team or department...',
+        tertiaryPeople: 'Witnesses',
+        tertiaryPlaceholder: 'Witness name...',
+        aliasPrefix: 'Person',
+        anonymizeNotice: 'Names anonymized by default. Tap a person to change labeling.',
+        resolutionLabel: 'Resolution Strategy Used',
+        types: [
+            'Workplace Conflict', 'Safety Violation', 'Policy Breach', 'Harassment',
+            'Equipment Damage', 'Security Incident', 'Performance Issue', 'Customer Complaint',
+            'Accident / Injury', 'Misconduct', 'Data Breach', 'Discrimination',
+            'Theft / Loss', 'Environmental Hazard', 'Other'
+        ],
+        locations: [
+            'Office - Main', 'Office - Executive', 'Conference Room', 'Break Room',
+            'Warehouse', 'Factory Floor', 'Lobby', 'Parking Structure', 'Loading Dock',
+            'Restroom', 'Stairwell', 'Elevator', 'Server Room', 'Cafeteria',
+            'Remote / Off-site', 'Client Site', 'Other'
+        ],
+        strategies: [
+            'Verbal De-escalation', 'Separated Parties', 'Manager Mediation',
+            'HR Intervention', 'Security Called', 'Written Warning Issued',
+            'Break / Cool-Down', 'Peer Mediation', 'Other'
+        ],
+        templateTabs: [
+            { key: 'manager', label: 'Manager', field: 'managerEmail', notify: 'teacherNotified' },
+            { key: 'hr', label: 'HR', field: 'hrEmail', notify: 'parentNotified' },
+            { key: 'stakeholder', label: 'Stakeholder', field: 'stakeholderBrief', notify: 'counselorNotified' },
+            { key: 'executive', label: 'Executive', field: 'executiveSummary', notify: 'principalNotified' },
+            { key: 'legal', label: 'Legal', field: 'legalMemo', notify: 'deanNotified' },
+            { key: 'safety', label: 'Safety Officer', field: 'safetyReport', notify: 'supportStaffNotified' },
+        ],
+    },
+    individual: {
+        key: 'individual',
+        name: 'Individual',
+        subtitle: 'Personal & Freelance',
+        desc: 'Quick capture, personal documentation, client communication',
+        icon: '<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>',
+        color: '#8b5cf6',
+        badge: 'Personal',
+        itemName: 'Note',
+        itemNamePlural: 'Notes',
+        captureTitle: 'Quick Capture',
+        captureHint: 'Speak naturally — your AI scribe is listening',
+        ctaLabel: 'Record New Note',
+        ctaHint: 'Tap to start voice capture',
+        dashboardTitle: 'Dashboard',
+        dashboardSub: "Today's notes overview",
+        emptyTitle: 'No notes captured today',
+        emptyHint: 'Tap the mic above to capture your first note',
+        primaryPeople: 'People Involved',
+        primaryPlaceholder: 'Person name...',
+        secondaryPeople: 'Related Contacts',
+        secondaryPlaceholder: 'Contact name...',
+        tertiaryPeople: 'Additional People',
+        tertiaryPlaceholder: 'Name...',
+        aliasPrefix: 'Person',
+        anonymizeNotice: 'Names anonymized by default. Tap a person to change labeling.',
+        resolutionLabel: 'Action Taken',
+        types: [
+            'Meeting Notes', 'Phone Call', 'Client Interaction', 'Task / To-Do',
+            'Idea / Brainstorm', 'Complaint', 'Follow-Up Needed', 'Personal Note',
+            'Expense / Receipt', 'Travel', 'Health / Wellness', 'Other'
+        ],
+        locations: [
+            'Home Office', 'Office', 'Coffee Shop', 'Co-working Space',
+            'Client Site', 'Phone / Virtual', 'In Transit', 'Restaurant',
+            'Conference / Event', 'Gym / Outdoors', 'Other'
+        ],
+        strategies: [
+            'Follow-Up Scheduled', 'Email Sent', 'Call Made', 'Task Created',
+            'Delegated', 'Tabled for Later', 'Resolved', 'Other'
+        ],
+        templateTabs: [
+            { key: 'email', label: 'Email Draft', field: 'emailDraft', notify: 'teacherNotified' },
+            { key: 'followup', label: 'Follow-Up', field: 'followUpNote', notify: 'parentNotified' },
+            { key: 'summary', label: 'Summary', field: 'summaryNote', notify: 'counselorNotified' },
+        ],
+    }
+};
+
+function getMode() {
+    return MODES[localStorage.getItem('pneuoma_mode')] || null;
+}
+
+function getModeOrRedirect() {
+    const mode = getMode();
+    if (!mode) { window.location.href = 'home.html'; return null; }
+    return mode;
+}
+
+// Backward-compatible constants (populated from active mode)
+const _m = getMode() || MODES.education;
+const INCIDENT_TYPES = _m.types;
 const SEVERITY_LEVELS = ['Low', 'Medium', 'High', 'Critical'];
-
 const STATUS_OPTIONS = ['open', 'in-progress', 'resolved', 'closed'];
-
-const DEESCALATION_STRATEGIES = [
-    'Verbal Separation',
-    'Physical Separation',
-    'Restorative Conversation Scheduled',
-    'Safety Escort',
-    'Cool-Down Period',
-    'Peer Mediation',
-    'Other'
-];
-
-const LOCATIONS = [
-    'Hallway - Main', 'Hallway - East Wing', 'Hallway - West Wing', 'Hallway - Near Gym',
-    'Cafeteria', 'Gymnasium', 'Playground', 'Parking Lot', 'Main Office', 'Classroom',
-    'Restroom', 'Library', 'Auditorium', 'Bus Loading Zone', 'Stairwell',
-    'Entrance - Front', 'Entrance - Side', 'Athletic Field', 'Other'
-];
+const DEESCALATION_STRATEGIES = _m.strategies;
+const LOCATIONS = _m.locations;
 
 // ==================== STUDENT IDENTITY MANAGEMENT ====================
 
@@ -46,7 +193,8 @@ const LABEL_MODES = [
 ];
 
 function generateAlias(idx) {
-    return 'Student ' + String.fromCharCode(65 + (idx % 26));
+    const prefix = (getMode() || { aliasPrefix: 'Student' }).aliasPrefix;
+    return prefix + ' ' + String.fromCharCode(65 + (idx % 26));
 }
 
 function getInitials(name) {
@@ -179,9 +327,10 @@ function escapeHtml(str) {
 }
 
 function generateClipboardText(inc) {
+    const m = getMode() || MODES.education;
     return [
         '═══════════════════════════════════════',
-        'INCIDENT REPORT',
+        (m.itemName + ' REPORT').toUpperCase(),
         '═══════════════════════════════════════',
         `Date: ${formatDate(inc.date)}`,
         `Time: ${inc.time}`,
@@ -190,9 +339,9 @@ function generateClipboardText(inc) {
         `Severity: ${inc.severity}`,
         `Status: ${(inc.status || '').toUpperCase()}`,
         '',
-        `Students Involved: ${studentsForDisplay(inc.studentsInvolved).join(', ') || 'N/A'}`,
-        `Staff Involved: ${(inc.staffInvolved || []).join(', ') || 'N/A'}`,
-        `Witnesses: ${(inc.witnesses || []).join(', ') || 'N/A'}`,
+        `${m.primaryPeople}: ${studentsForDisplay(inc.studentsInvolved).join(', ') || 'N/A'}`,
+        `${m.secondaryPeople}: ${(inc.staffInvolved || []).join(', ') || 'N/A'}`,
+        `${m.tertiaryPeople}: ${(inc.witnesses || []).join(', ') || 'N/A'}`,
         '',
         'DESCRIPTION:',
         inc.description,
@@ -200,7 +349,7 @@ function generateClipboardText(inc) {
         'IMMEDIATE ACTION:',
         inc.immediateAction || inc.immediate_action || 'N/A',
         '',
-        'DE-ESCALATION STRATEGY:',
+        (m.resolutionLabel + ':').toUpperCase(),
         (inc.deescalationStrategy || []).length ? inc.deescalationStrategy.join(', ') : 'N/A',
         '',
         'FOLLOW-UP NEEDED:',
@@ -298,13 +447,14 @@ function bottomNav(activePage) {
 }
 
 function topNav() {
+    const m = getMode() || MODES.education;
     return `
         <header class="top-nav">
             <a href="index.html" class="top-nav-logo">
                 <span class="logo-icon">πνεῦμα</span>
                 <span>PNEUOMA</span>
             </a>
-            <span class="top-nav-badge">Incident Capture</span>
+            <a href="home.html" class="top-nav-badge" style="cursor:pointer">${escapeHtml(m.badge)} ▾</a>
         </header>
     `;
 }

@@ -96,7 +96,7 @@
                     <div class="severity-grid" id="severity-grid"></div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Students Involved</label>
+                    <label class="form-label" for-label="primary-people">Students Involved</label>
                     <div class="tag-list" id="tags-students"></div>
                     <div id="student-editor"></div>
                     <div class="tag-input-wrap">
@@ -109,7 +109,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Staff Involved</label>
+                    <label class="form-label" for-label="secondary-people">Staff Involved</label>
                     <div class="tag-list" id="tags-staff"></div>
                     <div class="tag-input-wrap">
                         <input type="text" class="form-input" id="input-staff" placeholder="Staff name...">
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Witnesses</label>
+                    <label class="form-label" for-label="tertiary-people">Witnesses</label>
                     <div class="tag-list" id="tags-witnesses"></div>
                     <div class="tag-input-wrap">
                         <input type="text" class="form-input" id="input-witnesses" placeholder="Witness name...">
@@ -137,7 +137,7 @@
                     <textarea class="form-textarea" id="f-followup" rows="2" placeholder="Next steps required..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">De-Escalation Strategy Used <span style="font-weight:400;text-transform:none;color:var(--text-muted)">(optional)</span></label>
+                    <label class="form-label" for-label="resolution">De-Escalation Strategy Used <span style="font-weight:400;text-transform:none;color:var(--text-muted)">(optional)</span></label>
                     <div class="severity-grid" id="deesc-grid" style="grid-template-columns:1fr 1fr"></div>
                 </div>
                 <div class="form-group">
@@ -175,8 +175,23 @@
 
     <script src="app.js"></script>
     <script>
+        const M = getModeOrRedirect();
+        if (!M) throw new Error('redirecting');
+
         document.getElementById('top-nav').innerHTML = topNav();
         document.getElementById('bottom-nav').innerHTML = bottomNav('capture');
+
+        // Apply mode-specific labels
+        document.querySelector('#header h1').textContent = M.captureTitle;
+        document.querySelector('#header p').textContent = M.captureHint;
+        document.querySelector('[for-label="primary-people"]').textContent = M.primaryPeople;
+        document.getElementById('input-students').placeholder = M.primaryPlaceholder;
+        document.querySelector('[for-label="secondary-people"]').textContent = M.secondaryPeople;
+        document.getElementById('input-staff').placeholder = M.secondaryPlaceholder;
+        document.querySelector('[for-label="tertiary-people"]').textContent = M.tertiaryPeople;
+        document.getElementById('input-witnesses').placeholder = M.tertiaryPlaceholder;
+        document.querySelector('[for-label="resolution"]').innerHTML = M.resolutionLabel + ' <span style="font-weight:400;text-transform:none;color:var(--text-muted)">(optional)</span>';
+        document.getElementById('anon-notice').querySelector('span') || 0;
 
         // Wake up Render server on page load (free tier cold start takes ~30s)
         fetch(API_BASE + '/health').catch(() => {});
@@ -438,7 +453,7 @@
 
                 label.textContent = 'Extracting incident details...';
                 sub.textContent = 'GPT-4o is structuring and polishing your report';
-                const parsed = await api.post('/api/incidents/parse', { transcript });
+                const parsed = await api.post('/api/incidents/parse', { transcript, mode: M.key });
 
                 populateForm(parsed, transcript);
                 showState('form');
@@ -531,11 +546,11 @@
 
             const header = document.getElementById('header');
             if (state === 'form') {
-                header.querySelector('h1').textContent = currentTranscript ? 'Review Incident' : 'Manual Entry';
-                header.querySelector('p').textContent = currentTranscript ? 'Review and edit the details below' : 'Fill in the incident details';
+                header.querySelector('h1').textContent = currentTranscript ? 'Review ' + M.itemName : 'Manual Entry';
+                header.querySelector('p').textContent = currentTranscript ? 'Review and edit the details below' : 'Fill in the ' + M.itemName.toLowerCase() + ' details';
             } else if (state === 'ready') {
-                header.querySelector('h1').textContent = 'Capture Incident';
-                header.querySelector('p').textContent = 'Speak naturally about the incident';
+                header.querySelector('h1').textContent = M.captureTitle;
+                header.querySelector('p').textContent = M.captureHint;
             }
         }
 

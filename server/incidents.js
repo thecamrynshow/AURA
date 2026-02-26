@@ -311,34 +311,60 @@ router.post('/parse', async (req, res) => {
     }
 
     try {
-        const { transcript } = req.body;
+        const { transcript, mode } = req.body;
         if (!transcript) return res.status(400).json({ error: 'No transcript provided' });
 
         const today = new Date().toISOString().split('T')[0];
+
+        const modeContexts = {
+            education: {
+                role: 'K-12 school administration assistant',
+                context: 'school incidents',
+                people: 'students',
+                types: 'Physical Altercation, Verbal Altercation, Disruption, Insubordination, Bullying, Vandalism, Theft, Drug/Alcohol, Weapons, Threat, Truancy, Dress Code, Technology Misuse, Other',
+                strategies: 'Verbal Separation, Physical Separation, Restorative Conversation Scheduled, Safety Escort, Cool-Down Period, Peer Mediation, Other',
+            },
+            corporate: {
+                role: 'corporate workplace documentation assistant',
+                context: 'workplace incidents and reports',
+                people: 'individuals/employees',
+                types: 'Workplace Conflict, Safety Violation, Policy Breach, Harassment, Equipment Damage, Security Incident, Performance Issue, Customer Complaint, Accident / Injury, Misconduct, Data Breach, Discrimination, Theft / Loss, Environmental Hazard, Other',
+                strategies: 'Verbal De-escalation, Separated Parties, Manager Mediation, HR Intervention, Security Called, Written Warning Issued, Break / Cool-Down, Peer Mediation, Other',
+            },
+            individual: {
+                role: 'personal documentation and note-taking assistant',
+                context: 'personal notes, meetings, and interactions',
+                people: 'people',
+                types: 'Meeting Notes, Phone Call, Client Interaction, Task / To-Do, Idea / Brainstorm, Complaint, Follow-Up Needed, Personal Note, Expense / Receipt, Travel, Health / Wellness, Other',
+                strategies: 'Follow-Up Scheduled, Email Sent, Call Made, Task Created, Delegated, Tabled for Later, Resolved, Other',
+            }
+        };
+
+        const mc = modeContexts[mode] || modeContexts.education;
 
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',
             messages: [
                 {
                     role: 'system',
-                    content: `You are a K-12 school administration assistant that converts voice notes about incidents into structured, report-ready data. Extract all available information. Use today's date (${today}) if no date is mentioned.
+                    content: `You are a ${mc.role} that converts voice notes about ${mc.context} into structured, report-ready data. Extract all available information. Use today's date (${today}) if no date is mentioned.
 
-CRITICAL: All text fields (description, immediateAction, followUpNeeded) MUST be written in polished, professional prose — correct all grammar, spelling, punctuation, and sentence structure. Write in past tense, third person, formal tone suitable for official district documentation and legal review. Do NOT include filler words, false starts, or spoken-language artifacts from the transcript.
+CRITICAL: All text fields (description, immediateAction, followUpNeeded) MUST be written in polished, professional prose — correct all grammar, spelling, punctuation, and sentence structure. Write in past tense, third person, formal tone suitable for official documentation and legal review. Do NOT include filler words, false starts, or spoken-language artifacts from the transcript.
 
 Return ONLY valid JSON:
 {
   "date": "YYYY-MM-DD",
   "time": "H:MM AM/PM",
-  "location": "specific location in school",
-  "incidentType": "one of: Physical Altercation, Verbal Altercation, Disruption, Insubordination, Bullying, Vandalism, Theft, Drug/Alcohol, Weapons, Threat, Truancy, Dress Code, Technology Misuse, Other",
+  "location": "specific location",
+  "incidentType": "one of: ${mc.types}",
   "severity": "one of: Low, Medium, High, Critical",
-  "studentsInvolved": ["full names, properly capitalized"],
-  "staffInvolved": ["full names, properly capitalized"],
+  "studentsInvolved": ["full names of ${mc.people} involved, properly capitalized"],
+  "staffInvolved": ["full names of other personnel/contacts, properly capitalized"],
   "witnesses": ["full names, properly capitalized"],
   "description": "polished, grammar-corrected factual summary in professional report language",
   "immediateAction": "grammar-corrected actions taken, or empty string",
   "followUpNeeded": "grammar-corrected next steps, or empty string",
-  "deescalationStrategy": ["strategies used, from: Verbal Separation, Physical Separation, Restorative Conversation Scheduled, Safety Escort, Cool-Down Period, Peer Mediation, Other"]
+  "deescalationStrategy": ["strategies used, from: ${mc.strategies}"]
 }`
                 },
                 { role: 'user', content: transcript }
@@ -365,13 +391,11 @@ router.post('/templates', async (req, res) => {
 
     try {
         const inc = req.body;
+        const mode = inc.mode || 'education';
 
-        const response = await openai.chat.completions.create({
-            model: 'gpt-4o',
-            messages: [
-                {
-                    role: 'system',
-                    content: `You are a K-12 school administrator assistant. Generate professional, legally safe, grammar-perfect communication templates. Rules:
+        const templatePrompts = {
+            education: {
+                system: `You are a K-12 school administrator assistant. Generate professional, legally safe, grammar-perfect communication templates. Rules:
 - All output must use flawless grammar, spelling, and punctuation — suitable for official district records and legal review.
 - Neutral, factual language. Never assign blame. Past tense for events.
 - Teacher notification: Inform about incident and classroom impact. Include monitoring guidance.
@@ -380,21 +404,43 @@ router.post('/templates', async (req, res) => {
 - Principal briefing: Executive summary with severity, pattern concerns, and recommended next steps for leadership.
 - Dean notification: Operational detail for discipline follow-up, include student history context and consequence recommendations.
 - Support staff memo: Brief situational awareness for aides, paras, security — include what to watch for and where.
-- If de-escalation strategies were used, reference them positively in communications to reflect trauma-informed practice.
+- If de-escalation strategies were used, reference them positively in communications to reflect trauma-informed practice.`,
+                json: `{ "teacherEmail": "Subject: ...\\n\\n...", "parentEmail": "Subject: ...\\n\\n...", "counselorReferral": "COUNSELOR REFERRAL\\n\\n...", "principalBriefing": "PRINCIPAL BRIEFING\\n\\n...", "deanNotification": "DEAN NOTIFICATION\\n\\n...", "supportStaffMemo": "SUPPORT STAFF MEMO\\n\\n..." }`
+            },
+            corporate: {
+                system: `You are a corporate workplace documentation assistant. Generate professional, legally safe, grammar-perfect communication templates for workplace incidents. Rules:
+- All output must use flawless grammar, spelling, and punctuation — suitable for official records and legal review.
+- Neutral, factual language. Never assign blame. Past tense for events.
+- Manager email: Inform direct manager with relevant operational details and any team impact.
+- HR email: Formal HR documentation with policy references and recommended actions.
+- Stakeholder brief: High-level summary for cross-functional stakeholders, focus on business impact.
+- Executive summary: Concise C-suite briefing with risk assessment and recommended next steps.
+- Legal memo: Factual account for legal review, highlight compliance concerns and liability considerations.
+- Safety report: Incident details for safety officer, root cause indicators, prevention recommendations.`,
+                json: `{ "managerEmail": "Subject: ...\\n\\n...", "hrEmail": "Subject: ...\\n\\n...", "stakeholderBrief": "STAKEHOLDER BRIEF\\n\\n...", "executiveSummary": "EXECUTIVE SUMMARY\\n\\n...", "legalMemo": "LEGAL MEMO\\n\\n...", "safetyReport": "SAFETY REPORT\\n\\n..." }`
+            },
+            individual: {
+                system: `You are a personal documentation assistant. Generate clean, professional communication drafts. Rules:
+- All output must use flawless grammar, spelling, and punctuation.
+- Email draft: A professional email summarizing the key points, ready to send.
+- Follow-up note: Action items and reminders with dates/deadlines where possible.
+- Summary: A clean recap suitable for your records or sharing with others.`,
+                json: `{ "emailDraft": "Subject: ...\\n\\n...", "followUpNote": "FOLLOW-UP\\n\\n...", "summaryNote": "SUMMARY\\n\\n..." }`
+            }
+        };
 
-Return ONLY valid JSON:
-{
-  "teacherEmail": "Subject: ...\\n\\n...",
-  "parentEmail": "Subject: ...\\n\\n...",
-  "counselorReferral": "COUNSELOR REFERRAL\\n\\n...",
-  "principalBriefing": "PRINCIPAL BRIEFING\\n\\n...",
-  "deanNotification": "DEAN NOTIFICATION\\n\\n...",
-  "supportStaffMemo": "SUPPORT STAFF MEMO\\n\\n..."
-}`
+        const tp = templatePrompts[mode] || templatePrompts.education;
+
+        const response = await openai.chat.completions.create({
+            model: 'gpt-4o',
+            messages: [
+                {
+                    role: 'system',
+                    content: `${tp.system}\n\nReturn ONLY valid JSON:\n${tp.json}`
                 },
                 {
                     role: 'user',
-                    content: `Date: ${inc.date}\nTime: ${inc.time}\nLocation: ${inc.location}\nType: ${inc.incidentType}\nSeverity: ${inc.severity}\nStudents: ${(inc.studentsInvolved || []).join(', ')}\nDescription: ${inc.description}\nAction: ${inc.immediateAction}\nDe-escalation: ${(inc.deescalationStrategy || []).join(', ') || 'None documented'}\nFollow-up: ${inc.followUpNeeded}\nReported by: ${inc.reportedBy}`
+                    content: `Date: ${inc.date}\nTime: ${inc.time}\nLocation: ${inc.location}\nType: ${inc.incidentType}\nSeverity: ${inc.severity}\nPeople: ${(inc.studentsInvolved || []).join(', ')}\nDescription: ${inc.description}\nAction: ${inc.immediateAction}\nResolution: ${(inc.deescalationStrategy || []).join(', ') || 'None documented'}\nFollow-up: ${inc.followUpNeeded}\nReported by: ${inc.reportedBy}`
                 }
             ],
             response_format: { type: 'json_object' },

@@ -39,8 +39,12 @@
 
     <script src="app.js"></script>
     <script>
+        const M = getModeOrRedirect();
+        if (!M) throw new Error('redirecting');
+
         document.getElementById('top-nav').innerHTML = topNav();
         document.getElementById('bottom-nav').innerHTML = bottomNav('incidents');
+        document.querySelector('.page-header h1').textContent = 'All ' + M.itemNamePlural;
 
         let debounceTimer;
 

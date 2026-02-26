@@ -52,8 +52,17 @@
 
     <script src="app.js"></script>
     <script>
+        const M = getModeOrRedirect();
+        if (!M) throw new Error('redirecting');
+
         document.getElementById('top-nav').innerHTML = topNav();
         document.getElementById('bottom-nav').innerHTML = bottomNav('dashboard');
+
+        document.querySelector('.page-header h1').textContent = M.dashboardTitle;
+        document.querySelector('.page-header p').textContent = M.dashboardSub;
+        document.querySelector('.cta-text h2').textContent = M.ctaLabel;
+        document.querySelector('.cta-text p').textContent = M.ctaHint;
+        document.querySelector('.section-header h3').textContent = "Today's " + M.itemNamePlural;
 
         async function loadDashboard() {
             const listEl = document.getElementById('incident-list');
@@ -69,7 +78,7 @@
                 document.getElementById('stat-urgent').textContent = list.filter(i => i.severity === 'Critical' || i.severity === 'High').length;
 
                 if (list.length === 0) {
-                    listEl.innerHTML = renderEmpty('No incidents logged today', 'Tap the mic above to record your first incident');
+                    listEl.innerHTML = renderEmpty(M.emptyTitle, M.emptyHint);
                 } else {
                     listEl.innerHTML = list.map(renderIncidentCard).join('');
                 }
