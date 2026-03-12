@@ -1,6 +1,7 @@
 # PNEUOMA — The #1 Nervous System Regulation Platform
 
 [![Live Site](https://img.shields.io/badge/🌐_Live-pneuoma.com-06b6d4?style=for-the-badge)](https://pneuoma.com)
+[![Apps](https://img.shields.io/badge/📱_Apps-5_on_App_Store-64ffda?style=for-the-badge)](https://pneuoma.com/platform/apps/)
 [![Games](https://img.shields.io/badge/🎮_Games-30+_Live-8b5cf6?style=for-the-badge)](https://pneuoma.com/platform/games/)
 [![Companions](https://img.shields.io/badge/🤖_Companions-4_AI_Buddies-f472b6?style=for-the-badge)](https://pneuoma.com/platform/companions/)
 [![Create](https://img.shields.io/badge/🌌_Create-VR_Ready-22c55e?style=for-the-badge)](https://pneuoma.com/platform/create/)
@@ -26,6 +27,22 @@ PNEUOMA (πνεῦμα - Greek for "breath/spirit") is the leading platform for 
 | Trauma survivors | AI companion (Haven) - gentle support |
 | Classroom disruptions | Classroom Sync for whole-class regulation |
 | Screen time guilt | Games that actually help, not harm |
+
+---
+
+## 📱 Apps (5 Live on App Store)
+
+Native iOS apps for daily regulation and wellness:
+
+| App | Description | App Store |
+|-----|-------------|-----------|
+| 🫁 **PNEU** | Breathing & regulation with a beautiful orb synced to 65 BPM. Voice guidance, haptic feedback, family profiles, 20+ achievements. | [Download](https://apps.apple.com/us/app/pneu/id6757112120) |
+| 👑 **Sovereignty** | Build emotional sovereignty through guided practices. Reclaim your power and cultivate inner peace. | [Download](https://apps.apple.com/us/app/sovereignty/id6758255804) |
+| 🌱 **Origen** | Journey back to your origin. Explore your roots, reconnect with essence, and discover your authentic self. | [Download](https://apps.apple.com/us/app/origen/id6756326466) |
+| 🌙 **Veluna** | Intuitive period & cycle tracking and care. Understand your rhythm and align with your natural cycles. | [Download](https://apps.apple.com/us/app/veluna-period-cycle-care/id6758309019) |
+| 📸 **PNEUOMA Capture** | Document and capture regulation moments. Record, reflect, and build awareness through intentional observation. | [Download](https://apps.apple.com/us/app/pneuoma-capture/id6759628903) |
+
+**All apps are free on the App Store.**
 
 ---
 
@@ -196,6 +213,7 @@ AURA/
 │   └── ...                 # More games
 │
 ├── platform/               # Platform sections
+│   ├── apps/               # 5 live iOS apps hub
 │   ├── games/              # Games hub
 │   ├── rituals/            # 8 daily rituals
 │   ├── multiplayer/        # 6 multiplayer modes
