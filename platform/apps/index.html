@@ -548,21 +548,16 @@
                 height: 80px;
                 margin: 0 auto 20px;
                 border-radius: 20px;
+                overflow: hidden;
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
-            .live-app-card.pneu-card .live-app-icon {
-                background: linear-gradient(135deg, rgba(100, 255, 218, 0.2), rgba(100, 255, 218, 0.05));
-                color: #64ffda;
-            }
-            .live-app-card.sovereign-card .live-app-icon {
-                background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
-                color: #f59e0b;
-            }
-            .live-app-card.origen-card .live-app-icon {
-                background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));
-                color: #ec4899;
+            .live-app-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 20px;
             }
             .live-app-name {
                 font-family: 'Cormorant Garamond', serif;
@@ -617,10 +612,7 @@
                 <!-- PNEU -->
                 <div class="live-app-card pneu-card">
                     <div class="live-app-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 6v6l4 2"/>
-                        </svg>
+                        <img src="icons/pneu.png" alt="PNEU App Icon">
                     </div>
                     <h3 class="live-app-name">PNEU</h3>
                     <p class="live-app-tagline">Breathe. Regulate. Track.</p>
@@ -640,11 +632,7 @@
                 <!-- Sovereign -->
                 <div class="live-app-card sovereign-card">
                     <div class="live-app-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                            <path d="M2 17l10 5 10-5"/>
-                            <path d="M2 12l10 5 10-5"/>
-                        </svg>
+                        <img src="icons/sovereignty.png" alt="Sovereignty App Icon">
                     </div>
                     <h3 class="live-app-name">Sovereign</h3>
                     <p class="live-app-tagline">Own Your Inner World</p>
@@ -664,17 +652,7 @@
                 <!-- ORIGEN -->
                 <div class="live-app-card origen-card">
                     <div class="live-app-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="3"/>
-                            <path d="M12 2v4"/>
-                            <path d="M12 18v4"/>
-                            <path d="M4.93 4.93l2.83 2.83"/>
-                            <path d="M16.24 16.24l2.83 2.83"/>
-                            <path d="M2 12h4"/>
-                            <path d="M18 12h4"/>
-                            <path d="M4.93 19.07l2.83-2.83"/>
-                            <path d="M16.24 7.76l2.83-2.83"/>
-                        </svg>
+                        <img src="icons/origen.png" alt="Origen App Icon">
                     </div>
                     <h3 class="live-app-name">ORIGEN</h3>
                     <p class="live-app-tagline">Return to Source</p>
@@ -694,10 +672,7 @@
                 <!-- Veluna -->
                 <div class="live-app-card veluna-card">
                     <div class="live-app-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                        </svg>
+                        <img src="icons/veluna.png" alt="Veluna App Icon">
                     </div>
                     <h3 class="live-app-name">Veluna</h3>
                     <p class="live-app-tagline">Period & Cycle Care</p>
@@ -717,10 +692,7 @@
                 <!-- PNEUOMA Capture -->
                 <div class="live-app-card capture-card">
                     <div class="live-app-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                            <circle cx="12" cy="13" r="4"/>
-                        </svg>
+                        <img src="icons/capture.png" alt="PNEUOMA Capture App Icon">
                     </div>
                     <h3 class="live-app-name">PNEUOMA Capture</h3>
                     <p class="live-app-tagline">Capture the Moment</p>
