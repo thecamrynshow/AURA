@@ -191,9 +191,16 @@ STRIPE_WEBHOOK_SECRET=whsec_xxx
 # Stripe Price IDs
 STRIPE_PREMIUM_PRICE=price_xxx
 STRIPE_FAMILY_PRICE=price_xxx
+
+# MeterFlow Usage Tracking (optional — tracks API calls, sessions, active users)
+METERFLOW_API_URL=https://signalmeter.onrender.com
+METERFLOW_ORG_ID=1e4a956f-3e3d-4a4b-8695-079a17ac95ba
+METERFLOW_INGESTION_KEY=your-ingestion-api-key
 ```
 
 **Note:** If `ANTHROPIC_API_KEY` is not set, AI companions will use intelligent fallback responses.
+
+**Note:** If the `METERFLOW_*` variables are not set, usage tracking is silently disabled — no errors, no impact on request performance.
 
 ---
 
@@ -248,10 +255,25 @@ When API is unavailable, companions use:
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
    - **Node Version**: 18+
-4. Add environment variables (including `ANTHROPIC_API_KEY`)
+4. Add environment variables (including `ANTHROPIC_API_KEY` and `METERFLOW_*` keys)
 5. Deploy
 
 Live URL: `https://pneuoma-server.onrender.com`
+
+### MeterFlow Integration
+
+The server automatically sends usage events to [MeterFlow](https://signalmeter.onrender.com) (our usage metering platform) when the `METERFLOW_*` env vars are set.
+
+**What gets tracked:**
+
+| Event | Trigger | Meter |
+|-------|---------|-------|
+| API calls | Every `/api/*` request (middleware) | `api_calls` |
+| Active users | User login (deduplicated per user per day) | `active_users` |
+| Sessions | Multiplayer session created (Socket.io) | `sessions_played` |
+| Multiplayer | Multiplayer session created (Socket.io) | `multiplayer_sessions` |
+
+Tracking is fire-and-forget — failures are logged but never block the response. The SDK lives at `server/meterflow-client.js`.
 
 ### Railway
 
