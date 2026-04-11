@@ -43,6 +43,13 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json({ limit: '25mb' }));
 
+// MeterFlow usage tracking
+const meterflow = require('./meterflow-client');
+if (meterflow.isConfigured()) {
+    console.log('📊 MeterFlow tracking active');
+    app.use('/api', meterflow.apiTrackingMiddleware);
+}
+
 // Incident Capture & Containment routes
 const incidentRoutes = require('./incidents');
 app.use('/api/incidents', incidentRoutes);
@@ -300,6 +307,13 @@ app.post('/api/auth/login', async (req, res) => {
         const token = generateToken(user);
         
         console.log(`🔐 User logged in: ${normalizedEmail}`);
+
+        // Track active user in MeterFlow (one event per user per day via idempotency key)
+        const today = new Date().toISOString().slice(0, 10);
+        meterflow.sendEvent(meterflow.METERS.activeUsers, 1, {
+            userId: user.id,
+            idempotencyKey: `user-${user.id}-${today}`,
+        }).catch(() => {});
         
         res.json({
             success: true,
@@ -485,6 +499,16 @@ io.on('connection', (socket) => {
         socket.join(code);
         
         console.log(`✨ Session created: ${code} by ${name || socket.id}`);
+
+        // Track multiplayer session in MeterFlow
+        meterflow.sendEvent(meterflow.METERS.sessions, 1, {
+            idempotencyKey: `sess-${code}`,
+            metadata: { type: type || 'general', code },
+        }).catch(() => {});
+        meterflow.sendEvent(meterflow.METERS.multiplayer, 1, {
+            idempotencyKey: `mp-${code}`,
+            metadata: { type: type || 'general', code },
+        }).catch(() => {});
         
         if (callback) {
             callback({ success: true, code, session: session.state });
