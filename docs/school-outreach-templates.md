@@ -1,5 +1,9 @@
 # School Outreach Templates
 
+**Pilot evidence:** See [Pattengill Kindergarten case study (Spring 2026)](./pilot-pattengill-kindergarten-2026.md) for teacher quotes, session log, and facilitator playbook from a live Classroom Sync pilot.
+
+---
+
 ## Email Template 1: Cold Outreach to School Counselor
 
 **Subject:** Free SEL Breathing Games for Your Students - Pilot Program
