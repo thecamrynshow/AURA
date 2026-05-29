@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "sitemap": "node scripts/generate-sitemap.js"
+  },
   "devDependencies": {
     "puppeteer": "^24.36.1",
     "typescript": "^5.9.3"

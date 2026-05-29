@@ -346,6 +346,29 @@ PNEUOMA is optimized to rank for:
 - AI companion for bullying
 - PTSD support app for veterans
 
+### SEO Maintenance (keep it "always on")
+
+`sitemap.xml` is **auto-generated** from the file tree so it never goes stale.
+
+```bash
+# Regenerate after shipping or removing pages
+npm run sitemap
+```
+
+The generator (`scripts/generate-sitemap.js`):
+- Scans every `.html` page, skipping backend/internal/secondary-product dirs.
+- Skips any page marked `<meta name="robots" content="noindex">`.
+- Maps `index.html` → clean directory URLs and sets `<lastmod>` from each
+  page's last git commit date.
+
+**CI keeps it fresh automatically** — `.github/workflows/sitemap.yml` regenerates
+and commits `sitemap.xml` on every push that touches a page, plus a weekly refresh.
+
+**Manual step (one-time + ongoing):** submit `https://pneuoma.com/sitemap.xml` in
+[Google Search Console](https://search.google.com/search-console) and monitor
+Coverage/Indexing. Search Console is the only piece that can't be automated from
+this repo because it needs account access.
+
 ---
 
 ## 📈 Traction & Impact
