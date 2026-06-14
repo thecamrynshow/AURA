@@ -254,7 +254,7 @@ class Valor {
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3001';
         }
-        return 'https://pneuoma-server.onrender.com';
+        return 'https://pneuoma.onrender.com';
     }
     
     init() {

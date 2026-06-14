@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
     webDir: 'www',
     server: {
         allowNavigation: [
-            'pneuoma-server.onrender.com',
+            'pneuoma.onrender.com',
         ],
     },
     ios: {

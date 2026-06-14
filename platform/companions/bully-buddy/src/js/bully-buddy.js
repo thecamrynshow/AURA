@@ -220,7 +220,7 @@ class BullyBuddy {
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3001';
         }
-        return 'https://pneuoma-server.onrender.com'; // Production server
+        return 'https://pneuoma.onrender.com'; // Production server
     }
     
     init() {

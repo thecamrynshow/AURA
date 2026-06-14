@@ -2,7 +2,7 @@
 
 Real-time multiplayer sync + AI companions + authentication + payments for the PNEUOMA platform.
 
-[![Deployed](https://img.shields.io/badge/Deployed-Render-06b6d4)](https://pneuoma-server.onrender.com)
+[![Deployed](https://img.shields.io/badge/Deployed-Render-06b6d4)](https://pneuoma.onrender.com)
 [![Node](https://img.shields.io/badge/Node-18%2B-green)]()
 [![Socket.io](https://img.shields.io/badge/Socket.io-4.7-blue)]()
 [![Claude](https://img.shields.io/badge/AI-Claude_3.5-a855f7)]()
@@ -91,7 +91,7 @@ npm start
 
 **Example Request:**
 ```javascript
-const response = await fetch('https://pneuoma-server.onrender.com/api/companion/chat', {
+const response = await fetch('https://pneuoma.onrender.com/api/companion/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -258,7 +258,7 @@ When API is unavailable, companions use:
 4. Add environment variables (including `ANTHROPIC_API_KEY` and `METERFLOW_*` keys)
 5. Deploy
 
-Live URL: `https://pneuoma-server.onrender.com`
+Live URL: `https://pneuoma.onrender.com`
 
 ### MeterFlow Integration
 
@@ -300,7 +300,7 @@ railway up
 ```javascript
 // Chat with a companion
 async function chat(companion, message, history) {
-    const response = await fetch('https://pneuoma-server.onrender.com/api/companion/chat', {
+    const response = await fetch('https://pneuoma.onrender.com/api/companion/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ companion, message, history })
@@ -325,7 +325,7 @@ const { response: response2 } = await chat('bully-buddy', "They posted about me 
 ### Socket.io Integration
 
 ```javascript
-const socket = io('https://pneuoma-server.onrender.com');
+const socket = io('https://pneuoma.onrender.com');
 
 // Create session (host)
 socket.emit('create_session', { 
