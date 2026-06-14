@@ -66,6 +66,9 @@ const SKIP_FILES = new Set([
 const RULES = [
     { test: (p) => p === '/', priority: '1.0', changefreq: 'daily' },
     { test: (p) => p === '/platform/games/', priority: '0.95', changefreq: 'weekly' },
+    { test: (p) => p === '/toolkit/', priority: '0.9', changefreq: 'weekly' },
+    { test: (p) => p === '/resources/', priority: '0.9', changefreq: 'weekly' },
+    { test: (p) => p.startsWith('/resources/'), priority: '0.8', changefreq: 'weekly' },
     { test: (p) => p === '/platform/schools/', priority: '0.9', changefreq: 'weekly' },
     { test: (p) => p === '/platform/schools/pilot-program.html', priority: '0.85', changefreq: 'monthly' },
     { test: (p) => p === '/platform/create/', priority: '0.9', changefreq: 'weekly' },
