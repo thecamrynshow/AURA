@@ -274,6 +274,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="conversion.css">
 </head>
 <body>
     <!-- Animated background -->
@@ -318,24 +319,29 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <p class="hero-human">Helping kids and adults calm their minds, focus better, and feel safe — every day, through play.</p>
-            <p class="hero-eyebrow">The future of wellness technology</p>
+            <p class="hero-eyebrow">For Teachers &amp; Classrooms</p>
             <h1 class="hero-title">
-                The operating system for<br>
-                <span class="hero-title-accent">human regulation</span>
+                Help Students Calm Faster, Focus Longer, and<br>
+                <span class="hero-title-accent">Transition Without Chaos</span>
             </h1>
             <p class="hero-subtitle">
-                Games, apps, and experiences that train the nervous system through biofeedback.<br>
-                Built for homes. Scaled for schools. Designed for healthcare.
+                PNEUOMA gives teachers breathing games, regulation activities, and classroom
+                reset routines that help students self-regulate in minutes.
             </p>
             <div class="hero-cta">
-                <a href="#experiences" class="btn btn-primary">
-                    <span>Try Our Experiences</span>
+                <a href="auth/signup.html" class="btn btn-primary" data-pc-event="cta_start_free_click" data-pc-label="hero">
+                    <span>Start Free</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                 </a>
-                <a href="#partner" class="btn btn-secondary">Request Demo</a>
+                <a href="platform/schools/pilot-program.html" class="btn btn-secondary" data-pc-event="cta_request_pilot_click" data-pc-label="hero">Request School Pilot</a>
+            </div>
+            <div class="pc-trust-row">
+                <span class="pc-chip">Classroom Tested</span>
+                <span class="pc-chip">Teacher Approved</span>
+                <span class="pc-chip">Research Informed</span>
+                <span class="pc-chip">Built for Real Classrooms</span>
             </div>
         </div>
         
@@ -345,6 +351,67 @@
                 <div class="breath-ring ring-2"></div>
                 <div class="breath-ring ring-3"></div>
                 <div class="breath-core"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pilot Proof (Real Classroom Results) -->
+    <section class="pc-proof" id="results">
+        <div class="section-container">
+            <p class="section-eyebrow">Real Classroom Results</p>
+            <h2 class="section-title">Proven in a Real Kindergarten Classroom</h2>
+            <div class="pc-proof-grid">
+                <article class="pc-card pc-card-testimonial">
+                    <div class="pc-quote-mark">"</div>
+                    <blockquote class="pc-quote">Absolutely helps, very effective — I'll keep doing it daily during transitions without me.</blockquote>
+                    <div class="pc-quote-attr">
+                        <strong>Mrs. Gill</strong>
+                        <span>Kindergarten Teacher · Pattengill Elementary, Lansing MI</span>
+                    </div>
+                </article>
+                <article class="pc-card">
+                    <h3 class="pc-card-title">What the 3-week pilot showed</h3>
+                    <ul class="pc-bullets">
+                        <li>Daily classroom use</li>
+                        <li>Teacher-initiated transitions without the founder present</li>
+                        <li>Students completed regulation routines independently</li>
+                        <li>Improved classroom transitions</li>
+                        <li>Increased student participation</li>
+                    </ul>
+                    <div class="pc-cta-row">
+                        <a href="platform/multiplayer/classroom-sync/" class="btn btn-primary" data-pc-event="classroom_sync_interest_click" data-pc-label="proof"><span>Try Classroom Sync</span></a>
+                        <a href="platform/schools/pilot-program.html" class="btn btn-secondary" data-pc-event="cta_request_pilot_click" data-pc-label="proof">Request School Pilot</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Free Classroom Regulation Toolkit (Lead Magnet) -->
+    <section class="pc-toolkit" id="toolkit">
+        <div class="section-container">
+            <div class="pc-toolkit-inner">
+                <div class="pc-toolkit-copy">
+                    <p class="section-eyebrow">Free for Teachers</p>
+                    <h2 class="section-title" style="text-align:left;">Free Classroom Regulation Toolkit</h2>
+                    <p>Get the free classroom regulation toolkit: 27 breathing games, transition scripts, morning reset routines, and emotional check-in activities.</p>
+                    <ul class="pc-toolkit-list">
+                        <li>27 breathing games</li>
+                        <li>Transition scripts</li>
+                        <li>Morning reset routines</li>
+                        <li>Emotional check-ins</li>
+                        <li>Reset 3-2-1 protocol</li>
+                        <li>No login required</li>
+                    </ul>
+                    <a href="toolkit/" class="btn btn-primary" data-pc-event="cta_download_toolkit_click" data-pc-label="home_toolkit"><span>Download Free Toolkit</span></a>
+                </div>
+                <form class="pc-emailform" data-pc-email-form data-pc-source="homepage_toolkit">
+                    <h3>Want it emailed + new classroom routines?</h3>
+                    <input type="email" class="pc-input" placeholder="you@school.edu" aria-label="Email address" required>
+                    <button type="submit" class="btn btn-primary" style="width:100%;"><span>Send Me the Toolkit</span></button>
+                    <p class="pc-form-status" role="status" aria-live="polite"></p>
+                    <p class="pc-form-note">The toolkit is free to open right now — no email required. Add your email only if you'd like it sent and to get occasional classroom regulation tips. No spam.</p>
+                </form>
             </div>
         </div>
     </section>
@@ -1144,6 +1211,7 @@
     <script src="audio.js"></script>
     <script src="auth/auth.js"></script>
     <script src="main.js"></script>
+    <script src="conversion.js"></script>
     <script>
         // Update nav based on auth state
         document.addEventListener('DOMContentLoaded', () => {
