@@ -118,6 +118,23 @@
             track('email_capture_submit', { source: source });
             saveLocal(email, source);
 
+            // ---- Backend lead capture (optional, off by default) ----
+            // To enable server-side lead capture, define the endpoint before
+            // this script loads, e.g.:
+            //   <script>window.PNEUOMA_LEADS_ENDPOINT = 'https://pneuoma.onrender.com/api/leads';</script>
+            //
+            // Recommended backend endpoint:  POST /api/leads
+            // Expected JSON body:
+            //   {
+            //     "email":  "teacher@example.com",
+            //     "source": "classroom_regulation_toolkit",
+            //     "page":   "/toolkit/"
+            //   }
+            // Expected response: 2xx on success (any other status is treated as failure).
+            //
+            // Until that endpoint exists, window.PNEUOMA_LEADS_ENDPOINT stays
+            // undefined and we use the honest fallback below (no fake success):
+            // local save + GA4 event + mailto compose + an honest status message.
             var endpoint = window.PNEUOMA_LEADS_ENDPOINT;
             if (endpoint) {
                 // A real backend endpoint is configured: use it and only
@@ -126,7 +143,7 @@
                 fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email, source: source })
+                    body: JSON.stringify({ email: email, source: source, page: window.location.pathname })
                 })
                     .then(function (res) {
                         if (res.ok) {
@@ -157,7 +174,8 @@
             window.location.href = 'mailto:' + FOUNDER_EMAIL + '?subject=' + subject + '&body=' + body;
             setStatus(
                 form,
-                'Opening your email app to confirm. The toolkit is also free to open right now below.',
+                'The toolkit is free to open right now — no email needed. We just opened your email app so you can reach us at ' +
+                FOUNDER_EMAIL + ' to join classroom updates.',
                 true
             );
         });
