@@ -1,0 +1,371 @@
+/* ============================================
+   PNEUOMA — Conversion Layer
+   Modular, additive styles for hero proof, trust chips,
+   pilot/testimonial cards, lead-magnet toolkit, email capture,
+   article-bottom CTAs, and SEO resource pages.
+
+   All classes are namespaced `pc-` (pneuoma-convert) so this file
+   is fully additive and easy to roll back: remove the <link> and
+   <script> references and nothing else changes.
+
+   Relies on the existing design tokens in styles.css (CSS vars).
+   Falls back gracefully if a token is missing.
+   ============================================ */
+
+:root {
+    --pc-accent: var(--accent-primary, #64ffda);
+    --pc-warm: var(--accent-warm, #ffd700);
+    --pc-text: var(--text-primary, #e8eaed);
+    --pc-text-dim: var(--text-secondary, #9ca3af);
+    --pc-surface: var(--bg-surface, #151b23);
+    --pc-elevated: var(--bg-elevated, #1c2430);
+    --pc-radius: var(--radius-lg, 20px);
+    --pc-radius-sm: var(--radius-sm, 8px);
+}
+
+/* ---- Trust chips (under hero) ---- */
+.pc-trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    justify-content: flex-start;
+}
+.pc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--pc-text);
+    background: rgba(100, 255, 218, 0.08);
+    border: 1px solid rgba(100, 255, 218, 0.25);
+    border-radius: var(--radius-full, 9999px);
+    white-space: nowrap;
+}
+.pc-chip::before {
+    content: "✓";
+    color: var(--pc-accent);
+    font-weight: 700;
+}
+
+/* ---- Section helpers (reuse homepage look) ---- */
+.pc-section {
+    padding: 4rem 1.5rem;
+    position: relative;
+}
+.pc-narrow {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ---- Pilot proof / testimonial cards ---- */
+.pc-proof {
+    padding: 4rem 1.5rem;
+}
+.pc-proof-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.pc-card {
+    background: var(--pc-surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--pc-radius);
+    padding: 2rem;
+}
+.pc-card-testimonial {
+    background: linear-gradient(160deg, rgba(100, 255, 218, 0.08), rgba(28, 36, 48, 0.6));
+    border-color: rgba(100, 255, 218, 0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.pc-quote-mark {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 4rem;
+    line-height: 0.6;
+    color: var(--pc-accent);
+    opacity: 0.5;
+    height: 2rem;
+}
+.pc-quote {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: var(--pc-text);
+    margin: 0.5rem 0 1.5rem;
+    font-style: italic;
+}
+.pc-quote-attr {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.pc-quote-attr strong { color: var(--pc-text); font-size: 1rem; }
+.pc-quote-attr span { color: var(--pc-text-dim); font-size: 0.9rem; }
+.pc-card-title {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--pc-text);
+}
+.pc-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.pc-bullets li {
+    position: relative;
+    padding-left: 1.75rem;
+    color: var(--pc-text-dim);
+    line-height: 1.5;
+}
+.pc-bullets li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--pc-accent);
+    font-weight: 700;
+}
+.pc-link {
+    color: var(--pc-accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+.pc-link:hover { text-decoration: underline; }
+
+/* ---- CTA row / band ---- */
+.pc-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.pc-cta-band {
+    margin: 2.5rem auto;
+    max-width: 900px;
+    background: linear-gradient(160deg, rgba(100, 255, 218, 0.1), rgba(28, 36, 48, 0.7));
+    border: 1px solid rgba(100, 255, 218, 0.25);
+    border-radius: var(--pc-radius);
+    padding: 2.25rem;
+    text-align: center;
+}
+.pc-cta-band h3 {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 1.7rem;
+    margin-bottom: 0.5rem;
+    color: var(--pc-text);
+}
+.pc-cta-band p {
+    color: var(--pc-text-dim);
+    margin-bottom: 1.5rem;
+}
+.pc-cta-band .pc-cta-row { justify-content: center; }
+
+/* ---- Lead-magnet toolkit ---- */
+.pc-toolkit {
+    padding: 4rem 1.5rem;
+}
+.pc-toolkit-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--pc-elevated);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: var(--pc-radius);
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+}
+.pc-toolkit-copy h2 { margin-bottom: 1rem; }
+.pc-toolkit-copy p { color: var(--pc-text-dim); margin-bottom: 1.5rem; }
+.pc-toolkit-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+.pc-toolkit-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: 0.92rem;
+    color: var(--pc-text-dim);
+}
+.pc-toolkit-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--pc-warm);
+}
+
+/* ---- Email capture form ---- */
+.pc-emailform {
+    background: var(--pc-surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--pc-radius-sm);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+.pc-emailform h3 {
+    font-size: 1.1rem;
+    color: var(--pc-text);
+}
+.pc-input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--bg-deep, #07080d);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--pc-radius-sm);
+    color: var(--pc-text);
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+.pc-input:focus {
+    outline: none;
+    border-color: var(--pc-accent);
+}
+.pc-form-note {
+    font-size: 0.8rem;
+    color: var(--text-muted, #6b7280);
+    line-height: 1.4;
+}
+.pc-form-status {
+    font-size: 0.9rem;
+    min-height: 1.2em;
+}
+.pc-form-status.pc-ok { color: var(--pc-accent); }
+.pc-form-status.pc-err { color: #ff6b6b; }
+
+/* ---- SEO resource / article pages ---- */
+.pc-res-hero {
+    padding: 7rem 1.5rem 2.5rem;
+    max-width: 820px;
+    margin: 0 auto;
+    text-align: center;
+}
+.pc-res-eyebrow {
+    color: var(--pc-accent);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+.pc-res-hero h1 {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    margin: 0.75rem 0 1rem;
+    color: var(--pc-text);
+}
+.pc-res-lede {
+    font-size: 1.15rem;
+    color: var(--pc-text-dim);
+    line-height: 1.6;
+}
+.pc-article {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+}
+.pc-article h2 {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: 1.8rem;
+    margin: 2.5rem 0 1rem;
+    color: var(--pc-text);
+}
+.pc-article h3 {
+    font-size: 1.2rem;
+    margin: 1.75rem 0 0.75rem;
+    color: var(--pc-text);
+}
+.pc-article p,
+.pc-article li {
+    color: var(--pc-text-dim);
+    line-height: 1.7;
+}
+.pc-article ul, .pc-article ol {
+    margin: 0 0 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.pc-article a { color: var(--pc-accent); }
+.pc-callout {
+    background: var(--pc-surface);
+    border-left: 3px solid var(--pc-accent);
+    border-radius: var(--pc-radius-sm);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+}
+.pc-callout p { margin: 0; color: var(--pc-text); }
+
+/* ---- Related links ---- */
+.pc-related {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2rem;
+}
+.pc-related h2 { font-size: 1.4rem; margin-bottom: 1rem; }
+.pc-related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+.pc-related-grid a {
+    display: block;
+    padding: 1rem 1.25rem;
+    background: var(--pc-surface);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--pc-radius-sm);
+    color: var(--pc-text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: border-color var(--transition-base, 300ms ease);
+}
+.pc-related-grid a:hover { border-color: var(--pc-accent); }
+
+/* ---- FAQ ---- */
+.pc-faq {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+}
+.pc-faq h2 { font-size: 1.6rem; margin-bottom: 1.25rem; }
+.pc-faq-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.1rem 0;
+}
+.pc-faq-item h3 {
+    font-size: 1.05rem;
+    margin: 0 0 0.5rem;
+    color: var(--pc-text);
+}
+.pc-faq-item p { margin: 0; color: var(--pc-text-dim); line-height: 1.6; }
+
+/* ---- Responsive ---- */
+@media (max-width: 820px) {
+    .pc-proof-grid,
+    .pc-toolkit-inner,
+    .pc-toolkit-list,
+    .pc-related-grid {
+        grid-template-columns: 1fr;
+    }
+    .pc-trust-row { justify-content: center; }
+    .pc-quote { font-size: 1.35rem; }
+}
