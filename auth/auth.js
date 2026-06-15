@@ -95,8 +95,12 @@ const PneuomaAuth = {
             localStorage.setItem('pneuoma_user', JSON.stringify(this.user));
             localStorage.setItem('pneuoma_token', data.token);
             
-            // Redirect to platform
-            window.location.href = '/platform/';
+            // Redirect after login (honor ?redirect= for checkout return paths)
+            const redirect = window.PNEUOMA_POST_LOGIN_REDIRECT;
+            delete window.PNEUOMA_POST_LOGIN_REDIRECT;
+            window.location.href = (redirect && redirect.startsWith('/') && !redirect.startsWith('//'))
+                ? redirect
+                : '/platform/';
             
         } catch (error) {
             // Check if it's a network error (server offline)

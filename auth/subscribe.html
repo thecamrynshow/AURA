@@ -177,25 +177,46 @@
         if (STRIPE_KEY && !STRIPE_KEY.includes('your_publishable_key')) {
             stripe = Stripe(STRIPE_KEY);
         }
+
+        const LOGIN_URL = '/auth/login.html?redirect=' + encodeURIComponent('/auth/subscribe.html');
+
+        function getAuthToken() {
+            const token = localStorage.getItem('pneuoma_token');
+            return token && token.trim() ? token.trim() : null;
+        }
+
+        function redirectToLogin() {
+            window.location.href = LOGIN_URL;
+        }
+
+        function safeServerError(data) {
+            if (data && typeof data.error === 'string' && data.error.length > 0 && data.error.length < 200) {
+                return data.error;
+            }
+            return 'Could not start checkout. Please try again.';
+        }
         
         // Handle subscription
         async function subscribe(plan) {
-            // Check if logged in
             const user = PneuomaAuth.init();
+            const token = getAuthToken();
+
             if (!user) {
-                // Redirect to signup with plan parameter
                 window.location.href = `/auth/signup.html?plan=${plan}`;
+                return;
+            }
+
+            if (!token) {
+                redirectToLogin();
                 return;
             }
             
             if (!stripe) {
-                // Stripe not configured - show message
                 alert('Payment system is being configured. Please check back soon or contact camrynjackson@pneuoma.com for early access.');
                 return;
             }
             
             try {
-                // Create checkout session on backend
                 const response = await fetch(`${PneuomaAuth.serverUrl}/api/stripe/create-checkout`, {
                     method: 'POST',
                     headers: PneuomaAuth.getHeaders(),
@@ -204,10 +225,32 @@
                         plan 
                     })
                 });
-                
-                const { sessionId } = await response.json();
-                
-                // Redirect to Stripe Checkout
+
+                let data;
+                try {
+                    data = await response.json();
+                } catch (parseError) {
+                    console.error('Checkout response parse error:', parseError);
+                    alert('Could not start checkout. Please try again.');
+                    return;
+                }
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        alert('Please sign in again to continue.');
+                        redirectToLogin();
+                        return;
+                    }
+                    alert(safeServerError(data));
+                    return;
+                }
+
+                const sessionId = data && data.sessionId;
+                if (!sessionId) {
+                    alert(safeServerError(data));
+                    return;
+                }
+
                 const { error } = await stripe.redirectToCheckout({ sessionId });
                 
                 if (error) {
@@ -216,7 +259,7 @@
                 }
             } catch (error) {
                 console.error('Subscription error:', error);
-                alert('Could not process subscription. Please try again.');
+                alert('Could not reach the server. Please check your connection and try again.');
             }
         }
         

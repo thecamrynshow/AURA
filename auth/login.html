@@ -94,10 +94,18 @@
     
     <script src="auth.js"></script>
     <script>
+        const postLoginRedirect = (() => {
+            const target = new URLSearchParams(window.location.search).get('redirect');
+            return (target && target.startsWith('/') && !target.startsWith('//')) ? target : null;
+        })();
+
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            if (postLoginRedirect) {
+                window.PNEUOMA_POST_LOGIN_REDIRECT = postLoginRedirect;
+            }
             await PneuomaAuth.login(email, password);
         });
     </script>
