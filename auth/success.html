@@ -11,7 +11,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Premium | PNEUOMA</title>
+    <title>Subscription | PNEUOMA</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,26 +38,57 @@
             width: 120px;
             height: 120px;
             margin: 0 auto 2rem;
-            background: linear-gradient(135deg, #06b6d4, #64ffda);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .success-icon--premium {
+            background: linear-gradient(135deg, #06b6d4, #64ffda);
             animation: scaleIn 0.5s ease-out;
+        }
+
+        .success-icon--pending,
+        .success-icon--loading {
+            background: #161b22;
+            border: 2px solid #30363d;
+        }
+
+        .success-icon--error {
+            background: #161b22;
+            border: 2px solid #484f58;
         }
         
         .success-icon svg {
             width: 60px;
             height: 60px;
-            stroke: #0a0c10;
             stroke-width: 3;
             fill: none;
+        }
+
+        .success-icon--premium svg {
+            stroke: #0a0c10;
+        }
+
+        .success-icon--pending svg,
+        .success-icon--loading svg,
+        .success-icon--error svg {
+            stroke: #64ffda;
+        }
+
+        .success-icon--loading svg {
+            animation: spin 1s linear infinite;
         }
         
         @keyframes scaleIn {
             0% { transform: scale(0); opacity: 0; }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         .success-content h1 {
@@ -68,6 +99,12 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        .success-content h1.plain {
+            background: none;
+            -webkit-text-fill-color: #e6edf3;
+            color: #e6edf3;
         }
         
         .success-content p {
@@ -113,44 +150,74 @@
             font-weight: bold;
         }
         
-        .btn-start {
+        .btn-start,
+        .btn-secondary {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
             padding: 1rem 2rem;
-            background: linear-gradient(135deg, #06b6d4, #64ffda);
-            color: #0a0c10;
-            text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
             font-size: 1.125rem;
             transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #06b6d4, #64ffda);
+            color: #0a0c10;
+            text-decoration: none;
         }
         
         .btn-start:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);
         }
+
+        .btn-secondary {
+            background: transparent;
+            color: #64ffda;
+            border: 1px solid #30363d;
+            margin-top: 0.75rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: #64ffda;
+        }
         
         .btn-start svg {
             width: 20px;
             height: 20px;
         }
+
+        .success-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
     <div class="success-container">
-        <div class="success-content">
-            <div class="success-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+        <div class="success-content" id="success-content">
+            <div class="success-icon success-icon--loading" id="success-icon">
+                <svg viewBox="0 0 24 24" id="success-icon-svg">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" fill="none" stroke-dasharray="40 20"/>
                 </svg>
             </div>
             
-            <h1>Welcome to Premium!</h1>
-            <p>Your 7-day free trial has started. You now have full access to everything PNEUOMA offers.</p>
+            <h1 id="success-title">Confirming your subscription…</h1>
+            <p id="success-message">Please wait while we verify your membership with our server.</p>
             
-            <div class="success-features">
+            <div class="success-features hidden" id="success-features">
                 <h3>What's now unlocked</h3>
                 <ul>
                     <li>All 25+ regulation games</li>
@@ -162,39 +229,131 @@
                 </ul>
             </div>
             
-            <a href="/platform/" class="btn-start">
-                <span>Start Your Journey</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </a>
+            <div class="success-actions" id="success-actions"></div>
         </div>
     </div>
     
     <script src="auth.js"></script>
     <script>
-        // Update user subscription status
-        document.addEventListener('DOMContentLoaded', async () => {
+        const ICONS = {
+            check: '<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>',
+            spinner: '<circle cx="12" cy="12" r="9" stroke="currentColor" fill="none" stroke-dasharray="40 20"/>',
+            clock: '<circle cx="12" cy="12" r="9" stroke="currentColor"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-linecap="round"/>'
+        };
+
+        function setIcon(type) {
+            const iconEl = document.getElementById('success-icon');
+            const svgEl = document.getElementById('success-icon-svg');
+            iconEl.className = 'success-icon success-icon--' + type;
+            svgEl.innerHTML = ICONS[type === 'loading' ? 'spinner' : (type === 'premium' ? 'check' : 'clock')];
+        }
+
+        function setActions(html) {
+            document.getElementById('success-actions').innerHTML = html;
+        }
+
+        function showLoading() {
+            document.title = 'Confirming subscription | PNEUOMA';
+            setIcon('loading');
+            document.getElementById('success-title').textContent = 'Confirming your subscription…';
+            document.getElementById('success-title').classList.add('plain');
+            document.getElementById('success-message').textContent =
+                'Please wait while we verify your membership with our server.';
+            document.getElementById('success-features').classList.add('hidden');
+            setActions('');
+        }
+
+        function showPremium() {
+            document.title = 'Welcome to Premium | PNEUOMA';
+            setIcon('premium');
+            document.getElementById('success-title').textContent = 'Welcome to Premium!';
+            document.getElementById('success-title').classList.remove('plain');
+            document.getElementById('success-message').textContent =
+                'Your 7-day free trial has started. You now have full access to everything PNEUOMA offers.';
+            document.getElementById('success-features').classList.remove('hidden');
+            setActions(
+                '<a href="/platform/" class="btn-start">' +
+                '<span>Start Your Journey</span>' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+                '<path d="M5 12h14M12 5l7 7-7 7"/>' +
+                '</svg></a>'
+            );
+        }
+
+        function showPending() {
+            document.title = 'Confirming subscription | PNEUOMA';
+            setIcon('pending');
+            document.getElementById('success-title').textContent = "We're confirming your subscription";
+            document.getElementById('success-title').classList.add('plain');
+            document.getElementById('success-message').textContent =
+                'Your payment was received, but Stripe may take a moment to finish processing. ' +
+                'Premium access will unlock automatically once confirmed — nothing else is required.';
+            document.getElementById('success-features').classList.add('hidden');
+            setActions(
+                '<button type="button" class="btn-start" id="refresh-btn">Refresh status</button>' +
+                '<a href="/auth/subscribe.html" class="btn-secondary">Back to plans</a>'
+            );
+            document.getElementById('refresh-btn').addEventListener('click', checkSubscription);
+        }
+
+        function showError() {
+            document.title = 'Subscription status | PNEUOMA';
+            setIcon('error');
+            document.getElementById('success-title').textContent = "We couldn't confirm your subscription yet";
+            document.getElementById('success-title').classList.add('plain');
+            document.getElementById('success-message').textContent =
+                'We were unable to reach the server to verify your membership. ' +
+                'Your payment may still be processing — try refreshing in a moment.';
+            document.getElementById('success-features').classList.add('hidden');
+            setActions(
+                '<button type="button" class="btn-start" id="refresh-btn">Refresh status</button>' +
+                '<a href="/auth/subscribe.html" class="btn-secondary">Back to plans</a>'
+            );
+            document.getElementById('refresh-btn').addEventListener('click', checkSubscription);
+        }
+
+        function showNotLoggedIn() {
+            document.title = 'Sign in required | PNEUOMA';
+            setIcon('error');
+            document.getElementById('success-title').textContent = 'Sign in to continue';
+            document.getElementById('success-title').classList.add('plain');
+            document.getElementById('success-message').textContent =
+                'Please sign in to the account you used for checkout so we can confirm your subscription.';
+            document.getElementById('success-features').classList.add('hidden');
+            setActions('<a href="/auth/login.html" class="btn-start">Sign in</a>');
+        }
+
+        async function checkSubscription() {
             const user = PneuomaAuth.init();
-            if (user) {
-                // Refresh subscription status from server
-                try {
-                    const response = await fetch(`${PneuomaAuth.serverUrl}/api/stripe/subscription`, {
-                        headers: PneuomaAuth.getHeaders()
-                    });
-                    const data = await response.json();
-                    
-                    if (data.isPremium) {
-                        user.subscription = data.subscription;
-                        localStorage.setItem('pneuoma_user', JSON.stringify(user));
-                    }
-                } catch (error) {
-                    console.error('Could not verify subscription:', error);
-                }
+            if (!user) {
+                showNotLoggedIn();
+                return;
             }
-        });
+
+            showLoading();
+
+            const data = await PneuomaAuth.confirmAccess();
+
+            if (data === null) {
+                showError();
+                return;
+            }
+
+            if (data.isPremium === true) {
+                // confirmAccess() already saved user.subscription = data.plan,
+                // user.isPremium, and user.status from the authoritative API.
+                if (PneuomaAuth.user) {
+                    PneuomaAuth.user.subscriptionStatus = data.status;
+                    localStorage.setItem('pneuoma_user', JSON.stringify(PneuomaAuth.user));
+                }
+                showPremium();
+                return;
+            }
+
+            showPending();
+        }
+
+        document.addEventListener('DOMContentLoaded', checkSubscription);
     </script>
 </body>
 </html>
-
-
