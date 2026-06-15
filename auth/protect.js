@@ -67,14 +67,14 @@
         try {
             const user = JSON.parse(storedUser);
             
-            // Master accounts always have access
-            const masterEmails = ['camrynjackson@pneuoma.com', 'camryn@pneuoma.com'];
-            if (masterEmails.includes(user.email?.toLowerCase())) {
+            // Master is a server-assigned role (not an email match).
+            if (user.role === 'master' || user.subscription === 'master') {
                 return true;
             }
             
-            // Premium/Family subscribers have access
-            if (user.subscription === 'premium' || user.subscription === 'family' || user.subscription === 'master') {
+            // Premium/Family subscribers have access (cached; re-verified with the
+            // server below for premium content).
+            if (user.isPremium === true || user.subscription === 'premium' || user.subscription === 'family') {
                 return true;
             }
             
@@ -83,6 +83,26 @@
             
         } catch (e) {
             return isCurrentContentFree();
+        }
+    }
+    
+    // Authoritative server check for premium content. Returns true/false, or
+    // null on network error (offline). The server is the source of truth.
+    async function serverConfirmsPremium() {
+        const token = localStorage.getItem('pneuoma_token');
+        if (!token) return false;
+        const base = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+            ? 'http://localhost:3001'
+            : 'https://pneuoma.onrender.com';
+        try {
+            const res = await fetch(base + '/api/me/subscription', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) return false;
+            const data = await res.json();
+            return !!data.isPremium;
+        } catch (e) {
+            return null; // offline / unreachable — do not change current state
         }
     }
     
@@ -251,13 +271,29 @@
         document.body.appendChild(modal);
     }
     
-    // Check access immediately
-    if (!hasAccess()) {
-        // Block the page immediately
+    function blockNow() {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', showUpgradeModal);
         } else {
             showUpgradeModal();
+        }
+    }
+    
+    // 1) Immediate cached check (fast UX). Blocks obvious non-subscribers.
+    if (!hasAccess()) {
+        blockNow();
+    } else {
+        // 2) For PREMIUM (non-free) content, re-verify entitlement with the
+        //    server so tampered localStorage can't unlock paid experiences.
+        //    Free content and offline users are unaffected.
+        const content = getContentFromUrl();
+        if (content && !isCurrentContentFree()) {
+            serverConfirmsPremium().then((ok) => {
+                if (ok === false) {
+                    blockNow();
+                }
+                // ok === true  -> allowed; ok === null -> offline, keep cached access
+            });
         }
     }
 })();

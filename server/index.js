@@ -11,19 +11,50 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const db = require('./db');
 
 const app = express();
 const server = http.createServer(app);
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+
+// Stripe (server-side secret only — NEVER sent to the frontend)
+const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
+let stripe = null;
+if (STRIPE_SECRET) {
+    stripe = require('stripe')(STRIPE_SECRET);
+    console.log('💳 Stripe configured');
+} else {
+    console.warn('⚠️  STRIPE_SECRET_KEY not set — payment routes will return 503');
+}
+
 // JWT Secret (in production, use environment variable)
 const JWT_SECRET = process.env.JWT_SECRET || 'pneuoma-secret-key-change-in-production';
 const JWT_EXPIRES = '7d';
+if (IS_PROD && (!process.env.JWT_SECRET)) {
+    console.warn('⚠️  JWT_SECRET not set in production — using insecure default. Set JWT_SECRET on Render.');
+}
 
-// Master accounts with full access
+// Master accounts with full access (server-enforced role; no client-side master password)
 const MASTER_EMAILS = [
     'camrynjackson@pneuoma.com',
     'camryn@pneuoma.com'
 ];
+
+// Live price IDs -> plan names. Keep in sync with auth/subscribe.html PRICE_IDS.
+const PRICE_TO_PLAN = {
+    'price_1SlVBM2MMMhk8Zv1PhNtRqdJ': 'premium',
+    'price_1SlVC22MMMhk8Zv1PRzVTRkw': 'family'
+};
+function resolvePlanFromPrice(priceId) {
+    return PRICE_TO_PLAN[priceId] || 'premium';
+}
+
+// Stripe statuses that grant premium entitlement.
+const PREMIUM_STATUSES = ['active', 'trialing'];
+function isPremiumStatus(status) {
+    return PREMIUM_STATUSES.includes(status);
+}
 
 // Configure CORS for Socket.io
 const io = new Server(server, {
@@ -41,6 +72,11 @@ const io = new Server(server, {
 });
 
 app.use(cors());
+
+// Stripe webhook MUST receive the raw request body for signature verification,
+// so it is registered BEFORE express.json() consumes/parses the stream.
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
+
 app.use(express.json({ limit: '25mb' }));
 
 // MeterFlow usage tracking
@@ -55,45 +91,55 @@ const incidentRoutes = require('./incidents');
 app.use('/api/incidents', incidentRoutes);
 
 // ==================== USER STORAGE ====================
-// In production, replace with database (PostgreSQL/MongoDB)
+// Database-backed (SQLite via ./db). Subscription status is sourced from Stripe
+// (the source of truth) and persisted in the subscriptions table.
 
-const users = new Map();
-const subscriptions = new Map();
-
-// User class
-class User {
-    constructor(data) {
-        this.id = data.id || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        this.email = data.email.toLowerCase();
-        this.passwordHash = data.passwordHash;
-        this.firstName = data.firstName;
-        this.lastName = data.lastName;
-        this.accountType = data.accountType || 'individual';
-        this.subscription = MASTER_EMAILS.includes(this.email) ? 'master' : 'free';
-        this.createdAt = data.createdAt || Date.now();
-        this.lastLogin = Date.now();
-    }
-    
-    toJSON() {
-        return {
-            id: this.id,
-            email: this.email,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            accountType: this.accountType,
-            subscription: this.subscription,
-            createdAt: this.createdAt
-        };
-    }
-}
-
-// Generate JWT token
+// Generate JWT token. We embed id/email/role only — NEVER the subscription
+// status (it goes stale; entitlement is always read fresh from the DB/Stripe).
 function generateToken(user) {
     return jwt.sign(
-        { id: user.id, email: user.email, subscription: user.subscription },
+        { id: user.id, email: user.email, role: user.role || 'user' },
         JWT_SECRET,
         { expiresIn: JWT_EXPIRES }
     );
+}
+
+// Compute authoritative entitlement for a user from role + persisted Stripe state.
+function getEntitlement(user) {
+    if (!user) {
+        return { isPremium: false, status: 'guest', plan: 'guest', currentPeriodEnd: null, cancelAtPeriodEnd: false };
+    }
+    if (user.role === 'master') {
+        return { isPremium: true, status: 'master', plan: 'master', currentPeriodEnd: null, cancelAtPeriodEnd: false };
+    }
+    const sub = db.findSubscriptionByUserId(user.id);
+    if (!sub) {
+        return { isPremium: false, status: 'free', plan: 'free', currentPeriodEnd: null, cancelAtPeriodEnd: false };
+    }
+    return {
+        isPremium: isPremiumStatus(sub.subscription_status),
+        status: sub.subscription_status || 'free',
+        plan: sub.plan_name || 'free',
+        currentPeriodEnd: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
+        cancelAtPeriodEnd: !!sub.cancel_at_period_end
+    };
+}
+
+// Public, client-safe view of a user (never includes password hash).
+function publicUser(user) {
+    const ent = getEntitlement(user);
+    return {
+        id: user.id,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        accountType: user.account_type,
+        role: user.role,
+        subscription: ent.isPremium ? ent.plan : (user.role === 'master' ? 'master' : 'free'),
+        isPremium: ent.isPremium,
+        status: ent.status,
+        createdAt: user.created_at
+    };
 }
 
 // Verify JWT token middleware
@@ -243,32 +289,32 @@ app.post('/api/auth/signup', async (req, res) => {
         const normalizedEmail = email.toLowerCase();
         
         // Check if user exists
-        if (users.has(normalizedEmail)) {
+        if (db.findUserByEmail(normalizedEmail)) {
             return res.status(400).json({ error: 'An account with this email already exists' });
         }
         
         // Hash password
         const passwordHash = await bcrypt.hash(password, 10);
         
-        // Create user
-        const user = new User({
+        // Master role is assigned server-side by email allowlist (never client-driven)
+        const role = MASTER_EMAILS.includes(normalizedEmail) ? 'master' : 'user';
+        
+        const user = db.createUser({
             email: normalizedEmail,
             passwordHash,
             firstName,
             lastName,
-            accountType
+            accountType,
+            role
         });
         
-        users.set(normalizedEmail, user);
-        
-        // Generate token
         const token = generateToken(user);
         
         console.log(`✨ New user registered: ${normalizedEmail}`);
         
         res.json({
             success: true,
-            user: user.toJSON(),
+            user: publicUser(user),
             token
         });
         
@@ -288,20 +334,20 @@ app.post('/api/auth/login', async (req, res) => {
         }
         
         const normalizedEmail = email.toLowerCase();
-        const user = users.get(normalizedEmail);
+        const user = db.findUserByEmail(normalizedEmail);
         
         if (!user) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
         
         // Check password
-        const validPassword = await bcrypt.compare(password, user.passwordHash);
+        const validPassword = db.verifyPassword(user, password);
         if (!validPassword) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
         
         // Update last login
-        user.lastLogin = Date.now();
+        db.updateUser(user.id, { last_login: Date.now() });
         
         // Generate token
         const token = generateToken(user);
@@ -317,7 +363,7 @@ app.post('/api/auth/login', async (req, res) => {
         
         res.json({
             success: true,
-            user: user.toJSON(),
+            user: publicUser(user),
             token
         });
         
@@ -329,30 +375,26 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Get current user
 app.get('/api/auth/me', authenticateToken, (req, res) => {
-    const user = users.get(req.user.email);
+    const user = db.findUserById(req.user.id);
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
-    res.json({ user: user.toJSON() });
+    res.json({ user: publicUser(user) });
 });
 
-// Update subscription
+// NOTE: Subscription status is managed by Stripe (the source of truth) and is
+// set only via verified webhooks. Clients can NO LONGER self-assign a plan —
+// this previously allowed any logged-in user to grant themselves premium.
+// Kept as a locked, read-only endpoint for backward compatibility.
 app.post('/api/auth/subscription', authenticateToken, (req, res) => {
-    const { subscription } = req.body;
-    const user = users.get(req.user.email);
-    
+    const user = db.findUserById(req.user.id);
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
-    
-    // Don't allow downgrading master accounts
-    if (MASTER_EMAILS.includes(user.email)) {
-        return res.json({ user: user.toJSON() });
-    }
-    
-    user.subscription = subscription;
-    
-    res.json({ user: user.toJSON() });
+    return res.status(403).json({
+        error: 'Subscription status is managed by Stripe and cannot be set directly.',
+        user: publicUser(user)
+    });
 });
 
 // Forgot password (placeholder - would send email in production)
@@ -367,13 +409,8 @@ app.post('/api/auth/forgot-password', (req, res) => {
 });
 
 // ==================== STRIPE INTEGRATION ====================
-
-// Stripe configuration (use environment variables in production)
-const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
-let stripe;
-if (STRIPE_SECRET) {
-    stripe = require('stripe')(STRIPE_SECRET);
-}
+// (Stripe client is initialized at the top of this file; the webhook route is
+//  registered before express.json() so it receives the raw request body.)
 
 // Create checkout session
 app.post('/api/stripe/create-checkout', authenticateToken, async (req, res) => {
@@ -382,104 +419,231 @@ app.post('/api/stripe/create-checkout', authenticateToken, async (req, res) => {
     }
     
     const { priceId, plan } = req.body;
-    const user = users.get(req.user.email);
+    const user = db.findUserById(req.user.id);
     
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
+    if (!priceId) {
+        return res.status(400).json({ error: 'priceId is required' });
+    }
     
     try {
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [{
-                price: priceId,
-                quantity: 1
-            }],
-            mode: 'subscription',
-            success_url: `${req.headers.origin}/auth/success.html?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${req.headers.origin}/auth/subscribe.html`,
-            customer_email: user.email,
-            metadata: {
-                userId: user.id,
-                plan
-            },
-            subscription_data: {
-                trial_period_days: 7
-            }
-        });
+        const frontend = process.env.FRONTEND_URL || req.headers.origin || 'https://pneuoma.com';
+        const existingSub = db.findSubscriptionByUserId(user.id);
+        const metadata = { userId: user.id, email: user.email, plan: plan || '' };
         
+        const params = {
+            payment_method_types: ['card'],
+            line_items: [{ price: priceId, quantity: 1 }],
+            mode: 'subscription',
+            success_url: `${frontend}/auth/success.html?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${frontend}/auth/subscribe.html`,
+            metadata,
+            subscription_data: {
+                trial_period_days: 7,
+                metadata
+            }
+        };
+        
+        // Reuse an existing Stripe customer to avoid duplicates; otherwise let
+        // Stripe create one and prefill the email.
+        if (existingSub && existingSub.stripe_customer_id) {
+            params.customer = existingSub.stripe_customer_id;
+        } else {
+            params.customer_email = user.email;
+        }
+        
+        const session = await stripe.checkout.sessions.create(params);
         res.json({ sessionId: session.id });
     } catch (error) {
-        console.error('Stripe error:', error);
+        console.error('[stripe] create-checkout error:', error.message);
         res.status(500).json({ error: 'Could not create checkout session' });
     }
 });
 
-// Get subscription status
-app.get('/api/stripe/subscription', authenticateToken, async (req, res) => {
-    const user = users.get(req.user.email);
-    
+// Authoritative entitlement endpoint. Reads from the DB, optionally refreshing
+// from Stripe when the cached period looks stale. The server is the source of
+// truth; the frontend may cache the result for UX only.
+async function getSubscriptionStatus(req, res) {
+    const user = db.findUserById(req.user.id);
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
     
-    res.json({
-        subscription: user.subscription,
-        isPremium: user.subscription === 'premium' || user.subscription === 'family' || user.subscription === 'master'
-    });
-});
+    if (user.role === 'master') {
+        return res.json({ isPremium: true, status: 'master', plan: 'master', currentPeriodEnd: null, cancelAtPeriodEnd: false });
+    }
+    
+    let sub = db.findSubscriptionByUserId(user.id);
+    
+    // Refresh from Stripe if we have a subscription id and the cached period is
+    // missing or already in the past (lazy reconciliation in case a webhook was
+    // missed).
+    if (stripe && sub && sub.stripe_subscription_id) {
+        const stale = !sub.current_period_end || (sub.current_period_end * 1000 < Date.now());
+        if (stale) {
+            try {
+                const ss = await stripe.subscriptions.retrieve(sub.stripe_subscription_id);
+                db.syncSubscriptionFromStripe(user.id, ss, resolvePlanFromPrice(ss.items.data[0] && ss.items.data[0].price && ss.items.data[0].price.id));
+            } catch (e) {
+                console.error('[stripe] subscription refresh failed:', e.message);
+            }
+        }
+    }
+    
+    res.json(getEntitlement(user));
+}
 
-// Stripe webhook for subscription updates
-app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+app.get('/api/stripe/subscription', authenticateToken, getSubscriptionStatus);
+app.get('/api/me/subscription', authenticateToken, getSubscriptionStatus);
+
+// ==================== STRIPE WEBHOOK ====================
+// Registered near the top with express.raw(). Requires STRIPE_WEBHOOK_SECRET;
+// there is NO insecure JSON.parse fallback.
+
+function handleStripeWebhook(req, res) {
     if (!stripe) {
+        console.error('[stripe] webhook received but Stripe is not configured (STRIPE_SECRET_KEY missing).');
         return res.status(503).json({ error: 'Payment system not configured' });
     }
     
-    const sig = req.headers['stripe-signature'];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+        console.error('[stripe] STRIPE_WEBHOOK_SECRET is not set — refusing to process webhook (no insecure fallback). Set it on Render.');
+        return res.status(500).json({ error: 'Webhook secret not configured' });
+    }
     
+    const sig = req.headers['stripe-signature'];
     let event;
-    
     try {
-        if (webhookSecret) {
-            event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-        } else {
-            event = JSON.parse(req.body);
-        }
+        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
     } catch (err) {
-        console.error('Webhook signature verification failed:', err.message);
+        console.error('[stripe] webhook signature verification failed:', err.message);
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
     
-    // Handle subscription events
+    // Acknowledge quickly; process asynchronously.
+    processStripeEvent(event).catch((e) => console.error('[stripe] event processing error:', e.message));
+    res.json({ received: true });
+}
+
+// Resolve our user from a Stripe subscription object (metadata first, then by
+// stored customer/subscription ids).
+function resolveUserFromSubscription(ss) {
+    if (ss && ss.metadata && ss.metadata.userId) {
+        const u = db.findUserById(ss.metadata.userId);
+        if (u) return u;
+    }
+    const subId = ss && ss.id;
+    const customerId = ss && (typeof ss.customer === 'string' ? ss.customer : ss.customer && ss.customer.id);
+    let row = subId ? db.findSubscriptionByStripeSubscriptionId(subId) : null;
+    if (!row && customerId) row = db.findSubscriptionByStripeCustomerId(customerId);
+    return row ? db.findUserById(row.user_id) : null;
+}
+
+function persistFromStripeSub(user, ss) {
+    const priceId = ss.items && ss.items.data && ss.items.data[0] && ss.items.data[0].price && ss.items.data[0].price.id;
+    db.syncSubscriptionFromStripe(user.id, ss, resolvePlanFromPrice(priceId));
+}
+
+async function processStripeEvent(event) {
     switch (event.type) {
-        case 'checkout.session.completed':
+        case 'checkout.session.completed': {
             const session = event.data.object;
-            const userEmail = session.customer_email;
-            const plan = session.metadata?.plan || 'premium';
-            
-            const user = users.get(userEmail);
-            if (user) {
-                user.subscription = plan;
-                console.log(`🎉 Subscription activated for ${userEmail}: ${plan}`);
+            const userId = session.metadata && session.metadata.userId;
+            const email = session.customer_email || (session.metadata && session.metadata.email);
+            let user = userId ? db.findUserById(userId) : null;
+            if (!user && email) user = db.findUserByEmail(email.toLowerCase());
+            if (!user) {
+                console.error('[stripe] checkout.session.completed: no matching user', { userId, email });
+                return;
+            }
+            const subId = session.subscription;
+            if (subId) {
+                const ss = await stripe.subscriptions.retrieve(subId);
+                persistFromStripeSub(user, ss);
+            } else {
+                db.upsertSubscription(user.id, {
+                    stripe_customer_id: session.customer,
+                    subscription_status: 'active',
+                    plan_name: session.metadata && session.metadata.plan
+                });
+            }
+            console.log(`[stripe] checkout completed for ${user.email}`);
+            break;
+        }
+        case 'customer.subscription.created':
+        case 'customer.subscription.updated': {
+            const ss = event.data.object;
+            const user = resolveUserFromSubscription(ss);
+            if (!user) {
+                console.error('[stripe] subscription event: no matching user for', ss.id);
+                return;
+            }
+            persistFromStripeSub(user, ss);
+            console.log(`[stripe] ${event.type} for ${user.email}: ${ss.status}`);
+            break;
+        }
+        case 'customer.subscription.deleted': {
+            const ss = event.data.object;
+            const user = resolveUserFromSubscription(ss);
+            if (!user) return;
+            db.markSubscriptionCanceled(user.id, ss.canceled_at);
+            console.log(`[stripe] subscription canceled for ${user.email} — premium entitlement removed`);
+            break;
+        }
+        case 'invoice.payment_succeeded': {
+            const inv = event.data.object;
+            if (inv.subscription) {
+                const ss = await stripe.subscriptions.retrieve(inv.subscription);
+                const user = resolveUserFromSubscription(ss);
+                if (user) persistFromStripeSub(user, ss);
             }
             break;
-            
-        case 'customer.subscription.updated':
-            // Handle subscription changes
+        }
+        case 'invoice.payment_failed': {
+            const inv = event.data.object;
+            let ss = null;
+            if (inv.subscription) {
+                try { ss = await stripe.subscriptions.retrieve(inv.subscription); } catch (e) { /* ignore */ }
+            }
+            const user = ss ? resolveUserFromSubscription(ss)
+                : (inv.customer ? (function () { const r = db.findSubscriptionByStripeCustomerId(inv.customer); return r ? db.findUserById(r.user_id) : null; })() : null);
+            if (!user) return;
+            // Do NOT delete the user. Persist the real Stripe status; entitlement
+            // is granted only for active/trialing, so past_due/unpaid lose premium.
+            if (ss) persistFromStripeSub(user, ss);
+            else db.markSubscriptionPastDue(user.id);
+            console.log(`[stripe] invoice.payment_failed for ${user.email}`);
             break;
-            
-        case 'customer.subscription.deleted':
-            // Handle cancellation - downgrade to free
-            const subscription = event.data.object;
-            // In production, look up user by Stripe customer ID
-            break;
-            
+        }
         default:
-            console.log(`Unhandled event type: ${event.type}`);
+            // Unhandled event types are acknowledged and ignored.
+            break;
     }
-    
-    res.json({ received: true });
+}
+
+// ==================== LEADS ====================
+
+app.post('/api/leads', (req, res) => {
+    const { email, source, page } = req.body || {};
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: 'A valid email is required' });
+    }
+    const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+    // Basic anti-spam: cap submissions per IP per hour.
+    if (db.recentLeadCountByIp(ip, 60 * 60 * 1000) >= 8) {
+        return res.status(429).json({ error: 'Too many requests, please try again later' });
+    }
+    try {
+        db.createLead({ email, source, page, ip, userAgent: req.headers['user-agent'] });
+        console.log(`[leads] captured ${email} (source=${source || 'n/a'}, page=${page || 'n/a'})`);
+        res.json({ success: true });
+    } catch (e) {
+        console.error('[leads] could not store lead:', e.message);
+        res.status(500).json({ error: 'Could not save lead' });
+    }
 });
 
 // ==================== SOCKET.IO HANDLERS ====================

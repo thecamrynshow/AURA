@@ -166,6 +166,11 @@
         </div>
     </footer>
 
+    <script>
+        window.PNEUOMA_LEADS_ENDPOINT = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+            ? 'http://localhost:3001/api/leads'
+            : 'https://pneuoma.onrender.com/api/leads';
+    </script>
     <script src="/conversion.js"></script>
 </body>
 </html>

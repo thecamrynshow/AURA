@@ -147,10 +147,10 @@
                 })
                     .then(function (res) {
                         if (res.ok) {
-                            setStatus(form, 'You\'re in! Check your inbox for the toolkit link.', true);
+                            setStatus(form, 'You\'re on the list — we\'ll be in touch. The toolkit is also free to open right now below.', true);
                             form.reset();
                         } else {
-                            setStatus(form, 'Something went wrong — email ' + FOUNDER_EMAIL + ' and we\'ll send it.', false);
+                            setStatus(form, 'Something went wrong — email ' + FOUNDER_EMAIL + ' and we\'ll add you.', false);
                         }
                     })
                     .catch(function () {

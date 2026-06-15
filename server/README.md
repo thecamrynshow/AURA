@@ -39,16 +39,17 @@ Four therapeutic AI companions powered by Claude 3.5 Sonnet:
   - 📱 Remote Sync
 
 ### 🔐 Authentication
-- Email/password signup & login
-- JWT token-based sessions
+- Email/password signup & login (SQLite-persisted)
+- JWT token-based sessions (id/email/role; no stale subscription baked in)
 - Password hashing with bcryptjs
-- Master account support
+- Server-side master **role** (no client-side master password)
 
 ### 💳 Stripe Payments
-- Subscription management (Premium, Family)
-- Checkout session creation
-- Webhook handling
+- Subscription management (Premium, Family) — **Stripe is the source of truth**
+- Checkout with userId/email/plan metadata + customer reuse
+- Signature-verified webhook handling (full lifecycle incl. cancellation & failed payments)
 - 7-day free trials
+- Authoritative entitlement endpoint (`/api/me/subscription`)
 
 ---
 
@@ -126,19 +127,64 @@ If `fallback: true`, the response came from local fallback (API unavailable).
 
 | Endpoint | Method | Body | Description |
 |----------|--------|------|-------------|
-| `/api/auth/signup` | POST | `{ email, password, firstName, lastName }` | Create new account |
+| `/api/auth/signup` | POST | `{ email, password, firstName, lastName }` | Create new account (DB-backed) |
 | `/api/auth/login` | POST | `{ email, password }` | Login, returns JWT |
-| `/api/auth/me` | GET | Header: `Authorization: Bearer <token>` | Get current user |
-| `/api/auth/subscription` | POST | `{ subscription }` | Update subscription |
-| `/api/auth/forgot-password` | POST | `{ email }` | Request password reset |
+| `/api/auth/me` | GET | Header: `Authorization: Bearer <token>` | Get current user + entitlement |
+| `/api/auth/subscription` | POST | — | **Locked (403).** Plan is Stripe-driven; clients can no longer self-assign. |
+| `/api/auth/forgot-password` | POST | `{ email }` | Request password reset (placeholder) |
 
 ### Stripe Payments
 
 | Endpoint | Method | Body | Description |
 |----------|--------|------|-------------|
-| `/api/stripe/create-checkout` | POST | `{ priceId, plan }` | Create Stripe checkout session |
-| `/api/stripe/subscription` | GET | Header: `Authorization: Bearer <token>` | Get subscription details |
-| `/api/stripe/webhook` | POST | Stripe signature | Handle Stripe webhooks |
+| `/api/stripe/create-checkout` | POST | `{ priceId, plan }` | Create Stripe checkout session (auth required) |
+| `/api/stripe/subscription` | GET | Header: `Authorization: Bearer <token>` | Authoritative entitlement |
+| `/api/me/subscription` | GET | Header: `Authorization: Bearer <token>` | Alias of the above |
+| `/api/stripe/webhook` | POST | Stripe signature | Verified webhook handler |
+
+**Entitlement response shape:**
+```json
+{ "isPremium": true, "status": "active", "plan": "premium", "currentPeriodEnd": "2026-07-15T00:00:00.000Z", "cancelAtPeriodEnd": false }
+```
+
+### Leads
+
+| Endpoint | Method | Body | Description |
+|----------|--------|------|-------------|
+| `/api/leads` | POST | `{ email, source, page }` | Capture a toolkit/newsletter lead (no auth; rate-limited per IP) |
+
+---
+
+## Stripe Webhook Setup
+
+The webhook **requires a verified signature** (no insecure fallback).
+
+1. In the Stripe Dashboard → **Developers → Webhooks → Add endpoint**.
+2. Endpoint URL:
+   ```
+   https://pneuoma.onrender.com/api/stripe/webhook
+   ```
+3. Subscribe to these events:
+   - `checkout.session.completed`
+   - `customer.subscription.created`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `invoice.payment_succeeded`
+   - `invoice.payment_failed`
+4. Copy the **Signing secret** (`whsec_…`) into `STRIPE_WEBHOOK_SECRET` on Render and redeploy.
+5. Test locally with the Stripe CLI:
+   ```bash
+   stripe listen --forward-to localhost:3001/api/stripe/webhook
+   stripe trigger checkout.session.completed
+   ```
+
+The webhook route is mounted with `express.raw()` **before** `express.json()`, so the raw body is available for signature verification.
+
+---
+
+## iOS / App Store note
+
+⚠️ **Stripe Checkout here is for WEB subscriptions only.** Apple requires **In-App Purchase (IAP)** for digital subscriptions sold inside an iOS app. Do **not** ship the Capacitor iOS build pointing users to Stripe Checkout for digital goods — implement Apple IAP on that platform before App Store distribution. (This pass intentionally does not implement iOS IAP.)
 
 ---
 
@@ -177,9 +223,15 @@ Create a `.env` file in the server directory:
 ```env
 # Server
 PORT=3001
+NODE_ENV=production
+FRONTEND_URL=https://pneuoma.com
 
 # Authentication
 JWT_SECRET=your-super-secret-jwt-key-change-this
+
+# Persistence (SQLite). Point this at a Render Persistent Disk in production,
+# otherwise the database is wiped on every deploy/cold start (see below).
+SQLITE_DB_PATH=/var/data/pneuoma.db
 
 # AI Companions (Required for full functionality)
 ANTHROPIC_API_KEY=sk-ant-api03-xxx
@@ -188,19 +240,41 @@ ANTHROPIC_API_KEY=sk-ant-api03-xxx
 STRIPE_SECRET_KEY=sk_live_xxx
 STRIPE_WEBHOOK_SECRET=whsec_xxx
 
-# Stripe Price IDs
-STRIPE_PREMIUM_PRICE=price_xxx
-STRIPE_FAMILY_PRICE=price_xxx
-
 # MeterFlow Usage Tracking (optional — tracks API calls, sessions, active users)
 METERFLOW_API_URL=https://signalmeter.onrender.com
 METERFLOW_ORG_ID=1e4a956f-3e3d-4a4b-8695-079a17ac95ba
 METERFLOW_INGESTION_KEY=your-ingestion-api-key
 ```
 
+### Required in production
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `STRIPE_SECRET_KEY` | ✅ for payments | Server-side Stripe API key (never exposed to frontend) |
+| `STRIPE_WEBHOOK_SECRET` | ✅ for payments | Verifies webhook signatures. **The webhook refuses to process events if this is missing — there is no insecure fallback.** |
+| `JWT_SECRET` | ✅ | Signs auth tokens (a warning is logged if unset in production) |
+| `SQLITE_DB_PATH` | ✅ for durable data | Path to the SQLite file; must live on a persistent disk |
+| `FRONTEND_URL` | recommended | Used for Stripe `success_url`/`cancel_url` (defaults to request origin, then `https://pneuoma.com`) |
+
 **Note:** If `ANTHROPIC_API_KEY` is not set, AI companions will use intelligent fallback responses.
 
 **Note:** If the `METERFLOW_*` variables are not set, usage tracking is silently disabled — no errors, no impact on request performance.
+
+**Note:** Price IDs are mapped to plan names in `index.js` (`PRICE_TO_PLAN`). Keep this in sync with `auth/subscribe.html`.
+
+---
+
+## Database & Persistence
+
+Users, subscriptions, and leads are stored in **SQLite** via `better-sqlite3` (see `db.js`). Stripe is the **source of truth** for subscription status; the DB caches the latest Stripe state, updated by verified webhooks.
+
+> ⚠️ **Render's default filesystem is ephemeral.** It is wiped on every deploy and on cold start. Without durable storage, all accounts and subscriptions are lost on restart. You **must** do one of:
+> 1. **Attach a Render Persistent Disk** (e.g. mount at `/var/data`) and set `SQLITE_DB_PATH=/var/data/pneuoma.db`, **or**
+> 2. **Migrate to Render Postgres** (recommended at scale). `db.js` is the single storage seam — swapping it for Postgres only touches that one file.
+
+**Tables:** `users`, `subscriptions`, `leads`. Subscription period fields are stored as epoch seconds (matching Stripe); account timestamps are epoch ms.
+
+**Valid premium statuses:** `active`, `trialing`. Any other status (`canceled`, `past_due`, `unpaid`, `incomplete`, `incomplete_expired`, `paused`) does **not** grant premium access.
 
 ---
 
@@ -255,8 +329,10 @@ When API is unavailable, companions use:
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
    - **Node Version**: 18+
-4. Add environment variables (including `ANTHROPIC_API_KEY` and `METERFLOW_*` keys)
-5. Deploy
+4. **Attach a Persistent Disk** (Settings → Disks): e.g. mount path `/var/data`, then set `SQLITE_DB_PATH=/var/data/pneuoma.db`. Without this, the SQLite DB (users + subscriptions) is wiped on every deploy/cold start. *(Alternatively, migrate `db.js` to Render Postgres.)*
+5. Add environment variables: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `JWT_SECRET`, `SQLITE_DB_PATH`, `FRONTEND_URL`, `NODE_ENV=production`, plus `ANTHROPIC_API_KEY` and `METERFLOW_*`.
+6. Add the Stripe webhook endpoint (see **Stripe Webhook Setup** above).
+7. Deploy
 
 Live URL: `https://pneuoma.onrender.com`
 

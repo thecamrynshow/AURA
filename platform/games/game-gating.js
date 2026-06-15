@@ -62,10 +62,15 @@
         'ember': 'ember'
     };
     
-    function initGameGating() {
+    async function initGameGating() {
         // Initialize auth
         if (typeof PneuomaAuth !== 'undefined') {
             PneuomaAuth.init();
+            // Confirm entitlement with the server so the catalog reflects the
+            // authoritative subscription status (not just cached localStorage).
+            if (PneuomaAuth.isLoggedIn() && typeof PneuomaAuth.confirmAccess === 'function') {
+                try { await PneuomaAuth.confirmAccess(); } catch (e) { /* offline: use cached */ }
+            }
         }
         
         // Check if user has premium access

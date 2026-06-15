@@ -35,15 +35,18 @@ const PneuomaAuth = {
         return !!this.user;
     },
     
-    // Check if user is master account
+    // Check if user is master account.
+    // Master is a SERVER-ASSIGNED role (role: 'master'). This is a cached,
+    // cosmetic check only — the server re-verifies on every protected API call.
     isMaster() {
-        return this.user && this.masterEmails.includes(this.user.email.toLowerCase());
+        return !!(this.user && (this.user.role === 'master' || this.user.subscription === 'master'));
     },
     
-    // Check if user has premium access
+    // Check if user has premium access (cached for UX; server is source of truth).
     isPremium() {
         if (!this.user) return false;
         if (this.isMaster()) return true;
+        if (this.user.isPremium === true) return true;
         return this.user.subscription === 'premium' || 
                this.user.subscription === 'family' || 
                this.user.subscription === 'school';
@@ -55,9 +58,6 @@ const PneuomaAuth = {
         if (this.isMaster()) return 'master';
         return this.user.subscription || 'free';
     },
-    
-    // Master password hash (SHA-256 of actual password - change this!)
-    masterPasswordHash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', // 'admin'
     
     // Login with email/password
     async login(email, password) {
@@ -72,23 +72,10 @@ const PneuomaAuth = {
         btn.disabled = true;
         errorEl.classList.add('hidden');
         
-        // Check for master account offline login
-        if (this.masterEmails.includes(email.toLowerCase())) {
-            const inputHash = await this.hashPassword(password);
-            if (inputHash === this.masterPasswordHash) {
-                // Master account offline login
-                this.user = {
-                    email: email.toLowerCase(),
-                    name: 'Camryn Jackson',
-                    subscription: 'master',
-                    id: 'master-001'
-                };
-                localStorage.setItem('pneuoma_user', JSON.stringify(this.user));
-                localStorage.setItem('pneuoma_token', 'master-offline-token');
-                window.location.href = '/platform/';
-                return;
-            }
-        }
+        // NOTE: Master/admin access is granted by the SERVER (role: 'master')
+        // after a normal authenticated login. There is intentionally no
+        // client-side master password — putting one in frontend JS would let
+        // anyone read it and gain full access.
         
         try {
             const response = await fetch(`${this.serverUrl}/api/auth/login`, {
@@ -114,7 +101,7 @@ const PneuomaAuth = {
         } catch (error) {
             // Check if it's a network error (server offline)
             if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                errorEl.textContent = 'Server offline. Master accounts can still log in.';
+                errorEl.textContent = 'Could not reach the server. Please check your connection and try again.';
             } else {
                 errorEl.textContent = error.message;
             }
@@ -125,15 +112,6 @@ const PneuomaAuth = {
             btnText.textContent = 'Sign In';
             btn.disabled = false;
         }
-    },
-    
-    // Hash password using SHA-256
-    async hashPassword(password) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(password);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     },
     
     // Sign up with email
@@ -220,30 +198,33 @@ const PneuomaAuth = {
         };
     },
     
-    // Refresh subscription status from server
-    async refreshSubscription() {
-        if (!this.user) return false;
-        
+    // Confirm entitlement with the server (authoritative). Updates the cached
+    // user with the server's answer. Returns the entitlement object, or null on
+    // network error (callers should treat null as "use cached / fail open for
+    // UX, but never grant new access on null").
+    async confirmAccess() {
+        if (!this.user) return { isPremium: false, status: 'guest', plan: 'guest' };
         try {
-            const response = await fetch(`${this.serverUrl}/api/stripe/subscription`, {
+            const response = await fetch(`${this.serverUrl}/api/me/subscription`, {
                 headers: this.getHeaders()
             });
-            
-            if (!response.ok) return false;
-            
+            if (!response.ok) return null;
             const data = await response.json();
-            
-            if (data.subscription) {
-                this.user.subscription = data.subscription;
-                localStorage.setItem('pneuoma_user', JSON.stringify(this.user));
-                return true;
-            }
-            
-            return false;
+            this.user.isPremium = !!data.isPremium;
+            this.user.status = data.status;
+            this.user.subscription = data.isPremium ? data.plan : (this.user.role === 'master' ? 'master' : 'free');
+            localStorage.setItem('pneuoma_user', JSON.stringify(this.user));
+            return data;
         } catch (error) {
-            console.error('Could not refresh subscription:', error);
-            return false;
+            console.warn('[auth] Could not confirm access with server:', error.message);
+            return null;
         }
+    },
+    
+    // Backwards-compatible alias.
+    async refreshSubscription() {
+        const data = await this.confirmAccess();
+        return !!(data && data.isPremium);
     }
 };
 
