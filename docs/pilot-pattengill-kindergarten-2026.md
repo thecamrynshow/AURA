@@ -257,9 +257,21 @@ When the class was at recess, one student stayed inside. Facilitator ran **groun
 
 ## Quotes for external use
 
+### Public website quote (short form)
+
+Used on [homepage](/index.html) pilot section and [Classroom Sync resource](/resources/classroom-sync.html) since commit `990e504`:
+
+> “Absolutely helps, very effective. I'll keep doing it daily during transitions.”
+
+— **Mrs. Gill**, kindergarten teacher, Pattengill Elementary
+
+**Note:** Independent-use (“without founder facilitation”) belongs in pilot **findings** cards, not this quote. See homepage “What the pilot showed” bullets.
+
+### Full verbatim (case study / internal)
+
 **Teacher (May 21, 2026):**
 
-> “It absolutely helps and is very effective. I love it… I don’t need you anymore—I can do it myself and am going to keep doing it daily during transitions.”
+> “It absolutely helps and is very effective. I love it… I don't need you anymore—I can do it myself and am going to keep doing it daily during transitions.”
 
 **Teacher (May 7, 2026 — framing):**
 
@@ -276,8 +288,8 @@ When the class was at recess, one student stayed inside. Facilitator ran **groun
 **Camryn Jackson** — Founder, PNEUOMA  
 camrynjackson@pneuoma.com · [pneuoma.com](https://pneuoma.com)
 
-Related: [School outreach templates](./school-outreach-templates.md) · [Pilot program details](../platform/schools/pilot-program.html)
+Related: [Project log](./PROJECT-LOG.md) · [School outreach templates](./school-outreach-templates.md) · [Pilot program details](../platform/schools/pilot-program.html)
 
 ---
 
-*Document version: 1.0 · Compiled from field notes May 2026*
+*Document version: 1.1 · Compiled from field notes May 2026 · Public quote aligned June 2026 (`990e504`)*

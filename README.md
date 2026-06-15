@@ -371,6 +371,22 @@ this repo because it needs account access.
 
 ---
 
+## 📋 Project log & documentation
+
+**Where we left off:** [`docs/PROJECT-LOG.md`](docs/PROJECT-LOG.md) — shipped work, production state, commit timeline, next steps.
+
+| Doc | Purpose |
+|-----|---------|
+| [`docs/PROJECT-LOG.md`](docs/PROJECT-LOG.md) | Master log: payments, SEO phases, pilot, file map |
+| [`docs/SEO-CONTENT-SYSTEM.md`](docs/SEO-CONTENT-SYSTEM.md) | SEO generators, GA events, regenerate commands |
+| [`resources/RESOURCE_PAGE_PATTERN.md`](resources/RESOURCE_PAGE_PATTERN.md) | Resource page template spec |
+| [`docs/pilot-pattengill-kindergarten-2026.md`](docs/pilot-pattengill-kindergarten-2026.md) | Pattengill Classroom Sync pilot case study |
+| [`server/README.md`](server/README.md) | API, Stripe, env vars, deployment |
+
+**Recent ships (June 2026):** 20 teacher resource articles · 10 interactive play pages · Stripe/membership hardening · Pattengill testimonial fix.
+
+---
+
 ## 📈 Traction & Impact
 
 - **500+ schools** interested in pilot program

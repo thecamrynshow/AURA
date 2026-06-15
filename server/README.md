@@ -3,7 +3,7 @@
 Real-time multiplayer sync + AI companions + authentication + payments for the PNEUOMA platform.
 
 [![Deployed](https://img.shields.io/badge/Deployed-Render-06b6d4)](https://pneuoma.onrender.com)
-[![Node](https://img.shields.io/badge/Node-18%2B-green)]()
+[![Node](https://img.shields.io/badge/Node-22.x-green)]()
 [![Socket.io](https://img.shields.io/badge/Socket.io-4.7-blue)]()
 [![Claude](https://img.shields.io/badge/AI-Claude_3.5-a855f7)]()
 

@@ -1,8 +1,24 @@
 # PNEUOMA Resource Page Pattern
 
-Static problem-based SEO pages for teachers. Generated from `scripts/resource-cluster-data.js` via `node scripts/generate-resource-cluster.js`.
+Static problem-based SEO pages for teachers.
 
-## Required sections (in order)
+**Docs:** [`docs/PROJECT-LOG.md`](../docs/PROJECT-LOG.md) · [`docs/SEO-CONTENT-SYSTEM.md`](../docs/SEO-CONTENT-SYSTEM.md)
+
+---
+
+## Two content types
+
+| Type | Path | Generator | Shipped |
+|------|------|-----------|---------|
+| **Articles** | `/resources/*.html` | `scripts/generate-resource-cluster.js` | Phase 1 — 20 pages (`90ce2c3`) |
+| **Interactive play** | `/resources/play/*.html` | `scripts/generate-interactive-resources.js` | Phase 2 — 10 pages (`18a098f`) |
+
+Article data: `scripts/resource-cluster-data.js`  
+Play data: `scripts/interactive-resource-data.js`
+
+---
+
+## Required sections (in order) — articles
 
 1. **SEO** — `<title>`, `meta description`, `canonical`, Open Graph tags
 2. **Hero** — eyebrow, H1, short direct answer (`pc-res-lede`)
