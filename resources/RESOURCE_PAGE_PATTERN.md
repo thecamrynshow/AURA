@@ -29,5 +29,19 @@ Static problem-based SEO pages for teachers. Generated from `scripts/resource-cl
 
 ```bash
 node scripts/generate-resource-cluster.js
+node scripts/generate-interactive-resources.js
 npm run sitemap
 ```
+
+## Interactive play pages (`/resources/play/`)
+
+Pattern: Problem → Explanation → Embedded game (lazy iframe) → Teacher instructions → Classroom adaptation → CTA
+
+Tracking via `resource-play.js`:
+- `resource_game_start` — launch button clicked
+- `resource_game_time_spent` — every 30s and on page hide (param: `engagement_time_sec`)
+- `resource_toolkit_click` — toolkit CTA
+- `resource_classroom_sync_click` — Classroom Sync CTA
+- `resource_pilot_click` — school pilot CTA
+
+Regenerate: `node scripts/generate-interactive-resources.js`
