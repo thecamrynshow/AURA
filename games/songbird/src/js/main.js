@@ -28,6 +28,19 @@ class Songbird {
         this.melodiesMatched = 0;
         this.roundsCompleted = 0;
         this.maxRounds = 5;
+
+        // Music regulation GA tracking (fires only when `music_context` is present).
+        this.musicContext = null;
+        this.gradeBand = 'all';
+        this.musicGameName = 'Pitch Match';
+        this.musicTrackingEnabled = false;
+        this.musicStartTime = 0;
+        this.musicLastReportedSec = 0;
+        this.musicTimeInterval = null;
+
+        // Pitch match scoring for analytics.
+        this.pitchAttempts = 0;
+        this.pitchCorrect = 0;
         
         // Keyboard control
         this.keyboardNotes = {
@@ -42,6 +55,7 @@ class Songbird {
         await songbirdAudio.init();
         this.bindEvents();
         this.bindAudioCallbacks();
+        this.setupMusicTracking();
         console.log('🐦 Songbird initialized — Whistle with the forest');
     }
 
@@ -121,11 +135,102 @@ class Songbird {
         document.getElementById(screenId + 'Screen').classList.add('active');
     }
 
+    setupMusicTracking() {
+        try {
+            const params = new URLSearchParams(window.location.search || '');
+            this.musicContext = params.get('music_context');
+            this.gradeBand =
+                params.get('grade_band') ||
+                params.get('music_grade_band') ||
+                params.get('gradeBand') ||
+                'all';
+
+            this.musicTrackingEnabled = !!this.musicContext;
+
+            if (this.musicContext === 'pitch-match') {
+                this.musicGameName = 'Pitch Match';
+
+                // Optional classroom-friendly difficulty presets.
+                const mode =
+                    params.get('music_pitch_mode') ||
+                    params.get('music_mode') ||
+                    'elementary';
+                this.pitchMatchMode = mode;
+                if (mode === 'beginner') this.maxRounds = 3;
+                else if (mode === 'elementary') this.maxRounds = 4;
+                else if (mode === 'classroom' || mode === 'classroom-competition') this.maxRounds = 5;
+                else this.maxRounds = 5; // advanced default
+            }
+        } catch (e) {
+            this.musicTrackingEnabled = false;
+        }
+    }
+
+    safeTrack(eventName, params) {
+        if (typeof window.gtag !== 'function') return;
+        try {
+            window.gtag('event', eventName, params || {});
+        } catch (e) {
+            // swallow tracking errors
+        }
+    }
+
+    getMusicEngagementSeconds() {
+        if (!this.musicStartTime) return 0;
+        return Math.max(0, Math.round((Date.now() - this.musicStartTime) / 1000));
+    }
+
+    sendMusicTimeSpent(reason) {
+        if (!this.musicTrackingEnabled || this.musicContext !== 'pitch-match') return;
+        const sec = this.getMusicEngagementSeconds();
+        if (sec <= 0 || sec <= this.musicLastReportedSec) return;
+        this.musicLastReportedSec = sec;
+
+        this.safeTrack('music_game_time_spent', {
+            game_name: this.musicGameName,
+            grade_band: this.gradeBand,
+            engagement_time: sec,
+            engagement_time_sec: sec,
+            reason: reason || 'interval'
+        });
+    }
+
+    stopMusicTimeTracking() {
+        if (this.musicTimeInterval) {
+            clearInterval(this.musicTimeInterval);
+            this.musicTimeInterval = null;
+        }
+    }
+
     startGame() {
         this.showScreen('game');
         this.isRunning = true;
         this.roundsCompleted = 0;
         this.melodiesMatched = 0;
+
+        this.pitchAttempts = 0;
+        this.pitchCorrect = 0;
+
+        if (this.musicTrackingEnabled && this.musicContext === 'pitch-match') {
+            this.musicStartTime = Date.now();
+            this.musicLastReportedSec = 0;
+            this.stopMusicTimeTracking();
+
+            this.safeTrack('pitch_match_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand
+            });
+
+            this.safeTrack('music_game_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand
+            });
+
+            this.musicTimeInterval = setInterval(
+                () => this.sendMusicTimeSpent('interval'),
+                30000
+            );
+        }
         
         // Show whistle prompt
         this.whistlePrompt.classList.add('visible');
@@ -198,8 +303,32 @@ class Songbird {
 
     handleNote(note) {
         if (!this.birdManager.activeBird) return;
-        
+
+        let expectedNote = null;
+        try {
+            const bird = this.birdManager.activeBird;
+            expectedNote = bird?.type?.notes?.[bird.currentNoteIndex] || null;
+        } catch (e) { /* ignore */ }
+
+        if (this.musicTrackingEnabled && this.musicContext === 'pitch-match') {
+            this.pitchAttempts++;
+        }
+
         const result = this.birdManager.checkNote(note);
+
+        if (
+            this.musicTrackingEnabled &&
+            this.musicContext === 'pitch-match' &&
+            (result === 'match' || result === 'complete')
+        ) {
+            this.pitchCorrect++;
+            this.safeTrack('pitch_match_correct', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                sung: note,
+                expected: expectedNote
+            });
+        }
         
         if (result === 'match') {
             // Highlight matched note
@@ -253,6 +382,38 @@ class Songbird {
         // Update stats
         document.getElementById('birdsFound').textContent = this.birdManager.getBefriendedCount();
         document.getElementById('melodiesMatched').textContent = this.melodiesMatched;
+
+        if (this.musicTrackingEnabled && this.musicContext === 'pitch-match') {
+            this.stopMusicTimeTracking();
+            const engagementSec = this.getMusicEngagementSeconds();
+
+            const accuracy = this.pitchAttempts
+                ? Math.round((this.pitchCorrect / this.pitchAttempts) * 100)
+                : 0;
+
+            this.safeTrack('pitch_match_accuracy', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                accuracy_score: accuracy,
+                pitch_correct: this.pitchCorrect,
+                pitch_attempts: this.pitchAttempts
+            });
+
+            this.safeTrack('music_game_complete', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                engagement_time: engagementSec,
+                engagement_time_sec: engagementSec
+            });
+
+            this.safeTrack('music_game_time_spent', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                engagement_time: engagementSec,
+                engagement_time_sec: engagementSec,
+                reason: 'complete'
+            });
+        }
         
         this.showScreen('success');
     }
@@ -264,6 +425,10 @@ class Songbird {
         this.birdCountEl.textContent = '0';
         this.challengeDisplay.classList.remove('visible');
         this.whistlePrompt.classList.remove('visible');
+
+        this.stopMusicTimeTracking();
+        this.pitchAttempts = 0;
+        this.pitchCorrect = 0;
     }
 }
 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TQGSNCV7Q2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TQGSNCV7Q2');
+    </script>
+
+    <script src="/auth/protect.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rhythm Regulation — Music Regulation | PNEUOMA</title>
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+</head>
+<body>
+    <noscript>This game needs JavaScript enabled.</noscript>
+    <div style="padding: 1.25rem; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
+        Redirecting to Rhythm Regulation…
+    </div>
+
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search || '');
+            const grade = params.get('grade_band') || params.get('music_grade_band') || 'all';
+            const mode =
+                params.get('regulation_mode') ||
+                params.get('regulationMode') ||
+                'match';
+
+            const target = '/games/pulse/?' + [
+                'music_context=rhythm-regulation',
+                'grade_band=' + encodeURIComponent(grade),
+                'regulation_mode=' + encodeURIComponent(mode)
+            ].join('&');
+
+            window.location.replace(target);
+        })();
+    </script>
+</body>
+</html>
+

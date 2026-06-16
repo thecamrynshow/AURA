@@ -3,6 +3,16 @@
  * Workplace Stress Relief
  */
 
+// Analytics helper: never breaks gameplay if gtag is blocked.
+function safeTrack(eventName, params) {
+    if (typeof window.gtag !== 'function') return;
+    try {
+        window.gtag('event', eventName, params || {});
+    } catch (e) {
+        // swallow
+    }
+}
+
 class ResetGame {
     constructor() {
         this.state = 'title'; // title, playing, paused, complete
@@ -15,6 +25,16 @@ class ResetGame {
         this.soundEnabled = true;
         this.gameLoop = null;
         this.progressCircumference = 2 * Math.PI * 90; // Based on r=90
+
+        // Music regulation GA tracking (optional; only fires when `music_context` is present).
+        this.musicContext = null; // e.g. `music-breathing`
+        this.gradeBand = 'all';
+        this.musicGameName = 'Music Breathing';
+        this.breathingMode = 'ocean-phrase';
+        this.musicTrackingEnabled = false;
+        this.musicStartTime = 0;
+        this.musicLastReportedSec = 0;
+        this.musicTimeInterval = null;
         
         this.init();
     }
@@ -27,6 +47,8 @@ class ResetGame {
         // Load sound preference
         this.soundEnabled = Utils.storage.get('soundEnabled', true);
         this.elements.soundToggle.checked = this.soundEnabled;
+
+        this.setupMusicTracking();
     }
     
     cacheElements() {
@@ -131,6 +153,79 @@ class ResetGame {
             this.complete();
         };
     }
+
+    setupMusicTracking() {
+        try {
+            const params = new URLSearchParams(window.location.search || '');
+            this.musicContext = params.get('music_context');
+            this.gradeBand =
+                params.get('grade_band') ||
+                params.get('music_grade_band') ||
+                params.get('gradeBand') ||
+                'all';
+
+            // Optional: phrase/breathing label for analytics context.
+            this.breathingMode =
+                params.get('breathing_mode') ||
+                params.get('breathingMode') ||
+                this.breathingMode ||
+                'ocean-phrase';
+
+            this.musicTrackingEnabled = this.musicContext === 'music-breathing';
+
+            // If embedded for the music-breathing flow, optionally start immediately.
+            const autoStart =
+                params.get('auto_start') ||
+                params.get('autoStart') ||
+                params.get('auto-start');
+            if (autoStart === '1' && this.musicTrackingEnabled) {
+                const resetModeMap = {
+                    'ocean-phrase': 'quick',
+                    'choir-breath': 'eyes',
+                    'wind-breath': 'body',
+                    'slow-phrase': 'full',
+                    'focus-phrase': 'quick'
+                };
+
+                const mappedMode = resetModeMap[this.breathingMode] || 'quick';
+                const card = this.elements?.modeCards?.find(
+                    c => c.dataset && c.dataset.mode === mappedMode
+                );
+                const durationSec = card ? parseInt(card.dataset.duration, 10) : 120;
+
+                // Fire-and-forget: we don't want to block page load.
+                this.selectMode(mappedMode, durationSec).catch(() => {});
+            }
+        } catch (e) {
+            this.musicTrackingEnabled = false;
+        }
+    }
+
+    sendMusicTimeSpent(reason) {
+        if (!this.musicTrackingEnabled) return;
+        const sec = this.musicStartTime
+            ? Math.max(0, Math.round((Date.now() - this.musicStartTime) / 1000))
+            : 0;
+
+        if (sec <= 0 || sec <= this.musicLastReportedSec) return;
+        this.musicLastReportedSec = sec;
+
+        safeTrack('music_game_time_spent', {
+            game_name: this.musicGameName,
+            grade_band: this.gradeBand,
+            engagement_time: sec,
+            engagement_time_sec: sec,
+            reason: reason || 'interval',
+            breathing_mode: this.breathingMode
+        });
+    }
+
+    stopMusicTimeTracking() {
+        if (this.musicTimeInterval) {
+            clearInterval(this.musicTimeInterval);
+            this.musicTimeInterval = null;
+        }
+    }
     
     async selectMode(mode, duration) {
         this.mode = mode;
@@ -152,6 +247,31 @@ class ResetGame {
         // Show game screen
         this.showScreen('game');
         Utils.addClass(this.elements.timerDisplay, 'visible');
+
+        if (this.musicTrackingEnabled) {
+            this.musicStartTime = Date.now();
+            this.musicLastReportedSec = 0;
+            this.stopMusicTimeTracking();
+
+            const durationSec = this.duration ? Math.max(0, Math.round(this.duration / 1000)) : 0;
+
+            safeTrack('breathing_session_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                breathing_mode: this.breathingMode,
+                duration: durationSec,
+                duration_sec: durationSec
+            });
+
+            safeTrack('music_game_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand
+            });
+
+            this.musicTimeInterval = setInterval(() => {
+                this.sendMusicTimeSpent('interval');
+            }, 30000);
+        }
         
         // Setup controllers
         const exercise = Exercises[this.mode];
@@ -291,7 +411,36 @@ class ResetGame {
             full: "Full reset achieved. You've given yourself a gift."
         };
         this.elements.endMessage.textContent = messages[this.mode] || "Reset complete.";
-        
+
+        if (this.musicTrackingEnabled) {
+            this.stopMusicTimeTracking();
+            const durationSec = duration;
+            safeTrack('breathing_session_complete', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                breathing_mode: this.breathingMode,
+                duration: durationSec,
+                duration_sec: durationSec
+            });
+
+            safeTrack('music_game_complete', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                engagement_time: durationSec,
+                engagement_time_sec: durationSec
+            });
+
+            // Final time spent event.
+            safeTrack('music_game_time_spent', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                engagement_time: durationSec,
+                engagement_time_sec: durationSec,
+                reason: 'complete',
+                breathing_mode: this.breathingMode
+            });
+        }
+
         Audio.playComplete();
         this.showScreen('end');
         Utils.removeClass(this.elements.timerDisplay, 'visible');
@@ -299,6 +448,8 @@ class ResetGame {
     
     stopAll() {
         this.state = 'complete';
+
+        this.stopMusicTimeTracking();
         
         if (this.gameLoop) {
             clearInterval(this.gameLoop);
@@ -316,6 +467,8 @@ class ResetGame {
         this.elapsedTime = 0;
         
         this.showScreen('title');
+
+        this.stopMusicTimeTracking();
     }
     
     showScreen(screenName) {

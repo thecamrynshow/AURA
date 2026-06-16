@@ -60,7 +60,47 @@ class ExerciseManager {
                 ]
             }
         ];
-        
+
+        // Music regulation presets (only when explicitly embedded with query params).
+        // Default /games/solfege/ behavior stays unchanged.
+        try {
+            const params = new URLSearchParams(window.location.search || '');
+            const musicContext = params.get('music_context');
+            const mode = params.get('music_solfege_mode');
+            const earMode = params.get('music_ear_mode') || params.get('ear_mode');
+
+            let solfegeMode = mode;
+            if (musicContext === 'ear-training' && !solfegeMode && earMode) {
+                // Minimal mapping so Ear Training can reuse the same underlying
+                // note-based exercises without changing defaults.
+                const earMap = {
+                    'same-different': 'classroom-mode',
+                    'high-low': 'pitch-match',
+                    'interval-recognition': 'pitch-match',
+                    'melody-memory': 'listen-repeat',
+                    'pattern-recall': 'listen-repeat'
+                };
+                solfegeMode = earMap[earMode] || 'listen-repeat';
+            }
+
+            if ((musicContext === 'solfege-trainer' || musicContext === 'ear-training') && solfegeMode) {
+                const map = {
+                    'learn-notes': [0, 1],      // Ascending + Descending
+                    'pitch-match': [2],         // Do Mi Sol
+                    'listen-repeat': [3, 4],   // Twinkle + Mary
+                    'scale-builder': [0, 1],   // Ascending + Descending
+                    'classroom-mode': [2, 3]   // Short + engaging
+                };
+
+                const picked = map[solfegeMode];
+                if (picked) {
+                    this.exercises = picked.map((idx) => this.exercises[idx]).filter(Boolean);
+                }
+            }
+        } catch (e) {
+            // ignore; keep default exercise list
+        }
+
         this.totalNotes = this.exercises.reduce((sum, ex) => sum + ex.notes.length, 0);
     }
 

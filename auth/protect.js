@@ -10,7 +10,9 @@
             'cloudkeeper', 'pulse', 'songbird',  // Ages 4-8
             'aura', 'tidepool', 'echogarden',    // Ages 8-13
             'deep', 'solfege', 'chill',          // Ages 13-18 (teens)
-            'drift', 'reset', 'anchor'           // Ages 18+ (adults)
+            'drift', 'reset', 'anchor',         // Ages 18+ (adults)
+            // Music regulation cluster wrappers (free)
+            'pitch-match', 'ear-training', 'rhythm-regulation', 'music-breathing'
         ],
         rituals: [
             'morning-rise', 'sleep-descent', 'transition-reset'

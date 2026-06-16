@@ -24,6 +24,15 @@ class Solfege {
         this.lastDetectedNote = null;
         this.noteHoldTime = 0;
         this.noteHoldRequired = 200; // ms to hold note to count (reduced for responsiveness)
+
+        // Music regulation GA tracking (only when `music_context` is present).
+        this.musicContext = null; // e.g. `solfege-trainer` | `ear-training`
+        this.gradeBand = 'all';
+        this.musicGameName = 'Solfège Trainer';
+        this.musicTrackingEnabled = false;
+        this.musicStartTime = 0;
+        this.musicLastReportedSec = 0;
+        this.musicTimeInterval = null;
         
         this.init();
     }
@@ -32,6 +41,7 @@ class Solfege {
         await solfegeAudio.init();
         this.bindEvents();
         this.bindExerciseCallbacks();
+        this.setupMusicTracking();
         console.log('🎼 Solfège initialized — Do Re Mi Fa Sol La Ti Do');
     }
 
@@ -120,11 +130,29 @@ class Solfege {
             
             // Update target display
             this.updateTargetDisplay();
+
+            if (this.musicTrackingEnabled) {
+                this.safeTrack('note_correct', {
+                    game_name: this.musicGameName,
+                    grade_band: this.gradeBand,
+                    sung: sung,
+                    target: target
+                });
+            }
         };
 
         this.exercises.onNoteWrong = (sung, target) => {
             const targetSolfege = SOLFEGE[target]?.name || target;
             this.showFeedback(`Try ${targetSolfege}`, '🎵', true);
+
+            if (this.musicTrackingEnabled) {
+                this.safeTrack('note_incorrect', {
+                    game_name: this.musicGameName,
+                    grade_band: this.gradeBand,
+                    sung: sung,
+                    target: target
+                });
+            }
         };
 
         this.exercises.onExerciseComplete = (index) => {
@@ -147,8 +175,102 @@ class Solfege {
                 this.isRunning = false;
                 this.showScreen('complete');
                 solfegeAudio.playSuccess();
+
+                if (this.musicTrackingEnabled) {
+                    this.stopMusicTimeTracking();
+                    const engagementSec = this.getMusicEngagementSeconds();
+
+                    this.safeTrack('session_complete', {
+                        game_name: this.musicGameName,
+                        grade_band: this.gradeBand,
+                        correct: stats.correct,
+                        total: stats.total,
+                        accuracy_score: stats.accuracy,
+                        engagement_time_sec: engagementSec
+                    });
+
+                    // Ear-training uses the same underlying exercise set, but emits
+                    // different labeled events for analytics/aggregation.
+                    if (this.musicContext === 'ear-training') {
+                        this.safeTrack('exercise_complete', {
+                            game_name: 'Ear Training',
+                            grade_band: this.gradeBand,
+                            accuracy_score: stats.accuracy
+                        });
+                    }
+
+                    this.safeTrack('music_game_complete', {
+                        game_name: this.musicGameName,
+                        grade_band: this.gradeBand,
+                        engagement_time: engagementSec,
+                        engagement_time_sec: engagementSec
+                    });
+
+                    this.safeTrack('music_game_time_spent', {
+                        game_name: this.musicGameName,
+                        grade_band: this.gradeBand,
+                        engagement_time: engagementSec,
+                        engagement_time_sec: engagementSec,
+                        reason: 'complete'
+                    });
+                }
             }, 1000);
         };
+    }
+
+    setupMusicTracking() {
+        try {
+            const params = new URLSearchParams(window.location.search || '');
+            this.musicContext = params.get('music_context');
+            this.gradeBand =
+                params.get('grade_band') ||
+                params.get('music_grade_band') ||
+                params.get('gradeBand') ||
+                'all';
+
+            this.musicTrackingEnabled = !!this.musicContext;
+
+            if (this.musicContext === 'ear-training') this.musicGameName = 'Ear Training';
+            else if (this.musicContext === 'solfege-trainer') this.musicGameName = 'Solfège Trainer';
+        } catch (e) {
+            this.musicTrackingEnabled = false;
+        }
+    }
+
+    safeTrack(eventName, params) {
+        if (typeof window.gtag !== 'function') return;
+        try {
+            window.gtag('event', eventName, params || {});
+        } catch (e) {
+            // Never break gameplay on analytics failures.
+        }
+    }
+
+    getMusicEngagementSeconds() {
+        if (!this.musicStartTime) return 0;
+        return Math.max(0, Math.round((Date.now() - this.musicStartTime) / 1000));
+    }
+
+    sendMusicTimeSpent(reason) {
+        const sec = this.getMusicEngagementSeconds();
+        if (!this.musicTrackingEnabled) return;
+        if (sec <= 0 || sec <= this.musicLastReportedSec) return;
+        this.musicLastReportedSec = sec;
+
+        this.safeTrack('music_game_time_spent', {
+            game_name: this.musicGameName,
+            grade_band: this.gradeBand,
+            engagement_time: sec,
+            engagement_time_sec: sec,
+            reason: reason || 'interval'
+        });
+    }
+
+    stopMusicTimeTracking() {
+        if (this.musicTimeInterval) {
+            clearInterval(this.musicTimeInterval);
+            this.musicTimeInterval = null;
+        }
     }
 
     showScreen(screenId) {
@@ -161,6 +283,35 @@ class Solfege {
     startGame() {
         this.showScreen('game');
         this.isRunning = true;
+
+        if (this.musicTrackingEnabled) {
+            this.musicStartTime = Date.now();
+            this.musicLastReportedSec = 0;
+            this.stopMusicTimeTracking();
+
+            // Cluster-required events.
+            this.safeTrack('session_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand
+            });
+
+            if (this.musicContext === 'ear-training') {
+                this.safeTrack('exercise_start', {
+                    game_name: 'Ear Training',
+                    grade_band: this.gradeBand
+                });
+            }
+
+            this.safeTrack('music_game_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand
+            });
+
+            this.musicTimeInterval = setInterval(
+                () => this.sendMusicTimeSpent('interval'),
+                30000
+            );
+        }
         
         // Initialize progress dots
         this.initProgressDots();
@@ -303,6 +454,8 @@ class Solfege {
         this.yourSolfegeEl.textContent = '—';
         this.yourSolfegeEl.style.color = '';
         this.piano.clearAll();
+
+        this.stopMusicTimeTracking();
     }
 }
 

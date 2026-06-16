@@ -3,6 +3,16 @@
    A PNEUOMA Game
    ============================================ */
 
+// Analytics helper: never breaks gameplay if gtag is blocked.
+function safeTrack(eventName, params) {
+    if (typeof window.gtag !== 'function') return;
+    try {
+        window.gtag('event', eventName, params || {});
+    } catch (e) {
+        // swallow
+    }
+}
+
 class Game {
     constructor() {
         this.canvas = document.getElementById('game-canvas');
@@ -16,6 +26,16 @@ class Game {
         this.lastFrameTime = 0;
         this.sessionStartTime = 0;
         this.sessionDuration = 5 * 60 * 1000; // 5 minute session
+
+        // Music regulation GA tracking (optional; only fires when `music_context` is present).
+        this.musicContext = null;
+        this.gradeBand = 'all';
+        this.musicGameName = 'Rhythm Regulation';
+        this.regulationMode = 'match';
+        this.musicTrackingEnabled = false;
+        this.musicStartTime = 0;
+        this.musicLastReportedSec = 0;
+        this.musicTimeInterval = null;
         
         // Screens
         this.screens = {
@@ -110,6 +130,83 @@ class Game {
         
         // Show game screen
         this.showScreen('game');
+
+        // Music regulation tracking (only for the cluster wrapper/landing pages).
+        try {
+            const params = new URLSearchParams(window.location.search || '');
+            this.musicContext = params.get('music_context');
+            this.gradeBand =
+                params.get('grade_band') ||
+                params.get('music_grade_band') ||
+                params.get('gradeBand') ||
+                'all';
+            this.regulationMode =
+                params.get('regulation_mode') ||
+                params.get('regulationMode') ||
+                'match';
+
+            this.musicTrackingEnabled = this.musicContext === 'rhythm-regulation';
+        } catch (e) {
+            this.musicTrackingEnabled = false;
+        }
+
+        // Adjust regulation feel based on classroom mode preset.
+        if (this.rhythmEngine) {
+            let targetBpm = 65;
+            if (this.regulationMode === 'calm') targetBpm = 58;
+            else if (this.regulationMode === 'focus') targetBpm = 72;
+            else if (this.regulationMode === 'regulation') targetBpm = 70;
+            else targetBpm = 65;
+
+            this.rhythmEngine.bpm = targetBpm;
+            this.rhythmEngine.beatInterval = 60000 / targetBpm;
+
+            // Shorter calm sessions, slightly longer regulation sessions.
+            if (this.regulationMode === 'calm') this.sessionDuration = 3 * 60 * 1000;
+            else if (this.regulationMode === 'regulation') this.sessionDuration = 4 * 60 * 1000;
+            else this.sessionDuration = 5 * 60 * 1000;
+        }
+
+        const safeTrack = (eventName, params) => {
+            if (typeof window.gtag !== 'function') return;
+            try {
+                window.gtag('event', eventName, params || {});
+            } catch (e) { /* swallow */ }
+        };
+
+        if (this.musicTrackingEnabled) {
+            this.musicStartTime = Date.now();
+            this.musicLastReportedSec = 0;
+            safeTrack('rhythm_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                regulation_mode_selected: this.regulationMode
+            });
+
+            safeTrack('regulation_mode_selected', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                regulation_mode_selected: this.regulationMode
+            });
+
+            safeTrack('music_game_start', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand
+            });
+
+            this.musicTimeInterval = setInterval(() => {
+                const sec = Math.max(0, Math.round((Date.now() - this.musicStartTime) / 1000));
+                if (!sec || sec <= this.musicLastReportedSec) return;
+                this.musicLastReportedSec = sec;
+
+                safeTrack('music_game_time_spent', {
+                    game_name: this.musicGameName,
+                    grade_band: this.gradeBand,
+                    engagement_time: sec,
+                    engagement_time_sec: sec
+                });
+            }, 30000);
+        }
         
         // Start rhythm engine
         this.rhythmEngine.start();
@@ -277,6 +374,35 @@ class Game {
         
         // Show complete screen
         this.showScreen('complete');
+
+        if (this.musicTrackingEnabled) {
+            if (this.musicTimeInterval) clearInterval(this.musicTimeInterval);
+            const engagementSec = Math.max(0, Math.round(duration));
+
+            safeTrack('rhythm_complete', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                duration_sec: engagementSec,
+                accuracy_score: accuracy,
+                best_streak: bestStreak,
+                regulation_mode_selected: this.regulationMode
+            });
+
+            safeTrack('music_game_complete', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                engagement_time: engagementSec,
+                engagement_time_sec: engagementSec
+            });
+
+            safeTrack('music_game_time_spent', {
+                game_name: this.musicGameName,
+                grade_band: this.gradeBand,
+                engagement_time: engagementSec,
+                engagement_time_sec: engagementSec,
+                reason: 'complete'
+            });
+        }
     }
 
     showScreen(screenName) {
