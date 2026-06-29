@@ -5,12 +5,26 @@
 
 // Analytics helper: never breaks gameplay if gtag is blocked.
 function safeTrack(eventName, params) {
-    if (typeof window.gtag !== 'function') return;
-    try {
-        window.gtag('event', eventName, params || {});
-    } catch (e) {
-        // swallow
+    if (typeof window.gtag === 'function') {
+        try {
+            window.gtag('event', eventName, params || {});
+        } catch (e) {
+            // swallow
+        }
     }
+    try {
+        if (window.PneuomaDiscovery) {
+            window.PneuomaDiscovery.dualTrack('pulse', eventName, params || {});
+        }
+    } catch (e) { /* swallow */ }
+}
+
+function discoveryTrack(eventType, params) {
+    try {
+        if (window.PneuomaDiscovery) {
+            window.PneuomaDiscovery.track('pulse', eventType, params || {});
+        }
+    } catch (e) { /* swallow */ }
 }
 
 class Game {
@@ -92,6 +106,11 @@ class Game {
         
         // Setup event listeners
         this.setupEventListeners();
+
+        discoveryTrack('page_view', {
+            page_path: window.location.pathname,
+            feature_used: 'pulse_title'
+        });
         
         console.log('Pulse — A PNEUOMA Game — initialized');
     }
@@ -217,6 +236,15 @@ class Game {
         this.peakFlow = 0;
         this.lastFrameTime = performance.now();
         this.gameLoop();
+
+        discoveryTrack('session_started', {
+            feature_used: 'pulse_session',
+            regulation_mode: this.regulationMode
+        });
+        discoveryTrack('demo_started', {
+            feature_used: 'pulse_demo',
+            regulation_mode: this.regulationMode
+        });
     }
 
     gameLoop() {
@@ -374,6 +402,15 @@ class Game {
         
         // Show complete screen
         this.showScreen('complete');
+
+        discoveryTrack('first_value_reached', {
+            first_value_key: 'pulse_complete',
+            feature_used: 'pulse_complete',
+            duration_sec: Math.max(0, Math.round(duration)),
+            accuracy_score: accuracy,
+            best_streak: bestStreak,
+            regulation_mode: this.regulationMode
+        });
 
         if (this.musicTrackingEnabled) {
             if (this.musicTimeInterval) clearInterval(this.musicTimeInterval);

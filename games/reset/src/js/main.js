@@ -5,12 +5,26 @@
 
 // Analytics helper: never breaks gameplay if gtag is blocked.
 function safeTrack(eventName, params) {
-    if (typeof window.gtag !== 'function') return;
-    try {
-        window.gtag('event', eventName, params || {});
-    } catch (e) {
-        // swallow
+    if (typeof window.gtag === 'function') {
+        try {
+            window.gtag('event', eventName, params || {});
+        } catch (e) {
+            // swallow
+        }
     }
+    try {
+        if (window.PneuomaDiscovery) {
+            window.PneuomaDiscovery.dualTrack('reset', eventName, params || {});
+        }
+    } catch (e) { /* swallow */ }
+}
+
+function discoveryTrack(eventType, params) {
+    try {
+        if (window.PneuomaDiscovery) {
+            window.PneuomaDiscovery.track('reset', eventType, params || {});
+        }
+    } catch (e) { /* swallow */ }
 }
 
 class ResetGame {
@@ -49,6 +63,11 @@ class ResetGame {
         this.elements.soundToggle.checked = this.soundEnabled;
 
         this.setupMusicTracking();
+
+        discoveryTrack('page_view', {
+            page_path: window.location.pathname,
+            feature_used: 'reset_title'
+        });
     }
     
     cacheElements() {
@@ -292,6 +311,16 @@ class ResetGame {
         
         // Start game loop
         this.gameLoop = setInterval(() => this.update(), 100);
+
+        discoveryTrack('session_started', {
+            feature_used: 'reset_session',
+            mode: this.mode,
+            duration_sec: Math.round(this.duration / 1000)
+        });
+        discoveryTrack('demo_started', {
+            feature_used: 'reset_demo',
+            mode: this.mode
+        });
     }
     
     setupPhaseDots(count) {
@@ -411,6 +440,14 @@ class ResetGame {
             full: "Full reset achieved. You've given yourself a gift."
         };
         this.elements.endMessage.textContent = messages[this.mode] || "Reset complete.";
+
+        discoveryTrack('first_value_reached', {
+            first_value_key: 'reset_complete',
+            feature_used: 'reset_complete',
+            mode: this.mode,
+            duration_sec: duration,
+            breath_count: breaths
+        });
 
         if (this.musicTrackingEnabled) {
             this.stopMusicTimeTracking();

@@ -233,8 +233,16 @@
         </div>
     </div>
     
+    <script src="/lib/discovery-config.js"></script>
+    <script src="/lib/discovery.js"></script>
     <script src="auth.js"></script>
     <script>
+        function discoveryTrack(eventType, metadata) {
+            if (window.PneuomaDiscovery) {
+                window.PneuomaDiscovery.track('aura', eventType, metadata || {});
+            }
+        }
+
         const ICONS = {
             check: '<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>',
             spinner: '<circle cx="12" cy="12" r="9" stroke="currentColor" fill="none" stroke-dasharray="40 20"/>',
@@ -278,6 +286,14 @@
                 '<path d="M5 12h14M12 5l7 7-7 7"/>' +
                 '</svg></a>'
             );
+            discoveryTrack('purchase_completed', {
+                feature_used: 'stripe_subscription',
+                first_value_key: 'premium_activated'
+            });
+            discoveryTrack('first_value_reached', {
+                feature_used: 'premium_activated',
+                first_value_key: 'premium_activated'
+            });
         }
 
         function showPending() {
@@ -353,7 +369,13 @@
             showPending();
         }
 
-        document.addEventListener('DOMContentLoaded', checkSubscription);
+        document.addEventListener('DOMContentLoaded', function () {
+            discoveryTrack('page_view', {
+                feature_used: 'subscription_success',
+                page_path: window.location.pathname
+            });
+            checkSubscription();
+        });
     </script>
 </body>
 </html>

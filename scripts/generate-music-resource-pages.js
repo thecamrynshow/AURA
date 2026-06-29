@@ -171,6 +171,8 @@ ${p.faq
     <p class="pc-article" style="padding-top:0;font-size:0.9rem;color:var(--pc-text-dim);text-align:center;">${esc(DISCLAIMER)}</p>
 
     <script type="application/ld+json">${jsonLd}</script>
+    <script src="/lib/discovery-config.js"></script>
+    <script src="/lib/discovery.js"></script>
     <script src="/conversion.js"></script>
 </body>
 </html>

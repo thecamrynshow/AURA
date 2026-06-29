@@ -193,6 +193,8 @@ ${faqHtml(p.faq)}
     <script type="application/ld+json">
 ${faqJsonLd(p.faq)}
     </script>
+    <script src="/lib/discovery-config.js"></script>
+    <script src="/lib/discovery.js"></script>
     <script src="/conversion.js"></script>
 </body>
 </html>

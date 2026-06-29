@@ -161,6 +161,8 @@
     </div>
     
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="/lib/discovery-config.js"></script>
+    <script src="/lib/discovery.js"></script>
     <script src="auth.js"></script>
     <script>
         // Stripe configuration
@@ -180,6 +182,23 @@
 
         const LOGIN_URL = '/auth/login.html?redirect=' + encodeURIComponent('/auth/subscribe.html');
 
+        function discoveryTrack(eventType, metadata) {
+            if (window.PneuomaDiscovery) {
+                window.PneuomaDiscovery.track('aura', eventType, metadata || {});
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            discoveryTrack('pricing_viewed', {
+                feature_used: 'subscribe_pricing',
+                page_path: window.location.pathname
+            });
+            discoveryTrack('page_view', {
+                feature_used: 'subscribe_page',
+                page_path: window.location.pathname
+            });
+        });
+
         function getAuthToken() {
             const token = localStorage.getItem('pneuoma_token');
             return token && token.trim() ? token.trim() : null;
@@ -198,6 +217,15 @@
         
         // Handle subscription
         async function subscribe(plan) {
+            discoveryTrack('trial_started', {
+                feature_used: 'stripe_checkout',
+                plan: plan
+            });
+            discoveryTrack('subscription_started', {
+                feature_used: 'stripe_checkout',
+                plan: plan
+            });
+
             const user = PneuomaAuth.init();
             const token = getAuthToken();
 

@@ -10,12 +10,14 @@
    4. Honest email capture: posts to a backend endpoint ONLY if one is
       configured (window.PNEUOMA_LEADS_ENDPOINT). Otherwise falls back
       to a real mailto compose + local save. Never fakes success.
+   5. Discovery Engine: dual-fire analytics to PNEUOMA Discovery API.
    ============================================ */
 
 (function () {
     'use strict';
 
     var FOUNDER_EMAIL = 'camrynjackson@pneuoma.com';
+    var DISCOVERY_APP_NAME = 'aura';
     // Root-relative so it works on pneuoma.com and local `http.server` at repo root.
     var LINKS = {
         startFree: '/auth/signup.html',
@@ -24,7 +26,36 @@
         classroomSync: '/platform/multiplayer/classroom-sync/'
     };
 
-    // ---- 1. GA4 tracking helper ----
+    function mapGaToDiscovery(gaEvent, params) {
+        params = params || {};
+        if (!gaEvent) return 'feature_used';
+        if (gaEvent === 'cta_start_free_click' || gaEvent.indexOf('signup') !== -1) return 'signup_clicked';
+        if (gaEvent.indexOf('pricing') !== -1) return 'pricing_viewed';
+        if (gaEvent.indexOf('trial') !== -1) return 'trial_started';
+        if (gaEvent.indexOf('subscription') !== -1 || gaEvent.indexOf('purchase') !== -1) {
+            return 'subscription_started';
+        }
+        if (gaEvent.indexOf('question') !== -1 || gaEvent.indexOf('ask') !== -1) return 'question_asked';
+        if (params.label === 'hero' || gaEvent.indexOf('hero') !== -1) return 'hero_cta_clicked';
+        if (gaEvent.indexOf('toolkit') !== -1 || gaEvent.indexOf('download') !== -1) return 'feature_used';
+        if (gaEvent.indexOf('classroom_sync') !== -1 || gaEvent.indexOf('pilot') !== -1) return 'feature_used';
+        if (gaEvent.indexOf('game') !== -1 || gaEvent.indexOf('demo') !== -1) return 'demo_started';
+        if (gaEvent === 'email_capture_submit') return 'signup_clicked';
+        return 'feature_used';
+    }
+
+    function discoveryTrack(eventType, params) {
+        params = params || {};
+        try {
+            if (window.PneuomaDiscovery && typeof window.PneuomaDiscovery.track === 'function') {
+                window.PneuomaDiscovery.track(DISCOVERY_APP_NAME, eventType, params);
+            }
+        } catch (e) {
+            console.debug('[pc] discovery track error', e);
+        }
+    }
+
+    // ---- 1. GA4 tracking helper (+ Discovery Engine dual-fire) ----
     function track(eventName, params) {
         params = params || {};
         try {
@@ -35,6 +66,23 @@
             }
         } catch (e) {
             console.debug('[pc] track error', e);
+        }
+
+        try {
+            var discoveryType = mapGaToDiscovery(eventName, params);
+            var discoveryParams = Object.assign({}, params, {
+                ga_event: eventName,
+                page_path: params.page_path || window.location.pathname
+            });
+            if (discoveryType === 'feature_used' && !discoveryParams.feature_used) {
+                discoveryParams.feature_used = eventName;
+            }
+            if (discoveryType === 'hero_cta_clicked' && !discoveryParams.feature_used) {
+                discoveryParams.feature_used = eventName;
+            }
+            discoveryTrack(discoveryType, discoveryParams);
+        } catch (e) {
+            console.debug('[pc] discovery dual-fire error', e);
         }
     }
 
@@ -190,6 +238,10 @@
     }
 
     function init() {
+        discoveryTrack('page_view', {
+            page_path: window.location.pathname,
+            title: document.title
+        });
         bindEvents();
         injectCtas();
         bindEmailForms();
@@ -202,5 +254,23 @@
     }
 
     // Expose a tiny API for other scripts.
-    window.PneuomaConvert = { track: track };
+    function askQuestion(question, params) {
+        params = params || {};
+        if (window.PneuomaDiscovery && typeof window.PneuomaDiscovery.askQuestion === 'function') {
+            window.PneuomaDiscovery.askQuestion(DISCOVERY_APP_NAME, question, params);
+        } else {
+            discoveryTrack('question_asked', Object.assign({}, params, {
+                user_question: question,
+                question: question,
+                feature_used: params.feature_used || 'aura_question'
+            }));
+        }
+        track('question_asked', Object.assign({ question: question }, params));
+    }
+
+    window.PneuomaConvert = {
+        track: track,
+        discoveryTrack: discoveryTrack,
+        askQuestion: askQuestion
+    };
 })();

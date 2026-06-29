@@ -4,6 +4,14 @@
 // Uses PNEUOMA Sync Server for cross-device sync
 // ============================================
 
+function discoveryTrack(eventType, metadata) {
+    try {
+        if (window.PneuomaDiscovery) {
+            window.PneuomaDiscovery.track('classroom-sync', eventType, metadata || {});
+        }
+    } catch (e) { /* never break classroom sync */ }
+}
+
 class ClassroomSync {
     constructor() {
         this.role = null;
@@ -34,6 +42,7 @@ class ClassroomSync {
     async init() {
         this.bindEvents();
         await this.initSync();
+        discoveryTrack('page_view', { path: window.location.pathname });
     }
     
     async initSync() {
@@ -308,6 +317,8 @@ class ClassroomSync {
         this.$('#teacherScreen').classList.add('active');
         this.$('#sessionCode').textContent = this.sessionCode;
         this.$('#shareCode').textContent = this.sessionCode;
+        discoveryTrack('session_started', { role: 'teacher', sessionCode: this.sessionCode });
+        discoveryTrack('demo_started', { role: 'teacher' });
         
         // Update UI to show waiting for students
         this.updateTeacherUI();
@@ -373,6 +384,7 @@ class ClassroomSync {
                 
                 this.initAudio();
                 this.showConnectionToast('Joined session!', 'success');
+                discoveryTrack('session_started', { role: 'student', sessionCode: code });
                 console.log('✅ Joined session via server:', code);
                 return;
             } catch (e) {
@@ -433,6 +445,7 @@ class ClassroomSync {
         
         this.initAudio();
         console.log('Joined session locally:', code, 'as', this.studentName);
+        discoveryTrack('session_started', { role: 'student', sessionCode: code, offline: true });
     }
     
     setupSyncChannel() {
@@ -723,6 +736,7 @@ class ClassroomSync {
         if (!exercise) return;
         
         this.exerciseActive = true;
+        discoveryTrack('feature_used', { feature: 'exercise', exercise: exerciseKey, role: this.role });
         this.$('#exerciseOverlay').classList.remove('hidden');
         this.$('#activeExerciseName').textContent = exercise.name;
         this.$('#classStatus').textContent = `Leading: ${exercise.name}`;
@@ -872,6 +886,7 @@ class ClassroomSync {
     }
     
     endSession() {
+        discoveryTrack('session_completed', { role: this.role, sessionCode: this.sessionCode });
         this.stopExercise();
         clearInterval(this.syncInterval);
         

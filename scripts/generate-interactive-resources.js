@@ -149,6 +149,8 @@ ${p.teacherSteps.map((s) => '            <li>' + s + '</li>').join('\n')}
         </div>
     </footer>
 
+    <script src="/lib/discovery-config.js"></script>
+    <script src="/lib/discovery.js"></script>
     <script src="/conversion.js"></script>
     <script src="/resource-play.js"></script>
 </body>
