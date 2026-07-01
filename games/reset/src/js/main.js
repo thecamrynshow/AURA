@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('reset');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Reset — Main Game Controller
  * Workplace Stress Relief
@@ -15,14 +30,6 @@ function safeTrack(eventName, params) {
     try {
         if (window.PneuomaDiscovery) {
             window.PneuomaDiscovery.dualTrack('reset', eventName, params || {});
-        }
-    } catch (e) { /* swallow */ }
-}
-
-function discoveryTrack(eventType, params) {
-    try {
-        if (window.PneuomaDiscovery) {
-            window.PneuomaDiscovery.track('reset', eventType, params || {});
         }
     } catch (e) { /* swallow */ }
 }

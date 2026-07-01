@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('focus');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Focus — Main Game Controller
  * Study Session Reset for Teens
@@ -21,6 +36,7 @@ class FocusGame {
     }
     
     init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         this.cacheElements();
         this.bindEvents();
         this.setupExercises();

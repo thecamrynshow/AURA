@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('sync');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Sync — Main Game Controller
  * Couples Co-Regulation Experience
@@ -24,6 +39,7 @@ class SyncGame {
     }
     
     init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         this.cacheElements();
         this.bindEvents();
         this.setupPhaseController();

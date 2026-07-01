@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('chill');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Chill — Main Game Controller
  * Social Anxiety Cool-Down for Teens
@@ -17,6 +32,7 @@ class ChillGame {
     }
     
     init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         this.cacheElements();
         this.bindEvents();
     }

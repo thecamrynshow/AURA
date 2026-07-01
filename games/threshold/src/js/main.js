@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('threshold');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /* ============================================
    THRESHOLD — Main Game Controller
    Master the art of intentional state change
@@ -28,6 +43,7 @@ class Threshold {
     }
 
     async init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         await thresholdAudio.init();
         this.bindEvents();
         console.log('🚪 Threshold initialized — State Transition Training');

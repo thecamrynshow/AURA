@@ -18,12 +18,23 @@
     <title>Pitch Match — Music Regulation | PNEUOMA</title>
     <meta name="robots" content="index, follow">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+    <script src="/lib/discovery-config.js"></script>
+    <script src="/lib/discovery.js"></script>
+    <script src="/lib/game-discovery.js"></script>
 </head>
 <body>
     <noscript>This game needs JavaScript enabled.</noscript>
     <div style="padding: 1.25rem; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
         Redirecting to the Pitch Match trainer…
     </div>
+    <script>
+        (function () {
+            if (window.PneuomaGameDiscovery) {
+                window.PneuomaGameDiscovery.create('pitch-match').trackPageView();
+            }
+        })();
+    </script>
+
 
     <script>
         (function () {

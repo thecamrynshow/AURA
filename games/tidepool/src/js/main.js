@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('tidepool');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Tidepool - Main Game Controller
  * A PNEUOMA Game
@@ -38,6 +53,7 @@ class Game {
     }
     
     async init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         console.log('Initializing Tidepool...');
         
         // Initialize screen manager

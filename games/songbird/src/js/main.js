@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('songbird');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /* ============================================
    SONGBIRD — Main Game Controller
    Whistle with the forest
@@ -52,6 +67,7 @@ class Songbird {
     }
 
     async init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         await songbirdAudio.init();
         this.bindEvents();
         this.bindAudioCallbacks();

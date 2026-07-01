@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('ember');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Ember — A Warm Presence in Your Hands
  * Touch-based, haptic-focused calming experience
@@ -80,6 +95,7 @@ class EmberApp {
     }
     
     init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         this.handleResize();
         window.addEventListener('resize', this.handleResize);
         

@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('dragon');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /* Dragon's Breath - Main Game Controller */
 
 class DragonGame {
@@ -32,6 +47,7 @@ class DragonGame {
     }
 
     init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         this.setupEventListeners();
         this.resize();
         window.addEventListener('resize', () => this.resize());

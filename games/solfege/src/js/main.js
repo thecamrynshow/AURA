@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('solfege');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /* ============================================
    SOLFÈGE — Main Game Controller
    Do Re Mi Fa Sol La Ti Do
@@ -38,6 +53,7 @@ class Solfege {
     }
 
     async init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         await solfegeAudio.init();
         this.bindEvents();
         this.bindExerciseCallbacks();

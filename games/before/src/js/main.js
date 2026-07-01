@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('before');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /* ============================================
    BEFORE — Main Game Controller
    Arrive ready. Every time.
@@ -25,6 +40,7 @@ class Before {
     }
 
     async init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         await beforeAudio.init();
         this.bindEvents();
         console.log('⏱️ Before initialized — Arrive ready. Every time.');

@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('aura');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Project AURA - Main Game Controller
  * Regulation Game Prototype v1
@@ -48,6 +63,7 @@ class Game {
     }
 
     async init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         console.log('Initializing Project AURA...');
         
         // Initialize screen manager

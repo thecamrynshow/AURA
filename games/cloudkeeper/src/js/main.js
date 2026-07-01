@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('cloudkeeper');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /* ============================================
    CLOUD KEEPER — Main Game Controller
    The gentlest game for the youngest players
@@ -33,6 +48,7 @@ class CloudKeeper {
     }
 
     async init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         await cloudAudio.init();
         this.bindEvents();
         console.log('☁️ Cloud Keeper initialized — Gentle Sky Play');

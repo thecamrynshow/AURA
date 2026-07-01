@@ -1,3 +1,18 @@
+/* PNEUOMA Discovery — game telemetry */
+var __pneuomaGd = (function () {
+    if (!window.PneuomaGameDiscovery) return null;
+    return window.PneuomaGameDiscovery.create('drift');
+})();
+function discoveryTrack(eventType, params) {
+    if (__pneuomaGd) __pneuomaGd.track(eventType, params);
+}
+function discoverySessionStarted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionStarted(params);
+}
+function discoverySessionCompleted(params) {
+    if (__pneuomaGd) __pneuomaGd.trackSessionCompleted(params);
+}
+
 /**
  * Drift — Main Game Controller
  * Sleep Preparation Experience
@@ -15,6 +30,7 @@ class DriftGame {
     }
     
     init() {
+        if (__pneuomaGd) __pneuomaGd.trackPageView();
         this.cacheElements();
         this.bindEvents();
         this.setupJourney();
