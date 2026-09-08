@@ -59,9 +59,28 @@
         'rhythm islands': 'rhythm',
         'rainbow painter': 'rainbow',
         'rainbow': 'rainbow',
-        'ember': 'ember'
+        'ember': 'ember',
+        'align': 'align'
     };
     
+    function remainingSessions() {
+        if (window.PneuomaGate && typeof window.PneuomaGate.remainingSessions === 'function') {
+            return window.PneuomaGate.remainingSessions();
+        }
+        if (typeof PneuomaEntitlements !== 'undefined') {
+            return PneuomaEntitlements.remainingSessions();
+        }
+        try {
+            const raw = localStorage.getItem('pneuoma_game_sessions');
+            const data = raw ? JSON.parse(raw) : null;
+            const today = new Date().toISOString().slice(0, 10);
+            if (!data || data.date !== today) return 3;
+            return Math.max(0, 3 - (data.count || 0));
+        } catch (e) {
+            return 3;
+        }
+    }
+
     async function initGameGating() {
         // Initialize auth
         if (typeof PneuomaAuth !== 'undefined') {
@@ -73,8 +92,8 @@
             }
         }
         
-        // Check if user has premium access
-        const hasPremium = typeof PneuomaAuth !== 'undefined' && 
+        // Check if user has PNEUOMA+ access
+        const hasPlus = typeof PneuomaAuth !== 'undefined' && 
             (PneuomaAuth.isPremium() || PneuomaAuth.isMaster());
         
         // Get all game cards
@@ -91,8 +110,8 @@
             // Check if this is a free game
             const isFreeGame = FREE_GAMES[gameId] === true;
             
-            // If user has premium OR it's a free game, keep it unlocked
-            if (hasPremium || isFreeGame) {
+            // If user has PNEUOMA+ OR it's a free game, keep it unlocked
+            if (hasPlus || isFreeGame) {
                 // Already unlocked, do nothing
                 return;
             }
@@ -102,7 +121,7 @@
         });
         
         // Add unlock banner if user is not logged in or is free tier
-        if (!hasPremium) {
+        if (!hasPlus) {
             addUpgradeBanner();
         }
     }
@@ -115,7 +134,7 @@
         // Update status badge
         const statusBadge = card.querySelector('.status-badge');
         if (statusBadge) {
-            statusBadge.textContent = 'Premium';
+            statusBadge.textContent = 'PNEUOMA+';
             statusBadge.classList.remove('live');
             statusBadge.classList.add('premium-badge');
         }
@@ -131,7 +150,7 @@
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
-                <span>Unlock with Premium</span>
+                <span>Unlock with PNEUOMA+</span>
             `;
             playBtn.parentNode.replaceChild(upgradeBtn, playBtn);
         }
@@ -159,6 +178,8 @@
         if (document.querySelector('.upgrade-banner')) return;
         
         const isLoggedIn = typeof PneuomaAuth !== 'undefined' && PneuomaAuth.isLoggedIn();
+        const left = remainingSessions();
+        const sessionsLine = `${left} of 3 free game sessions left today.`;
         
         const banner = document.createElement('div');
         banner.className = 'upgrade-banner';
@@ -166,13 +187,13 @@
             <div class="upgrade-banner-content">
                 <div class="upgrade-banner-icon">🔓</div>
                 <div class="upgrade-banner-text">
-                    <h3>${isLoggedIn ? 'Unlock All 25+ Games' : 'Sign Up to Track Progress'}</h3>
+                    <h3>${isLoggedIn ? 'Upgrade to PNEUOMA+' : 'PNEUOMA Free vs PNEUOMA+'}</h3>
                     <p>${isLoggedIn 
-                        ? 'Upgrade to Premium for unlimited access to all games, rituals, and multiplayer modes.' 
-                        : '3 games per category are free. Sign up to save progress or subscribe for full access.'}</p>
+                        ? `Free includes a selection of games and 3 sessions/day. ${sessionsLine} Unlock unlimited play and the full library.` 
+                        : 'Free: 3 sessions/day + a selection of games. PNEUOMA+: unlimited games, full library, permanent progress.'}</p>
                 </div>
                 <a href="${isLoggedIn ? '/auth/subscribe.html' : '/auth/signup.html'}" class="upgrade-banner-btn">
-                    ${isLoggedIn ? 'Upgrade to Premium' : 'Get Started Free'}
+                    ${isLoggedIn ? 'Get PNEUOMA+' : 'Get Started Free'}
                 </a>
             </div>
         `;

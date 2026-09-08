@@ -1,39 +1,34 @@
 // ============================================
 // PNEUOMA Access Control
-// Content gating for free vs premium tiers
+// Content gating for Free vs PNEUOMA+
 // ============================================
 
 const PneuomaAccess = {
-    // Free content - first 3 in each category
+    // Free content - selection of free games + basic tools
     freeContent: {
-        // Games by age group (first 3 each)
         games: {
             'ages-4-8': ['cloudkeeper', 'pulse', 'songbird'],
             'ages-8-13': ['aura', 'tidepool', 'echogarden'],
-            'ages-13-18': ['deep', 'solfege', 'aura'],
-            'ages-18+': ['deep', 'echogarden', 'tidepool']
+            'ages-13-18': ['deep', 'solfege', 'chill'],
+            'ages-18+': ['drift', 'reset', 'anchor']
         },
         
-        // First 3 rituals (matching folder names)
         rituals: ['morning-rise', 'sleep-descent', 'transition-reset'],
-        
-        // First 3 multiplayer modes (matching folder names)
         multiplayer: ['partners', 'family-circle', 'classroom-sync']
     },
     
-    // All content lists (for premium)
     allContent: {
         games: {
-            'ages-4-8': ['cloudkeeper', 'pulse', 'songbird', 'tidepool', 'echogarden'],
+            'ages-4-8': ['cloudkeeper', 'pulse', 'songbird', 'tidepool', 'echogarden', 'rainbow'],
             'ages-8-13': ['aura', 'tidepool', 'echogarden', 'solfege', 'dragon', 'starcatcher', 'rhythm'],
-            'ages-13-18': ['deep', 'solfege', 'aura', 'echogarden', 'tidepool', 'dragon', 'starcatcher', 'rhythm'],
-            'ages-18+': ['deep', 'echogarden', 'tidepool', 'aura', 'solfege', 'pulse']
+            'ages-13-18': ['deep', 'solfege', 'chill', 'aura', 'echogarden', 'tidepool', 'dragon', 'starcatcher', 'rhythm'],
+            'ages-18+': ['drift', 'reset', 'anchor', 'deep', 'echogarden', 'tidepool', 'aura', 'solfege', 'align', 'ember']
         },
         
         rituals: [
-            'morning-calm', 'sleep-prep', 'quick-reset',
-            'focus-boost', 'anxiety-relief', 'energy-shift',
-            'evening-wind', 'crisis-calm'
+            'morning-rise', 'sleep-descent', 'transition-reset',
+            'deep-focus', 'before', 'decompress',
+            'emergency-reset', 'deep-recovery'
         ],
         
         multiplayer: [
@@ -42,7 +37,6 @@ const PneuomaAccess = {
         ]
     },
     
-    // Game ID to path mapping
     gamePaths: {
         'cloudkeeper': '/games/cloudkeeper/',
         'pulse': '/games/pulse/',
@@ -52,46 +46,54 @@ const PneuomaAccess = {
         'echogarden': '/games/echogarden/',
         'deep': '/games/deep/',
         'solfege': '/games/solfege/',
+        'chill': '/games/chill/',
+        'drift': '/games/drift/',
+        'reset': '/games/reset/',
+        'anchor': '/games/anchor/',
         'dragon': '/games/dragon/',
         'starcatcher': '/games/starcatcher/',
-        'rhythm': '/games/rhythm/'
+        'rhythm': '/games/rhythm/',
+        'rainbow': '/games/rainbow/',
+        'align': '/games/align/',
+        'ember': '/games/ember/'
     },
     
-    // Check if user can access specific content
     canAccess(contentType, contentId, ageGroup = null) {
-        // Always allow if not initialized
+        if (typeof PneuomaEntitlements !== 'undefined') {
+            return PneuomaEntitlements.evaluateAccess(contentType, contentId).allowed;
+        }
+
         if (typeof PneuomaAuth === 'undefined') return true;
         
         const user = PneuomaAuth.user;
         
-        // Not logged in = guest, show upgrade prompt
         if (!user) {
             return this.isGuestAccessible(contentType, contentId, ageGroup);
         }
         
-        // Master accounts have full access
         if (PneuomaAuth.isMaster()) return true;
-        
-        // Premium users have full access
         if (PneuomaAuth.isPremium()) return true;
         
-        // Free tier - check against free content
         return this.isFreeContent(contentType, contentId, ageGroup);
     },
     
-    // Check if content is in free tier
     isFreeContent(contentType, contentId, ageGroup = null) {
+        if (typeof PneuomaEntitlements !== 'undefined') {
+            return PneuomaEntitlements.isFreeContent(contentType, contentId);
+        }
+
         const freeList = this.freeContent[contentType];
         
         if (!freeList) return false;
         
-        // For games, check by age group
-        if (contentType === 'games' && ageGroup) {
-            const ageGames = freeList[ageGroup] || [];
-            return ageGames.includes(contentId);
+        if (contentType === 'games') {
+            if (ageGroup) {
+                const ageGames = freeList[ageGroup] || [];
+                return ageGames.includes(contentId);
+            }
+            return Object.values(freeList).some(list => list.includes(contentId));
         }
         
-        // For rituals and multiplayer
         if (Array.isArray(freeList)) {
             return freeList.includes(contentId);
         }
@@ -99,29 +101,24 @@ const PneuomaAccess = {
         return false;
     },
     
-    // Guest access (not logged in) - same as free but prompts signup
     isGuestAccessible(contentType, contentId, ageGroup = null) {
         return this.isFreeContent(contentType, contentId, ageGroup);
     },
     
-    // Get content ID from current URL
     getContentIdFromUrl() {
         const path = window.location.pathname;
         
-        // Check games
         for (const [id, gamePath] of Object.entries(this.gamePaths)) {
             if (path.includes(gamePath) || path.includes(`/games/${id}`)) {
                 return { type: 'games', id };
             }
         }
         
-        // Check rituals
         if (path.includes('/rituals/')) {
             const match = path.match(/\/rituals\/([^\/]+)/);
             if (match) return { type: 'rituals', id: match[1] };
         }
         
-        // Check multiplayer
         if (path.includes('/multiplayer/')) {
             const match = path.match(/\/multiplayer\/([^\/]+)/);
             if (match) return { type: 'multiplayer', id: match[1] };
@@ -130,10 +127,9 @@ const PneuomaAccess = {
         return null;
     },
     
-    // Protect current page
     protectPage(ageGroup = null) {
         const content = this.getContentIdFromUrl();
-        if (!content) return true; // Not a protected page
+        if (!content) return true;
         
         if (!this.canAccess(content.type, content.id, ageGroup)) {
             this.showUpgradeModal(content);
@@ -143,9 +139,7 @@ const PneuomaAccess = {
         return true;
     },
     
-    // Show upgrade modal for locked content
     showUpgradeModal(content) {
-        // Check if modal already exists
         if (document.getElementById('upgrade-modal')) return;
         
         const modal = document.createElement('div');
@@ -154,17 +148,17 @@ const PneuomaAccess = {
             <div class="upgrade-modal-overlay">
                 <div class="upgrade-modal-content">
                     <div class="upgrade-icon">🔒</div>
-                    <h2>Premium Content</h2>
-                    <p>This ${content.type.slice(0, -1)} requires a premium subscription.</p>
+                    <h2>PNEUOMA+ Content</h2>
+                    <p>This ${content.type.slice(0, -1)} requires PNEUOMA+.</p>
                     
                     <div class="upgrade-benefits">
-                        <h3>With Premium, you get:</h3>
+                        <h3>With PNEUOMA+, you get:</h3>
                         <ul>
-                            <li>✓ All 25+ regulation games</li>
-                            <li>✓ All 8 daily rituals</li>
-                            <li>✓ All 6 multiplayer modes</li>
-                            <li>✓ Family profiles (up to 5)</li>
-                            <li>✓ Progress tracking & insights</li>
+                            <li>✓ Unlimited games</li>
+                            <li>✓ Full game + regulation library</li>
+                            <li>✓ Full Solfège experiences</li>
+                            <li>✓ Permanent progress/history</li>
+                            <li>✓ New games/features first</li>
                         </ul>
                     </div>
                     
@@ -174,7 +168,7 @@ const PneuomaAccess = {
                     </div>
                     
                     <div class="upgrade-actions">
-                        <a href="/auth/signup.html" class="btn-upgrade">Start Free Trial</a>
+                        <a href="/auth/subscribe.html" class="btn-upgrade">Upgrade to PNEUOMA+</a>
                         <a href="/platform/" class="btn-back">Browse Free Content</a>
                     </div>
                     
@@ -185,7 +179,6 @@ const PneuomaAccess = {
             </div>
         `;
         
-        // Add styles
         const style = document.createElement('style');
         style.textContent = `
             .upgrade-modal-overlay {
@@ -198,7 +191,6 @@ const PneuomaAccess = {
                 z-index: 10000;
                 padding: 1rem;
             }
-            
             .upgrade-modal-content {
                 background: #161b22;
                 border: 1px solid #30363d;
@@ -207,24 +199,14 @@ const PneuomaAccess = {
                 max-width: 400px;
                 text-align: center;
             }
-            
-            .upgrade-icon {
-                font-size: 3rem;
-                margin-bottom: 1rem;
-            }
-            
+            .upgrade-icon { font-size: 3rem; margin-bottom: 1rem; }
             .upgrade-modal-content h2 {
                 font-family: 'Space Grotesk', sans-serif;
                 font-size: 1.5rem;
                 margin-bottom: 0.5rem;
                 color: #e6edf3;
             }
-            
-            .upgrade-modal-content > p {
-                color: #8b949e;
-                margin-bottom: 1.5rem;
-            }
-            
+            .upgrade-modal-content > p { color: #8b949e; margin-bottom: 1.5rem; }
             .upgrade-benefits {
                 background: #0d1117;
                 border-radius: 8px;
@@ -232,46 +214,30 @@ const PneuomaAccess = {
                 margin-bottom: 1.5rem;
                 text-align: left;
             }
-            
             .upgrade-benefits h3 {
                 font-size: 0.875rem;
                 color: #8b949e;
                 margin-bottom: 0.75rem;
             }
-            
-            .upgrade-benefits ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-            
+            .upgrade-benefits ul { list-style: none; padding: 0; margin: 0; }
             .upgrade-benefits li {
                 color: #e6edf3;
                 font-size: 0.875rem;
                 padding: 0.25rem 0;
             }
-            
-            .upgrade-pricing {
-                margin-bottom: 1.5rem;
-            }
-            
+            .upgrade-pricing { margin-bottom: 1.5rem; }
             .upgrade-pricing .price {
                 font-size: 2.5rem;
                 font-weight: 700;
                 color: #64ffda;
             }
-            
-            .upgrade-pricing .period {
-                color: #8b949e;
-            }
-            
+            .upgrade-pricing .period { color: #8b949e; }
             .upgrade-actions {
                 display: flex;
                 flex-direction: column;
                 gap: 0.75rem;
                 margin-bottom: 1rem;
             }
-            
             .btn-upgrade {
                 display: block;
                 padding: 0.875rem 1.5rem;
@@ -281,51 +247,28 @@ const PneuomaAccess = {
                 border-radius: 8px;
                 font-weight: 600;
             }
-            
-            .btn-upgrade:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
-            }
-            
             .btn-back {
                 color: #8b949e;
                 text-decoration: none;
                 font-size: 0.875rem;
             }
-            
-            .btn-back:hover {
-                color: #e6edf3;
-            }
-            
-            .upgrade-note {
-                font-size: 0.75rem;
-                color: #6e7681;
-            }
-            
-            .upgrade-note a {
-                color: #06b6d4;
-                text-decoration: none;
-            }
+            .upgrade-note { font-size: 0.75rem; color: #6e7681; }
+            .upgrade-note a { color: #06b6d4; text-decoration: none; }
         `;
         
         document.head.appendChild(style);
         document.body.appendChild(modal);
     },
     
-    // Initialize access control on page load
     init(ageGroup = null) {
-        // Wait for auth to initialize
         if (typeof PneuomaAuth !== 'undefined') {
             PneuomaAuth.init();
         }
         
-        // Protect current page if needed
         return this.protectPage(ageGroup);
     }
 };
 
-// Export
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = PneuomaAccess;
 }
-

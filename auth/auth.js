@@ -42,21 +42,28 @@ const PneuomaAuth = {
         return !!(this.user && (this.user.role === 'master' || this.user.subscription === 'master'));
     },
     
-    // Check if user has premium access (cached for UX; server is source of truth).
+    // Check if user has PNEUOMA+ / premium access (cached for UX; server is source of truth).
     isPremium() {
         if (!this.user) return false;
         if (this.isMaster()) return true;
         if (this.user.isPremium === true) return true;
-        return this.user.subscription === 'premium' || 
-               this.user.subscription === 'family' || 
+        return this.user.subscription === 'premium' ||
+               this.user.subscription === 'plus' ||
+               this.user.subscription === 'family' ||
                this.user.subscription === 'school';
+    },
+
+    // Alias for PNEUOMA+ branding
+    isPlus() {
+        return this.isPremium();
     },
     
     // Get subscription tier
     getTier() {
         if (!this.user) return 'guest';
         if (this.isMaster()) return 'master';
-        return this.user.subscription || 'free';
+        const sub = this.user.subscription || 'free';
+        return sub === 'premium' ? 'plus' : sub;
     },
     
     // Login with email/password

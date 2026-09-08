@@ -436,10 +436,10 @@
         <!-- Upgrade Banner (shown to free users) -->
         <div class="upgrade-banner" id="upgradeBanner">
             <div class="upgrade-text">
-                <h3>✨ Unlock Everything</h3>
-                <p>Get access to all 27 games, 8 rituals, and 6 multiplayer modes with Premium.</p>
+                <h3>Unlock PNEUOMA+</h3>
+                <p>Free includes 3 game sessions/day. PNEUOMA+ unlocks unlimited games, the full library, and permanent progress.</p>
             </div>
-            <a href="/auth/subscribe.html" class="upgrade-btn">Upgrade Now</a>
+            <a href="/auth/subscribe.html" class="upgrade-btn">Get PNEUOMA+</a>
         </div>
         
         <!-- Content Grid -->
@@ -522,7 +522,7 @@
                 upgradeBanner.classList.add('hidden');
             } else if (auth.isPremium()) {
                 const sub = user.subscription;
-                userBadge.textContent = sub.toUpperCase();
+                userBadge.textContent = (sub === 'premium' || sub === 'plus') ? 'PNEUOMA+' : sub.toUpperCase();
                 userBadge.className = 'user-badge badge-premium';
                 upgradeBanner.classList.add('hidden');
             } else {
