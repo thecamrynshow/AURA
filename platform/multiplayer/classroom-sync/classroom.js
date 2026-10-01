@@ -19,12 +19,17 @@ class ClassroomSync {
         this.studentName = null;
         this.students = new Map(); // Real students only - Map of id -> student data
         this.exerciseActive = false;
+        this.currentExerciseKey = null;
+        this.exerciseStartedAt = null;
+        this.studentId = null;
+        this.studentStartedAt = null;
         this.exerciseTimer = null;
         this.breathTimer = null;
         this.audioContext = null;
         this.sync = null; // PneuomaSync client
         
         this.exercises = {
+            'class-reset': { name: '90-Second Reset', duration: 90, inhale: 4, exhale: 6 },
             'breath-reset': { name: 'Breath Reset', duration: 120, inhale: 4, exhale: 4 },
             'grounding': { name: 'Quick Ground', duration: 60, inhale: 3, exhale: 5 },
             'transition': { name: 'Transition', duration: 90, inhale: 4, exhale: 6 },
@@ -170,7 +175,10 @@ class ClassroomSync {
         this.students.set(id, {
             id: id,
             name: name || 'Anonymous',
-            state: 'calm', // Start calm
+            state: 'calm',
+            status: 'joined',
+            finished: false,
+            durationSec: null,
             joinTime: Date.now()
         });
         
@@ -370,6 +378,7 @@ class ClassroomSync {
                 
                 this.role = 'student';
                 this.sessionCode = code;
+                this.studentId = 'student-' + Date.now();
                 
                 // Show student screen
                 this.$$('.screen').forEach(s => s.classList.remove('active'));
@@ -417,6 +426,7 @@ class ClassroomSync {
         // Successfully joining locally
         this.role = 'student';
         this.sessionCode = code;
+        this.studentId = 'student-' + Date.now();
         
         // Setup local sync
         this.setupSyncChannel();
@@ -431,7 +441,7 @@ class ClassroomSync {
         this.broadcastState({ 
             type: 'student_joined', 
             code: code,
-            studentId: Date.now().toString(),
+            studentId: this.studentId,
             studentName: this.studentName
         });
         
@@ -496,10 +506,11 @@ class ClassroomSync {
             }
         } else if (this.role === 'teacher') {
             if (data.type === 'student_joined') {
-                // Add real student via local broadcast
                 this.addStudent(data.studentId, data.studentName);
             } else if (data.type === 'student_left') {
                 this.removeStudent(data.studentId);
+            } else if (data.type === 'student_started' || data.type === 'student_done') {
+                this.markStudentProgress(data);
             }
         }
     }
@@ -533,6 +544,9 @@ class ClassroomSync {
         if (!exercise) return;
         
         this.exerciseActive = true;
+        this.studentStartedAt = Date.now();
+        this.reportStudent('student_started');
+        this.bindStudentFollow();
         
         this.$('#studentWaiting').classList.add('hidden');
         this.$('#studentComplete').classList.add('hidden');
@@ -605,7 +619,12 @@ class ClassroomSync {
     }
     
     studentExerciseStop() {
+        const durationSec = this.studentStartedAt
+            ? Math.round((Date.now() - this.studentStartedAt) / 1000)
+            : null;
         this.exerciseActive = false;
+        this.reportStudent('student_done', durationSec);
+        this.unbindStudentFollow();
         
         this.$('#studentExercise').classList.add('hidden');
         this.$('#studentComplete').classList.remove('hidden');
@@ -672,10 +691,10 @@ class ClassroomSync {
             
             // Show first letter or emoji for anonymous
             if (student.name === 'Anonymous') {
-                dot.textContent = '👤';
+                dot.textContent = student.finished ? '✓' : '👤';
                 dot.style.fontSize = '1rem';
             } else {
-                dot.textContent = student.name.charAt(0).toUpperCase();
+                dot.textContent = student.finished ? '✓' : student.name.charAt(0).toUpperCase();
             }
             
             grid.appendChild(dot);
@@ -688,9 +707,9 @@ class ClassroomSync {
         
         this.students.forEach(s => counts[s.state]++);
         
-        this.$('#calmCount').textContent = counts.calm;
         this.$('#alertCount').textContent = counts.alert;
         this.$('#stressedCount').textContent = counts.stressed;
+        this.updateResetBoard();
         
         // Calculate coherence based on actual students
         let coherence;
@@ -731,11 +750,89 @@ class ClassroomSync {
         }
     }
     
+    reportStudent(type, durationSec) {
+        if (this.role !== 'student' || !this.studentId) return;
+        this.broadcastState({
+            type: type,
+            studentId: this.studentId,
+            studentName: this.studentName,
+            durationSec: durationSec == null ? null : durationSec
+        });
+    }
+
+    bindStudentFollow() {
+        this.unbindStudentFollow();
+        this._followHandler = (event) => {
+            if (!this.exerciseActive) return;
+            if (event.type === 'keydown' && event.code !== 'Space') return;
+            if (event.type === 'keydown') event.preventDefault();
+            const hint = this.$('#studentFollowHint');
+            if (hint) hint.textContent = 'With the class. Keep following the circle.';
+        };
+        document.addEventListener('keydown', this._followHandler);
+        const circle = this.$('#studentBreathCircle');
+        if (circle) circle.addEventListener('pointerdown', this._followHandler);
+    }
+
+    unbindStudentFollow() {
+        if (!this._followHandler) return;
+        document.removeEventListener('keydown', this._followHandler);
+        const circle = this.$('#studentBreathCircle');
+        if (circle) circle.removeEventListener('pointerdown', this._followHandler);
+        this._followHandler = null;
+    }
+
+    markStudentProgress(data) {
+        let student = this.students.get(data.studentId);
+        if (!student && data.studentName) {
+            student = Array.from(this.students.values()).find((item) => item.name === data.studentName);
+        }
+        if (!student) return;
+        student.status = 'started';
+        if (data.type === 'student_done') {
+            student.finished = true;
+            student.durationSec = data.durationSec;
+        }
+        this.renderClassGrid();
+        this.updateResetBoard(data.durationSec);
+    }
+
+    updateResetBoard(elapsed) {
+        const list = Array.from(this.students.values());
+        const started = list.filter((student) => student.status === 'started' || student.finished).length;
+        const finished = list.filter((student) => student.finished).length;
+        const startedEl = this.$('#startedCount');
+        const finishedEl = this.$('#finishedCount');
+        const timeEl = this.$('#resetDuration');
+        if (startedEl) startedEl.textContent = started;
+        if (finishedEl) finishedEl.textContent = finished;
+        if (timeEl) {
+            if (elapsed == null) {
+                timeEl.textContent = '--';
+            } else {
+                const secs = Math.max(0, Math.round(elapsed));
+                timeEl.textContent = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
+            }
+        }
+    }
+
+    finishConnectedStudents(durationSec) {
+        this.students.forEach((student) => {
+            student.status = 'started';
+            student.finished = true;
+            student.durationSec = durationSec;
+        });
+        this.renderClassGrid();
+        this.updateResetBoard(durationSec);
+    }
+
     startExercise(exerciseKey) {
         const exercise = this.exercises[exerciseKey];
         if (!exercise) return;
         
         this.exerciseActive = true;
+        this.currentExerciseKey = exerciseKey;
+        this.exerciseStartedAt = Date.now();
         discoveryTrack('feature_used', { feature: 'exercise', exercise: exerciseKey, role: this.role });
         this.$('#exerciseOverlay').classList.remove('hidden');
         this.$('#activeExerciseName').textContent = exercise.name;
@@ -752,6 +849,14 @@ class ClassroomSync {
             exercise: exerciseKey,
             exerciseData: exercise
         });
+
+        this.students.forEach((student) => {
+            student.status = 'started';
+            student.finished = false;
+            student.durationSec = null;
+        });
+        this.updateResetBoard(0);
+        this.renderClassGrid();
         
         let elapsed = 0;
         const total = exercise.duration;
@@ -765,8 +870,9 @@ class ClassroomSync {
             const mins = Math.floor(remaining / 60);
             const secs = remaining % 60;
             this.$('#timeRemaining').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            this.updateResetBoard(elapsed);
             
-            if (elapsed % 5 === 0) {
+            if (elapsed % 5 === 0 && exerciseKey !== 'class-reset') {
                 this.improveClassState();
             }
             
@@ -860,6 +966,10 @@ class ClassroomSync {
     }
     
     completeExercise() {
+        const durationSec = this.exerciseStartedAt
+            ? Math.round((Date.now() - this.exerciseStartedAt) / 1000)
+            : 90;
+        this.finishConnectedStudents(durationSec);
         this.stopExercise();
         this.playTone(523.25, 0.3);
         setTimeout(() => this.playTone(659.25, 0.5), 150);

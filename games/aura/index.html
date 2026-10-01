@@ -49,7 +49,7 @@
             </div>
             <p class="intro-text">A journey of calm awaits.<br>Your breath is your guide.</p>
             <button id="start-button" class="glow-button">Begin Journey</button>
-            <p class="mic-notice">🎤 Microphone access required for breath detection</p>
+            <p class="mic-notice">The full journey uses the microphone. The 90-second reset also works with tap or spacebar.</p>
         </div>
     </div>
 
@@ -153,6 +153,8 @@
     </div>
 
     <!-- Scripts -->
+    <script>window.PNEUOMA_RESET = { gameId: 'aura', title: 'Project AURA', mode: 'breath' };</script>
+    <script src="/lib/reset-session.js"></script>
     <script src="/lib/discovery-config.js"></script>
     <script src="/lib/discovery.js"></script>
     <script src="/lib/game-discovery.js"></script>

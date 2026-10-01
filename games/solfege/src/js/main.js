@@ -186,6 +186,21 @@ class Solfege {
         this.exercises.onAllComplete = (stats) => {
             document.getElementById('notesHit').textContent = stats.correct;
             document.getElementById('accuracy').textContent = stats.accuracy + '%';
+            try {
+                const key = 'pneuoma_solfege_history';
+                const history = JSON.parse(localStorage.getItem(key) || '[]');
+                history.unshift({
+                    at: Date.now(),
+                    correct: stats.correct,
+                    total: stats.total,
+                    accuracy: stats.accuracy
+                });
+                localStorage.setItem(key, JSON.stringify(history.slice(0, 20)));
+                const historyEl = document.getElementById('solfegeHistory');
+                if (historyEl) {
+                    historyEl.textContent = 'Saved. ' + history.length + ' session' + (history.length === 1 ? '' : 's') + ' on this device.';
+                }
+            } catch (e) { /* history is optional */ }
             
             setTimeout(() => {
                 this.isRunning = false;

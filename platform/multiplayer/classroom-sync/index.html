@@ -117,8 +117,16 @@
                         
                         <div class="class-stats" id="classStats">
                             <div class="stat">
-                                <span class="stat-value calm" id="calmCount">0</span>
-                                <span class="stat-label">Calm</span>
+                                <span class="stat-value calm" id="startedCount">0</span>
+                                <span class="stat-label">Started</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value coherence" id="finishedCount">0</span>
+                                <span class="stat-label">Finished</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="resetDuration">--</span>
+                                <span class="stat-label">Time</span>
                             </div>
                             <div class="stat">
                                 <span class="stat-value alert" id="alertCount">0</span>
@@ -142,6 +150,11 @@
                         </div>
                         
                         <div class="exercise-options">
+                            <button class="exercise-btn" data-exercise="class-reset">
+                                <span class="ex-icon">⏱️</span>
+                                <span class="ex-name">90-Second Reset</span>
+                                <span class="ex-time">90 sec</span>
+                            </button>
                             <button class="exercise-btn" data-exercise="breath-reset">
                                 <span class="ex-icon">🌬️</span>
                                 <span class="ex-name">Breath Reset</span>
@@ -276,6 +289,7 @@
                         </div>
                         
                         <p class="student-instruction" id="studentInstruction">Breathe In</p>
+                        <p class="student-instruction" id="studentFollowHint">No microphone needed. Follow the circle. Tap or press space to show you are with the class.</p>
                         
                         <div class="student-feedback">
                             <div class="feedback-dot" id="feedbackDot"></div>

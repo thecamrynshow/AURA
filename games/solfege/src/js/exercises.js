@@ -58,6 +58,17 @@ class ExerciseManager {
                     'D4', 'D4', 'D4',                          // Little lamb
                     'E4', 'G4', 'G4'                           // Little lamb
                 ]
+            },
+            {
+                name: 'Classroom Call & Response',
+                notes: [
+                    'C4', 'E4', 'G4',
+                    'C4', 'E4', 'G4',
+                    'G4', 'E4', 'C4',
+                    'C4', 'D4', 'E4', 'F4', 'G4',
+                    'G4', 'F4', 'E4', 'D4', 'C4',
+                    'C4', 'E4', 'G4', 'C5'
+                ]
             }
         ];
 
