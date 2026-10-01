@@ -175,7 +175,9 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: 1.05rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .nav-buttons {
@@ -191,7 +193,8 @@ body {
 .nav-links a {
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
     transition: color var(--transition-fast);
 }
 
