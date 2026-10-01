@@ -798,6 +798,9 @@ class ClassroomSync {
     }
 
     updateResetBoard(elapsed) {
+        if (elapsed == null && this.exerciseStartedAt && this.exerciseActive) {
+            elapsed = Math.round((Date.now() - this.exerciseStartedAt) / 1000);
+        }
         const list = Array.from(this.students.values());
         const started = list.filter((student) => student.status === 'started' || student.finished).length;
         const finished = list.filter((student) => student.finished).length;
