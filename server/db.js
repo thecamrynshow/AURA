@@ -80,6 +80,23 @@ db.exec(`
         created_at INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_leads_ip ON leads (ip, created_at);
+
+    CREATE TABLE IF NOT EXISTS inquiries (
+        id           TEXT PRIMARY KEY,
+        name         TEXT NOT NULL,
+        email        TEXT NOT NULL,
+        organization TEXT,
+        industry     TEXT,
+        project      TEXT,
+        timeline     TEXT,
+        message      TEXT NOT NULL,
+        source       TEXT,
+        page         TEXT,
+        ip           TEXT,
+        user_agent   TEXT,
+        created_at   INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_inquiries_ip ON inquiries (ip, created_at);
 `);
 
 function genId(prefix) {
@@ -268,6 +285,38 @@ function recentLeadCountByIp(ip, windowMs) {
     return row ? row.n : 0;
 }
 
+function createInquiry({ name, email, organization, industry, project, timeline, message, source, page, ip, userAgent }) {
+    const id = genId('inq');
+    db.prepare(`
+        INSERT INTO inquiries
+            (id, name, email, organization, industry, project, timeline, message, source, page, ip, user_agent, created_at)
+        VALUES
+            (@id, @name, @email, @organization, @industry, @project, @timeline, @message, @source, @page, @ip, @user_agent, @created_at)
+    `).run({
+        id,
+        name,
+        email: email.toLowerCase(),
+        organization: organization || null,
+        industry: industry || null,
+        project: project || null,
+        timeline: timeline || null,
+        message,
+        source: source || null,
+        page: page || null,
+        ip: ip || null,
+        user_agent: userAgent || null,
+        created_at: Date.now()
+    });
+    return id;
+}
+
+function recentInquiryCountByIp(ip, windowMs) {
+    if (!ip) return 0;
+    const since = Date.now() - (windowMs || 60 * 60 * 1000);
+    const row = db.prepare('SELECT COUNT(*) AS n FROM inquiries WHERE ip = ? AND created_at >= ?').get(ip, since);
+    return row ? row.n : 0;
+}
+
 module.exports = {
     db,
     DB_PATH,
@@ -288,5 +337,7 @@ module.exports = {
     syncSubscriptionFromStripe,
     // leads
     createLead,
-    recentLeadCountByIp
+    recentLeadCountByIp,
+    createInquiry,
+    recentInquiryCountByIp
 };

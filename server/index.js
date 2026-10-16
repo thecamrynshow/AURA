@@ -626,6 +626,35 @@ async function processStripeEvent(event) {
 
 // ==================== LEADS ====================
 
+const { validateInquiry } = require('./inquiry');
+
+// Project inquiries from the corporate site. There is no outbound mailer in this
+// service. A 200 response means the row was written to SQLite. On Render's
+// default disk that file is ephemeral unless SQLITE_DB_PATH points at a
+// persistent disk. Do not add a paid email provider here without a credential.
+app.post('/api/inquiries', (req, res) => {
+    const result = validateInquiry(req.body);
+    if (!result.ok) return res.status(result.status).json({ error: result.error });
+
+    const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+    if (db.recentInquiryCountByIp(ip, 60 * 60 * 1000) >= 5) {
+        return res.status(429).json({ error: 'Too many inquiries from this network. Try again later or email camrynjackson@pneuoma.com.' });
+    }
+
+    try {
+        const id = db.createInquiry({
+            ...result.value,
+            ip,
+            userAgent: req.headers['user-agent']
+        });
+        console.log(`[inquiries] accepted ${id} source=${result.value.source || 'n/a'} page=${result.value.page || 'n/a'}`);
+        res.json({ accepted: true, id });
+    } catch (e) {
+        console.error('[inquiries] could not store inquiry:', e.message);
+        res.status(500).json({ error: 'Could not store this inquiry' });
+    }
+});
+
 app.post('/api/leads', (req, res) => {
     const { email, source, page } = req.body || {};
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
