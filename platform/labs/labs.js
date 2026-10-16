@@ -12,11 +12,23 @@ class LabsBackground {
         this.waves = [];
         this.time = 0;
         
+        this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.running = true;
         this.resize();
         this.init();
-        this.animate();
+        if (this.reduceMotion) {
+            this.draw();
+        } else {
+            this.animate();
+        }
         
         window.addEventListener('resize', () => this.resize());
+        window.addEventListener('pagehide', () => this.stop());
+    }
+
+    stop() {
+        this.running = false;
+        if (this.frame) cancelAnimationFrame(this.frame);
     }
     
     resize() {
@@ -52,6 +64,16 @@ class LabsBackground {
     }
     
     animate() {
+        if (!this.running) return;
+        if (document.hidden) {
+            this.frame = requestAnimationFrame(() => this.animate());
+            return;
+        }
+        this.draw();
+        this.frame = requestAnimationFrame(() => this.animate());
+    }
+
+    draw() {
         this.time += 0.01;
         
         // Clear with fade effect
@@ -125,8 +147,6 @@ class LabsBackground {
                 }
             });
         });
-        
-        requestAnimationFrame(() => this.animate());
     }
 }
 
@@ -143,7 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Parallax effect on hero
     const heroVisual = document.querySelector('.hero-visual');
-    if (heroVisual) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (heroVisual && !reduceMotion) {
         document.addEventListener('mousemove', (e) => {
             const x = (e.clientX / window.innerWidth - 0.5) * 20;
             const y = (e.clientY / window.innerHeight - 0.5) * 20;

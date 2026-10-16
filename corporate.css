@@ -34,8 +34,35 @@ body.corporate .nav {
     z-index: 200;
 }
 
+body.corporate {
+    --text-muted: #b7bec9;
+    --corporate-nav-offset: 7.25rem;
+    overflow-x: clip;
+}
+
+body.corporate .footer-grid {
+    width: 100%;
+    min-width: 0;
+}
+
+body.corporate .footer-column {
+    min-width: 0;
+}
+
+body.corporate .footer-column a {
+    overflow-wrap: anywhere;
+}
+
 html:has(body.corporate) {
-    scroll-padding-top: 6.75rem;
+    scroll-padding-top: var(--corporate-nav-offset);
+}
+
+body.corporate .nav {
+    min-height: 4.5rem;
+}
+
+body.corporate :is(section[id], [id].c-solution, h2[id], h3[id]) {
+    scroll-margin-top: var(--corporate-nav-offset);
 }
 
 .nav-products {
@@ -51,7 +78,7 @@ html:has(body.corporate) {
     white-space: nowrap;
     cursor: pointer;
     min-height: 44px;
-    padding: 0 0.15rem;
+    padding: 0 0.35rem;
 }
 
 .nav-products > button:hover,
@@ -90,16 +117,28 @@ html:has(body.corporate) {
 }
 
 .nav-products-panel a {
-    padding: 0.55rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.1rem;
+    min-height: 44px;
+    padding: 0.45rem 0.75rem;
     border-radius: 8px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     text-decoration: none;
     font-size: 0.95rem;
 }
 
-.nav-products-panel a:hover {
+.nav-products-panel a span {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+}
+
+.nav-products-panel a:hover,
+.nav-products-panel a:focus-visible {
     color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .c-hero {
@@ -156,7 +195,7 @@ html:has(body.corporate) {
 
 .c-hero h1 {
     font-family: var(--font-display);
-    font-size: clamp(3.2rem, 7vw, 6rem);
+    font-size: clamp(2.5rem, 12vw, 6rem);
     font-weight: 500;
     line-height: 0.95;
     margin: 0.4rem 0 1rem;
@@ -442,6 +481,35 @@ html:has(body.corporate) {
     color: var(--text-secondary);
 }
 
+.c-form-status.is-error {
+    color: #ffc2c2;
+}
+
+.c-inquiry button[disabled] {
+    opacity: 0.72;
+    cursor: progress;
+}
+
+.c-inquiry [aria-invalid="true"] {
+    border-color: #ffc2c2;
+}
+
+.c-hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.c-mail-fallback {
+    color: var(--accent-primary);
+}
+
 .c-company {
     display: grid;
     grid-template-columns: 140px 1fr;
@@ -491,7 +559,7 @@ body.corporate main a:not(.btn) {
 }
 
 body.corporate section[id] {
-    scroll-margin-top: 6.75rem;
+    scroll-margin-top: var(--corporate-nav-offset);
 }
 
 .c-ecosystem {
@@ -602,7 +670,8 @@ body.corporate main .c-paths span {
     }
 
     .c-hero-stage {
-        display: none;
+        min-height: 240px;
+        overflow: hidden;
     }
 }
 
@@ -624,6 +693,11 @@ body.corporate main .c-paths span {
     .c-ecosystem,
     .c-pillars {
         grid-template-columns: 1fr;
+    }
+
+    body.corporate .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem 1rem;
     }
 }
 

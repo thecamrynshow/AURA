@@ -13,7 +13,7 @@
     
     --color-text: #e5e7eb;
     --color-text-muted: #9ca3af;
-    --color-text-dim: #6b7280;
+    --color-text-dim: #b0b7c3;
     
     --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-serif: 'Cormorant Garamond', Georgia, serif;
@@ -35,6 +35,10 @@ html, body {
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+}
+
+html {
+    scroll-padding-top: 5.5rem;
 }
 
 #app {
@@ -398,18 +402,34 @@ html, body {
     height: 80px;
 }
 
+.wave-static {
+    position: absolute;
+    inset: 18px 0 auto;
+    width: 100%;
+    height: 48px;
+}
+
 .wave-line {
     position: absolute;
     width: 100%;
-    height: 2px;
+    height: 100%;
+    top: 0;
     background: var(--color-plasma-cyan);
-    top: 50%;
     animation: wave-anim 2s ease-in-out infinite;
 }
 
 .wave-line:nth-child(1) { animation-delay: 0s; }
 .wave-line:nth-child(2) { animation-delay: 0.3s; opacity: 0.6; }
 .wave-line:nth-child(3) { animation-delay: 0.6s; opacity: 0.3; }
+
+@media (prefers-reduced-motion: reduce) {
+    .wave-line,
+    .resonance-ring,
+    .resonance-core,
+    .core-glow {
+        animation: none;
+    }
+}
 
 @keyframes wave-anim {
     0%, 100% { 

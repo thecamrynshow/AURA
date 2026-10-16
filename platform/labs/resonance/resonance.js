@@ -37,8 +37,16 @@ class ResonanceLab {
         
         // Canvas elements
         this.canvas = document.getElementById('viz-canvas');
-        this.ctx = this.canvas.getContext('2d');
+        this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
         this.threeContainer = document.getElementById('three-container');
+        if (!this.ctx) {
+            var status = document.getElementById('viz-status');
+            if (status) {
+                status.hidden = false;
+                status.textContent = 'This browser could not start the wave canvas. The research model is unchanged.';
+            }
+            return;
+        }
         
         // Three.js objects
         this.scene = null;
@@ -48,11 +56,15 @@ class ResonanceLab {
         this.points = null;
         this.originalPositions = null;
         
+        this.running = true;
+        this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.webglAvailable = null;
         this.init();
     }
     
     init() {
         this.cacheElements();
+        this.vizStatus = document.getElementById('viz-status');
         this.setupEventListeners();
         this.resize();
         this.updateMetrics();
@@ -60,6 +72,47 @@ class ResonanceLab {
         this.animate();
         
         window.addEventListener('resize', () => this.resize());
+        if (window.ResizeObserver && this.canvas && this.canvas.parentElement) {
+            this.resizeObserver = new ResizeObserver(() => this.resize());
+            this.resizeObserver.observe(this.canvas.parentElement);
+        }
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && this.running) this.resize();
+        });
+        window.addEventListener('pagehide', () => this.stop());
+    }
+
+    stop() {
+        this.running = false;
+        if (this.frame) cancelAnimationFrame(this.frame);
+        if (this.resizeObserver) this.resizeObserver.disconnect();
+    }
+
+    showVizStatus(message) {
+        if (!this.vizStatus) return;
+        if (!message) {
+            this.vizStatus.hidden = true;
+            this.vizStatus.textContent = '';
+            return;
+        }
+        this.vizStatus.hidden = false;
+        this.vizStatus.textContent = message;
+    }
+
+    canUseWebGL() {
+        if (this.webglAvailable !== null) return this.webglAvailable;
+        if (typeof THREE === 'undefined') {
+            this.webglAvailable = false;
+            return false;
+        }
+        try {
+            const probe = document.createElement('canvas');
+            const gl = probe.getContext('webgl') || probe.getContext('experimental-webgl');
+            this.webglAvailable = !!gl;
+        } catch (error) {
+            this.webglAvailable = false;
+        }
+        return this.webglAvailable;
     }
     
     initAnalytics() {
@@ -191,12 +244,14 @@ class ResonanceLab {
     
     resize() {
         const container = this.canvas.parentElement;
-        this.canvas.width = container.clientWidth;
-        this.canvas.height = container.clientHeight;
+        const width = Math.max(container.clientWidth, 1);
+        const height = Math.max(container.clientHeight, 280);
+        if (this.canvas.width !== width) this.canvas.width = width;
+        if (this.canvas.height !== height) this.canvas.height = height;
         
-        if (this.renderer) {
-            this.renderer.setSize(container.clientWidth, container.clientHeight);
-            this.camera.aspect = container.clientWidth / container.clientHeight;
+        if (this.renderer && this.camera) {
+            this.renderer.setSize(width, height);
+            this.camera.aspect = width / height;
             this.camera.updateProjectionMatrix();
         }
     }
@@ -214,6 +269,20 @@ class ResonanceLab {
     }
     
     switchGeometry() {
+        if (this.geometry === '3d' || this.geometry === '4d') {
+            if (!this.canUseWebGL()) {
+                this.showVizStatus('3D and 4D views need WebGL. This browser is showing the 1D wave instead. The wave model is unchanged.');
+                this.geometry = '1d';
+                document.querySelectorAll('.geo-btn').forEach((button) => {
+                    button.classList.toggle('active', button.dataset.geo === '1d');
+                });
+            } else {
+                this.showVizStatus('');
+            }
+        } else {
+            this.showVizStatus('');
+        }
+
         if (this.geometry === '1d' || this.geometry === '2d') {
             this.canvas.style.display = 'block';
             this.threeContainer.style.display = 'none';
@@ -445,21 +514,33 @@ class ResonanceLab {
     
     initThree() {
         if (this.scene) return; // Already initialized
+        if (!this.canUseWebGL()) return;
         
         const container = this.threeContainer;
+        const width = Math.max(container.clientWidth, 1);
+        const height = Math.max(container.clientHeight, 280);
         
         // Scene
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x0f0d24);
         
         // Camera
-        this.camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
         this.camera.position.z = 3;
         
         // Renderer
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        this.renderer.setSize(container.clientWidth, container.clientHeight);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+        } catch (error) {
+            this.webglAvailable = false;
+            this.geometry = '1d';
+            this.switchGeometry();
+            return;
+        }
+        this.renderer = renderer;
+        this.renderer.setSize(width, height);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         container.appendChild(this.renderer.domElement);
         
         // Lights
@@ -712,21 +793,24 @@ class ResonanceLab {
     // ==================== ANIMATION LOOP ====================
     
     animate() {
-        this.time += 0.016;
-        
-        if (this.geometry === '1d') {
-            this.draw1D();
-        } else if (this.geometry === '2d') {
-            this.draw2D();
-        } else if (this.geometry === '3d' && this.mesh) {
-            this.update3D();
-            this.renderer.render(this.scene, this.camera);
-        } else if (this.geometry === '4d' && this.points) {
-            this.update4D();
-            this.renderer.render(this.scene, this.camera);
+        if (!this.running) return;
+        if (!document.hidden) {
+            if (!this.reduceMotion) this.time += 0.016;
+            
+            if (this.geometry === '1d') {
+                this.draw1D();
+            } else if (this.geometry === '2d') {
+                this.draw2D();
+            } else if (this.geometry === '3d' && this.mesh) {
+                this.update3D();
+                this.renderer.render(this.scene, this.camera);
+            } else if (this.geometry === '4d' && this.points) {
+                this.update4D();
+                this.renderer.render(this.scene, this.camera);
+            }
         }
         
-        requestAnimationFrame(() => this.animate());
+        this.frame = requestAnimationFrame(() => this.animate());
     }
 }
 
