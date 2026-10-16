@@ -27,43 +27,66 @@ body.corporate .nav-logo {
     color: inherit;
 }
 
-.nav-products > summary {
-    list-style: none;
-    cursor: pointer;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    white-space: nowrap;
+body.corporate .nav {
+    background: rgba(7, 8, 13, 0.94);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 200;
 }
 
-.nav-products > summary::-webkit-details-marker {
-    display: none;
-}
-
-.nav-products > summary:hover,
-.nav-products[open] > summary {
-    color: var(--text-primary);
+html:has(body.corporate) {
+    scroll-padding-top: 6.75rem;
 }
 
 .nav-products {
     position: relative;
 }
 
+.nav-products > button {
+    background: none;
+    border: 0;
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    cursor: pointer;
+    min-height: 44px;
+    padding: 0 0.15rem;
+}
+
+.nav-products > button:hover,
+.nav-products.is-open > button {
+    color: var(--text-primary);
+}
+
 .nav-products-panel {
-    display: none;
     position: absolute;
     top: calc(100% + 0.75rem);
     left: 0;
-    min-width: 220px;
-    padding: 0.5rem;
+    width: min(680px, calc(100vw - 2rem));
+    max-height: min(70vh, 540px);
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem 1.25rem;
+    padding: 1rem;
     background: var(--bg-elevated);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-md);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-    z-index: 20;
+    z-index: 30;
 }
 
-.nav-products[open] .nav-products-panel {
-    display: grid;
+.nav-products-panel[hidden] {
+    display: none;
+}
+
+.nav-menu-label {
+    margin: 0 0.75rem 0.25rem;
+    color: var(--accent-primary);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 .nav-products-panel a {
@@ -80,8 +103,50 @@ body.corporate .nav-logo {
 }
 
 .c-hero {
-    padding: 9rem var(--space-lg) 4rem;
-    max-width: 920px;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 8.75rem var(--space-lg) 4rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 2rem;
+    align-items: center;
+}
+
+.c-hero:not(:has(.c-hero-stage)) {
+    grid-template-columns: minmax(0, 760px);
+}
+
+.c-hero-stage {
+    position: relative;
+    min-height: 420px;
+}
+
+.c-shot {
+    position: absolute;
+    width: 78%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    background: #000;
+}
+
+.c-shot-back {
+    top: 0;
+    right: 0;
+    opacity: 0.9;
+}
+
+.c-shot-mid {
+    top: 28%;
+    left: 0;
+    width: 72%;
+}
+
+.c-shot-front {
+    bottom: 0;
+    right: 6%;
+    width: 64%;
 }
 
 .c-kicker,
@@ -146,11 +211,25 @@ body.corporate .nav-logo {
 .c-card,
 .c-solution,
 .c-directory a,
-.c-milestone {
+.c-milestone,
+.c-eco {
     background: var(--bg-surface);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
     padding: 1.25rem 1.35rem;
+}
+
+.c-card,
+.c-solution {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.c-card .c-more,
+.c-solution .c-more {
+    margin-top: auto;
+    padding-top: 0.9rem;
 }
 
 .c-card h3,
@@ -405,13 +484,126 @@ body.corporate main a:not(.btn) {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .c-directory {
+    .c-directory,
+    .c-ecosystem {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 body.corporate section[id] {
-    scroll-margin-top: 5.5rem;
+    scroll-margin-top: 6.75rem;
+}
+
+.c-ecosystem {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+body.corporate main a.c-eco,
+body.corporate main .c-paths a {
+    color: var(--text-primary);
+}
+
+body.corporate main a.c-eco .c-eco-copy,
+body.corporate main .c-paths span {
+    color: var(--text-secondary);
+}
+
+.c-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: -1rem auto 1.5rem;
+}
+
+.c-filters button {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    min-height: 44px;
+    padding: 0.4rem 0.9rem;
+    font: inherit;
+    cursor: pointer;
+}
+
+.c-filters button[aria-pressed="true"] {
+    color: var(--bg-deep);
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.c-eco {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.c-eco:hover {
+    border-color: var(--accent-primary);
+}
+
+.c-eco[hidden] {
+    display: none;
+}
+
+.c-eco-cat,
+.c-eco-status {
+    color: var(--accent-primary);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.c-eco-copy {
+    color: var(--text-secondary);
+}
+
+.c-caption {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+}
+
+.c-paths {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin: 0 auto 1.5rem;
+    max-width: 720px;
+}
+
+.c-paths a {
+    text-decoration: none;
+    color: inherit;
+    background: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1rem;
+}
+
+.c-paths strong {
+    display: block;
+}
+
+.c-paths span {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 980px) {
+    .c-hero {
+        grid-template-columns: 1fr;
+        padding-top: 7.5rem;
+    }
+
+    .c-hero-stage {
+        display: none;
+    }
 }
 
 @media (max-width: 800px) {
@@ -419,39 +611,44 @@ body.corporate section[id] {
     .c-research,
     .c-milestone,
     .c-company,
-    .c-pair {
+    .c-pair,
+    .c-paths,
+    .nav-products-panel {
         grid-template-columns: 1fr;
-    }
-
-    .c-hero {
-        padding-top: 7.5rem;
     }
 }
 
 @media (max-width: 640px) {
     .c-solutions,
     .c-directory,
+    .c-ecosystem,
     .c-pillars {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
+    body.corporate .nav-links.open {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .nav-products {
         width: 100%;
     }
 
-    .nav-products > summary {
+    .nav-products > button {
         font-size: 1.1rem;
-        padding: var(--space-sm) 0;
         width: 100%;
+        text-align: left;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .nav-products-panel {
         position: static;
+        width: 100%;
+        max-height: none;
         box-shadow: none;
-        min-width: 0;
         margin: 0.25rem 0 0.5rem;
     }
 }
