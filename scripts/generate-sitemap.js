@@ -84,6 +84,7 @@ const RULES = [
     { test: (p) => p === '/platform/apps/', priority: '0.8', changefreq: 'monthly' },
     { test: (p) => p.startsWith('/platform/apps/'), priority: '0.75', changefreq: 'monthly' },
     { test: (p) => p === '/platform/labs/', priority: '0.7', changefreq: 'monthly' },
+    { test: (p) => p === '/platform/tech/', priority: '0.75', changefreq: 'monthly' },
     { test: (p) => p.startsWith('/platform/labs/'), priority: '0.6', changefreq: 'monthly' },
     { test: (p) => p === '/platform/about/', priority: '0.7', changefreq: 'monthly' },
     { test: (p) => p === '/platform/surveys/', priority: '0.5', changefreq: 'monthly' },

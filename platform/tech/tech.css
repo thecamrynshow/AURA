@@ -1,0 +1,57 @@
+.nav-links a.active {
+    color: var(--text-primary);
+}
+
+.tech-page {
+    padding: 8rem 0 4rem;
+}
+
+.tech-lead {
+    text-align: center;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: -1.5rem auto var(--space-xl);
+    font-size: 1.1rem;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.tech-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    text-decoration: none;
+    color: inherit;
+    min-height: 100%;
+    transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.tech-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-primary);
+}
+
+.tech-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 500;
+}
+
+.tech-card p {
+    color: var(--text-secondary);
+    flex: 1;
+}
+
+.tech-host {
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+}
