@@ -1,0 +1,457 @@
+/* Corporate homepage. Scoped so shared styles.css tokens stay intact. */
+
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -3rem;
+    z-index: 200;
+    background: var(--accent-primary);
+    color: var(--bg-deep);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+body.corporate :focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+body.corporate .nav-logo {
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-products > summary {
+    list-style: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.nav-products > summary::-webkit-details-marker {
+    display: none;
+}
+
+.nav-products > summary:hover,
+.nav-products[open] > summary {
+    color: var(--text-primary);
+}
+
+.nav-products {
+    position: relative;
+}
+
+.nav-products-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 0;
+    min-width: 220px;
+    padding: 0.5rem;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+}
+
+.nav-products[open] .nav-products-panel {
+    display: grid;
+}
+
+.nav-products-panel a {
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.nav-products-panel a:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.c-hero {
+    padding: 9rem var(--space-lg) 4rem;
+    max-width: 920px;
+}
+
+.c-kicker,
+.c-section .section-eyebrow {
+    letter-spacing: 0.16em;
+}
+
+.c-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3.2rem, 7vw, 6rem);
+    font-weight: 500;
+    line-height: 0.95;
+    margin: 0.4rem 0 1rem;
+}
+
+.c-statement {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-style: italic;
+    color: var(--accent-primary);
+    margin-bottom: 1.25rem;
+}
+
+.c-dek {
+    max-width: 38rem;
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+.c-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.c-section {
+    padding: 4.5rem 0;
+}
+
+.c-section-alt {
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.c-intro {
+    text-align: center;
+    color: var(--text-secondary);
+    max-width: 40rem;
+    margin: -2rem auto 2.5rem;
+}
+
+.c-pillars,
+.c-solutions,
+.c-directory {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.c-card,
+.c-solution,
+.c-directory a,
+.c-milestone {
+    background: var(--bg-surface);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.35rem;
+}
+
+.c-card h3,
+.c-solution h3,
+.c-product h3,
+.c-milestone h3 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.c-card p,
+.c-solution p,
+.c-product p,
+.c-milestone p,
+.c-company p {
+    color: var(--text-secondary);
+}
+
+.c-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.c-links a {
+    color: var(--text-primary);
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.92rem;
+}
+
+.c-links a:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.c-product {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.c-product img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #000;
+}
+
+.c-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.c-meta span {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    border: 1px solid rgba(100, 255, 218, 0.35);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+}
+
+.c-product ul {
+    margin: 0.75rem 0 1rem 1.1rem;
+    color: var(--text-secondary);
+}
+
+.c-directory {
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 1rem;
+}
+
+.c-directory a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.c-directory a:hover {
+    border-color: var(--accent-primary);
+}
+
+.c-directory strong {
+    font-size: 1.05rem;
+}
+
+.c-directory span {
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+}
+
+.c-solutions {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.c-research {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.c-research img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.c-module-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 1.25rem;
+}
+
+.c-module-list a {
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(100, 255, 218, 0.4);
+}
+
+.c-milestones {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.c-milestone {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1rem;
+    align-items: start;
+}
+
+.c-milestone time {
+    color: var(--accent-primary);
+    font-size: 0.9rem;
+}
+
+.c-quote {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.4rem;
+    border-left: 3px solid var(--accent-primary);
+    background: var(--bg-surface);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.c-quote p {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    color: var(--text-primary);
+}
+
+.c-quote footer,
+.c-note {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-top: 0.6rem;
+}
+
+.c-inquiry {
+    display: grid;
+    gap: 0.9rem;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.c-inquiry label {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--text-primary);
+    font-size: 0.92rem;
+}
+
+.c-inquiry input,
+.c-inquiry select,
+.c-inquiry textarea {
+    width: 100%;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 0.75rem 0.85rem;
+    font: inherit;
+}
+
+.c-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+}
+
+.c-form-status {
+    min-height: 1.4em;
+    color: var(--text-secondary);
+}
+
+.c-company {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.c-company img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+body.corporate .footer {
+    padding-top: 3rem;
+}
+
+body.corporate .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+body.corporate .footer-column h2 {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+}
+
+body.corporate main a:not(.btn) {
+    color: var(--accent-primary);
+}
+
+@media (max-width: 1100px) {
+    .c-pillars {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .c-directory {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+body.corporate section[id] {
+    scroll-margin-top: 5.5rem;
+}
+
+@media (max-width: 800px) {
+    .c-product,
+    .c-research,
+    .c-milestone,
+    .c-company,
+    .c-pair {
+        grid-template-columns: 1fr;
+    }
+
+    .c-hero {
+        padding-top: 7.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .c-solutions,
+    .c-directory,
+    .c-pillars {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-products {
+        width: 100%;
+    }
+
+    .nav-products > summary {
+        font-size: 1.1rem;
+        padding: var(--space-sm) 0;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-products-panel {
+        position: static;
+        box-shadow: none;
+        min-width: 0;
+        margin: 0.25rem 0 0.5rem;
+    }
+}
