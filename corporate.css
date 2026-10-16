@@ -631,6 +631,14 @@ body.corporate main .c-paths span {
     color: var(--text-secondary);
 }
 
+.c-eco::after {
+    content: "Open";
+    margin-top: 0.35rem;
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
 .c-caption {
     color: var(--text-muted);
     font-size: 0.85rem;
