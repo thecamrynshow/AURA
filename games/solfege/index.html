@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function () {
+            var path = location.pathname;
+            if (/\/index\.html$/i.test(path)) {
+                history.replaceState(null, '', path.replace(/\/index\.html$/i, '/') + location.search + location.hash);
+            }
+        })();
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TQGSNCV7Q2"></script>
     <script>

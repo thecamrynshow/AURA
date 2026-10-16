@@ -138,6 +138,10 @@ const PneuomaAuth = {
         btn.disabled = true;
         errorEl.classList.add('hidden');
         
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'signup_start', { page_path: window.location.pathname });
+        }
+
         try {
             const response = await fetch(`${this.serverUrl}/api/auth/signup`, {
                 method: 'POST',
@@ -156,6 +160,10 @@ const PneuomaAuth = {
             localStorage.setItem('pneuoma_user', JSON.stringify(this.user));
             localStorage.setItem('pneuoma_token', data.token);
             
+            if (typeof window.gtag === 'function') {
+                window.gtag('event', 'signup_complete', { page_path: window.location.pathname });
+            }
+
             // Redirect to platform
             window.location.href = '/platform/';
             

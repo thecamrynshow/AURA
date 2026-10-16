@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function () {
+            var path = location.pathname;
+            if (/\/index\.html$/i.test(path)) {
+                history.replaceState(null, '', path.replace(/\/index\.html$/i, '/') + location.search + location.hash);
+            }
+        })();
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TQGSNCV7Q2"></script>
     <script>
@@ -88,7 +96,7 @@
 
     <!-- Navigation -->
     <nav class="nav">
-        <a href="../../index.html" class="nav-logo">
+        <a href="/" class="nav-logo">
             <span class="logo-icon">πνεῦμα</span>
             <span class="logo-text">PNEUOMA</span>
         </a>
@@ -98,7 +106,7 @@
             <a href="../rituals/">Rituals</a>
             <a href="../create/">Create</a>
             <a href="../multiplayer/">Multiplayer</a>
-            <a href="../../index.html#partner" class="nav-cta">Partner</a>
+            <a href="/#partners" class="nav-cta">Partner</a>
         </div>
     </nav>
 
@@ -110,6 +118,7 @@
             <p class="page-subtitle">
                 Immersive experiences where breath, touch, and sound become the controller.<br>
                 Play that heals. Progress without addiction.
+                <br><a href="/platform/multiplayer/classroom-sync/">Classroom Sync</a> is the shared routine for a class.
             </p>
         </div>
     </section>

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function () {
+            var path = location.pathname;
+            if (/\/index\.html$/i.test(path)) {
+                history.replaceState(null, '', path.replace(/\/index\.html$/i, '/') + location.search + location.hash);
+            }
+        })();
+    </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TQGSNCV7Q2"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -284,7 +292,8 @@
                         <h3>Enterprise &amp; AI</h3>
                         <p><strong>Intelligent technology for organizational challenges.</strong></p>
                         <p>Custom enterprise software, private AI and knowledge systems, workflow automation, and industry-specific applications. This is a project inquiry, not a list of completed deployments.</p>
-                        <a class="c-more" href="/platform/enterprise/" data-pc-event="enterprise_inquiry_click" data-pc-label="solutions">Discuss a project</a>
+                        <a class="c-more" href="/platform/enterprise/" data-pc-event="enterprise_cta_click" data-pc-label="solutions">Discuss a project</a>
+                        <p>Service pages: <a href="/solutions/enterprise-ai/">Enterprise AI</a>, <a href="/solutions/private-llm/">private LLM</a>, <a href="/solutions/legal-ai/">legal AI</a>, <a href="/solutions/custom-software/">custom software</a>, <a href="/solutions/workflow-automation/">workflow automation</a>.</p>
                     </article>
                     <article class="c-solution" id="creators">
                         <h3>Creators &amp; developers</h3>
@@ -411,7 +420,7 @@
                             <input name="website" type="text" tabindex="-1" autocomplete="off">
                         </label>
                     </div>
-                    <button class="btn btn-primary" type="submit" data-pc-event="demo_request_submit" data-pc-label="partner">Send inquiry</button>
+                    <button class="btn btn-primary" type="submit">Send inquiry</button>
                     <p class="c-form-status" role="status" aria-live="polite"></p>
                     <p class="c-note">Do not include student records, health information, credentials, or other confidential material. The inquiry is stored so we can reply. Or write directly to <a href="mailto:camrynjackson@pneuoma.com">camrynjackson@pneuoma.com</a>.</p>
                     <a class="c-mail-fallback" href="mailto:camrynjackson@pneuoma.com" hidden>Email this inquiry instead</a>

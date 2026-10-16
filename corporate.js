@@ -163,6 +163,28 @@
         });
     });
 
+    function trackEvent(name, label) {
+        var payload = { page_path: window.location.pathname };
+        if (label) payload.label = String(label).slice(0, 80);
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', name, payload);
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        var link = event.target.closest ? event.target.closest('a[href]') : null;
+        if (!link) return;
+        var url;
+        try {
+            url = new URL(link.href, window.location.href);
+        } catch (error) {
+            return;
+        }
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+        if (url.host === window.location.host) return;
+        trackEvent('product_outbound_click', url.hostname);
+    });
+
     function validEmail(value) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     }
@@ -186,6 +208,14 @@
         var status = form.querySelector('.c-form-status');
         var button = form.querySelector('button[type="submit"]');
         var fallback = form.querySelector('.c-mail-fallback');
+        var source = form.getAttribute('data-source') || 'inquiry';
+        var started = false;
+
+        form.addEventListener('focusin', function () {
+            if (started) return;
+            started = true;
+            trackEvent('project_inquiry_start', source);
+        });
 
         form.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -279,8 +309,10 @@
                     return;
                 }
                 form.reset();
+                started = false;
                 status.classList.remove('is-error');
                 status.textContent = 'Received. PNEUOMA stored this inquiry and will reply at the email you entered. Do not send confidential records.';
+                trackEvent(source.indexOf('partner') !== -1 ? 'partner_inquiry_submit' : 'project_inquiry_submit', source);
             }).catch(function () {
                 fail('The inquiry could not be sent. Your details are still in the form. Email them instead.');
             }).then(function () {

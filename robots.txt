@@ -1,89 +1,15 @@
-# ============================================
-# PNEUOMA - Nervous System Regulation Games
-# The #1 Platform for Breathing Games
+# PNEUOMA public site
 # https://pneuoma.com
-# ============================================
+# Preferred URLs are the canonical links in each page.
+# GitHub Pages serves / and /index.html as the same file, so this file
+# cannot issue a 301 between them.
 
-# Allow all crawlers
 User-agent: *
 Allow: /
 
-# Google
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
+# Utility screens. These are not search landing pages.
+# robots.txt is not an access control.
+Disallow: /auth/success.html
+Disallow: /auth/forgot-password.html
 
-# Bing
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-# Yahoo
-User-agent: Slurp
-Allow: /
-
-# DuckDuckGo
-User-agent: DuckDuckBot
-Allow: /
-
-# Baidu (China)
-User-agent: Baiduspider
-Allow: /
-
-# Yandex (Russia)
-User-agent: YandexBot
-Allow: /
-
-# Apple (for Vision Pro / Safari)
-User-agent: Applebot
-Allow: /
-
-# ============================================
-# SITEMAP
-# ============================================
 Sitemap: https://pneuoma.com/sitemap.xml
-
-# ============================================
-# KEY PAGES FOR CRAWLING
-# ============================================
-# 
-# HOMEPAGE (nervous system regulation games)
-# https://pneuoma.com/
-#
-# GAMES HUB (30+ biofeedback games)
-# https://pneuoma.com/platform/games/
-#
-# CREATE SECTION (VR-ready creative tools)
-# https://pneuoma.com/platform/create/
-# - Universe Hub (build solar systems with friends)
-# - World Builder (design custom planets)
-# - Creature Lab (create creatures)
-# - Planet Explore (first-person 3D/VR)
-#
-# RITUALS (8 daily breathing routines)
-# https://pneuoma.com/platform/rituals/
-#
-# MULTIPLAYER (6 co-regulation modes)
-# https://pneuoma.com/platform/multiplayer/
-#
-# FOR SCHOOLS (classroom sync, SEL)
-# https://pneuoma.com/platform/schools/
-#
-# SIGNUP (free account creation)
-# https://pneuoma.com/auth/signup.html
-#
-# ============================================
-# KEYWORDS WE RANK FOR
-# ============================================
-# - nervous system regulation games
-# - breathing games for kids
-# - calm down games
-# - ADHD games for children
-# - anxiety games for kids
-# - SEL games for classroom
-# - biofeedback games
-# - self-regulation activities
-# - emotional regulation games
-# - polyvagal games
-# - co-regulation games
-# ============================================
