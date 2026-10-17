@@ -311,7 +311,7 @@
                 form.reset();
                 started = false;
                 status.classList.remove('is-error');
-                status.textContent = 'Received. PNEUOMA stored this inquiry and will reply at the email you entered. Do not send confidential records.';
+                status.textContent = 'Received. This inquiry was emailed to PNEUOMA, and we will reply at the email you entered. Do not send confidential records.';
                 trackEvent(source.indexOf('partner') !== -1 ? 'partner_inquiry_submit' : 'project_inquiry_submit', source);
             }).catch(function () {
                 fail('The inquiry could not be sent. Your details are still in the form. Email them instead.');

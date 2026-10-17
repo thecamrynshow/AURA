@@ -331,8 +331,9 @@ When API is unavailable, companions use:
    - **Node Version**: 18+
 4. **Attach a Persistent Disk** (Settings → Disks): e.g. mount path `/var/data`, then set `SQLITE_DB_PATH=/var/data/pneuoma.db`. Without this, the SQLite DB (users + subscriptions) is wiped on every deploy/cold start. *(Alternatively, migrate `db.js` to Render Postgres.)*
 5. Add environment variables: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `JWT_SECRET`, `SQLITE_DB_PATH`, `FRONTEND_URL`, `NODE_ENV=production`, plus `ANTHROPIC_API_KEY` and `METERFLOW_*`.
-6. Add the Stripe webhook endpoint (see **Stripe Webhook Setup** above).
-7. Deploy
+6. Add `INQUIRY_SMTP_PASS`, the Hostinger mailbox password for `camrynjackson@pneuoma.com`. Project inquiries are emailed to that address through `smtp.hostinger.com`. The form tells the visitor the inquiry was received only after Hostinger accepts the email. Optional overrides: `INQUIRY_SMTP_HOST`, `INQUIRY_SMTP_PORT` (default `587`), `INQUIRY_SMTP_USER`.
+7. Add the Stripe webhook endpoint (see **Stripe Webhook Setup** above).
+8. Deploy
 
 Live URL: `https://pneuoma.onrender.com`
 

@@ -73,7 +73,7 @@ The old `demo_request_submit` click on the inquiry button was removed so a click
 
 ## Inquiry workflow
 
-`POST /api/inquiries` on the existing Render service validates the fields, rejects the honeypot, rate-limits by IP, and stores the row. Success UI requires `accepted: true`. Failure keeps the typed values and shows an email link. There is still no outbound mailer. Storage is SQLite, which on Render’s default disk is ephemeral unless `SQLITE_DB_PATH` points at a persistent disk.
+`POST /api/inquiries` validates the fields, rejects the honeypot, and rate-limits by IP. It emails the inquiry to camrynjackson@pneuoma.com through the Hostinger mailbox. Success UI requires `accepted: true`, which means Hostinger accepted the email. That send needs `INQUIRY_SMTP_PASS` on the Render service. A SQLite row is only a backup copy.
 
 ## Tests executed
 

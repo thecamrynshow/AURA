@@ -627,12 +627,12 @@ async function processStripeEvent(event) {
 // ==================== LEADS ====================
 
 const { validateInquiry } = require('./inquiry');
+const { deliverInquiry } = require('./inquiry-mail');
 
-// Project inquiries from the corporate site. There is no outbound mailer in this
-// service. A 200 response means the row was written to SQLite. On Render's
-// default disk that file is ephemeral unless SQLITE_DB_PATH points at a
-// persistent disk. Do not add a paid email provider here without a credential.
-app.post('/api/inquiries', (req, res) => {
+// Project inquiries are emailed to camrynjackson@pneuoma.com through the
+// Hostinger mailbox. accepted:true means the mail server accepted that email.
+// A database row is only a backup copy.
+app.post('/api/inquiries', async (req, res) => {
     const result = validateInquiry(req.body);
     if (!result.ok) return res.status(result.status).json({ error: result.error });
 
@@ -642,17 +642,28 @@ app.post('/api/inquiries', (req, res) => {
     }
 
     try {
-        const id = db.createInquiry({
+        await deliverInquiry(result.value);
+    } catch (e) {
+        if (e.code === 'NOT_CONFIGURED') {
+            console.error('[inquiries] INQUIRY_SMTP_PASS is not set');
+            return res.status(503).json({ error: 'Inquiry email is not set up yet. Email camrynjackson@pneuoma.com directly.' });
+        }
+        console.error('[inquiries] could not deliver inquiry:', e.message);
+        return res.status(502).json({ error: 'Could not deliver this inquiry. Email camrynjackson@pneuoma.com directly.' });
+    }
+
+    let id = null;
+    try {
+        id = db.createInquiry({
             ...result.value,
             ip,
             userAgent: req.headers['user-agent']
         });
-        console.log(`[inquiries] accepted ${id} source=${result.value.source || 'n/a'} page=${result.value.page || 'n/a'}`);
-        res.json({ accepted: true, id });
     } catch (e) {
-        console.error('[inquiries] could not store inquiry:', e.message);
-        res.status(500).json({ error: 'Could not store this inquiry' });
+        console.error('[inquiries] email was accepted but the backup copy failed:', e.message);
     }
+    console.log(`[inquiries] emailed source=${result.value.source || 'n/a'} page=${result.value.page || 'n/a'} id=${id || 'n/a'}`);
+    res.json({ accepted: true, id });
 });
 
 app.post('/api/leads', (req, res) => {
